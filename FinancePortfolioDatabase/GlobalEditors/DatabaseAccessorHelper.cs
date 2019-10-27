@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 using GlobalHeldData;
-using FinancePortfolioDatabase;
+using FinanceStructures;
+using GUIFinanceStructures;
 
 namespace GUIAccessorFunctions
 {
@@ -24,21 +22,72 @@ namespace GUIAccessorFunctions
             PortfoCopy = GlobalData.Finances;
             return PortfoCopy;
         }
+        public static List<string> GetSecurityNames()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GetSecurityNames();
+            }
+            return new List<string>();
+        }
+        public static List<string> GetSectorNames()
+        {
+            var outputs = new List<string>();
+            if (GlobalData.BenchMark != null)
+            {
+                foreach (Sector thing in GlobalData.BenchMark)
+                {
+                    outputs.Add(thing.GetName());
+                }
+            }
+            return outputs;
+        }
+        public static List<NameComp> GetSecurityNamesAndCompanies()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GetSecurityNamesAndCompanies();
+            }
+            return new List<NameComp>();
+        }
+
+        public static List<string> GetBankAccountNames()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GetBankAccountNames();
+            }
+            return new List<string>();
+        }
+
+        public static List<NameComp> GetBankAccountNamesAndCompanies()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GetBankAccountNamesAndCompanies();
+            }
+            return new List<NameComp>();
+        }
 
         public static void LoadPortfolio()
         {
-            if (File.Exists("database.xml"))
+            if (File.Exists(GlobalData.fDatabaseFilePath))
             {
-                var database = ReadFromXmlFile<Portfolio>("database.xml");
+                var database = ReadFromXmlFile<Portfolio>(GlobalData.fDatabaseFilePath);
                 GlobalData.LoadDatabase(database);
+                return;
             }
+
+            GlobalData.LoadDatabase(null);
         }
 
         public static void SavePortfolio()
         {
             var ToSave = GetPortfolio();
-            WriteToXmlFile<Portfolio>("database.xml", ToSave);
-
+            if (GlobalData.fDatabaseFilePath != null)
+            {
+                WriteToXmlFile<Portfolio>(GlobalData.fDatabaseFilePath, ToSave);
+            }
         }
 
         /// <summary>

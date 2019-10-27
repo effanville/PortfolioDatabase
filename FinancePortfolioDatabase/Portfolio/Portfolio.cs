@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using GUIFinanceStructures;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     public partial class Portfolio
     {
@@ -27,6 +24,53 @@ namespace FinancePortfolioDatabase
 
         public Portfolio()
         {
+            fFunds = new List<Security>();
+            fBankAccounts = new List<CashAccount>();
+        }
+
+        public List<string> GetSecurityNames()
+        {
+            var names = new List<string>();
+            foreach (var security in Funds)
+            {
+                names.Add(security.GetName());
+            }
+
+            return names;
+        }
+
+        public List<NameComp > GetSecurityNamesAndCompanies()
+        {
+            var namesAndCompanies = new List<NameComp>();
+            
+            foreach (var security in Funds)
+            {
+                namesAndCompanies.Add(new NameComp(security.GetName(), security.GetCompany()));
+            }
+
+            return namesAndCompanies;
+        }
+
+        public List<string> GetBankAccountNames()
+        {
+            var names = new List<string>();
+            foreach (var bankAcc in BankAccounts)
+            {
+                names.Add(bankAcc.GetName());
+            }
+
+            return names;
+        }
+        public List<NameComp> GetBankAccountNamesAndCompanies()
+        {
+            var namesAndCompanies = new List<NameComp>();
+
+            foreach (var bankAcc in BankAccounts)
+            {
+                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany()));
+            }
+
+            return namesAndCompanies;
         }
     }
 }

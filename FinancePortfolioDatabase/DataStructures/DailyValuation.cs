@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     /// <summary>
     /// Holds a date and a value to act as the value on that day.

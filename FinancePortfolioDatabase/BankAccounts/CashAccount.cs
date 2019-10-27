@@ -1,31 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FinancePortfolioDatabase
+﻿
+namespace FinanceStructures
 {
     public partial class CashAccount
     {
         private string fName;
 
-        private string fCompany;
+        /// <summary>
+        /// For Serialisation only
+        /// </summary>
+        public string Name
+        {
+            get { return fName; }
+            set { fName = value; }
+        }
 
-        private TimeList Amounts;
+        private string fCompany;
+        /// <summary>
+        /// For Serialisation only
+        /// </summary>
+        public string Company
+        {
+            get { return fCompany; }
+            set { fCompany = value; }
+        }
+
+        private TimeList fAmounts;
+
+        /// <summary>
+        /// Here for serialisation and viewing in GUI
+        /// </summary>
+        public TimeList Amounts
+        {
+            get { return fAmounts; }
+            set { fAmounts = value; }
+        }
 
         public CashAccount(string name, string company)
         {
             fName =name;
             fCompany =company;
-            Amounts = new TimeList();
+            fAmounts = new TimeList();
         }
 
         private CashAccount(string name, string company, TimeList amounts)
         {
             fName = name;
             fCompany = company;
-            Amounts = amounts;
+            fAmounts = amounts;
+        }
+
+        /// <summary>
+        /// Parameterless constructor for serialisation.
+        /// </summary>
+        private CashAccount()
+        {
+            fAmounts = new TimeList();
         }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FinancePortfolioDatabase;
+using FinanceStructures;
 
 namespace GlobalHeldData
 {
     public static class GlobalData
     {
+        public static string fDatabaseFilePath;
+
         public static DateTime fToday = DateTime.Today;
 
         private static Portfolio fPersonalFinances;
@@ -39,7 +38,14 @@ namespace GlobalHeldData
         /// </summary>
         public static void LoadDatabase(Portfolio database)
         {
-            Finances = database;
+            if (database == null)
+            {
+                Finances = new Portfolio();
+            }
+            else
+            {
+                Finances = database;
+            }
         }
     }
 }

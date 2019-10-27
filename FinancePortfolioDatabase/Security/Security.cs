@@ -1,22 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FinancePortfolioDatabase
+﻿namespace FinanceStructures
 {
     public partial class Security
     {
         private string fName;
 
+        /// <summary>
+        /// For serialisation only.
+        /// </summary>
+        public string Name
+        {
+            get { return fName; }
+            set { fName= value; }
+        }
         private string fCompany;
+
+        /// <summary>
+        /// For serialisation only.
+        /// </summary>
+        public string Company
+        { 
+            get { return fCompany; }
+            set { fCompany = value; }
+        }
 
         private TimeList fShares;
 
+        /// <summary>
+        /// For serialisation only.
+        /// </summary>
+        public TimeList Shares
+        {
+            get { return fShares; }
+            set { fShares = value; }
+        }
+
         private TimeList fUnitPrice;
 
+        /// <summary>
+        /// For serialisation only.
+        /// </summary>
+        public TimeList UnitPrice
+        {
+            get { return fUnitPrice; }
+            set { fUnitPrice = value; }
+        }
+
         private TimeList fInvestments;
+
+        /// <summary>
+        /// For serialisation only.
+        /// </summary>
+        public TimeList Investments
+        {
+            get { return fInvestments; }
+            set { fInvestments = value; }
+        }
 
         public Security()
         {
