@@ -1,28 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GUIFinanceStructures;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     public partial class CashAccount
     {
         public bool TryAddValue(DateTime date, double value)
         {
-            if (Amounts.ValueExists(date, out int index))
+            if (fAmounts.ValueExists(date, out int index))
             {
                 return false;
             }
 
-            Amounts.AddData(date, value);
+            return fAmounts.TryAddValue(date, value);
+        }
 
-            return true;
+        internal List<AccountDayDataView> GetDataForDisplay()
+        {
+            var output = new List<AccountDayDataView>();
+            foreach (var datevalue in fAmounts.Values)
+            {
+                fAmounts.TryGetValue(datevalue.Day, out double UnitPrice);
+                var thisday = new AccountDayDataView(datevalue.Day, UnitPrice);
+                output.Add(thisday);
+            }
+
+            return output;
         }
 
         public bool TryEditValue(DateTime date, double value)
         {
-            return Amounts.TryEditData(date, value);
+            return fAmounts.TryEditData(date, value);
         }
 
         public bool TryEditNameCompany(string name, string company)
@@ -37,6 +46,11 @@ namespace FinancePortfolioDatabase
             }
 
             return true;
+        }
+
+        public bool TryDeleteData(DateTime date)
+        {
+            return fAmounts.TryDeleteValue(date);
         }
 
         public bool IsEqualTo(CashAccount otherAccount)
@@ -55,7 +69,7 @@ namespace FinancePortfolioDatabase
 
         public CashAccount Copy()
         {
-            return new CashAccount(fName, fCompany, Amounts);
+            return new CashAccount(fName, fCompany, fAmounts);
         }
 
         public string GetName()

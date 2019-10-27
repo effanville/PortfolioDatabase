@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,7 +57,57 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="GlobalEditors\SectorEditHelper.cs" />
+    <Compile Include="GUI\BankAccEditWindow.xaml.cs">
+      <DependentUpon>BankAccEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BankAccEditWindowViewModel.cs" />
+    <Compile Include="GUI\BasicDataViewModel.cs" />
+    <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
+    <Compile Include="GUI\MainUserControl.xaml.cs">
+      <DependentUpon>MainUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\OptionsPanelViewModel.cs" />
+    <Compile Include="ErrorReports\ErrorReports.cs" />
+    <Compile Include="GUI\GuiSupport\EventArgs.cs" />
+    <Compile Include="GUI\GuiSupport\EventRaiser.cs" />
+    <Compile Include="GUI\OpeningWindowViewModel.cs" />
+    <Compile Include="GUI\MainWindowViewModel.cs" />
+    <Compile Include="GUI\GuiSupport\Basic Command.cs" />
+    <Compile Include="GUI\BasicDataView.xaml.cs">
+      <DependentUpon>BasicDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\GuiSupport\RelayCommand.cs" />
+    <Compile Include="GUI\SectorEditWindow.xaml.cs">
+      <DependentUpon>SectorEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\SectorEditWindowViewModel.cs" />
+    <Compile Include="GUI\SecurityEditWindow.xaml.cs">
+      <DependentUpon>SecurityEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\SecurityEditWindowViewModel.cs" />
+    <Compile Include="GUI\StatsCreatorWindow.xaml.cs">
+      <DependentUpon>StatsCreatorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\StatsCreatorWindowViewModel.cs" />
+    <Compile Include="GUI\TitleBar.xaml.cs">
+      <DependentUpon>TitleBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\OptionsPanel.xaml.cs">
+      <DependentUpon>OptionsPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\OpeningWindow.xaml.cs">
+      <DependentUpon>OpeningWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="GUI\BankAccEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\MainUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -68,22 +120,56 @@
     <Compile Include="DataStructures\GeneralFinancialFunctions.cs" />
     <Compile Include="DataStructures\Timelist.Rates.cs" />
     <Compile Include="GlobalEditors\BankAccountHelperFunctions.cs" />
+    <Compile Include="GlobalEditors\SecurityCompanyStatsHelper.cs" />
+    <Compile Include="GlobalEditors\SecurityStatsHelper.cs" />
     <Compile Include="GlobalEditors\SecurityEditHelper.cs" />
     <Compile Include="DataStructures\DailyValuation.cs" />
+    <Compile Include="Portfolio\GUIDataStructs.cs" />
+    <Compile Include="Portfolio\PortfolioSecurityCompany.cs" />
+    <Compile Include="Portfolio\PortfolioSecurityRates.cs" />
     <Compile Include="Portfolio\PortfolioBankAccAccessors.cs" />
     <Compile Include="Sector\Sector.cs" />
     <Compile Include="Portfolio\PortfolioSecurityAccessors.cs" />
     <Compile Include="GlobalEditors\GlobalData.cs" />
+    <Compile Include="Sector\SectorEditFunctions.cs" />
     <Compile Include="Security\Security.Rates.cs" />
     <Compile Include="Security\SecurityEditFns.cs" />
     <Compile Include="DataStructures\TimeList.cs" />
     <Compile Include="GlobalEditors\DatabaseAccessorHelper.cs" />
     <Compile Include="Portfolio\Portfolio.cs" />
     <Compile Include="Security\Security.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="GUI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="GUI\BasicDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\SectorEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\SecurityEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\StatsCreatorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\TitleBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\OptionsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\OpeningWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

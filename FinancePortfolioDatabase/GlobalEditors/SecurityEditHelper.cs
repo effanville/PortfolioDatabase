@@ -1,6 +1,8 @@
 ﻿using GlobalHeldData;
-using FinancePortfolioDatabase;
+using FinanceStructures;
+using GUIFinanceStructures;
 using System;
+using System.Collections.Generic;
 
 namespace SecurityHelperFunctions
 {
@@ -26,6 +28,14 @@ namespace SecurityHelperFunctions
         }
 
         /// <summary>
+        /// Attempts to get the data from the security for display purposes 
+        /// </summary>
+        public static bool TryGetSecurityData(string name, string company, out List<BasicDayDataView> data)
+        {
+            return GlobalData.Finances.TryGetSecurityData(name, company, out data);
+        }
+
+        /// <summary>
         /// Returns true if security with given name and company exists.
         /// </summary>
         public static bool DoesSecurityExist(string name, string company)
@@ -33,6 +43,10 @@ namespace SecurityHelperFunctions
             return GlobalData.Finances.DoesSecurityExistFromName(name, company);
         }
 
+        public static bool TryAddDataToSecurity(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        {
+            return GlobalData.Finances.TryAddDataToSecurity(name, company, date, shares, unitPrice, Investment);
+        }
         /// <summary>
         /// Edits data in the security, if possible.
         /// </summary>
@@ -55,6 +69,11 @@ namespace SecurityHelperFunctions
         public static bool TryDeleteSecurity(string name, string company)
         {
             return GlobalData.Finances.TryRemoveSecurity(name, company);
+        }
+
+        public static bool TryDeleteSecurityData(string name, string company, DateTime date, double shares, double unitPrice, double investment = 0)
+        {
+            return GlobalData.Finances.TryRemoveSecurityData(name, company, date, shares, unitPrice, investment);
         }
     }
 }

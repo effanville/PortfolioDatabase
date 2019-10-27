@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GUIFinanceStructures;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     public partial class Portfolio
     {
@@ -27,6 +25,21 @@ namespace FinancePortfolioDatabase
             {
                 if (acc.GetName() == name && acc.GetCompany() == company)
                 {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryGetAccountData(string name, string company, out List<AccountDayDataView> data)
+        {
+            data = new List<AccountDayDataView>();
+            foreach (CashAccount acc in BankAccounts)
+            {
+                if (acc.GetName() == name && acc.GetCompany() == company)
+                {
+                    data = acc.GetDataForDisplay();
                     return true;
                 }
             }
@@ -89,6 +102,20 @@ namespace FinancePortfolioDatabase
             return false;
         }
 
+        public bool TryAddDataToBankAccount(string name, string company, DateTime date, double value)
+        {
+            for (int accountIndex = 0; accountIndex < BankAccounts.Count; accountIndex++)
+            {
+                if (BankAccounts[accountIndex].GetCompany() == company && BankAccounts[accountIndex].GetName() == name)
+                {
+                    // now edit data
+                    return BankAccounts[accountIndex].TryAddValue(date, value);
+                }
+            }
+
+            return false;
+        }
+
         public bool TryEditBankAccount(string name, string company, DateTime date, double value)
         {
             for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
@@ -111,6 +138,20 @@ namespace FinancePortfolioDatabase
                 {
                     // now edit data
                     return BankAccounts[AccountIndex].TryEditNameCompany(newName, newCompany);
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryDeleteBankAccountData(string name, string company, DateTime date)
+        {
+            for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
+            {
+                if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
+                {
+                    // now edit data
+                    return BankAccounts[AccountIndex].TryDeleteData(date);
                 }
             }
 

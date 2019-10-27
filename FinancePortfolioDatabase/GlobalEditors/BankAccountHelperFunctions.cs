@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FinancePortfolioDatabase;
+using FinanceStructures;
 using GlobalHeldData;
+using GUIFinanceStructures;
 
 namespace BankAccountHelperFunctions
 {
@@ -27,6 +25,14 @@ namespace BankAccountHelperFunctions
         public static bool TryGetBankAccount(string name, string company, out CashAccount Desired)
         {
             return GlobalData.Finances.TryGetBankAccount(name, company, out Desired);
+        }
+
+        /// <summary>
+        /// Attempts to get the data from the bank account for display purposes 
+        /// </summary>
+        public static bool TryGetBankAccountData(string name, string company, out List<AccountDayDataView> data)
+        {
+            return GlobalData.Finances.TryGetAccountData(name, company, out data);
         }
 
         /// <summary>
@@ -53,12 +59,25 @@ namespace BankAccountHelperFunctions
             return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany);
         }
 
+        public static bool TryAddDataToBankAccount(string name, string company, DateTime date, double value)
+        {
+            return GlobalData.Finances.TryAddDataToBankAccount(name, company, date, value);
+        }
+
         /// <summary>
         /// Deletes BankAccount if it exists. Does nothing otherwise.
         /// </summary>
         public static bool TryDeleteBankAccount(string name, string company)
         {
             return GlobalData.Finances.TryRemoveBankAccount(name, company);
+        }
+
+        /// <summary>
+        /// Deletes the data from the date specified if it exists.
+        /// </summary>
+        public static bool TryDeleteBankAccountData(string name, string company, DateTime date)
+        {
+            return GlobalData.Finances.TryDeleteBankAccountData(name, company, date);
         }
     }
 }

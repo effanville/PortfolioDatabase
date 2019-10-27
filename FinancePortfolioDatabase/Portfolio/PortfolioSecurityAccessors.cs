@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using GUIFinanceStructures;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     public partial class Portfolio
     {
@@ -18,6 +20,14 @@ namespace FinancePortfolioDatabase
         }
 
         /// <summary>
+        /// This should only be called in combination with GetPortfolio() to avoid accidentally overwriting data.
+        /// </summary>
+        public List<Security> GetSecurities()
+        {
+            return Funds;
+        }
+
+        /// <summary>
         /// Outputs a copy of the security if it exists.
         /// </summary>
         public bool TryGetSecurity(string name, string company, out Security desired)
@@ -31,6 +41,21 @@ namespace FinancePortfolioDatabase
                 }
             }
             desired = null;
+            return false;
+        }
+
+        public bool TryGetSecurityData(string name, string company, out List<BasicDayDataView> data)
+        {
+            data = new List<BasicDayDataView>();
+            foreach (Security sec in Funds)
+            {
+                if (sec.GetName() == name && sec.GetCompany() == company)
+                {
+                    data = sec.GetDataForDisplay();
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -60,11 +85,16 @@ namespace FinancePortfolioDatabase
 
         public bool TryAddSecurityFromName(string name, string company)
         {
-            if (DoesSecurityExistFromName(name, company))
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(company))
             {
                 return false;
             }
 
+            if (DoesSecurityExistFromName(name, company))
+            {
+                return false;
+            }
+            
             var NewFund = new Security(name, company);
             Funds.Add(NewFund);
             return true;
@@ -83,7 +113,21 @@ namespace FinancePortfolioDatabase
 
             return false;
         }
-        
+
+        public bool TryAddDataToSecurity(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        {
+            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            {
+                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                {
+                    // now edit data
+                    return Funds[fundIndex].TryAddData(date, unitPrice, shares, Investment);
+                }
+            }
+
+            return false;
+        }
+
         public bool TryEditSecurity(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
@@ -106,6 +150,20 @@ namespace FinancePortfolioDatabase
                 {
                     // now edit data
                     return Funds[fundIndex].TryEditNameCompany(newName, newCompany);
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryRemoveSecurityData(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        {
+            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            {
+                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                {
+                    // now edit data
+                    return Funds[fundIndex].TryDeleteData( date, shares,  unitPrice, Investment);
                 }
             }
 

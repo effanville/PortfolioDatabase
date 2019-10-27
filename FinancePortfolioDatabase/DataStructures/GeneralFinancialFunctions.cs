@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FinanceStructures;
 
-namespace FinancePortfolioDatabase
+namespace FinanceFunctionsList
 {
     public static class FinancialFunctions
     {

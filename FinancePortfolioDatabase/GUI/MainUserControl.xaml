@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="FinanceWindows.MainUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FinanceWindows"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="Horizontal">
+
+        <local:OptionsPanel DataContext="{Binding OptionsPanelCommands}"/>
+
+        <StackPanel Visibility="{Binding DataWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:BasicDataView DataContext="{Binding DataView}"/>
+        </StackPanel>
+
+        <StackPanel Visibility="{Binding SecurityEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"/>
+        </StackPanel>
+
+        <StackPanel Visibility="{Binding BankAccEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"/>
+        </StackPanel>
+
+        <StackPanel Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

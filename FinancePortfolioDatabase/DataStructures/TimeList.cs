@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     /// <summary>
     /// Sorted list of values, with last value the most recent, and first the oldest.
@@ -13,6 +11,15 @@ namespace FinancePortfolioDatabase
     {
         private List<DailyValuation> fValues;
 
+        /// <summary>
+        /// For serialisation only
+        /// </summary>
+        public List<DailyValuation> Values
+        {
+            get { return fValues; }
+            set { fValues = value; }
+        }
+
         public TimeList(List<DailyValuation> values)
         {
             fValues = values;
@@ -20,12 +27,13 @@ namespace FinancePortfolioDatabase
 
         public TimeList()
         {
+            fValues = new List<DailyValuation>();
         }
 
         /// <summary>
         /// Adds value to the data.
         /// </summary>
-        public void AddData(DateTime date, double value)
+        private void AddData(DateTime date, double value)
         {
             var valuation = new DailyValuation(date, value);
             fValues.Add(valuation);
@@ -68,11 +76,9 @@ namespace FinancePortfolioDatabase
                 }
             }
 
-            var valuation = new DailyValuation(date, value);
-            fValues.Add(valuation);
-            Sort();
+            AddData(date, value);
 
-            return false;
+            return true;
         }
 
         public bool TryEditData(DateTime date, double value)
@@ -82,6 +88,37 @@ namespace FinancePortfolioDatabase
                 if (fValues[i].Day == date)
                 {
                     fValues[i].Value = value;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal void TryEditDataOtherwiseAdd(DateTime date, double value)
+        {
+            for (int i = 0; i < fValues.Count; i++)
+            {
+                if (fValues[i].Day == date)
+                {
+                    fValues[i].Value = value;
+                }
+            }
+
+            AddData(date, value);
+        }
+
+        /// <summary>
+        /// Deletes data if exists. If deletes, returns true.
+        /// </summary>
+        public bool TryDeleteValue(DateTime date)
+        {
+            for (int i = 0; i < fValues.Count; i++)
+            {
+                if (fValues[i].Day == date)
+                {
+
+                    fValues.RemoveAt(i);
                     return true;
                 }
             }
@@ -107,9 +144,6 @@ namespace FinancePortfolioDatabase
             return false;
         }
 
-        /// <summary>
-        /// returns nearest valuation in the timelist to the date provided.
-        /// </summary>
         public DailyValuation GetNearestEarlierValue(DateTime date)
         {
             // empty so return null
@@ -144,6 +178,50 @@ namespace FinancePortfolioDatabase
 
             // something has gone wrong.
             return null;
+        }
+
+        /// <summary>
+        /// returns nearest valuation in the timelist to the date provided.
+        /// </summary>
+        public bool  TryGetNearestEarlierValue(DateTime date, out DailyValuation value)
+        {
+            // empty so return null
+            if (Count() == 0)
+            {
+                value = null;
+                return false;
+            }
+            if (Count() == 1)
+            {
+                value = fValues[0];
+                return true;
+            }
+
+            if (date > GetLatestDate())
+            {
+                value = GetLatestValuation();
+                return true;
+            }
+
+            if (date < GetLatestDate())
+            {
+                value = GetFirstValuation();
+                return true;
+            }
+
+            // list sorted with earliest at start. First occurence greater than value means 
+            // the first value later.
+            for (int i = 0; i < Count(); i++)
+            {
+                if (date < fValues[i].Day)
+                {
+                    value = fValues[i - 1];
+                    return true;
+                }
+            }
+            value = null;
+            // something has gone wrong.
+            return false;
         }
 
         /// <summary>

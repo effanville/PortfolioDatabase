@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GUIFinanceStructures;
 
-namespace FinancePortfolioDatabase
+namespace FinanceStructures
 {
     public partial class Security
     {
-        public bool IsEqualTo(Security otherSecurity)
+        internal bool IsEqualTo(Security otherSecurity)
         {
             if (otherSecurity.GetName() != fName)
             {
@@ -22,7 +20,7 @@ namespace FinancePortfolioDatabase
             return true;
         }
 
-        public Security Copy()
+        internal Security Copy()
         {
             return new Security(fName, fCompany, fShares, fUnitPrice, fInvestments);
         }
@@ -30,7 +28,7 @@ namespace FinancePortfolioDatabase
         /// <summary>
         /// returns the name of the security.
         /// </summary>
-        public string GetName()
+        internal string GetName()
         {
             return fName;
         }
@@ -38,15 +36,30 @@ namespace FinancePortfolioDatabase
         /// <summary>
         /// returns the company field of the security
         /// </summary>
-        public string GetCompany()
+        internal string GetCompany()
         {
             return fCompany;
+        }
+
+        internal List<BasicDayDataView> GetDataForDisplay()
+        {
+            var output = new List<BasicDayDataView>();
+            foreach (var datevalue in fUnitPrice.Values)
+            {
+                fUnitPrice.TryGetValue(datevalue.Day, out double UnitPrice);
+                fShares.TryGetValue(datevalue.Day, out double shares);
+                fInvestments.TryGetValue(datevalue.Day, out double invest);
+                var thisday = new BasicDayDataView(datevalue.Day, UnitPrice, shares, invest);
+                output.Add(thisday);
+            }
+
+            return output;
         }
 
         /// <summary>
         /// Checks if SharePrice data for the date specified exists. if so outputs index value
         /// </summary>
-        public bool DoesDateSharesDataExist(DateTime date, out int index)
+        internal bool DoesDateSharesDataExist(DateTime date, out int index)
         {
             return fShares.ValueExists(date, out index);
         }
@@ -54,7 +67,7 @@ namespace FinancePortfolioDatabase
         /// <summary>
         /// Checks if UnitPrice data for the date specified exists. if so outputs index value
         /// </summary>
-        public bool DoesDateUnitPriceDataExist(DateTime date, out int index)
+        internal bool DoesDateUnitPriceDataExist(DateTime date, out int index)
         {
             return fUnitPrice.ValueExists(date, out index);
         }
@@ -62,66 +75,88 @@ namespace FinancePortfolioDatabase
         /// <summary>
         /// Checks if UnitPrice data for the date specified exists. if so outputs index value
         /// </summary>
-        public bool DoesDateInvestmentDataExist(DateTime date, out int index)
+        internal bool DoesDateInvestmentDataExist(DateTime date, out int index)
         {
             return fInvestments.ValueExists(date, out index);
         }
 
         /// <summary>
-        /// Attempts to add data for the date specified
+        /// Attempts to add data for the date specified.
+        /// If cannot add any value that one wants to, then doesn't add all the values chosen.
         /// </summary>
-        public bool TryAddData(DateTime date, double shares, double unitPrice = 0)
+        internal bool TryAddData(DateTime date, double unitPrice, double shares = 0, double investment = 0)
         {
-            return true;
+            // here we don't care about investments
+            if (investment == 0)
+            {
+                if (DoesDateSharesDataExist(date, out int index)  || DoesDateUnitPriceDataExist(date, out int index2))
+                {
+                    return false;
+                }
+
+                return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice);
+            }
+
+            // here we dont care about shares or investments
+            if (shares == 0)
+            {
+                if (DoesDateUnitPriceDataExist(date, out int index3))
+                {
+                    return false;
+                }
+
+                return fUnitPrice.TryAddValue(date, unitPrice) ;
+            }
+
+            if (DoesDateSharesDataExist(date, out int index4) || DoesDateInvestmentDataExist(date, out int index5) || DoesDateUnitPriceDataExist(date, out int index6))
+            {
+                return false;
+            }
+
+            return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice) & fInvestments.TryAddValue(date, investment);
         }
 
-        public bool TryAddInvestment(DateTime date, double value)
+        internal bool TryAddInvestment(DateTime date, double value)
         {
+            if (!DoesDateInvestmentDataExist(date, out int index2))
+            { }
             return true;
         }
 
         /// <summary>
-        /// Try to edit data. If any dont have the relevant values, then do not edit
+        /// Try to edit data. If any dont have any relevant values, then do not edit
+        /// If do have relevant values, then edit that value
+        /// If value doesnt exist, then add
         /// </summary>
-        /// <param name="date"></param>
-        /// <param name="shares"></param>
-        /// <param name="unitPrice"></param>
-        /// <param name="Investment"></param>
-        /// <returns></returns>
-        public bool TryEditData(DateTime date, double shares, double unitPrice, double Investment = 0)
+        internal bool TryEditData(DateTime date, double shares, double unitPrice, double Investment = 0)
         {
-            if (!DoesDateSharesDataExist(date, out int index) || !DoesDateInvestmentDataExist(date, out int index2))
+            bool editShares = false;
+            bool editUnitPrice = false;
+            if (DoesDateSharesDataExist(date, out int index))
             {
-                if (Investment == 0)
-                {
-                    return false;
-                }
-
-                if (!DoesDateUnitPriceDataExist(date, out int index3))
-                {
-                    return false;
-                }
+                editShares = fShares.TryEditData(date, shares);
             }
 
-            if (Investment != 0)
+            if (DoesDateUnitPriceDataExist(date, out int index3))
             {
-                return fShares.TryEditData(date, shares) && fUnitPrice.TryEditData(date, unitPrice) && fInvestments.TryEditData(date, Investment);
+                editUnitPrice = fUnitPrice.TryEditData(date, unitPrice);
             }
-
-            return fShares.TryEditData(date, shares) && fUnitPrice.TryEditData(date, unitPrice);
+            
+            fInvestments.TryEditDataOtherwiseAdd(date, Investment);
+            return editShares & editUnitPrice;
         }
 
-        public bool TryEditSharesData(DateTime date, double shares)
+        internal bool TryEditSharesData(DateTime date, double shares)
         {
             return fShares.TryEditData(date, shares);
         }
 
-        public bool TryEditUnitPriceData(DateTime date, double investment)
+        internal bool TryEditUnitPriceData(DateTime date, double investment)
         {
             return fUnitPrice.TryEditData(date, investment);
         }
 
-        public bool TryEditInvestmentData(DateTime date, double unitPrice)
+        internal bool TryEditInvestmentData(DateTime date, double unitPrice)
         {
             return fInvestments.TryEditData(date, unitPrice);
         }
@@ -129,7 +164,7 @@ namespace FinancePortfolioDatabase
         /// <summary>
         /// Edits name and company data of security.
         /// </summary>
-        public bool TryEditNameCompany(string name, string company)
+        internal bool TryEditNameCompany(string name, string company)
         {
             if (name != fName)
             {
@@ -146,7 +181,7 @@ namespace FinancePortfolioDatabase
         /// <summary>
         /// returns data at index i.
         /// </summary>
-        public bool TryGetData(int i, out DateTime date, out double price, out double units, out double investment)
+        internal bool TryGetData(int i, out DateTime date, out double price, out double units, out double investment)
         {
             // note using i here is really ambiguous as have many vectors of datetime.
             date = new DateTime();
@@ -159,20 +194,52 @@ namespace FinancePortfolioDatabase
                 return false;
             }
 
-
             return true;
         }
 
         /// <summary>
         /// Trys to get data on specific date. Only returns true if all data present.
         /// </summary>
-        public bool TryGetData(DateTime date, out double price, out double units, out double investment)
+        internal bool TryGetData(DateTime date, out double price, out double units, out double investment)
         {
             price = 0;
             units = 0;
             investment = 0;
 
-            return fUnitPrice.TryGetValue(date, out price) && fShares.TryGetValue(date, out units) && fInvestments.TryGetValue(date, out investment);
+            return fUnitPrice.TryGetValue(date, out price) & fShares.TryGetValue(date, out units) & fInvestments.TryGetValue(date, out investment);
+        }
+
+        /// <summary>
+        /// Trys to get latest data earlier than date requested. Only returns true if all data present.
+        /// </summary>
+        internal bool TryGetEarlierData(DateTime date, out DailyValuation price, out DailyValuation units, out DailyValuation investment)
+        {
+            price = null;
+            units = null;
+            investment = null;
+
+            return fUnitPrice.TryGetNearestEarlierValue(date, out price) & fShares.TryGetNearestEarlierValue(date, out units) & fInvestments.TryGetNearestEarlierValue(date, out investment);
+        }
+
+        internal bool TryDeleteData(DateTime date, double shares, double unitPrice, double Investment = 0)
+        {
+            bool units = false;
+            bool invs = false;
+            bool sharetrue = false;
+            if (shares > 0  )
+            {
+                sharetrue = fShares.TryDeleteValue(date);
+            }
+            if (unitPrice > 0)
+            {
+                units = fUnitPrice.TryDeleteValue(date);
+            }
+            if (Investment > 0)
+            {
+                invs= fInvestments.TryDeleteValue(date); 
+            }
+
+            return units & invs & sharetrue;
         }
     }
 }

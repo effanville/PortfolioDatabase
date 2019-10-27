@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FinancePortfolioDatabase
+﻿
+namespace FinanceStructures
 {
-    public class Sector
+    public partial class Sector
     {
         private string fName;
         private TimeList fValues;
