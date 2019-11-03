@@ -1,47 +1,67 @@
-﻿
+﻿using DataStructures;
+using System;
+
 namespace FinanceStructures
 {
+    /// <summary>
+    /// Contains data to model a cash account.
+    /// </summary>
+    /// <remarks>
+    /// Currently only suitable for a bank account.
+    /// Eventually will also work for cash isa etc.
+    /// </remarks>
+    /// <!--The name and company are used to uniquely specify this.-->
     public partial class CashAccount
     {
+        /// <summary>
+        /// The name associated to the account
+        /// </summary>
         private string fName;
 
-        /// <summary>
-        /// For Serialisation only
-        /// </summary>
+        [Obsolete("This should only be used for serialisation.", false)]
         public string Name
         {
             get { return fName; }
             set { fName = value; }
         }
 
-        private string fCompany;
         /// <summary>
-        /// For Serialisation only
+        /// The company name associated to the account.
         /// </summary>
+        private string fCompany;
+
+        [Obsolete("This should only be used for serialisation.", false)]
         public string Company
         {
             get { return fCompany; }
             set { fCompany = value; }
         }
 
+        /// <summary>
+        /// The time indexed data for the Cash Account.
+        /// </summary>
         private TimeList fAmounts;
 
-        /// <summary>
-        /// Here for serialisation and viewing in GUI
-        /// </summary>
+        [Obsolete("This should only be used for serialisation.", false)]
         public TimeList Amounts
         {
             get { return fAmounts; }
             set { fAmounts = value; }
         }
 
-        public CashAccount(string name, string company)
+        /// <summary>
+        /// Default constructor where no data is known.
+        /// </summary>
+        internal CashAccount(string name, string company)
         {
             fName =name;
             fCompany =company;
             fAmounts = new TimeList();
         }
 
+        /// <summary>
+        /// Constructor used when data is known.
+        /// </summary>
         private CashAccount(string name, string company, TimeList amounts)
         {
             fName = name;
@@ -55,6 +75,14 @@ namespace FinanceStructures
         private CashAccount()
         {
             fAmounts = new TimeList();
+        }
+
+        /// <summary>
+        /// Checks whether a non null non zero length data list.
+        /// </summary>
+        public bool Any()
+        {
+            return fAmounts != null || fAmounts.Any();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using GlobalHeldData;
 using FinanceWindows;
-using GuiSupport;
+using GUISupport;
 
 namespace FinanceWindowsViewModels
 {
@@ -49,7 +49,7 @@ namespace FinanceWindowsViewModels
                 }
             }
 
-            DatabaseAccessorHelper.SavePortfolio();
+            DatabaseAccessor.SavePortfolio();
         }
 
         Action<bool> UpdateMainWindow;

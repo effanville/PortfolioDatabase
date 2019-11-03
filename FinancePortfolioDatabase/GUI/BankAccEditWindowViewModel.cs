@@ -1,5 +1,5 @@
 ﻿using System;
-using GuiSupport;
+using GUISupport;
 using FinanceStructures;
 using GUIFinanceStructures;
 using BankAccountHelperFunctions;
@@ -107,7 +107,7 @@ namespace FinanceWindowsViewModels
 
         private void UpdateAccountListBox()
         {
-            AccountNames = DatabaseAccessorHelper.GetBankAccountNamesAndCompanies();
+            AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
             selectedName = null;
             selectedNameEdit = null;
             selectedCompanyEdit = null;
@@ -119,12 +119,12 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                DatabaseAccessorHelper.GetPortfolio().TryGetBankAccount(fSelectedName.Name, fSelectedName.Company, out CashAccount wanted);
+                DatabaseAccessor.GetPortfolio().TryGetBankAccount(fSelectedName.Name, fSelectedName.Company, out CashAccount wanted);
                 selectedAccount = wanted;
                 selectedCompanyEdit = fSelectedName.Company;
                 selectedNameEdit = fSelectedName.Name;
 
-                if (BankAccountEditHelper.TryGetBankAccountData(fSelectedName.Name, fSelectedName.Company, out List<AccountDayDataView> values))
+                if (BankAccountEditor.TryGetBankAccountData(fSelectedName.Name, fSelectedName.Company, out List<AccountDayDataView> values))
                 {
                     SelectedAccountData = values;
                 }
@@ -175,7 +175,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteAddSecurity(Object obj)
         {
-            BankAccountEditHelper.TryAddBankAccount(selectedNameEdit, selectedCompanyEdit);
+            BankAccountEditor.TryAddBankAccount(selectedNameEdit, selectedCompanyEdit);
             UpdateAccountListBox();
             ClearSelection();
 
@@ -187,7 +187,7 @@ namespace FinanceWindowsViewModels
             {
                 if (DateTime.TryParse(DateEdit, out DateTime date) && Double.TryParse(AmountsEdit, out double shares))
                 {
-                    BankAccountEditHelper.TryAddDataToBankAccount(fSelectedName.Name, fSelectedName.Company, date, shares);
+                    BankAccountEditor.TryAddDataToBankAccount(fSelectedName.Name, fSelectedName.Company, date, shares);
                     UpdateAccountListBox();
 
                     ClearSelection();
@@ -199,7 +199,7 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                BankAccountEditHelper.TryEditBankAccountName(fSelectedName.Name, fSelectedName.Company, selectedNameEdit, selectedCompanyEdit);
+                BankAccountEditor.TryEditBankAccountName(fSelectedName.Name, fSelectedName.Company, selectedNameEdit, selectedCompanyEdit);
                 UpdateAccountListBox();
 
                 ClearSelection();
@@ -212,7 +212,7 @@ namespace FinanceWindowsViewModels
             {
                 if (DateTime.TryParse(DateEdit, out DateTime date) && Double.TryParse(AmountsEdit, out double shares))
                 {
-                    BankAccountEditHelper.TryEditBankAccount(fSelectedName.Name, fSelectedName.Company, date, shares);
+                    BankAccountEditor.TryEditBankAccount(fSelectedName.Name, fSelectedName.Company, date, shares);
                     UpdateAccountListBox();
 
                     ClearSelection();
@@ -222,7 +222,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteDeleteSecurity(Object obj)
         {
-            BankAccountEditHelper.TryDeleteBankAccount(selectedNameEdit, selectedCompanyEdit);
+            BankAccountEditor.TryDeleteBankAccount(selectedNameEdit, selectedCompanyEdit);
             UpdateAccountListBox();
         }
 
@@ -230,7 +230,7 @@ namespace FinanceWindowsViewModels
         {
             if (selectedName != null)
             {
-                BankAccountEditHelper.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date);
+                BankAccountEditor.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date);
             }
             UpdateSelectedSecurityListBox();
         }

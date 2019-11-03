@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FinanceStructures;
+using DataStructures;
 
 namespace FinanceFunctionsList
 {
+    /// <summary>
+    /// Default financial based functions.
+    /// </summary>
     public static class FinancialFunctions
     {
         /// <summary>
@@ -12,30 +15,46 @@ namespace FinanceFunctionsList
         /// </summary>
         public static double CAR(DateTime first, double firstValue, DateTime last, double lastValue)
         {
+            if (firstValue == 0 || (last - first).Days == 0)
+            {
+                return double.NaN;
+            }
+
             return Math.Pow(lastValue / firstValue, 365.0 / (last - first).Days);
         }
 
         /// <summary>
-        /// Returns the compound annual rate from the firstValue to the lastValue in the time last-first
+        /// Returns the compound annual rate from the <paramref name="firstValue"/> to the <paramref name="lastValue"/> in the time last-first
         /// </summary>
-        public static double CAR(DailyValuation firstValue, DailyValuation secondValue)
+        public static double CAR(DailyValuation firstValue, DailyValuation lastValue)
         {
-            return CAR(firstValue.Day, firstValue.Value, secondValue.Day, secondValue.Value);
+            if (firstValue == null || lastValue == null)
+            {
+                return double.NaN;
+            }
+
+            return CAR(firstValue.Day, firstValue.Value, lastValue.Day, lastValue.Value);
         }
 
+        /// <summary>
+        /// Function evaluation for the IRR method below. 
+        /// This evaluates
+        /// f(x) = <paramref name="latest.Value"/> -sum(<paramref name="investments"/>[i].Value x (1+<paramref name="expectedReturnRate"/>)^{<paramref name="latest.Date"/>-investments[i].Date})
+        /// </summary>
         private static double Evaluator(List<DailyValuation> investments, DailyValuation latest, double expectedReturnRate)
         {
             double sum = 0;
             for (int i = 0; i < investments.Count(); ++i)
             {
-                sum += investments[i].Value * Math.Pow((1 + expectedReturnRate), (latest.Day - investments[i].Day).Days);
+                double modifier = Math.Pow(1.0 + expectedReturnRate, (latest.Day - investments[i].Day).Days / 365.0);
+                sum += investments[i].Value * modifier;
             }
+
             return latest.Value - sum;
         }
 
         /// <summary>
-        /// Returns the internal rate of return of a collection of investments, having achieve a certain value
-        /// Is a bisection method.
+        /// Returns the internal rate of return of the collection of <paramref name="investments"/>, having achieved the value <paramref name="latestValue"/>, via the bisection method.
         /// </summary>
         public static double IRR(List<DailyValuation> investments, DailyValuation latestValue)
         {
@@ -52,33 +71,29 @@ namespace FinanceFunctionsList
                 return double.NaN;
             }
 
-            double middleValue = (lowestValue + highestValue) / 2.0;
-            double funcMiddle = Evaluator(investments, latestValue, middleValue);
-
             int iterationNumber = 0;
-            // stop after certain number of iterations (this also guarantees a certain error)
-            while (iterationNumber < 20)
+            // stop after certain number of iterations (this here guarantees an error of 3x2^{-10}).
+            while (iterationNumber < 10)
             {
+                double middleValue = (lowestValue + highestValue) / 2.0;
                 funcLow = Evaluator(investments, latestValue, lowestValue);
                 funcHigh = Evaluator(investments, latestValue, highestValue);
-                funcMiddle = Evaluator(investments, latestValue, middleValue);
+                double funcMiddle = Evaluator(investments, latestValue, middleValue);
 
                 if ((funcLow < 0 && funcMiddle < 0) || (funcLow > 0 && funcMiddle > 0))
                 {
                     lowestValue = middleValue;
-                    middleValue = (lowestValue + highestValue) / 2.0;
                 }
 
                 if ((funcHigh < 0 && funcMiddle < 0) || (funcHigh > 0 && funcMiddle > 0))
                 {
                     highestValue = middleValue;
-                    middleValue = (lowestValue + highestValue) / 2.0;
                 }
 
                 iterationNumber++;
             }
 
-            return middleValue;
+            return (lowestValue + highestValue) / 2.0;
         }
 
         /// <summary>
@@ -86,12 +101,20 @@ namespace FinanceFunctionsList
         /// </summary>
         public static double IRRTime(List<DailyValuation> investments, DailyValuation latestValue, DailyValuation startValue)
         {
+            if (latestValue == null || startValue == null || investments == null)
+            {
+                return double.NaN;
+            }
             // reduce number of investments to recent only
             var recentInvestments = new List<DailyValuation>();
             recentInvestments.Add(startValue);
 
             foreach (DailyValuation value in investments)
             {
+                if (value == null)
+                {
+                    return double.NaN;
+                }
                 if (value.Day > startValue.Day)
                 {
                     recentInvestments.Add(value);

@@ -57,13 +57,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GlobalEditors\SectorEditHelper.cs" />
+    <Compile Include="BankAccounts\CashAccount.Rates.cs" />
+    <Compile Include="GlobalEditors\AllData.cs" />
+    <Compile Include="GlobalEditors\SectorEditor.cs" />
+    <Compile Include="GlobalEditors\BankAccountStatsHelper.cs" />
     <Compile Include="GUI\BankAccEditWindow.xaml.cs">
       <DependentUpon>BankAccEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\BankAccEditWindowViewModel.cs" />
     <Compile Include="GUI\BasicDataViewModel.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
+    <Compile Include="GUI\HelpWindow.xaml.cs">
+      <DependentUpon>HelpWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\MainUserControl.xaml.cs">
       <DependentUpon>MainUserControl.xaml</DependentUpon>
     </Compile>
@@ -78,6 +84,9 @@
       <DependentUpon>BasicDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\GuiSupport\RelayCommand.cs" />
+    <Compile Include="GUI\GuiSupport\DefaultButton.xaml.cs">
+      <DependentUpon>DefaultButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SectorEditWindow.xaml.cs">
       <DependentUpon>SectorEditWindow.xaml</DependentUpon>
     </Compile>
@@ -103,6 +112,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GUI\GuiSupport\Colours.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\HelpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\MainUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -122,12 +139,15 @@
     <Compile Include="GlobalEditors\BankAccountHelperFunctions.cs" />
     <Compile Include="GlobalEditors\SecurityCompanyStatsHelper.cs" />
     <Compile Include="GlobalEditors\SecurityStatsHelper.cs" />
-    <Compile Include="GlobalEditors\SecurityEditHelper.cs" />
+    <Compile Include="GlobalEditors\SecurityEditor.cs" />
     <Compile Include="DataStructures\DailyValuation.cs" />
-    <Compile Include="Portfolio\GUIDataStructs.cs" />
+    <Compile Include="GUI\GuiSupport\GUIDataStructs.cs" />
+    <Compile Include="Portfolio\Portfolio.StatisticsPageCreator.cs" />
+    <Compile Include="Portfolio\PortfolioBankAccountCompany.cs" />
     <Compile Include="Portfolio\PortfolioSecurityCompany.cs" />
     <Compile Include="Portfolio\PortfolioSecurityRates.cs" />
     <Compile Include="Portfolio\PortfolioBankAccAccessors.cs" />
+    <Compile Include="Portfolio\PortfolioValues.cs" />
     <Compile Include="Sector\Sector.cs" />
     <Compile Include="Portfolio\PortfolioSecurityAccessors.cs" />
     <Compile Include="GlobalEditors\GlobalData.cs" />
@@ -135,7 +155,7 @@
     <Compile Include="Security\Security.Rates.cs" />
     <Compile Include="Security\SecurityEditFns.cs" />
     <Compile Include="DataStructures\TimeList.cs" />
-    <Compile Include="GlobalEditors\DatabaseAccessorHelper.cs" />
+    <Compile Include="GlobalEditors\DatabaseAccessor.cs" />
     <Compile Include="Portfolio\Portfolio.cs" />
     <Compile Include="Security\Security.cs" />
     <Compile Include="GUI\MainWindow.xaml.cs">
@@ -143,6 +163,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="GUI\BasicDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\GuiSupport\DefaultButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,6 +221,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Themes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

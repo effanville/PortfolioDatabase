@@ -29,6 +29,10 @@
         <StackPanel Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
             <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
         </StackPanel>
+
+        <StackPanel Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
+        </StackPanel>
     </StackPanel>
 
 </UserControl>

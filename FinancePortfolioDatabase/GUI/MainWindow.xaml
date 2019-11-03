@@ -4,21 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanceWindows"
+        xmlns:Styles="clr-namespace:GUISupport"
         mc:Ignorable="d"
         Title="Database"
         Height="450" 
         MinHeight="450"
         Width="800"
         MinWidth="500"
-        Background="Beige">
+        Background="LightPink">
     <StackPanel>
 
-        <Border  Background="Pink"
+        <Border Background="#F98866"
                 Height="45">
-            <TextBlock FontSize="14"
-                       Margin="12 12 12 12">
-                Select the option on the left hand side 
-            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="14"
+                           Margin="12 12 12 12"
+                           Text="Select the option on the left hand side "/>
+                <Styles:DefaultButton HorizontalAlignment="Right"
+                                      Margin="12 12 12 12"
+                                      Content="Open Help Docs" 
+                                      Click="OpenHelpDocsCommand" 
+                                      ClickMode="Press"/>
+            </StackPanel>
         </Border>
 
         <local:MainUserControl/>

@@ -4,13 +4,14 @@ using System.Xml.Serialization;
 using GlobalHeldData;
 using FinanceStructures;
 using GUIFinanceStructures;
+using SavingDummyClasses;
 
 namespace GUIAccessorFunctions
 {
     /// <summary>
     /// Class holding functions for User Interfaces to edit the global database.
     /// </summary>
-    public static class DatabaseAccessorHelper
+    public static class DatabaseAccessor
     {
         /// <summary>
         /// Returns a copy of the currently held portfolio. 
@@ -19,8 +20,18 @@ namespace GUIAccessorFunctions
         public static Portfolio GetPortfolio()
         {
             var PortfoCopy = new Portfolio();
+            // the following assigns the pointers as the same
+            // need to be more sophisticated to get a new copy
+            // implement a copy routine for Portfolio
             PortfoCopy = GlobalData.Finances;
             return PortfoCopy;
+        }
+
+        public static List<Sector> GetBenchMarks()
+        {
+            var output = new List<Sector>();
+            output = GlobalData.BenchMarks;
+            return output;
         }
         public static List<string> GetSecurityNames()
         {
@@ -33,9 +44,9 @@ namespace GUIAccessorFunctions
         public static List<string> GetSectorNames()
         {
             var outputs = new List<string>();
-            if (GlobalData.BenchMark != null)
+            if (GlobalData.BenchMarks != null)
             {
-                foreach (Sector thing in GlobalData.BenchMark)
+                foreach (Sector thing in GlobalData.BenchMarks)
                 {
                     outputs.Add(thing.GetName());
                 }
@@ -51,6 +62,15 @@ namespace GUIAccessorFunctions
             return new List<NameComp>();
         }
 
+        public static List<SecurityStatsHolder> GenerateSecurityStatistics()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GenerateSecurityStatistics();
+            }
+            return new List<SecurityStatsHolder>();
+        }
+
         public static List<string> GetBankAccountNames()
         {
             if (GlobalData.Finances != null)
@@ -58,6 +78,15 @@ namespace GUIAccessorFunctions
                 return GlobalData.Finances.GetBankAccountNames();
             }
             return new List<string>();
+        }
+
+        public static List<BankAccountStatsHolder> GenerateBankAccountStatistics()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GenerateBankAccountStatistics();
+            }
+            return new List<BankAccountStatsHolder>();
         }
 
         public static List<NameComp> GetBankAccountNamesAndCompanies()
@@ -73,20 +102,20 @@ namespace GUIAccessorFunctions
         {
             if (File.Exists(GlobalData.fDatabaseFilePath))
             {
-                var database = ReadFromXmlFile<Portfolio>(GlobalData.fDatabaseFilePath);
-                GlobalData.LoadDatabase(database);
+                var database = ReadFromXmlFile<AllData>(GlobalData.fDatabaseFilePath);
+                GlobalData.LoadDatabase(database.MyFunds, database.myBenchMarks);
                 return;
             }
 
-            GlobalData.LoadDatabase(null);
+            GlobalData.LoadDatabase(null, null);
         }
 
         public static void SavePortfolio()
         {
-            var ToSave = GetPortfolio();
+            var toSave = new AllData(GetPortfolio(), GetBenchMarks());
             if (GlobalData.fDatabaseFilePath != null)
             {
-                WriteToXmlFile<Portfolio>(GlobalData.fDatabaseFilePath, ToSave);
+                WriteToXmlFile(GlobalData.fDatabaseFilePath, toSave);
             }
         }
 

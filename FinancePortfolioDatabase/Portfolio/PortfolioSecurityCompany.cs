@@ -29,7 +29,7 @@ namespace FinanceStructures
                     securities.Add(sec);
                 }
             }
-
+            securities.Sort();
             return securities;
         }
 
@@ -43,7 +43,10 @@ namespace FinanceStructures
             double value = 0;
             foreach (var security in securities)
             {
-                value += security.GetNearestEarlierValuation(date).Value;
+                if (security.Any())
+                {
+                    value += security.GetNearestEarlierValuation(date).Value;
+                }
             }
 
             return value;

@@ -7,7 +7,7 @@ namespace SecurityStatisticsFunctions
     /// <summary>
     /// Helper class to get statistics for 
     /// </summary>
-    public static class SecurityStatisticsHelper
+    public static class SecurityStatistics
     {
         public static double SecurityLatestValue(string name, string company)
         {

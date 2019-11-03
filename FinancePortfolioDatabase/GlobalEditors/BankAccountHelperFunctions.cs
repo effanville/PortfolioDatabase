@@ -9,7 +9,7 @@ namespace BankAccountHelperFunctions
     /// <summary>
     /// Helper class to edit the bank accounts held in the global database.
     /// </summary>
-    public static class BankAccountEditHelper
+    public static class BankAccountEditor
     {
         /// <summary>
         /// Tries to add a CashAccount to the underlying global database

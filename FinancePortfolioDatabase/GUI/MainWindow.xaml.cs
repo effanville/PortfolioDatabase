@@ -11,5 +11,11 @@ namespace FinanceWindows
         {
             InitializeComponent();
         }
+
+        private void OpenHelpDocsCommand(object sender, RoutedEventArgs e)
+        {
+            var helpwindow = new HelpWindow();
+            helpwindow.Show();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FinanceFunctionsList;
+using DataStructures;
 
 namespace FinanceStructures
 {
@@ -12,7 +13,7 @@ namespace FinanceStructures
         internal DailyValuation LatestValue()
         {
             DateTime latestDate = fUnitPrice.GetLatestDate();
-            double latestValue = fUnitPrice.GetLatestValue() * fUnitPrice.GetLatestValue();
+            double latestValue = fUnitPrice.GetLatestValue() * fShares.GetLatestValue();
 
             return new DailyValuation(latestDate, latestValue);
         }
@@ -23,7 +24,7 @@ namespace FinanceStructures
         internal DailyValuation FirstValue()
         {
             DateTime firstDate = fUnitPrice.GetFirstDate();
-            double latestValue = fUnitPrice.GetFirstValue() * fUnitPrice.GetFirstValue();
+            double latestValue = fUnitPrice.GetFirstValue() * fShares.GetFirstValue();
 
             return new DailyValuation(firstDate, latestValue);
         }
@@ -34,8 +35,12 @@ namespace FinanceStructures
         internal DailyValuation GetNearestEarlierValuation(DateTime date)
         {
             DailyValuation val = fUnitPrice.GetNearestEarlierValue(date);
-            double latestValue = fShares.GetNearestEarlierValue(date).Value * val.Value;
+            if (val == null)
+            {
+                return null;
+            }
 
+            double latestValue = fShares.GetNearestEarlierValue(date).Value * val.Value;
             return new DailyValuation(date, latestValue);
         }
 
@@ -73,7 +78,14 @@ namespace FinanceStructures
         /// </summary>
         internal double IRRTime(DateTime earlierDate, DateTime laterDate)
         {
-            return FinancialFunctions.IRRTime(GetInvestmentsBetween(earlierDate, laterDate), GetNearestEarlierValuation(laterDate), GetNearestEarlierValuation(earlierDate));
+            if (Any())
+            {
+                var invs = GetInvestmentsBetween(earlierDate, laterDate);
+                var latestTime = GetNearestEarlierValuation(laterDate);
+                var firstTime = GetNearestEarlierValuation(earlierDate);
+                return FinancialFunctions.IRRTime(invs, latestTime, firstTime);
+            }
+            return double.NaN;
         }
 
         /// <summary>

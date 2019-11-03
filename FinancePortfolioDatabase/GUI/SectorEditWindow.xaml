@@ -23,15 +23,15 @@
                         Background="Pink">
                     <Button Content="New Sector"
                         Margin="10 10 10 10 "
-                        Command="{Binding AddAccountCommand}"
+                        Command="{Binding AddSectorCommand}"
                         ToolTip="Create new Sector from Name and Company Data specified."/>
                     <Button Content="Edit Sector Name"
                         Margin="10 10 10 10 "
-                        Command="{Binding EditAccountNameCommand}"
+                        Command="{Binding EditSectorNameCommand}"
                         ToolTip="Edits the highlighted Sector name."/>
                     <Button Content="Delete Sector"
                         Margin="10 10 10 10 "
-                        Command="{Binding DeleteAccountCommand}"
+                        Command="{Binding DeleteSectorCommand}"
                         ToolTip="Delete the Sector highlighted"/>
                     <Button Content="Add Valuation"
                         Margin="10 10 10 10 "
@@ -39,11 +39,11 @@
                         ToolTip="Add a value to the Sector highlighted."/>
                     <Button Content="Edit Valuation"
                         Margin="10 10 10 10 "
-                        Command="{Binding EditAccountCommand}"
+                        Command="{Binding EditSectorCommand}"
                         ToolTip="Edit the Sector data highlighted."/>
                     <Button Content="Delete Valuation"
                         Margin="10 10 10 10 "
-                        Command="{Binding DeleteValuationCommand}"
+                        Command="{Binding DeleteDataCommand}"
                         ToolTip="Deletes the Sector data highlighted."/>
                     <Button Content="Close Sector Edit"
                         Margin="10 10 10 10 "
@@ -58,7 +58,7 @@
                     <StackPanel ToolTip="Lists all Sector currently in the database. Select one to edit data.">
                         <Label Content="Sector in Database"/>
                         <ListView Name="SecBox"
-                              ItemsSource="{Binding AccountNames, Mode=TwoWay}"
+                              ItemsSource="{Binding SectorNames, Mode=TwoWay}"
                               MinHeight="300"
                               Margin="10,10,10,10"
                               MinWidth="190"
@@ -67,11 +67,8 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="90" 
-                                                    Header="Company" 
-                                                    DisplayMemberBinding="{Binding Company}"/>
-                                    <GridViewColumn Width="90" 
                                                     Header="Name" 
-                                                    DisplayMemberBinding="{Binding Name}" />
+                                                    DisplayMemberBinding="{Binding}" />
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -115,37 +112,20 @@
                     BorderThickness="1" 
                     CornerRadius="8">
                     <StackPanel>
-                        <Label Content="Name and Company Data"/>
+                        <Label Content="NameData"/>
                         <StackPanel Orientation="Horizontal"
                                     Margin="5 5 5 5">
                             <StackPanel.ToolTip>
                                 <StackPanel>
-                                    <TextBlock Text="Either a) The name of the selected security."/>
-                                    <TextBlock Text="       b) User entered name for a new/edited security."/>
+                                    <TextBlock Text="Either a) The name of the selected sector."/>
+                                    <TextBlock Text="       b) User entered name for a new/edited sector."/>
                                 </StackPanel>
                             </StackPanel.ToolTip>
                             <Label Width="110"
-                                   Content="Security Name"/>
+                                   Content="Sector Name"/>
                             <TextBox Text="{Binding selectedNameEdit}"
                                      MinWidth="100"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5">
-                            <StackPanel.ToolTip>
-                                <StackPanel>
-                                    <TextBlock>Either a) The company of the selected security.</TextBlock>
-                                    <TextBlock>       b) User entered company for a new/edited security.</TextBlock>
-                                </StackPanel>
-                            </StackPanel.ToolTip>
-                            <Label Width="110">Security Company</Label>
-                            <TextBox Text="{Binding selectedCompanyEdit}"
-                            MinWidth="100"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-                <Border Height="350" VerticalAlignment="Top" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8">
-                    <StackPanel >
-
                         <Label>Valuation Data</Label>
                         <StackPanel Orientation="Horizontal"
                                 Margin="5 5 5 5"
@@ -158,11 +138,12 @@
                         <StackPanel Orientation="Horizontal"
                                 Margin="5 5 5 5"
                                 ToolTip="Value in account on day specified">
-                            <Label Width="120">Number of Shares</Label>
+                            <Label Width="120">Value</Label>
                             <TextBox 
-                             Text="{Binding AmountsEdit}"
+                             Text="{Binding ValuesEdit}"
                             MinWidth="100"/>
                         </StackPanel>
+
                     </StackPanel>
                 </Border>
             </StackPanel>

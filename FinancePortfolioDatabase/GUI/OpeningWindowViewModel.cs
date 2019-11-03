@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using GUIAccessorFunctions;
 using FinanceWindows;
-using GuiSupport;
+using GUISupport;
 
 namespace FinanceWindowsViewModels
 {
@@ -37,7 +37,7 @@ namespace FinanceWindowsViewModels
             if (File.Exists(fFilePath))
             {
                 GlobalData.fDatabaseFilePath = FilePath;
-                DatabaseAccessorHelper.LoadPortfolio();
+                DatabaseAccessor.LoadPortfolio();
                 var fMainWindow = new MainWindow();
                 fMainWindow.Show();
                 CloseWindowAction();
@@ -48,7 +48,7 @@ namespace FinanceWindowsViewModels
         public void ExecuteOpenNewFileWindow(Window window)
         {
                 GlobalData.fDatabaseFilePath = FilePath;
-            DatabaseAccessorHelper.LoadPortfolio();
+            DatabaseAccessor.LoadPortfolio();
                 var fMainWindow = new MainWindow();
                 fMainWindow.Show();
 

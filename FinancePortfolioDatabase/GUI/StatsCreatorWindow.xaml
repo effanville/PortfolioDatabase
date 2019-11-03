@@ -3,9 +3,86 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FinancePortfolioDatabase"
         mc:Ignorable="d"
             Height="450" 
-            Width="800">
+            Width="1200">
+    <Border BorderBrush="#FF000000" 
+            BorderThickness="1" 
+            CornerRadius="8"
+            Height="450">
+        <StackPanel>
+            <Border Background="Pink"
+                Height="45"
+                >
+                <TextBlock FontSize="14"
+                       Margin="12 12 12 12">Select How you want to create Statistics</TextBlock>
+            </Border>
+            <StackPanel Orientation="Horizontal" >
+                <StackPanel Width="130"
+                        Height="500"
+                        Background="Pink">
+                    <Button Content="Create CSV file Stats"
+                        Margin="10 10 10 10 "
+                        Command="{Binding CreateCSVStatsCommand}"/>
+                    <Button Content="Create HTML page of Stats"
+                            Margin="10 10 10 10 "
+                            Command="{Binding CreateHTMLCommand}"/>
+                    <Button Content="Close Stats Creator"
+                        Margin="10 10 10 10 "
+                        Command="{Binding CloseCommand}"/>
+                </StackPanel>
 
+                <StackPanel>
+                    <Label Content="Statistics of Securities in Database"/>
+                    <ListView Name="SecBox"
+                      ItemsSource="{Binding SecuritiesStats}"
+                      MinHeight="300"
+                      Margin="10,10,10,10"
+                      MinWidth="210"
+                      Width="500">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="100" 
+                                        Header="Company" 
+                                        DisplayMemberBinding="{Binding Company}"/>
+                                <GridViewColumn Width="100" 
+                                        Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Width="100" 
+                                        Header="Latest Value" 
+                                        DisplayMemberBinding="{Binding LatestVal}" />
+                                <GridViewColumn Width="100" 
+                                        Header="CAR total" 
+                                        DisplayMemberBinding="{Binding CARTotal}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+
+                <StackPanel ToolTip="Lists all securities currently in the database. Select one to edit data.">
+                    <Label Content="BankAccounts in Database"/>
+                    <ListView Name="BankAccBox"
+                      ItemsSource="{Binding BankAccountStats}"
+                      MinHeight="300"
+                      Margin="10,10,10,10"
+                      MinWidth="210"
+                      Width="500">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="100" 
+                                        Header="Company" 
+                                        DisplayMemberBinding="{Binding Company}"/>
+                                <GridViewColumn Width="100" 
+                                        Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Width="100" 
+                                        Header="Latest Value" 
+                                        DisplayMemberBinding="{Binding LatestVal}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Border>
 </StackPanel>
