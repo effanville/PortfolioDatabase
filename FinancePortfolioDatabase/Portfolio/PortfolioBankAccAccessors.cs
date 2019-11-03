@@ -6,6 +6,55 @@ namespace FinanceStructures
 {
     public partial class Portfolio
     {
+        public List<string> GetBankAccountNames()
+        {
+            var names = new List<string>();
+            foreach (var bankAcc in BankAccounts)
+            {
+                names.Add(bankAcc.GetName());
+            }
+
+            return names;
+        }
+
+        public List<BankAccountStatsHolder> GenerateBankAccountStatistics()
+        {
+            var names = new List<BankAccountStatsHolder>();
+            foreach (var bankAcc in BankAccounts)
+            {
+                names.Add(new BankAccountStatsHolder(bankAcc.GetName(), bankAcc.GetCompany()));
+            }
+
+            return names;
+        }
+
+        public List<string> GetBankAccountCompanyNames()
+        {
+            var companies = new List<string>();
+            foreach (var bankAcc in BankAccounts)
+            {
+                if (companies.IndexOf(bankAcc.GetCompany()) == -1)
+                {
+                    companies.Add(bankAcc.GetCompany());
+                }
+            }
+            companies.Sort();
+
+            return companies;
+        }
+
+        public List<NameComp> GetBankAccountNamesAndCompanies()
+        {
+            var namesAndCompanies = new List<NameComp>();
+
+            foreach (var bankAcc in BankAccounts)
+            {
+                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany()));
+            }
+
+            return namesAndCompanies;
+        }
+
         public bool DoesAccountExist(CashAccount Account)
         {
             foreach (CashAccount acc in BankAccounts)
@@ -137,7 +186,7 @@ namespace FinanceStructures
                 if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].TryEditNameCompany(newName, newCompany);
+                    return BankAccounts[AccountIndex].EditNameCompany(newName, newCompany);
                 }
             }
 

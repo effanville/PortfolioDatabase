@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FinanceFunctionsList;
+using DataStructures;
 
 namespace FinanceStructures
 {
@@ -13,7 +14,10 @@ namespace FinanceStructures
         {
             if (TryGetSecurity(name, company, out Security desired))
             {
-                return desired.CAR(earlierTime, laterTime);
+                if (desired.Any())
+                {
+                    return desired.CAR(earlierTime, laterTime);
+                }
             }
 
             return double.NaN;
@@ -26,7 +30,10 @@ namespace FinanceStructures
         {
             if (TryGetSecurity(name, company, out Security desired))
             {
-                return desired.IRR();
+                if (desired.Any())
+                {
+                    return desired.IRR();
+                }
             }
 
             return double.NaN;
@@ -39,7 +46,10 @@ namespace FinanceStructures
         {
             if (TryGetSecurity(name, company, out Security desired))
             {
-                return desired.IRRTime(earlierTime, laterTime);
+                if (desired.Any())
+                {
+                    return desired.IRRTime(earlierTime, laterTime);
+                }
             }
 
             return double.NaN;
@@ -61,9 +71,12 @@ namespace FinanceStructures
 
             foreach (var security in securities)
             {
-                earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                if (security.Any())
+                {
+                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
+                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
+                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                }
             }
 
             return FinancialFunctions.IRRTime(Investments,new DailyValuation( laterTime, laterValue), new DailyValuation( earlierTime, earlierValue));
@@ -84,9 +97,12 @@ namespace FinanceStructures
 
             foreach (var security in Funds)
             {
-                earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                if (security.Any())
+                {
+                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
+                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
+                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                }
             }
 
             return FinancialFunctions.IRRTime(Investments, new DailyValuation(laterTime, laterValue), new DailyValuation(earlierTime, earlierValue));

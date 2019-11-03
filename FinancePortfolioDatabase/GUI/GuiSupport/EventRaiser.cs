@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GuiSupport
+namespace GUISupport
 {
     public static class EventRaiser
     {

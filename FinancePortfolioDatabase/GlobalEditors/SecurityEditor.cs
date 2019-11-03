@@ -9,7 +9,7 @@ namespace SecurityHelperFunctions
     /// <summary>
     /// Helper class to edit the securities held in the global database.
     /// </summary>
-    public static class SecurityEditHelper
+    public static class SecurityEditor
     {
         /// <summary>
         /// Tries to add a security to the underlying global database

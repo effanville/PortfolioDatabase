@@ -6,6 +6,60 @@ namespace FinanceStructures
 {
     public partial class Portfolio
     {
+        public List<string> GetSecurityNames()
+        {
+            var names = new List<string>();
+            foreach (var security in Funds)
+            {
+                names.Add(security.GetName());
+            }
+
+            return names;
+        }
+
+        /// <summary>
+        /// Return alphabetically ordered list of all companies without repetition.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSecuritiesCompanyNames()
+        {
+            var companies = new List<string>();
+            foreach (var security in Funds)
+            {
+                if (companies.IndexOf(security.GetCompany()) == -1)
+                { 
+                    companies.Add(security.GetCompany()); 
+                }
+            }
+            companies.Sort();
+
+            return companies;
+        }
+
+        public List<NameComp> GetSecurityNamesAndCompanies()
+        {
+            var namesAndCompanies = new List<NameComp>();
+
+            foreach (var security in Funds)
+            {
+                namesAndCompanies.Add(new NameComp(security.GetName(), security.GetCompany()));
+            }
+
+            return namesAndCompanies;
+        }
+
+        public List<SecurityStatsHolder> GenerateSecurityStatistics()
+        {
+            var namesAndCompanies = new List<SecurityStatsHolder>();
+
+            foreach (var security in Funds)
+            {
+                namesAndCompanies.Add(new SecurityStatsHolder(security.GetName(), security.GetCompany()));
+            }
+
+            return namesAndCompanies;
+        }
+
         public bool DoesSecurityExist(Security fund)
         {
             foreach (Security sec in Funds)

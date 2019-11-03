@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GuiSupport
+namespace GUISupport
 {
     public class EventArgs<T> : EventArgs
     {

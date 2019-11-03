@@ -6,6 +6,7 @@ namespace GlobalHeldData
 {
     public static class GlobalData
     {
+        public static double versionNumber = 0.1;
         public static string fDatabaseFilePath;
 
         public static DateTime fToday = DateTime.Today;
@@ -20,23 +21,18 @@ namespace GlobalHeldData
 
         private static List<Sector> fBenchmarks;
 
-        public static List<Sector> BenchMark
+        public static List<Sector> BenchMarks
         {
             get { return fBenchmarks; }
-        }
 
-        private static List<Sector> fSectors;
-
-        public static List<Sector> Sectors
-        {
-            get { return fSectors; }
+            private set { fBenchmarks = value; }
         }
 
         /// <summary>
         ///  loads in data 
         ///  This should only every be called once in the loading routine.
         /// </summary>
-        public static void LoadDatabase(Portfolio database)
+        public static void LoadDatabase(Portfolio database, List<Sector> myBenchMarks)
         {
             if (database == null)
             {
@@ -45,6 +41,15 @@ namespace GlobalHeldData
             else
             {
                 Finances = database;
+            }
+
+            if (myBenchMarks == null)
+            {
+                BenchMarks = new List<Sector>();
+            }
+            else
+            {
+                BenchMarks = myBenchMarks;
             }
         }
     }

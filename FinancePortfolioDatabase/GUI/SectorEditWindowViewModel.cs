@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Input;
 using GUIAccessorFunctions;
 using SectorHelperFunctions;
-using GuiSupport;
+using GUISupport;
 using GUIFinanceStructures;
 
 namespace FinanceWindowsViewModels
 {
-    public class SectorEditWindowViewModel : INotifyPropertyChanged
+    public class SectorEditWindowViewModel : PropertyChangedBase
     {
         private List<string> fSectorNames;
         public List<string> SectorNames
@@ -36,12 +35,12 @@ namespace FinanceWindowsViewModels
             {
                 fSelectedName = value;
                 OnPropertyChanged();
-                UpdateSelectedSecurityListBox();
+                UpdateSelectedSectorListBox();
             }
         }
 
-        private List<BasicDayDataView> fSelectedSectorData;
-        public List<BasicDayDataView> SelectedSectorData
+        private List<AccountDayDataView> fSelectedSectorData;
+        public List<AccountDayDataView> SelectedSectorData
         {
             get
             {
@@ -79,20 +78,26 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddSectorCommand { get; }
 
+        public ICommand EditSectorNameCommand { get; }
+
         public ICommand AddValuationCommand { get; }
 
         public ICommand EditSectorCommand { get; }
 
         public ICommand DeleteSectorCommand { get; }
 
-        private void UpdateFundListBox()
+        public ICommand DeleteDataCommand { get; }
+
+        public ICommand CloseCommand { get; }
+
+        private void UpdateSectorListBox()
         {
-            SectorNames = DatabaseAccessorHelper.GetSectorNames();
+            SectorNames = DatabaseAccessor.GetSectorNames();
 
             ClearSelection();
         }
 
-        private void UpdateSelectedSecurityListBox()
+        private void UpdateSelectedSectorListBox()
         {
           
         }
@@ -107,20 +112,29 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteAddSector(Object obj)
         {
-            SectorEditHelper.TryAddSector(selectedNameEdit);
-            UpdateFundListBox();
+            SectorEditor.TryAddSector(selectedNameEdit);
+            UpdateSectorListBox();
             ClearSelection();
 
         }
 
+        private void ExecuteEditSectorNameCommand(Object obj)
+        {
+            if (fSelectedNameEdit != null)
+            {
+                SectorEditor.TryEditSectorName(selectedName, selectedNameEdit);
+            }
+           
+        }
+
         private void ExecuteAddValuationCommand(Object obj)
         {
-            if (fSelectedName != null)
+            if (selectedName != null)
             {
                 if (DateTime.TryParse(DateEdit, out DateTime date) &&  Double.TryParse(ValuesEdit, out double value))
                 {
-                    SectorEditHelper.TryAddDataToSector(fSelectedName, date, value);
-                    UpdateFundListBox();
+                    SectorEditor.TryAddDataToSector(selectedName, date, value);
+                    UpdateSectorListBox();
 
                     ClearSelection();
                 }
@@ -129,22 +143,41 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteEditSector(Object obj)
         {
-            if (fSelectedName != null)
+            if (selectedName != null)
             {
                 if (DateTime.TryParse(DateEdit, out DateTime date) && Double.TryParse(ValuesEdit, out double value))
                 {
-                    SectorEditHelper.TryEditSector(fSelectedName, date, value);
-                    UpdateFundListBox();
+                    SectorEditor.TryEditSector(selectedName, date, value);
+                    UpdateSectorListBox();
 
                     ClearSelection();
                 }
             }
         }
 
+        private void ExecuteDeleteSectorData(Object obj)
+        {
+            if (selectedName != null)
+            {
+                if (DateTime.TryParse(DateEdit, out DateTime date) && Double.TryParse(ValuesEdit, out double value))
+                {
+                    SectorEditor.TryDeleteSectorData(selectedName, date, value);
+                    UpdateSectorListBox();
+
+                    ClearSelection();
+                }
+            } 
+        }
+
         private void ExecuteDeleteSector(Object obj)
         {
-            SectorEditHelper.TryDeleteSector(selectedNameEdit);
-            UpdateFundListBox();
+            SectorEditor.TryDeleteSector(selectedName);
+            UpdateSectorListBox();
+        }
+
+        private void ExecuteCloseCommand(Object obj)
+        {
+            windowToView("dataview");
         }
 
         Action<bool> UpdateMainWindow;
@@ -155,25 +188,17 @@ namespace FinanceWindowsViewModels
             windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;
 
-            fSectorNames = new List<string>();
-            fSelectedSectorData = new List<BasicDayDataView>();
-            UpdateFundListBox();
+            SectorNames = new List<string>();
+            SelectedSectorData = new List<AccountDayDataView>();
+            UpdateSectorListBox();
             AddSectorCommand = new BasicCommand(ExecuteAddSector);
+            EditSectorNameCommand = new BasicCommand(ExecuteEditSectorNameCommand);
             AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
 
             EditSectorCommand = new BasicCommand(ExecuteEditSector);
-
+            DeleteDataCommand = new BasicCommand(ExecuteDeleteSectorData);
             DeleteSectorCommand = new BasicCommand(ExecuteDeleteSector);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged(string propertyName = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            CloseCommand = new BasicCommand(ExecuteCloseCommand);
         }
     }
 }

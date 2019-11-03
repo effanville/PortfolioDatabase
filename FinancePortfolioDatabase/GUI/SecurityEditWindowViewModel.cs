@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using SecurityHelperFunctions;
-using GuiSupport;
+using GUISupport;
 using FinanceStructures;
+using DataStructures;
 using GUIFinanceStructures;
 
 namespace FinanceWindowsViewModels
@@ -126,7 +127,7 @@ namespace FinanceWindowsViewModels
 
         private void UpdateFundListBox()
         {
-            FundNames = DatabaseAccessorHelper.GetSecurityNamesAndCompanies();
+            FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
 
             selectedName = null;
             selectedNameEdit = null;
@@ -141,12 +142,12 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                DatabaseAccessorHelper.GetPortfolio().TryGetSecurity(fSelectedName.Name, fSelectedName.Company, out Security wanted);
+                DatabaseAccessor.GetPortfolio().TryGetSecurity(fSelectedName.Name, fSelectedName.Company, out Security wanted);
                 selectedSecurity = wanted;
                 selectedCompanyEdit = fSelectedName.Company;
                 selectedNameEdit = fSelectedName.Name;
 
-                if (SecurityEditHelper.TryGetSecurityData(fSelectedName.Name, fSelectedName.Company, out List<BasicDayDataView> values))
+                if (SecurityEditor.TryGetSecurityData(fSelectedName.Name, fSelectedName.Company, out List<BasicDayDataView> values))
                 {
                     SelectedSecurityData = values;
                 }
@@ -203,7 +204,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteAddSecurity(Object obj)
         {
-            SecurityEditHelper.TryAddSecurity(selectedNameEdit, selectedCompanyEdit);
+            SecurityEditor.TryAddSecurity(selectedNameEdit, selectedCompanyEdit);
             UpdateFundListBox();
             ClearSelection();
 
@@ -230,7 +231,7 @@ namespace FinanceWindowsViewModels
                             investmentValue = shares * unitPrice; 
                         }
                     }
-                    SecurityEditHelper.TryAddDataToSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
+                    SecurityEditor.TryAddDataToSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
                     UpdateFundListBox();
                    
                     ClearSelection();
@@ -242,7 +243,7 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                SecurityEditHelper.TryEditSecurityName(fSelectedName.Name, fSelectedName.Company, selectedNameEdit, selectedCompanyEdit);
+                SecurityEditor.TryEditSecurityName(fSelectedName.Name, fSelectedName.Company, selectedNameEdit, selectedCompanyEdit);
                 UpdateFundListBox();
 
                 ClearSelection();
@@ -260,7 +261,7 @@ namespace FinanceWindowsViewModels
                     {
                         investmentValue = shares * unitPrice;
                     }
-                    SecurityEditHelper.TryEditSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
+                    SecurityEditor.TryEditSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
                     UpdateFundListBox();
 
                     ClearSelection();
@@ -270,13 +271,13 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteDeleteSecurity(Object obj)
         {
-            SecurityEditHelper.TryDeleteSecurity(selectedNameEdit, selectedCompanyEdit);
+            SecurityEditor.TryDeleteSecurity(selectedNameEdit, selectedCompanyEdit);
             UpdateFundListBox(); 
         }
 
         private void ExecuteDeleteValuation(Object obj)
         {
-            SecurityEditHelper.TryDeleteSecurityData(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+            SecurityEditor.TryDeleteSecurityData(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
             UpdateSelectedSecurityListBox();
         }
 

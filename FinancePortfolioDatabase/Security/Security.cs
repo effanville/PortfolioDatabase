@@ -1,7 +1,20 @@
-﻿namespace FinanceStructures
+﻿using System;
+using System.Collections;
+using DataStructures;
+
+namespace FinanceStructures
 {
-    public partial class Security
+    public partial class Security :IComparable
     {
+        private class sort : IComparer
+        {
+            int IComparer.Compare(object a, object b)
+            {
+                Security aa = (Security)a;
+                var bb = (Security)b;
+                return string.Compare(aa.GetName(), bb.GetName());
+            }
+        }
         private string fName;
 
         /// <summary>
@@ -79,6 +92,12 @@
             fShares = shares;
             fUnitPrice = prices;
             fInvestments = investments;
+        }
+
+        public int CompareTo(object obj)
+        {
+            Security a = (Security)obj;
+            return string.Compare(fName, a.GetName());
         }
     }
 }

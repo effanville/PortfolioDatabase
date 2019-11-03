@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GUIFinanceStructures;
+using DataStructures;
 
 namespace FinanceStructures
 {
@@ -18,6 +19,19 @@ namespace FinanceStructures
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Returns true if shares or unit prices have an item
+        /// </summary>
+        internal bool Any()
+        {
+            if (fUnitPrice.Any() || fShares.Any())
+            {
+                return true;
+            }
+
+            return false;
         }
 
         internal Security Copy()
@@ -44,7 +58,7 @@ namespace FinanceStructures
         internal List<BasicDayDataView> GetDataForDisplay()
         {
             var output = new List<BasicDayDataView>();
-            foreach (var datevalue in fUnitPrice.Values)
+            foreach (var datevalue in fUnitPrice.GetValuesBetween(fUnitPrice.GetFirstDate(),fUnitPrice.GetLatestDate()))
             {
                 fUnitPrice.TryGetValue(datevalue.Day, out double UnitPrice);
                 fShares.TryGetValue(datevalue.Day, out double shares);
@@ -173,25 +187,6 @@ namespace FinanceStructures
             if (company != fCompany)
             {
                 fCompany = company;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// returns data at index i.
-        /// </summary>
-        internal bool TryGetData(int i, out DateTime date, out double price, out double units, out double investment)
-        {
-            // note using i here is really ambiguous as have many vectors of datetime.
-            date = new DateTime();
-            price = 0;
-            units = 0;
-            investment = 0;
-
-            if (i < 0 || i > fUnitPrice.Count()-1)
-            {
-                return false;
             }
 
             return true;

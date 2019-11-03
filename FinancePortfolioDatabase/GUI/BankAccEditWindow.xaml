@@ -123,12 +123,12 @@
                                     Margin="5 5 5 5">
                             <StackPanel.ToolTip>
                                 <StackPanel>
-                                    <TextBlock Text="Either a) The name of the selected security."/>
-                                    <TextBlock Text="       b) User entered name for a new/edited security."/>
+                                    <TextBlock Text="Either a) The name of the selected bank account."/>
+                                    <TextBlock Text="       b) User entered name for a new/edited bank account."/>
                                 </StackPanel>
                             </StackPanel.ToolTip>
                             <Label Width="110"
-                                   Content="Security Name"/>
+                                   Content="Bank Account Name"/>
                             <TextBox Text="{Binding selectedNameEdit}"
                                      MinWidth="100"/>
                         </StackPanel>
@@ -136,11 +136,11 @@
                                 Margin="5 5 5 5">
                             <StackPanel.ToolTip>
                                 <StackPanel>
-                                    <TextBlock>Either a) The company of the selected security.</TextBlock>
-                                    <TextBlock>       b) User entered company for a new/edited security.</TextBlock>
+                                    <TextBlock>Either a) The company of the selected bank account.</TextBlock>
+                                    <TextBlock>       b) User entered company for a new/edited bank account.</TextBlock>
                                 </StackPanel>
                             </StackPanel.ToolTip>
-                            <Label Width="110">Security Company</Label>
+                            <Label Width="110">Bank Account Company</Label>
                             <TextBox Text="{Binding selectedCompanyEdit}"
                             MinWidth="100"/>
                         </StackPanel>

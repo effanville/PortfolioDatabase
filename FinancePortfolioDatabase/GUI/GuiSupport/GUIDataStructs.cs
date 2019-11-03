@@ -1,4 +1,6 @@
 ﻿using System;
+using SecurityStatisticsFunctions;
+using BankAccountStatisticsFunctions;
 
 namespace GUIFinanceStructures
 {
@@ -49,5 +51,38 @@ namespace GUIFinanceStructures
 
         public DateTime Date { get; set; }
         public double Amount { get; set; }
+    }
+
+    public class SecurityStatsHolder
+    {
+        public SecurityStatsHolder()
+        { }
+        public SecurityStatsHolder(string n, string c)
+        {
+            Name = n;
+            Company = c;
+            LatestVal = SecurityStatistics.SecurityLatestValue(n, c);
+            CARTotal = 100*SecurityStatistics.SecurityIRR(n, c);
+        }
+        public string Name { get; set; }
+        public string Company { get; set; }
+        public double LatestVal { get; set; }
+
+        public double CARTotal { get; set; }
+    }
+
+    public class BankAccountStatsHolder
+    {
+        public BankAccountStatsHolder()
+        { }
+        public BankAccountStatsHolder(string n, string c)
+        {
+            Name = n;
+            Company = c;
+            LatestVal = BankAccountStatistics.BankAccountLatestValue(n, c);
+        }
+        public string Name { get; set; }
+        public string Company { get; set; }
+        public double LatestVal { get; set; }
     }
 }

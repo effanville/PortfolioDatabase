@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FinancePortfolioDatabase;
 using GlobalHeldData;
 
 namespace CompanyStatisticsFunctions
@@ -11,7 +6,7 @@ namespace CompanyStatisticsFunctions
     /// <summary>
     /// Helper class to get statistics for companies
     /// </summary>
-    public static class CompanyStatisticsHelper
+    public static class CompanyStatistics
     {
         public static double CompanyLatestValue(string company)
         {

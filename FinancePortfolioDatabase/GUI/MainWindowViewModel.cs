@@ -1,5 +1,5 @@
 ﻿using System;
-using GuiSupport;
+using GUISupport;
 
 namespace FinanceWindowsViewModels
 {

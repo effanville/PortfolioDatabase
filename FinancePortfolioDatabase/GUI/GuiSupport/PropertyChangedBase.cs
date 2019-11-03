@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace GuiSupport
+namespace GUISupport
 {
     public class PropertyChangedBase : INotifyPropertyChanged
     {
