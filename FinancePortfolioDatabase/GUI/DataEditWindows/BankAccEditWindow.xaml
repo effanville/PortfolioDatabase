@@ -9,6 +9,9 @@
         MinHeight="450"
         Width="800"
         MinWidth="1125">
+    <StackPanel.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </StackPanel.Resources>
     <Border BorderBrush="#FF000000" 
             BorderThickness="1" 
             CornerRadius="8"
@@ -28,17 +31,13 @@
                         Margin="10 10 10 10 "
                         Command="{Binding AddAccountCommand}"
                         ToolTip="Create new BankAccount from Name and Company Data specified."/>
-                    <Button Content="Edit BankAccount Name"
-                        Margin="10 10 10 10 "
-                        Command="{Binding EditAccountNameCommand}"
-                        ToolTip="Edits the highlighted BankAccount name."/>
                     <Button Content="Delete BankAccount"
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteAccountCommand}"
                         ToolTip="Delete the BankAccount highlighted"/>
                     <Button Content="Add Valuation"
                         Margin="10 10 10 10 "
-                        Command="{Binding AddValuationCommand}"
+                        Command="{Binding AddDataCommand}"
                         ToolTip="Add a value to the BankAccount highlighted."/>
                     <Button Content="Edit Valuation"
                         Margin="10 10 10 10 "
@@ -52,6 +51,82 @@
                         Margin="10 10 10 10 "
                         Command="{Binding CloseCommand}"
                         ToolTip="Press here to close Add/Edit BankAccount"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Border Height="150" 
+                    VerticalAlignment="Top" 
+                    BorderBrush="#FF000000" 
+                    BorderThickness="1" 
+                    CornerRadius="8"
+                            Visibility="{Binding NameAddEditVisibility, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <Label Content="Name and Company Data"/>
+                            <StackPanel Orientation="Horizontal"
+                                    Margin="5 5 5 5">
+                                <StackPanel.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Text="Either a) The name of the selected bank account."/>
+                                        <TextBlock Text="       b) User entered name for a new/edited bank account."/>
+                                    </StackPanel>
+                                </StackPanel.ToolTip>
+                                <Label Width="110"
+                                   Content="Bank Account Name"/>
+                                <TextBox Text="{Binding selectedNameEdit}"
+                                     MinWidth="100"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                Margin="5 5 5 5">
+                                <StackPanel.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock>Either a) The company of the selected bank account.</TextBlock>
+                                        <TextBlock>       b) User entered company for a new/edited bank account.</TextBlock>
+                                    </StackPanel>
+                                </StackPanel.ToolTip>
+                                <Label Width="110">Bank Account Company</Label>
+                                <TextBox Text="{Binding selectedCompanyEdit}"
+                            MinWidth="100"/>
+                            </StackPanel>
+                            <Button Content="Add Bank Account"
+                                    Margin="10 10 10 10 "
+                                    Command="{Binding CreateAccountCommand}"
+                                    Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
+                            <Button Content="Edit Bank Account"
+                                    Margin="10 10 10 10 "
+                                    Command="{Binding EditAccountNameCommand}"
+                                    Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Height="150" VerticalAlignment="Top" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8"
+                            Visibility="{Binding DataAddEditVisibility, Converter={StaticResource BoolToVis}}">
+                        <StackPanel >
+
+                            <Label>Valuation Data</Label>
+                            <StackPanel Orientation="Horizontal"
+                                Margin="5 5 5 5"
+                                ToolTip="Date of selected data, or new value to be added">
+                                <Label Width="120" Content="Date" />
+                                <TextBox 
+                             Text="{Binding DateEdit}"
+                            MinWidth="100"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                Margin="5 5 5 5"
+                                ToolTip="Value in account on day specified">
+                                <Label Width="120">Amount Held</Label>
+                                <TextBox 
+                             Text="{Binding AmountsEdit}"
+                            MinWidth="100"/>
+                            </StackPanel>
+                            <Button Content="Add Data"
+                                    Margin="10 10 10 10 "
+                                    Command="{Binding AddValuationCommand}"
+                                    Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
+                            <Button Content="Edit Data"
+                                    Margin="10 10 10 10 "
+                                    Command="{Binding EditAccountDataCommand}"
+                                    Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
                 <Border Height="380" 
                     VerticalAlignment="Top" 
@@ -78,8 +153,6 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                        <Button Content="Clear Selection"
-                            Command="{Binding ClearFundSelectionCommand}"/>
                     </StackPanel>
                 </Border>
                 <Border Height="380" 
@@ -108,66 +181,9 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                        <Button Content="Clear Data Selection"
-                                Command="{Binding ClearDataSelectionCommand}"/>
                     </StackPanel>
                 </Border>
-                <Border Height="350" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000" 
-                    BorderThickness="1" 
-                    CornerRadius="8">
-                    <StackPanel>
-                        <Label Content="Name and Company Data"/>
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="5 5 5 5">
-                            <StackPanel.ToolTip>
-                                <StackPanel>
-                                    <TextBlock Text="Either a) The name of the selected bank account."/>
-                                    <TextBlock Text="       b) User entered name for a new/edited bank account."/>
-                                </StackPanel>
-                            </StackPanel.ToolTip>
-                            <Label Width="110"
-                                   Content="Bank Account Name"/>
-                            <TextBox Text="{Binding selectedNameEdit}"
-                                     MinWidth="100"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5">
-                            <StackPanel.ToolTip>
-                                <StackPanel>
-                                    <TextBlock>Either a) The company of the selected bank account.</TextBlock>
-                                    <TextBlock>       b) User entered company for a new/edited bank account.</TextBlock>
-                                </StackPanel>
-                            </StackPanel.ToolTip>
-                            <Label Width="110">Bank Account Company</Label>
-                            <TextBox Text="{Binding selectedCompanyEdit}"
-                            MinWidth="100"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-                <Border Height="350" VerticalAlignment="Top" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8">
-                    <StackPanel >
-
-                        <Label>Valuation Data</Label>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Date of selected data, or new value to be added">
-                            <Label Width="120" Content="Date" />
-                            <TextBox 
-                             Text="{Binding DateEdit}"
-                            MinWidth="100"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Value in account on day specified">
-                            <Label Width="120">Amount Held</Label>
-                            <TextBox 
-                             Text="{Binding AmountsEdit}"
-                            MinWidth="100"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
+               
             </StackPanel>
         </StackPanel>
     </Border>

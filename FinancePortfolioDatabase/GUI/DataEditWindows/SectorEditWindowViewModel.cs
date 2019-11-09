@@ -5,11 +5,39 @@ using GUIAccessorFunctions;
 using SectorHelperFunctions;
 using GUISupport;
 using GUIFinanceStructures;
+using ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
     public class SectorEditWindowViewModel : PropertyChangedBase
     {
+        private bool fDataAddEditVisibility;
+        public bool DataAddEditVisibility
+        {
+            get { return fDataAddEditVisibility; }
+            set { fDataAddEditVisibility = value; OnPropertyChanged(); }
+        }
+
+        private bool fNameAddEditVisibility;
+        public bool NameAddEditVisibility
+        {
+            get { return fNameAddEditVisibility; }
+            set { fNameAddEditVisibility = value; OnPropertyChanged(); }
+        }
+
+        private bool fEditing;
+
+        public bool Editing
+        {
+            get { return fEditing; }
+            set { fEditing = value; OnPropertyChanged(); }
+        }
+        public bool NotEditing
+        {
+            get { return !fEditing; }
+            set { fEditing = !value; OnPropertyChanged(); }
+        }
+
         private List<string> fSectorNames;
         public List<string> SectorNames
         {
@@ -53,6 +81,13 @@ namespace FinanceWindowsViewModels
             }
         }
 
+        private AccountDayDataView fSelectedSector;
+        public AccountDayDataView selectedSector
+        {
+            get { return fSelectedSector; }
+            set { fSelectedSector = value; OnPropertyChanged(); }
+        }
+
         private string fSelectedNameEdit;
         public string selectedNameEdit
         {
@@ -78,15 +113,21 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddSectorCommand { get; }
 
+        public ICommand CreateSectorCommand { get; }
+
         public ICommand EditSectorNameCommand { get; }
 
         public ICommand AddValuationCommand { get; }
+
+        public ICommand AddSectorDataCommand { get; }
 
         public ICommand EditSectorCommand { get; }
 
         public ICommand DeleteSectorCommand { get; }
 
         public ICommand DeleteDataCommand { get; }
+
+        public ICommand EditSectorDataCommand { get; }
 
         public ICommand CloseCommand { get; }
 
@@ -99,7 +140,6 @@ namespace FinanceWindowsViewModels
 
         private void UpdateSelectedSectorListBox()
         {
-          
         }
 
         private void ClearSelection()
@@ -108,13 +148,40 @@ namespace FinanceWindowsViewModels
             selectedNameEdit = null;
             DateEdit = null;
             ValuesEdit = null;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteAddSector(Object obj)
         {
-            SectorEditor.TryAddSector(selectedNameEdit);
-            UpdateSectorListBox();
-            ClearSelection();
+            NotEditing = true;
+            NameAddEditVisibility = true;
+            DataAddEditVisibility = false;
+        }
+
+        private void ShowAddValues(Object obj)
+        {
+            NotEditing = true;
+            NameAddEditVisibility = true;
+            DataAddEditVisibility = true;
+        }
+
+        private void ExecuteCreateSector(Object obj)
+        {
+            if (selectedNameEdit != null)
+            {
+                SectorEditor.TryAddSector(selectedNameEdit);
+                UpdateSectorListBox();
+                ClearSelection();
+            }
+            else 
+            {
+                ErrorReports.AddError("No Name provided to create a sector.");
+            }
+
+            NotEditing = true;
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
 
         }
 
@@ -124,7 +191,11 @@ namespace FinanceWindowsViewModels
             {
                 SectorEditor.TryEditSectorName(selectedName, selectedNameEdit);
             }
-           
+
+            NotEditing = true;
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteAddValuationCommand(Object obj)
@@ -139,9 +210,20 @@ namespace FinanceWindowsViewModels
                     ClearSelection();
                 }
             }
+
+            NotEditing = true;
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
+        }
+        private void ExecuteEditSector(Object obj)
+        {
+            Editing = true;
+            NameAddEditVisibility = true;
+            DataAddEditVisibility = true;
         }
 
-        private void ExecuteEditSector(Object obj)
+        private void ExecuteEditSectorData(Object obj)
         {
             if (selectedName != null)
             {
@@ -153,6 +235,10 @@ namespace FinanceWindowsViewModels
                     ClearSelection();
                 }
             }
+
+            UpdateMainWindow(true);
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
         }
 
         private void ExecuteDeleteSectorData(Object obj)
@@ -166,17 +252,21 @@ namespace FinanceWindowsViewModels
 
                     ClearSelection();
                 }
-            } 
+            }
+
+            UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteSector(Object obj)
         {
             SectorEditor.TryDeleteSector(selectedName);
             UpdateSectorListBox();
+            UpdateMainWindow(true);
         }
 
         private void ExecuteCloseCommand(Object obj)
         {
+            UpdateMainWindow(true);
             windowToView("dataview");
         }
 
@@ -191,11 +281,15 @@ namespace FinanceWindowsViewModels
             SectorNames = new List<string>();
             SelectedSectorData = new List<AccountDayDataView>();
             UpdateSectorListBox();
+
             AddSectorCommand = new BasicCommand(ExecuteAddSector);
+            CreateSectorCommand = new BasicCommand(ExecuteCreateSector);
             EditSectorNameCommand = new BasicCommand(ExecuteEditSectorNameCommand);
             AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
+            AddSectorDataCommand = new BasicCommand(ShowAddValues);
 
             EditSectorCommand = new BasicCommand(ExecuteEditSector);
+            EditSectorDataCommand = new BasicCommand(ExecuteEditSectorData);
             DeleteDataCommand = new BasicCommand(ExecuteDeleteSectorData);
             DeleteSectorCommand = new BasicCommand(ExecuteDeleteSector);
             CloseCommand = new BasicCommand(ExecuteCloseCommand);

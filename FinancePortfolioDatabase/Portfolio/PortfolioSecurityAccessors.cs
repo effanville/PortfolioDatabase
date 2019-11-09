@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GUIFinanceStructures;
+using ReportingStructures;
 
 namespace FinanceStructures
 {
@@ -139,18 +140,22 @@ namespace FinanceStructures
 
         public bool TryAddSecurityFromName(string name, string company)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(company))
+            if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(company))
             {
+                ErrorReports.AddGeneralReport(ReportType.Error, $"Company `{company}' or name `{name}' is not suitable.");
                 return false;
             }
 
             if (DoesSecurityExistFromName(name, company))
             {
+                ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' already exists.");
                 return false;
             }
             
             var NewFund = new Security(name, company);
             Funds.Add(NewFund);
+            ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' added to database.");
+            var reps = ErrorReports.GetReports();
             return true;
         }
 
@@ -161,10 +166,11 @@ namespace FinanceStructures
                 if (sec.GetCompany() == company && sec.GetName() == name)
                 {
                     Funds.Remove(sec);
+                    ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' removed from the database.");
                     return true;
                 }
             }
-
+            ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' could not be found in the database.");
             return false;
         }
 

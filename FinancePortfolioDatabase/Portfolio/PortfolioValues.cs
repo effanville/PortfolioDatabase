@@ -1,14 +1,29 @@
-﻿using System;
+﻿using DataStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinanceStructures
 {
     public partial class Portfolio
     {
         /// <summary>
+        /// Returns a list of all investments in the portfolio securities.
+        /// </summary>
+        /// <returns></returns>
+        public List<DailyValuation_Named> AllSecuritiesInvestments()
+        {
+            var output = new List<DailyValuation_Named>();
+            foreach (var comp in GetSecuritiesCompanyNames())
+            {
+                output.AddRange( GetCompanyInvestments(comp));
+            }
+            output.Sort();
+            return output;
+        }
+
+        /// <summary>
         /// The total value of all securities on the date specified.
         /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
         public double AllSecuritiesValue(DateTime date)
         {
             double total = 0;

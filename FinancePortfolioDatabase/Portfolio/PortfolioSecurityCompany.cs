@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataStructures;
+using FinanceFunctionsList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,6 +35,17 @@ namespace FinanceStructures
             return securities;
         }
 
+        public List<DailyValuation_Named> GetCompanyInvestments(string company)
+        {
+            var output = new List<DailyValuation_Named>();
+            foreach (var sec in CompanySecurities(company))
+            {
+                output.AddRange(sec.GetAllInvestmentsNamed());
+            }
+
+            return output;
+        }
+
         public double CompanyValue(string company, DateTime date)
         {
             var securities = CompanySecurities(company);
@@ -50,6 +63,34 @@ namespace FinanceStructures
             }
 
             return value;
+        }
+
+
+        /// <summary>
+        /// If possible, returns the IRR of all securities in the company specified over the time period.
+        /// </summary>
+        public double IRRCompany(string company, DateTime earlierTime, DateTime laterTime)
+        {
+            var securities = CompanySecurities(company);
+            if (securities.Count == 0)
+            {
+                return double.NaN;
+            }
+            double earlierValue = 0;
+            double laterValue = 0;
+            var Investments = new List<DailyValuation>();
+
+            foreach (var security in securities)
+            {
+                if (security.Any())
+                {
+                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
+                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
+                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                }
+            }
+
+            return FinancialFunctions.IRRTime(Investments, new DailyValuation(laterTime, laterValue), new DailyValuation(earlierTime, earlierValue));
         }
     }
 }

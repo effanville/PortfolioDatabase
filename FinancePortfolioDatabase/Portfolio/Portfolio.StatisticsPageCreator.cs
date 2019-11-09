@@ -15,9 +15,9 @@ namespace PortfolioStatsCreatorHelper
         }
 
 
-        public static bool TryCreateHTMLPage(Portfolio funds, List<string> toExport)
+        public static bool TryCreateHTMLPage(Portfolio funds, List<string> toExport, string filepath)
         {
-            StreamWriter htmlWriter = new StreamWriter("statistics.html");
+            StreamWriter htmlWriter = new StreamWriter(filepath);
             CreateHTMLHeader(htmlWriter);
 
             htmlWriter.WriteLine(" ");

@@ -1,0 +1,178 @@
+﻿<StackPanel x:Class="FinanceWindows.StatsCreatorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+            Height="450" 
+            Width="1200">
+    <StackPanel.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </StackPanel.Resources>
+    <Border BorderBrush="#FF000000" 
+            BorderThickness="1" 
+            CornerRadius="8"
+            Height="450">
+        <StackPanel>
+            <Border Background="Pink"
+                Height="45"
+                >
+                <TextBlock FontSize="14"
+                       Margin="12 12 12 12">Select How you want to create Statistics</TextBlock>
+            </Border>
+            <StackPanel Orientation="Horizontal" >
+                <StackPanel Width="Auto"
+                        Height="500"
+                        Background="Pink">
+                    <Button Content="Create CSV stats file"
+                        Margin="10 10 10 10 "
+                        Command="{Binding CreateCSVStatsCommand}"/>
+                    <Button Content="Create HTML stats page"
+                            Margin="10 10 10 10 "
+                            Command="{Binding CreateHTMLCommand}"/>
+                    <Button Content="Create Investment list"
+                            Margin="10 10 10 10 "
+                            Command="{Binding  CreateInvestmentListCommand}"/>
+                    <Button Content="Close Stats Creator"
+                        Margin="10 10 10 10 "
+                        Command="{Binding CloseCommand}"/>
+                    <Label>
+                        Choose Statistics to view.
+                    </Label>
+                    <CheckBox IsChecked="{Binding SecStatsVisibility}"
+                              Margin="10,10,10,10">
+                        <TextBlock Text="Show Securities Rates" TextWrapping="Wrap"/>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding SecInvestsVisibility}"
+                              Margin="10,10,10,10">
+                        <TextBlock Text="Show Investments in Securities" TextWrapping="Wrap"/>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding BankAccStatsVisibility}"
+                              Margin="10,10,10,10">
+                        <TextBlock Text="Show Bank Accounts Values" TextWrapping="Wrap"/>
+                    </CheckBox>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding SecStatsVisibility, Converter={StaticResource BoolToVis}}"
+                            Orientation="Horizontal">
+                    <StackPanel Visibility="Collapsed">
+                        <Label>Select Statistics for Display</Label>
+                        <CheckBox IsChecked="{Binding CAR3MVisible}"
+                                  Margin="10,10,10,10">
+                            <TextBlock Text="Show CAR3M" TextWrapping="Wrap"/>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding CAR6MVisible}"
+                                  Margin="10,10,10,10">
+                            <TextBlock Text="Show CAR6M" TextWrapping="Wrap"/>                        
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding CAR1YVisible}"
+                                  Margin="10,10,10,10">
+                            <TextBlock Text="Show CAR1Y" TextWrapping="Wrap"/>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding CAR5YVisible}"
+                                  Margin="10,10,10,10">
+                            <TextBlock Text="Show CAR5Y" TextWrapping="Wrap"/>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding CARTVisible}"
+                                  Margin="10,10,10,10">
+                            <TextBlock Text="Show CARTotal" TextWrapping="Wrap"/>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label Content="Statistics of Securities in Database"/>
+                        <ListView Name="SecBox"
+                      ItemsSource="{Binding SecuritiesStats}"
+                      MinHeight="300"
+                              MaxHeight="300"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                      Margin="10,10,10,10"
+                      MinWidth="300"
+                      Width="Auto" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="Auto" 
+                                        Header="Company" 
+                                        DisplayMemberBinding="{Binding Company}"/>
+                                <GridViewColumn Width="Auto" 
+                                        Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="Latest Value" 
+                                        DisplayMemberBinding="{Binding LatestVal}" />
+                                    <GridViewColumn Width="Auto" 
+                                        Header="Profit" 
+                                        DisplayMemberBinding="{Binding Profit}" />
+                                    <GridViewColumn Width="{Binding threeMWidth}" 
+                                        Header="CAR 3M"
+                                        DisplayMemberBinding="{Binding CAR3M}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="CAR 6M" 
+                                        DisplayMemberBinding="{Binding CAR6M}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="CAR 1Y" 
+                                        DisplayMemberBinding="{Binding CAR1Y}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="CAR 5Y" 
+                                        DisplayMemberBinding="{Binding CAR5Y}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="CAR total" 
+                                        DisplayMemberBinding="{Binding CARTotal}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Visibility="{Binding SecInvestsVisibility, Converter={StaticResource BoolToVis}}">
+                    <Label Content="All Investments in Securities in Database"/>
+                    <ListView Name="SecInvBox"
+                              ItemsSource="{Binding SecuritiesInvestments}"
+                              MinHeight="300"
+                              MaxHeight="300"
+                              Margin="10,10,10,10"
+                              MinWidth="300"
+                              Width="Auto">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="Auto" 
+                                        Header="Date" 
+                                        DisplayMemberBinding="{Binding Day, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="Company" 
+                                        DisplayMemberBinding="{Binding Company}"/>
+                                <GridViewColumn Width="Auto" 
+                                        Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="Investment Amount" 
+                                        DisplayMemberBinding="{Binding Value}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+                <StackPanel Visibility="{Binding BankAccStatsVisibility, Converter={StaticResource BoolToVis}}">
+                    <Label Content="BankAccounts in Database"/>
+                    <ListView Name="BankAccBox"
+                              ItemsSource="{Binding BankAccountStats}"
+                              MinHeight="300"
+                              Margin="10,10,10,10"
+                              MinWidth="300"
+                              Width="Auto">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="Auto" 
+                                        Header="Company" 
+                                        DisplayMemberBinding="{Binding Company}"/>
+                                <GridViewColumn Width="Auto" 
+                                        Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Width="Auto" 
+                                        Header="Latest Value" 
+                                        DisplayMemberBinding="{Binding LatestVal}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</StackPanel>

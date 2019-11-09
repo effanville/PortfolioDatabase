@@ -3,6 +3,9 @@ using System;
 
 namespace FinanceStructures
 {
+    /// <summary>
+    /// General edit functions for a sector.
+    /// </summary>
     public partial class Sector
     {
         public string GetName()

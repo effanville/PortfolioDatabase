@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FinanceStructures;
 
 namespace GlobalHeldData
 {
+    internal static class AssemblyCreationDate
+    {
+        public static readonly DateTime Value;
+
+        static AssemblyCreationDate()
+        {
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            Value = new DateTime(2000, 1, 2,12,24,30).AddDays(version.Build).AddSeconds(version.MinorRevision * 2);
+        }
+    }
     public static class GlobalData
     {
-        public static double versionNumber = 0.1;
+        public static string versionNumber = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
         public static string fDatabaseFilePath;
 
         public static DateTime fToday = DateTime.Today;
@@ -26,6 +37,12 @@ namespace GlobalHeldData
             get { return fBenchmarks; }
 
             private set { fBenchmarks = value; }
+        }
+
+        public static void ClearDatabase()
+        {
+            Finances = new Portfolio();
+            BenchMarks = new List<Sector>();
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GUIFinanceStructures;
+using ReportingStructures;
 
 namespace FinanceStructures
 {
@@ -127,6 +128,11 @@ namespace FinanceStructures
 
         public bool TryAddBankAccountFromName(string name, string company)
         {
+            if (name == null || company == null)
+            {
+                ErrorReports.AddError("Name or Company provided were null.");
+                return false;
+            }
             if (DoesBankAccountExistFromName(name, company))
             {
                 return false;

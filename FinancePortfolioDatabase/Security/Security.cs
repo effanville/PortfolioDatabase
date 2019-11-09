@@ -4,8 +4,14 @@ using DataStructures;
 
 namespace FinanceStructures
 {
-    public partial class Security :IComparable
+    /// <summary>
+    /// Class to model a stock, or a unit trust.
+    /// </summary>
+    public partial class Security : IComparable
     {
+        /// <summary>
+        /// The mechanism to compare two instances of a security.
+        /// </summary>
         private class sort : IComparer
         {
             int IComparer.Compare(object a, object b)
@@ -15,20 +21,28 @@ namespace FinanceStructures
                 return string.Compare(aa.GetName(), bb.GetName());
             }
         }
+
+        /// <summary>
+        /// The name of the security in question.
+        /// </summary>
         private string fName;
 
         /// <summary>
-        /// For serialisation only.
+        /// This should only be used for serialisation.
         /// </summary>
         public string Name
         {
             get { return fName; }
             set { fName= value; }
         }
+
+        /// <summary>
+        /// The company the security belongs with.
+        /// </summary>
         private string fCompany;
 
         /// <summary>
-        /// For serialisation only.
+        /// This should only be used for serialisation.
         /// </summary>
         public string Company
         { 
@@ -36,10 +50,13 @@ namespace FinanceStructures
             set { fCompany = value; }
         }
 
+        /// <summary>
+        /// The number of shares held in this security.
+        /// </summary>
         private TimeList fShares;
 
         /// <summary>
-        /// For serialisation only.
+        /// This should only be used for serialisation.
         /// </summary>
         public TimeList Shares
         {
@@ -47,10 +64,13 @@ namespace FinanceStructures
             set { fShares = value; }
         }
 
+        /// <summary>
+        /// The data of the price per unit/share of this security.
+        /// </summary>
         private TimeList fUnitPrice;
 
         /// <summary>
-        /// For serialisation only.
+        /// This should only be used for serialisation.
         /// </summary>
         public TimeList UnitPrice
         {
@@ -58,10 +78,13 @@ namespace FinanceStructures
             set { fUnitPrice = value; }
         }
 
+        /// <summary>
+        /// A list of investments made in this security.
+        /// </summary>
         private TimeList fInvestments;
 
         /// <summary>
-        /// For serialisation only.
+        /// This should only be used for serialisation.
         /// </summary>
         public TimeList Investments
         {
@@ -69,13 +92,19 @@ namespace FinanceStructures
             set { fInvestments = value; }
         }
 
-        public Security()
+        /// <summary>
+        /// An empty constructor.
+        /// </summary>
+        private Security()
         {
             fShares = new TimeList();
             fUnitPrice = new TimeList();
             fInvestments = new TimeList();
         }
 
+        /// <summary>
+        /// Constructor creating a new security.
+        /// </summary>
         public Security(string name, string company)
         {
             fName = name;
@@ -85,6 +114,9 @@ namespace FinanceStructures
             fInvestments = new TimeList();
         }
 
+        /// <summary>
+        /// Constructor to make a new security from known data.
+        /// </summary>
         private Security(string name, string company, TimeList shares, TimeList prices, TimeList investments)
         {
             fName = name;
@@ -94,6 +126,9 @@ namespace FinanceStructures
             fInvestments = investments;
         }
 
+        /// <summary>
+        /// Method of comparison
+        /// </summary>
         public int CompareTo(object obj)
         {
             Security a = (Security)obj;

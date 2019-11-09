@@ -3,11 +3,11 @@
 namespace FinanceWindows
 {
     /// <summary>
-    /// Interaction logic for OptionsPanel.xaml
+    /// Interaction logic for ReportingWindow.xaml
     /// </summary>
-    public partial class OptionsPanel : Grid
+    public partial class ReportingWindow : Grid
     {
-        public OptionsPanel()
+        public ReportingWindow()
         {
             InitializeComponent();
         }

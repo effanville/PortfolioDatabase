@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,16 +11,24 @@ namespace DataStructures
     /// <remarks>This list is sorted, with oldest value the first and latest the last.</remarks>
     public partial class TimeList
     {
+
         /// <summary>
         /// Collection of data within the TimeList.
         /// </summary>
         private List<DailyValuation> fValues;
 
-        [Obsolete("This should only be used for serialisation.", false)]
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
         public List<DailyValuation> Values
         {
             get { return fValues; }
             set { fValues = value; }
+        }
+
+        public DailyValuation this[int index]
+        {
+            get { return new DailyValuation(fValues[index]); }
         }
 
         /// <summary>
@@ -49,7 +58,7 @@ namespace DataStructures
         /// <summary>
         /// Returns the number of valuations in the timelist.
         /// </summary>
-        protected int Count()
+        public int Count()
         {
             return fValues.Count;
         }
@@ -100,23 +109,18 @@ namespace DataStructures
         /// Adds value to the data only if value of the date doesn't currently exist.
         /// </summary>
         internal bool TryAddValue(DateTime date, double value)
-        {
-            if (fValues != null && fValues.Any())
-            {
-                for (int i = 0; i < fValues.Count; i++)
+        {    
+            for (int i = 0; i < fValues.Count; i++)  
+            {  
+                if (fValues[i].Day == date)
                 {
-                    if (fValues[i].Day == date)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-
-                AddData(date, value);
-
-                return true;
             }
 
-            return false;
+            AddData(date, value);
+
+            return true;
         }
 
         /// <summary>
@@ -149,6 +153,12 @@ namespace DataStructures
                 {
                     if (fValues[i].Day == date)
                     {
+                        if (value == 0)
+                        {
+                            fValues.RemoveAt(i);
+                            return;
+                        }
+
                         fValues[i].Value = value;
                         return;
                     }
@@ -198,10 +208,18 @@ namespace DataStructures
             return false;
         }
 
+        /// <summary>
+        /// Returns the DailyValuation on or before the date specified.
+        /// </summary>
         internal DailyValuation GetNearestEarlierValue(DateTime date)
         {
             if (fValues != null && fValues.Any())
             {
+                if (date < GetFirstDate())
+                {
+                    return null;
+                }
+
                 if (Count() == 1)
                 {
                     return fValues[0];
@@ -212,18 +230,13 @@ namespace DataStructures
                     return GetLatestValuation();
                 }
 
-                if (date < GetFirstDate())
-                {
-                    return GetFirstValuation();
-                }
-
                 // list sorted with earliest at start. First occurence greater than value means 
                 // the first value later.
-                for (int i = 0; i < Count(); i++)
+                for (int i = Count() - 1; i > -1; i--)
                 {
-                    if (date < fValues[i].Day)
+                    if (date > fValues[i].Day)
                     {
-                        return fValues[i - 1];
+                        return fValues[i];
                     }
                     if (date == fValues[i].Day)
                     {
@@ -236,44 +249,54 @@ namespace DataStructures
         }
 
         /// <summary>
-        /// returns nearest valuation in the timelist to the date provided.
+        /// Returns DailyValuation closest to the date but earlier to it. 
+        /// If a strictly earlier one cannot be found then return null.
         /// </summary>
-        internal bool  TryGetNearestEarlierValue(DateTime date, out DailyValuation value)
+        internal DailyValuation GetLastEarlierValue(DateTime date)
         {
             if (fValues != null && fValues.Any())
             {
-                if (Count() == 1)
+                // Some cases can return early.
+                if (Count() == 1 || date <= GetFirstDate())
                 {
-                    value = fValues[0];
-                    return true;
+                    return null;
                 }
 
                 if (date > GetLatestDate())
                 {
-                    value = GetLatestValuation();
-                    return true;
+                    return GetLatestValuation();
                 }
 
-                if (date < GetFirstDate())
+                // go back in time until find a valuation that is after the date we want
+                // Then the value we want is the previous in the vector.
+                for (int i = Count() - 1; i > 0; i--)
                 {
-                    value = GetFirstValuation();
-                    return true;
-                }
-
-                // list sorted with earliest at start. First occurence greater than value means 
-                // the first value later.
-                for (int i = 0; i < Count(); i++)
-                {
-                    if (date < fValues[i].Day)
+                    if (date == fValues[i].Day)
                     {
-                        value = fValues[i - 1];
-                        return true;
+                        return fValues[i-1];
+                    }
+                    if (date > fValues[i].Day)
+                    {
+                        return fValues[i];
                     }
                 }
             }
 
-            value = null;
-            return false;
+            return null;
+        }
+
+        /// <summary>
+        /// returns nearest valuation in the timelist to the date provided.
+        /// </summary>
+        internal bool  TryGetNearestEarlierValue(DateTime date, out DailyValuation value)
+        {
+            value = GetNearestEarlierValue(date);
+            if (value == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -290,10 +313,10 @@ namespace DataStructures
 
                 if (date > GetLatestDate())
                 {
-                    return GetLatestValuation();
+                    return null;
                 }
 
-                if (date < GetLatestDate())
+                if (date < GetFirstDate())
                 {
                     return GetFirstValuation();
                 }
@@ -302,7 +325,7 @@ namespace DataStructures
                 // the first value later.
                 for (int i = 0; i < Count(); i++)
                 {
-                    if (date < fValues[i].Day)
+                    if (date > fValues[i].Day)
                     {
                         return fValues[i];
                     }
@@ -329,7 +352,7 @@ namespace DataStructures
                     return GetLatestValuation();
                 }
 
-                if (date < GetLatestDate())
+                if (date < GetFirstDate())
                 {
                     return GetFirstValuation();
                 }

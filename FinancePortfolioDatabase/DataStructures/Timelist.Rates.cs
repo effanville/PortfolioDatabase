@@ -8,6 +8,21 @@ namespace DataStructures
     /// </summary>
     public partial class TimeList
     {
+        internal double Sum()
+        {
+            if (fValues != null && fValues.Count > 0)
+            {
+                double sum = 0;
+                foreach (var val in fValues)
+                {
+                    sum += val.Value;
+                }
+
+                return sum;
+            }
+
+            return double.NaN;
+        }
         /// <summary>
         /// returns the CAR of the timelist between the dates provided.
         /// </summary>
