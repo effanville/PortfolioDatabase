@@ -5,6 +5,8 @@ using GlobalHeldData;
 using FinanceStructures;
 using GUIFinanceStructures;
 using SavingDummyClasses;
+using ReportingStructures;
+using DataStructures;
 
 namespace GUIAccessorFunctions
 {
@@ -53,6 +55,11 @@ namespace GUIAccessorFunctions
             }
             return outputs;
         }
+
+        public static void SetFilePath(string path)
+        {
+            GlobalData.fDatabaseFilePath = path;
+        }
         public static List<NameComp> GetSecurityNamesAndCompanies()
         {
             if (GlobalData.Finances != null)
@@ -98,15 +105,27 @@ namespace GUIAccessorFunctions
             return new List<NameComp>();
         }
 
+        public static List<DailyValuation_Named> AllSecuritiesInvestments()
+        {
+            return GlobalData.Finances.AllSecuritiesInvestments();
+        }
+
+        public static void ClearPortfolio()
+        {
+            GlobalData.ClearDatabase();
+        }
+
         public static void LoadPortfolio()
         {
+            ErrorReports.Configure();
+            
             if (File.Exists(GlobalData.fDatabaseFilePath))
             {
                 var database = ReadFromXmlFile<AllData>(GlobalData.fDatabaseFilePath);
                 GlobalData.LoadDatabase(database.MyFunds, database.myBenchMarks);
                 return;
             }
-
+            ErrorReports.AddReport("Loaded Empty New Database.");
             GlobalData.LoadDatabase(null, null);
         }
 
@@ -116,6 +135,7 @@ namespace GUIAccessorFunctions
             if (GlobalData.fDatabaseFilePath != null)
             {
                 WriteToXmlFile(GlobalData.fDatabaseFilePath, toSave);
+                ErrorReports.AddReport("Saved Database.");
             }
         }
 

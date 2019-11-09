@@ -7,11 +7,40 @@ using GUISupport;
 using FinanceStructures;
 using DataStructures;
 using GUIFinanceStructures;
+using ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
     public class SecurityEditWindowViewModel : PropertyChangedBase
     {
+        private bool fDataAddEditVisibility;
+        public bool DataAddEditVisibility
+        {
+            get { return fDataAddEditVisibility; }
+            set { fDataAddEditVisibility = value; OnPropertyChanged(); }
+        }
+
+        private bool fNameAddEditVisibility;
+        public bool NameAddEditVisibility
+        {
+            get { return fNameAddEditVisibility; }
+            set { fNameAddEditVisibility = value; OnPropertyChanged(); }
+        }
+
+        private bool fEditing;
+
+        public bool Editing
+        {
+            get { return fEditing; }
+            set { fEditing = value; OnPropertyChanged(); }
+        }
+
+        public bool NotEditing
+        {
+            get { return !fEditing; }
+            set { fEditing = !value; OnPropertyChanged(); }
+        }
+
         private List<NameComp> fFundNames;
         /// <summary>
         /// Name and Company data of Funds in database for view.
@@ -109,11 +138,17 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddSecurityCommand { get; }
 
+        public ICommand CreateSecurityCommand { get; }
+
         public ICommand AddValuationCommand { get; }
 
         public ICommand EditSecurityCommand { get; }
 
+        public ICommand ShowEditSecurityCommand { get; }
+
         public ICommand EditSecurityNameCommand { get; }
+
+        public ICommand AddDataCommand { get; }
 
         public ICommand DeleteSecurityCommand { get; }
 
@@ -151,6 +186,16 @@ namespace FinanceWindowsViewModels
                 {
                     SelectedSecurityData = values;
                 }
+
+                SelectLatestValue();
+            }
+        }
+
+        private void SelectLatestValue()
+        {
+            if (SelectedSecurityData != null  && SelectedSecurityData.Count > 0)
+            {
+                selectedValues = SelectedSecurityData[SelectedSecurityData.Count - 1];
             }
         }
 
@@ -204,39 +249,83 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteAddSecurity(Object obj)
         {
-            SecurityEditor.TryAddSecurity(selectedNameEdit, selectedCompanyEdit);
-            UpdateFundListBox();
-            ClearSelection();
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = true;
+            NotEditing = true;
+        }
 
+        private void ExecuteCreateSecurity(Object obj)
+        {
+            if (selectedNameEdit != null && selectedCompanyEdit != null)
+            {
+                SecurityEditor.TryAddSecurity(selectedNameEdit, selectedCompanyEdit);
+                UpdateFundListBox();
+                ClearSelection();
+                
+            }
+            else 
+            {
+                ErrorReports.AddError("Name or company given were null");
+            }
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteAddValuationCommand(Object obj)
         {
+            NameAddEditVisibility = true;
+            DataAddEditVisibility = true;
+            NotEditing = true;
+        }
+        /// <summary>
+        /// Adds data to selected security.
+        /// </summary>
+        /// <remarks>
+        /// This method not sufficient
+        /// Must rethink how I deal with new investments.</remarks>
+        private void ExecuteAddDataCommand(Object obj)
+        {
             if (fSelectedName != null)
             {
-                if (DateTime.TryParse(DateEdit, out DateTime date) && Double.TryParse(SharesEdit, out double shares) && Double.TryParse(UnitPriceEdit, out double unitPrice))
+                if (DateTime.TryParse(DateEdit, out DateTime date))
                 {
-                    double investmentValue = 0;
-                    if (NewInvestment)
+                    if (Double.TryParse(SharesEdit, out double shares) && Double.TryParse(UnitPriceEdit, out double unitPrice))
                     {
-                        //user specified added new money to fund, so all number share change is new money.  
-                        //need to calculate this. Either have previous investment, so get numbershares
-                        // or is new fund and all money added is new.
-                        if (selectedSecurity.TryGetEarlierData(date, out DailyValuation earlierPrice, out DailyValuation earlierShareNo, out DailyValuation earlierInvestment))
+                        double investmentValue = 0;
+                        if (NewInvestment)
                         {
-                            investmentValue = (shares - earlierShareNo.Value) * unitPrice;
+                            //user specified added new money to fund, so difference between last number of shares and numer shares now is considered new money.  
+                            //need to calculate this. Either have previous investment, so get numbershares
+                            // or is new fund and all money added is new.
+                            if (selectedSecurity.TryGetEarlierData(date, out DailyValuation earlierPrice, out DailyValuation earlierShareNo, out DailyValuation earlierInvestment))
+                            {
+                                investmentValue = (shares - earlierShareNo.Value) * unitPrice;
+                            }
+                            else
+                            {
+                                investmentValue = shares * unitPrice;
+                            }
                         }
-                        else
-                        {
-                            investmentValue = shares * unitPrice; 
-                        }
+
+                        //Current 
+                        SecurityEditor.TryAddDataToSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
+                        UpdateFundListBox();
                     }
-                    SecurityEditor.TryAddDataToSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
-                    UpdateFundListBox();
-                   
-                    ClearSelection();
+                    else
+                    {
+                        ErrorReports.AddError($"Number of Shares of {SharesEdit} or unit price {UnitPriceEdit} was not parsable as a number.");
+                    }
+                }
+                else 
+                { 
+                    ErrorReports.AddError($"Date of {DateEdit} was not parsable as a Date.");
                 }
             }
+
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteEditSecurityName(Object obj)
@@ -248,41 +337,76 @@ namespace FinanceWindowsViewModels
 
                 ClearSelection();
             }
+
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
+        }
+
+        private void ExecuteShowEditSecurity(Object obj)
+        {
+            NameAddEditVisibility = true;
+            Editing = true;
+            DataAddEditVisibility = true;
         }
 
         private void ExecuteEditSecurity(Object obj)
         {
             if (fSelectedName != null)
             {
-                if (DateTime.TryParse(DateEdit, out DateTime date) && Double.TryParse(SharesEdit, out double shares) && Double.TryParse(UnitPriceEdit, out double unitPrice))
+                if (DateTime.TryParse(DateEdit, out DateTime date))
                 {
-                    double investmentValue = 0;
-                    if (NewInvestment)
+                    if (Double.TryParse(SharesEdit, out double shares) && Double.TryParse(UnitPriceEdit, out double unitPrice))
                     {
-                        investmentValue = shares * unitPrice;
-                    }
-                    SecurityEditor.TryEditSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
-                    UpdateFundListBox();
+                        double investmentValue = 0;
+                        if (NewInvestment)
+                        {
+                            investmentValue = shares * unitPrice;
+                        }
+                        SecurityEditor.TryEditSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
+                        UpdateFundListBox();
 
-                    ClearSelection();
+                        ClearDataSelection();
+                    }
+                }
+                else 
+                {
+                    ErrorReports.AddError($"Date format of {DateEdit} was not suitable.");
                 }
             }
+            else 
+            {
+                ErrorReports.AddReport("No security or data selected to edit");
+            }
+
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteSecurity(Object obj)
         {
             SecurityEditor.TryDeleteSecurity(selectedNameEdit, selectedCompanyEdit);
-            UpdateFundListBox(); 
+            UpdateFundListBox();
+            ClearSelection();
+            UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteValuation(Object obj)
         {
-            SecurityEditor.TryDeleteSecurityData(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
-            UpdateSelectedSecurityListBox();
+            if (selectedName != null && selectedValues != null)
+            {
+                SecurityEditor.TryDeleteSecurityData(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                UpdateSelectedSecurityListBox();
+                ClearDataSelection();
+            }
+
+            UpdateMainWindow(true);
         }
 
         private void ExecuteCloseCommand(Object obj)
         {
+            UpdateMainWindow(false);
             windowToView("dataview");
         }
 
@@ -293,12 +417,18 @@ namespace FinanceWindowsViewModels
         {
             UpdateMainWindow = updateWindow;
             windowToView = pageViewChoice;
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = false;
+            Editing = false;
             fFundNames = new List<NameComp>();
             fSelectedSecurityData = new List<BasicDayDataView>();
             UpdateFundListBox();
             AddSecurityCommand = new BasicCommand(ExecuteAddSecurity);
+            CreateSecurityCommand = new BasicCommand(ExecuteCreateSecurity);
             AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
+            AddDataCommand = new BasicCommand(ExecuteAddDataCommand);
             EditSecurityCommand = new BasicCommand(ExecuteEditSecurity);
+            ShowEditSecurityCommand = new BasicCommand(ExecuteShowEditSecurity);
             EditSecurityNameCommand = new BasicCommand(ExecuteEditSecurityName);
             DeleteSecurityCommand = new BasicCommand(ExecuteDeleteSecurity);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);

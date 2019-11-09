@@ -15,7 +15,9 @@
                       MinHeight="300"
                       Margin="10,10,10,10"
                       MinWidth="210"
-                      Width="210">
+                      Width="210"
+                      MaxWidth="210"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="100" 
@@ -36,7 +38,9 @@
                       MinHeight="300"
                       Margin="10,10,10,10"
                       MinWidth="210"
-                      Width="210">
+                      Width="210"
+                      MaxWidth="210"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="100" 

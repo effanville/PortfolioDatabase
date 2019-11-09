@@ -27,6 +27,7 @@ namespace GUIFinanceStructures
             Date = date;
             UnitPrice = unitPrice;
             ShareNo = shareNo;
+            Value = UnitPrice * ShareNo;
             Investment = investment;
         }
 
@@ -34,6 +35,8 @@ namespace GUIFinanceStructures
         public double UnitPrice { get; set; }
 
         public double ShareNo { get; set; }
+
+        public double Value { get; set; }
 
         public double Investment { get; set; }
     }
@@ -61,13 +64,23 @@ namespace GUIFinanceStructures
         {
             Name = n;
             Company = c;
-            LatestVal = SecurityStatistics.SecurityLatestValue(n, c);
-            CARTotal = 100*SecurityStatistics.SecurityIRR(n, c);
+            LatestVal = Math.Truncate(100*SecurityStatistics.SecurityLatestValue(n, c))/100;
+            Profit = Math.Truncate(100*SecurityStatistics.Profit(n, c))/100;
+            CAR3M = Math.Truncate(10000 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-3), DateTime.Today))/100;
+            CAR6M = Math.Truncate(10000 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-6), DateTime.Today))/100;
+            CAR1Y = Math.Truncate(10000 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-12), DateTime.Today))/100;
+            CAR5Y = Math.Truncate(10000 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-60), DateTime.Today))/100;
+            CARTotal = Math.Truncate(10000 * SecurityStatistics.SecurityIRR(n, c))/100;
         }
         public string Name { get; set; }
         public string Company { get; set; }
         public double LatestVal { get; set; }
 
+        public double Profit { get; set; }
+        public double CAR3M { get; set; }
+        public double CAR6M { get; set; }
+        public double CAR1Y { get; set; }
+        public double CAR5Y { get; set; }
         public double CARTotal { get; set; }
     }
 

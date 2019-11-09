@@ -6,8 +6,8 @@ namespace FinanceWindowsViewModels
     public class MainWindowViewModel : PropertyChangedBase
     {
         private bool fDataWindowVisibility;
-        public bool DataWindowVisibility 
-        { 
+        public bool DataWindowVisibility
+        {
             get { return fDataWindowVisibility; }
             set { fDataWindowVisibility = value; OnPropertyChanged(); }
         }
@@ -43,6 +43,7 @@ namespace FinanceWindowsViewModels
         {
             OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow, displayWindowChoice);
             DataView = new BasicDataViewModel(UpdateWindow);
+            ReportsViewModel = new ReportingWindowViewModel();
             DataWindowVisibility = true;
             SecurityEditWindowVisibility = false;
         }
@@ -51,10 +52,18 @@ namespace FinanceWindowsViewModels
 
         public void UpdateData(object obj)
         {
-            DataView.DataUpdate();
+            if (obj is bool updateReportsOnly)
+            {
+                if (!updateReportsOnly)
+                {
+                    DataView.DataUpdate();
+                }
+
+                ReportsViewModel.Update();
+            }
         }
 
-        Action<string> displayWindowChoice => (name)=> WindowDisplayChoice(name);
+        Action<string> displayWindowChoice => (name) => WindowDisplayChoice(name);
 
         private void WindowDisplayChoice(string windowName)
         {
@@ -133,15 +142,15 @@ namespace FinanceWindowsViewModels
 
         private OptionsPanelViewModel fOptionsPanelCommands;
 
-        public OptionsPanelViewModel  OptionsPanelCommands
+        public OptionsPanelViewModel OptionsPanelCommands
         {
             get { return fOptionsPanelCommands; }
             set { fOptionsPanelCommands = value; OnPropertyChanged(); }
         }
-        private BasicDataViewModel fDataView; 
-        
+        private BasicDataViewModel fDataView;
+
         public BasicDataViewModel DataView
-        { 
+        {
             get { return fDataView; }
             set { fDataView = value; OnPropertyChanged(); }
         }
@@ -175,6 +184,13 @@ namespace FinanceWindowsViewModels
         {
             get { return fStatsViewModel; }
             set { fStatsViewModel = value; OnPropertyChanged(); }
+        }
+
+        private ReportingWindowViewModel fReports;
+        public ReportingWindowViewModel ReportsViewModel
+        { 
+            get { return fReports; }
+            set { fReports = value; OnPropertyChanged();} 
         }
     }
 }

@@ -5,34 +5,40 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FinanceWindows"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Width="Auto"
+             Height="Auto">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
-    
-    <StackPanel Orientation="Horizontal">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
 
-        <local:OptionsPanel DataContext="{Binding OptionsPanelCommands}"/>
+            <local:OptionsPanel DataContext="{Binding OptionsPanelCommands}"
+                                Height="Auto"/>
 
-        <StackPanel Visibility="{Binding DataWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:BasicDataView DataContext="{Binding DataView}"/>
+            <StackPanel Visibility="{Binding DataWindowVisibility, Converter={StaticResource BoolToVis}}">
+                <local:BasicDataView DataContext="{Binding DataView}"/>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding SecurityEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+                <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"/>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding BankAccEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+                <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"/>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+                <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+                <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
+            </StackPanel>
         </StackPanel>
-
-        <StackPanel Visibility="{Binding SecurityEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"/>
-        </StackPanel>
-
-        <StackPanel Visibility="{Binding BankAccEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"/>
-        </StackPanel>
-
-        <StackPanel Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
-        </StackPanel>
-
-        <StackPanel Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
-        </StackPanel>
+        <local:ReportingWindow DockPanel.Dock="Bottom" 
+                                   VerticalAlignment="Bottom" 
+                                   DataContext="{Binding ReportsViewModel}"/>
     </StackPanel>
-
 </UserControl>

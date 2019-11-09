@@ -2,9 +2,9 @@
 using System;
 using System.Windows.Forms;
 using System.Windows.Input;
-using GlobalHeldData;
 using FinanceWindows;
 using GUISupport;
+using ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
@@ -20,21 +20,27 @@ namespace FinanceWindowsViewModels
 
         public ICommand SaveDatabaseCommand { get; }
 
+        public ICommand LoadDatabaseCommand { get; }
+
         public void ExecuteSecurityEditWindow(Object obj)
         {
+            UpdateMainWindow(true);
             windowToView("SecurityEditWindow");
         }
 
         public void ExecuteBankAccEditWindow(Object obj)
         {
+            UpdateMainWindow(true);
             windowToView("BankAccEditWindow");
         }
         public void ExecuteSectorEditWindow(Object obj)
         {
+            UpdateMainWindow(true);
             windowToView("SectorEditWindow");
         }
         public void ExecuteStatsCreatorWindow(Object obj)
         {
+            UpdateMainWindow(true);
             windowToView("StatsCreatorWindow");
         }
 
@@ -45,11 +51,27 @@ namespace FinanceWindowsViewModels
             {
                 //if (!File.Exists(saving.FileName))
                 {
-                    GlobalData.fDatabaseFilePath = saving.FileName;
+                    DatabaseAccessor.SetFilePath(saving.FileName);
                 }
             }
 
             DatabaseAccessor.SavePortfolio();
+            saving.Dispose();
+            UpdateMainWindow(true);
+        }
+
+        public void ExecuteLoadDatabase(Object obj)
+        {
+            OpenFileDialog openFile = new OpenFileDialog();
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                DatabaseAccessor.SetFilePath(openFile.FileName);
+                DatabaseAccessor.ClearPortfolio();
+                DatabaseAccessor.LoadPortfolio();
+                ErrorReports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
+            }
+            openFile.Dispose();
+            UpdateMainWindow(false);
         }
 
         Action<bool> UpdateMainWindow;
@@ -65,6 +87,7 @@ namespace FinanceWindowsViewModels
             OpenSectorEditWindowCommand = new BasicCommand(ExecuteSectorEditWindow);
             OpenStatsCreatorWindowCommand = new BasicCommand(ExecuteStatsCreatorWindow);
             SaveDatabaseCommand = new BasicCommand(ExecuteSaveDatabase);
+            LoadDatabaseCommand = new BasicCommand(ExecuteLoadDatabase);
         }
     }
 }

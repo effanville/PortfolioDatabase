@@ -4,31 +4,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanceWindows"
-        xmlns:Styles="clr-namespace:GUISupport"
         mc:Ignorable="d"
-        Title="Database"
-        Height="450" 
-        MinHeight="450"
-        Width="800"
+        Title="{Binding TitleValue}"
+        Height="Auto" 
+        MinHeight="650"
+        Width="Auto"
         MinWidth="500"
         Background="LightPink">
-    <StackPanel>
+    <StackPanel Height="Auto"
+                Width="Auto">
 
         <Border Background="#F98866"
-                Height="45">
-            <StackPanel Orientation="Horizontal">
+                Height="50">
+            <StackPanel Orientation="Horizontal"
+                        Width="Auto">
                 <TextBlock FontSize="14"
                            Margin="12 12 12 12"
                            Text="Select the option on the left hand side "/>
-                <Styles:DefaultButton HorizontalAlignment="Right"
-                                      Margin="12 12 12 12"
-                                      Content="Open Help Docs" 
-                                      Click="OpenHelpDocsCommand" 
-                                      ClickMode="Press"/>
+                <Button Width="30"
+                        Height="30" 
+                        HorizontalAlignment="Right"
+                        Margin="12 12 12 12"
+                        Click="OpenHelpDocsCommand" 
+                        ClickMode="Press">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="GuiSupport/helpIcon.png" />
+                        <TextBlock>Open Help Docs</TextBlock>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </Border>
 
-        <local:MainUserControl/>
+        <local:MainUserControl Width="Auto"
+                               Height="Auto"/>
 
     </StackPanel>
 

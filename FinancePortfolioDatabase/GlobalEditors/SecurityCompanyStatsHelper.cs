@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using DataStructures;
 using GlobalHeldData;
 
 namespace CompanyStatisticsFunctions
@@ -16,6 +18,11 @@ namespace CompanyStatisticsFunctions
         public static double CompanyValue(string company, DateTime date)
         {
             return GlobalData.Finances.CompanyValue(company, date);
+        }
+
+        public static List<DailyValuation_Named> GetCompanyInvestments(string company)
+        {
+            return GlobalData.Finances.GetCompanyInvestments(company);
         }
 
         public static double IRRCompany(string company, DateTime earlierTime, DateTime laterTime)

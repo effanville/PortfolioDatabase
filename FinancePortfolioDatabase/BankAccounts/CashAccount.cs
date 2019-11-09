@@ -18,7 +18,9 @@ namespace FinanceStructures
         /// </summary>
         private string fName;
 
-        [Obsolete("This should only be used for serialisation.", false)]
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
         public string Name
         {
             get { return fName; }
@@ -30,7 +32,9 @@ namespace FinanceStructures
         /// </summary>
         private string fCompany;
 
-        [Obsolete("This should only be used for serialisation.", false)]
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
         public string Company
         {
             get { return fCompany; }
@@ -42,7 +46,9 @@ namespace FinanceStructures
         /// </summary>
         private TimeList fAmounts;
 
-        [Obsolete("This should only be used for serialisation.", false)]
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
         public TimeList Amounts
         {
             get { return fAmounts; }

@@ -28,39 +28,23 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         Margin="10 10 10 10 ">
-                <StackPanel Margin="10 10 10 10 ">
-                    <Button x:Name="FileBrowse"
+                    <StackPanel Margin="10 10 10 10 ">
+                        <Button x:Name="FileBrowse"
                     MinWidth="150"
                             Width="100"
                 Content="Browse for File"
                     Margin="2 2 2 2 "
                 Command="{Binding BrowseForFileCommand}"
                             />
-                    <Button x:Name="OpenProgramButton"
+                        <Button x:Name="OpenProgramButton"
                     Content="Open Database"
                     Margin="10 10 10 10 "
                             MinWidth="150"
                     Width="100"
                     Command="{Binding OpenProgramCommand}"
                             CommandParameter="{Binding ElementName=OpeningWindow}"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel  Margin="10 10 10 10 ">
-                    <Button x:Name="FolderBrowse"
-                    MinWidth="150"
-                            Width="100"
-                Content="Browse for Folder"
-                    Margin="2 2 2 2 "
-                Command="{Binding BrowseForFolderCommand}"/>
-                    <Button x:Name="OpenNewFileButton"
-                            Content="Open New Database"
-                            Margin="10 10 10 10 "
-                            MinWidth="150"
-                            Width="100"
-                            Command="{Binding OpenNewFileCommand}"
-                            CommandParameter="{Binding ElementName=OpeningWindow}"/>
-                </StackPanel>
-
-            </StackPanel>
 
         </StackPanel>
         </Border>

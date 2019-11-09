@@ -11,6 +11,32 @@ namespace FinanceWindowsViewModels
 {
     public class BankAccEditWindowViewModel : PropertyChangedBase
     {
+        private bool fDataAddEditVisibility;
+        public bool DataAddEditVisibility
+        {
+            get { return fDataAddEditVisibility; }
+            set { fDataAddEditVisibility = value; OnPropertyChanged(); }
+        }
+
+        private bool fNameAddEditVisibility;
+        public bool NameAddEditVisibility
+        {
+            get { return fNameAddEditVisibility; }
+            set { fNameAddEditVisibility = value; OnPropertyChanged(); }
+        }
+
+        private bool fEditing;
+
+        public bool Editing
+        {
+            get { return fEditing; }
+            set { fEditing = value; OnPropertyChanged(); }
+        }
+        public bool NotEditing
+        {
+            get { return !fEditing; }
+            set { fEditing = !value; OnPropertyChanged(); }
+        }
         private List<NameComp> fAccountNames;
         /// <summary>
         /// Name and Company data of Funds in database for view.
@@ -89,13 +115,19 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddAccountCommand { get; }
 
+        public ICommand CreateAccountCommand { get; }
+
         public ICommand AddValuationCommand { get; }
 
         public ICommand EditAccountCommand { get; }
 
         public ICommand EditAccountNameCommand { get; }
 
+        public ICommand AddDataCommand { get; }
+
         public ICommand DeleteAccountCommand { get; }
+
+        public ICommand EditAccountDataCommand { get; }
 
         public ICommand DeleteValuationCommand { get; }
 
@@ -148,6 +180,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteClearSelection(Object obj)
         {
             ClearSelection();
+
         }
 
         /// <summary>
@@ -175,10 +208,26 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteAddSecurity(Object obj)
         {
+            NameAddEditVisibility = true;
+            NotEditing = true;
+            DataAddEditVisibility = false;
+        }
+
+        private void ShowDataAdding(Object obj)
+        {
+            NameAddEditVisibility = true;
+            NotEditing = true;
+            DataAddEditVisibility = true;
+        }
+
+        private void ExecuteCreateSecurity(Object obj)
+        {
             BankAccountEditor.TryAddBankAccount(selectedNameEdit, selectedCompanyEdit);
             UpdateAccountListBox();
             ClearSelection();
-
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteAddValuationCommand(Object obj)
@@ -193,6 +242,10 @@ namespace FinanceWindowsViewModels
                     ClearSelection();
                 }
             }
+
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteEditSecurityName(Object obj)
@@ -204,9 +257,20 @@ namespace FinanceWindowsViewModels
 
                 ClearSelection();
             }
+
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
-        private void ExecuteEditSecurity(Object obj)
+        private void ExecuteEditBankAccount(Object obj)
+        {
+            Editing = true;
+            DataAddEditVisibility = true;
+            NameAddEditVisibility = true;
+        }
+
+        private void ExecuteEditDataCommand(Object obj)
         {
             if (fSelectedName != null)
             {
@@ -218,12 +282,16 @@ namespace FinanceWindowsViewModels
                     ClearSelection();
                 }
             }
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = false;
+            UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteSecurity(Object obj)
         {
             BankAccountEditor.TryDeleteBankAccount(selectedNameEdit, selectedCompanyEdit);
             UpdateAccountListBox();
+            UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteValuation(Object obj)
@@ -232,11 +300,14 @@ namespace FinanceWindowsViewModels
             {
                 BankAccountEditor.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date);
             }
+
             UpdateSelectedSecurityListBox();
+            UpdateMainWindow(true);
         }
 
         private void ExecuteCloseCommand(Object obj)
         {
+            UpdateMainWindow(true);
             windowToView("dataview");
         }
         Action<bool> UpdateMainWindow;
@@ -250,8 +321,13 @@ namespace FinanceWindowsViewModels
             fSelectedAccountData = new List<AccountDayDataView>();
             UpdateAccountListBox();
             AddAccountCommand = new BasicCommand(ExecuteAddSecurity);
+            CreateAccountCommand = new BasicCommand(ExecuteCreateSecurity);
+            AddDataCommand = new BasicCommand(ShowDataAdding);
             AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
-            EditAccountCommand = new BasicCommand(ExecuteEditSecurity);
+
+            EditAccountCommand = new BasicCommand(ExecuteEditBankAccount);
+
+            EditAccountDataCommand = new BasicCommand(ExecuteEditDataCommand);
             EditAccountNameCommand = new BasicCommand(ExecuteEditSecurityName);
             DeleteAccountCommand = new BasicCommand(ExecuteDeleteSecurity);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);

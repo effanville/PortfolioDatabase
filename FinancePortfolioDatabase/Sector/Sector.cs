@@ -3,27 +3,54 @@ using System;
 
 namespace FinanceStructures
 {
+    /// <summary>
+    /// Acts as an overall change of an area of funds.
+    /// </summary>
+    /// <example>
+    /// e.g. FTSE100 or MSCI-Asia
+    /// </example>
     public partial class Sector
     {
+        /// <summary>
+        /// The name of the sector. 
+        /// </summary>
+        /// <remarks>
+        /// These names must be unique
+        /// </remarks>
         private string fName;
 
-        [Obsolete("This should only be used for serialisation or data visualisation.", false)]
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
         public string Name
         {
             get => fName;
             set => fName = value;
         }
+
+        /// <summary>
+        /// The values of the sector.
+        /// </summary>
         private TimeList fValues;
 
-        [Obsolete("This should only be used for serialisation or data visualisation.", false)]
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
         public TimeList Values
         {
             get => fValues;
             set => fValues = value;
         }
 
-        public Sector()
+        /// <summary>
+        /// default constructor.
+        /// </summary>
+        private Sector()
         { }
+
+        /// <summary>
+        /// Creates a new instance of a sector.
+        /// </summary>
         public Sector(string name)
         {
             fName = name;

@@ -7,6 +7,31 @@ namespace FinanceStructures
 {
     public partial class Portfolio
     {
+        public double Profit(string name, string company)
+        {
+            if (TryGetSecurity(name, company, out Security desired))
+            {
+                if (desired.Any())
+                {
+                    return desired.LatestValue().Value - desired.TotalInvestment();
+                }
+            }
+
+            return double.NaN;
+        }
+        public List<DailyValuation_Named> GetSecurityInvestments(string name, string company)
+        {
+            if (TryGetSecurity(name, company, out Security desired))
+            {
+                if (desired.Any())
+                {
+                    return desired.GetAllInvestmentsNamed();
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// If possible, returns the CAR of the security specified.
         /// </summary>
@@ -53,33 +78,6 @@ namespace FinanceStructures
             }
 
             return double.NaN;
-        }
-
-        /// <summary>
-        /// If possible, returns the IRR of all securities in the company specified over the time period.
-        /// </summary>
-        public double IRRCompany(string company, DateTime earlierTime, DateTime laterTime)
-        {
-            var securities = CompanySecurities(company);
-            if (securities.Count == 0)
-            {
-                return double.NaN;
-            }
-            double earlierValue = 0;
-            double laterValue = 0;
-            var Investments = new List<DailyValuation>();
-
-            foreach (var security in securities)
-            {
-                if (security.Any())
-                {
-                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
-                }
-            }
-
-            return FinancialFunctions.IRRTime(Investments,new DailyValuation( laterTime, laterValue), new DailyValuation( earlierTime, earlierValue));
         }
 
         /// <summary>

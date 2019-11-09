@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using ReportingStructures;
+using System;
+using System.IO;
+using System.Windows;
 
 namespace FinanceWindows
 {
@@ -10,6 +13,14 @@ namespace FinanceWindows
         public HelpWindow()
         {
             InitializeComponent();
+            string helpPath = Path.GetFullPath("GUI\\GuiSupport\\help.html");
+            if (!File.Exists(helpPath))
+            {
+                ErrorReports.AddGeneralReport(ReportType.Error, "Could not find help documentation.");
+                return;
+            }
+            Uri path = new Uri(helpPath);
+            webBrowser.Source = path;
         }
     }
 }

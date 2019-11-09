@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Help Window" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <StackPanel>
+        <WebBrowser x:Name="webBrowser"
+                Width="600" 
+                Height="600"/>
+    </StackPanel>
 </Window>

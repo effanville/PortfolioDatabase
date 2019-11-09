@@ -7,15 +7,24 @@ namespace FinanceStructures
 {
     public partial class Security
     {
+        internal double TotalInvestment()
+        {
+            return fInvestments.Sum();
+        }
         /// <summary>
         /// The date and latest value of the security
         /// </summary>
         internal DailyValuation LatestValue()
         {
-            DateTime latestDate = fUnitPrice.GetLatestDate();
-            double latestValue = fUnitPrice.GetLatestValue() * fShares.GetLatestValue();
+            DailyValuation latestDate = fUnitPrice.GetLatestValuation();
+            if (latestDate == null)
+            {
+                return null;
+            }
 
-            return new DailyValuation(latestDate, latestValue);
+            double latestValue = latestDate.Value * fShares.GetLatestValue();
+
+            return new DailyValuation(latestDate.Day, latestValue);
         }
 
         /// <summary>
@@ -23,10 +32,15 @@ namespace FinanceStructures
         /// </summary>
         internal DailyValuation FirstValue()
         {
-            DateTime firstDate = fUnitPrice.GetFirstDate();
-            double latestValue = fUnitPrice.GetFirstValue() * fShares.GetFirstValue();
+            DailyValuation firstDate = fUnitPrice.GetFirstValuation();
+            if (firstDate == null)
+            {
+                return null;
+            }
 
-            return new DailyValuation(firstDate, latestValue);
+            double latestValue = firstDate.Value * fShares.GetFirstValue();
+
+            return new DailyValuation(firstDate.Day, latestValue);
         }
 
         /// <summary>
@@ -50,6 +64,11 @@ namespace FinanceStructures
         internal DailyValuation GetNearestLaterValuation(DateTime date)
         {
             DailyValuation val = fUnitPrice.GetNearestLaterValue(date);
+            if (val == null)
+            {
+                return null;
+            }
+
             double latestValue = fShares.GetNearestLaterValue(date).Value * val.Value;
 
             return new DailyValuation(date, latestValue);
@@ -63,6 +82,32 @@ namespace FinanceStructures
             List<DailyValuation> values = fInvestments.GetValuesBetween(earlierDate,laterDate);
 
             return values;
+        }
+
+        /// <summary>
+        /// returns all investments in the given security.
+        /// </summary>
+        /// <returns></returns>
+        internal List<DailyValuation> GetAllInvestments()
+        {
+            return GetInvestmentsBetween(fInvestments.GetFirstDate(), fInvestments.GetLatestDate());
+        }
+
+        /// <summary>
+        /// returns a list of all investments with the name of the security.
+        /// </summary>
+        internal List<DailyValuation_Named> GetAllInvestmentsNamed()
+        {
+            List<DailyValuation> values = fInvestments.GetValuesBetween(fInvestments.GetFirstDate(), fInvestments.GetLatestDate());
+            List<DailyValuation_Named> namedValues = new List<DailyValuation_Named>();
+            foreach (var val in values)
+            {
+                if (val != null && val.Value > 0)
+                {
+                    namedValues.Add(new DailyValuation_Named(this.fName, this.fCompany, val));
+                }
+            }
+            return namedValues;
         }
 
         /// <summary>

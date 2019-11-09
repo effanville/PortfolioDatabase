@@ -1,113 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace ReportingStructures
 {
     /// <summary>
-    /// Structure 
+    /// Structure of reports to tell the user what is happening
     /// </summary>
     public static class ErrorReports
     {
+        /// <summary>
+        /// Instantiates the 
+        /// </summary>
+        /// <returns></returns>
         public static bool Configure()
         {
-            ok = true;
-            fReports = new List<string>();
-            fWarnings = new List<string>();
-            fErrors = new List<string>();
+            fReports = new List<ErrorReport>();
             return true;
         }
 
+        private static List<ErrorReport> fReports;
+
         /// <summary>
-        /// member to say whether should continue or not. 
-        /// if false then stops program to continue
+        /// Adds a report of any type to the existing list 
         /// </summary>
-        private static bool ok; 
-
-        private static List<string> fReports;
-
-        private static List<string> fWarnings;
-
-        private static List<string> fErrors;
-
-        public static void NotOk()
+        public static void AddGeneralReport(ReportType type, string newReport)
         {
-            ok = false;
-        }
-
-        public static void AllOk()
-        {
-            ok = true;
-        }
-
-        public static bool OkNotOk()
-        {
-            return ok;
+            fReports.Add(new ErrorReport(type,newReport));
         }
 
         /// <summary>
         /// Adds a report to the existing list 
         /// </summary>
-        /// <param name="newReport">Report one wants to add to held reports</param>
         public static void AddReport(string newReport)
         {
-            fReports.Add(newReport);
+            AddGeneralReport(ReportType.Report, newReport);
         }
 
         /// <summary>
-        /// Adds a warning to the existing list 
+        /// Adds an Error report to the existing list 
         /// </summary>
-        /// <param name="newWarning">Warning one wants to add to held reports</param>
-        public static void AddWarning(string newWarning)
+        public static void AddError(string newReport)
         {
-            fWarnings.Add(newWarning);
+            AddGeneralReport(ReportType.Error, newReport);
         }
 
         /// <summary>
-        /// Adds a report to the existing list 
+        /// Adds a Warning report to the existing list 
         /// </summary>
-        /// <param name="newError">Report one wants to add to held reports</param>
-        public static void AddError(string newError)
+        public static void AddWarning(string newReport)
         {
-            fErrors.Add(newError);
-            NotOk();
+            AddGeneralReport(ReportType.Warning, newReport);
         }
 
         /// <summary>
         /// Function to obtain 
         /// </summary>
         /// <returns>Currently held reports</returns>
-        public static List<string> GetReport()
+        public static List<ErrorReport> GetReports()
         {
             return fReports;
         }
 
-        public static List<string> GetWarnings()
+        /// <summary>
+        /// Removes element at index <param name="i"/>
+        /// </summary>
+        public static void RemoveReport(int i)
         {
-            return fWarnings;
-        }
-
-        public static List<string> GetErrors()
-        {
-            return fErrors;
+            if (i >= 0 && i < fReports.Count())
+            {
+                fReports.RemoveAt(i);
+            }
         }
 
         public static void Clear()
         {
-            fErrors.Clear();
-            fWarnings.Clear();
             fReports.Clear();
-            ok = true;
         }
-    }
-
-    public enum ReportType
-    {
-        Report = 0,
-        Warning = 1,
-        Error = 2,
     }
 }
