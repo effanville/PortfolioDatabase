@@ -57,7 +57,7 @@ namespace FinanceStructures
             {
                 namesAndCompanies.Add(new SecurityStatsHolder(security.GetName(), security.GetCompany()));
             }
-
+            namesAndCompanies.Add(new SecurityStatsHolder("Totals", ""));
             return namesAndCompanies;
         }
 

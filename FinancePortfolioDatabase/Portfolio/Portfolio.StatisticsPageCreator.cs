@@ -3,16 +3,13 @@ using SecurityStatisticsFunctions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using mathematics;
 
 namespace PortfolioStatsCreatorHelper
 {
     public static class PortfolioStatsCreators
     {
-        public static string Trunc(double value, int exp)
-        {
-            double decimalPlaces = Math.Pow(10, exp);
-            return (Math.Truncate(value * decimalPlaces) / decimalPlaces).ToString();
-        }
+
 
 
         public static bool TryCreateHTMLPage(Portfolio funds, List<string> toExport, string filepath)
@@ -32,11 +29,11 @@ namespace PortfolioStatsCreatorHelper
                 var securities = funds.CompanySecurities(compName);
                 foreach (var sec in securities)
                 {
-                    string line = sec.GetName().PadRight(25) + Trunc(SecurityStatistics.SecurityLatestValue(sec.GetName(), compName), 3).PadRight(15) + Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-3), DateTime.Today), 3).PadRight(15) + Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-6), DateTime.Today), 3).PadRight(15) + Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-12), DateTime.Today), 3).PadRight(15) + Trunc(100 * SecurityStatistics.SecurityIRR(sec.GetName(), compName), 3).PadRight(15);
+                    string line = sec.GetName().PadRight(25) + MathSupport.Trunc(SecurityStatistics.SecurityLatestValue(sec.GetName(), compName), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-3), DateTime.Today), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-6), DateTime.Today), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-12), DateTime.Today), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRR(sec.GetName(), compName), 3).PadRight(15);
                     htmlWriter.WriteLine(line);
                 }
 
-                string compLine = compName.PadRight(25) + Trunc(funds.CompanyValue(compName, DateTime.Today), 4).PadRight(15) + Trunc(funds.IRRCompany(compName,DateTime.Today.AddMonths(-3), DateTime.Today), 4).PadRight(15) + Trunc(funds.IRRCompany(compName, DateTime.Today.AddMonths(-6), DateTime.Today), 4).PadRight(15) + Trunc(funds.IRRCompany(compName, DateTime.Today.AddMonths(-12), DateTime.Today), 4).PadRight(15);
+                string compLine = compName.PadRight(25) + MathSupport.Trunc(funds.CompanyValue(compName, DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRCompany(compName,DateTime.Today.AddMonths(-3), DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRCompany(compName, DateTime.Today.AddMonths(-6), DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRCompany(compName, DateTime.Today.AddMonths(-12), DateTime.Today), 4).PadRight(15);
                 htmlWriter.WriteLine(compLine);
                 htmlWriter.WriteLine("");
 
@@ -44,7 +41,7 @@ namespace PortfolioStatsCreatorHelper
 
             htmlWriter.WriteLine("");
 
-            string totalLine = "Funds Total".PadRight(25) + Trunc(funds.AllSecuritiesValue(DateTime.Today), 4).PadRight(15) + Trunc(funds.IRRPortfolio(DateTime.Today.AddMonths(-3), DateTime.Today), 4).PadRight(15);
+            string totalLine = "Funds Total".PadRight(25) + MathSupport.Trunc(funds.AllSecuritiesValue(DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRPortfolio(DateTime.Today.AddMonths(-3), DateTime.Today), 4).PadRight(15);
             htmlWriter.WriteLine(totalLine) ;
             htmlWriter.WriteLine("");
 
@@ -56,15 +53,15 @@ namespace PortfolioStatsCreatorHelper
                 var bankAccounts = funds.CompanyBankAccounts(compName);
                 foreach (CashAccount acc in bankAccounts)
                 {
-                    string line = acc.GetName().PadRight(25) + Trunc(acc.LatestValue().Value, 3).PadRight(15);
+                    string line = acc.GetName().PadRight(25) + MathSupport.Trunc(acc.LatestValue().Value, 3).PadRight(15);
                     htmlWriter.WriteLine(line);
                 }
-                string compLine = compName.PadRight(25) + Trunc(funds.BankAccountCompanyValue(compName, DateTime.Today), 4).PadRight(15);
+                string compLine = compName.PadRight(25) + MathSupport.Trunc(funds.BankAccountCompanyValue(compName, DateTime.Today), 4).PadRight(15);
                 htmlWriter.WriteLine(compLine);
                 htmlWriter.WriteLine("");
             }
 
-            string totalAccountsLine = "BankAccounts Total".PadRight(15) + Trunc(funds.AllBankAccountsValue(DateTime.Today), 4).PadRight(15);
+            string totalAccountsLine = "BankAccounts Total".PadRight(15) + MathSupport.Trunc(funds.AllBankAccountsValue(DateTime.Today), 4).PadRight(15);
             htmlWriter.WriteLine(totalAccountsLine);
             htmlWriter.WriteLine("");
 

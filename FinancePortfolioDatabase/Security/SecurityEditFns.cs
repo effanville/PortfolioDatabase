@@ -120,25 +120,13 @@ namespace FinanceStructures
             // here we don't care about investments
             if (investment == 0)
             {
-                if (DoesDateSharesDataExist(date, out int index)  || DoesDateUnitPriceDataExist(date, out int _))
+                if (DoesDateSharesDataExist(date, out int _)  || DoesDateUnitPriceDataExist(date, out int _))
                 {
                     ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has NumShares or UnitPrice data on {date.ToShortDateString()}.");
                     return false;
                 }
 
                 return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice) && ComputeInvestments();
-            }
-
-            // here we dont care about shares or investments
-            if (shares == 0)
-            {
-                if (DoesDateUnitPriceDataExist(date, out int _))
-                {
-                    ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has UnitPrice data on {date.ToShortDateString()}.");
-                    return false;
-                }
-
-                return fUnitPrice.TryAddValue(date, unitPrice) && ComputeInvestments();
             }
 
             if (DoesDateSharesDataExist(date, out int _) || DoesDateInvestmentDataExist(date, out int _) || DoesDateUnitPriceDataExist(date, out int _))
@@ -160,12 +148,12 @@ namespace FinanceStructures
         {
             bool editShares = false;
             bool editUnitPrice = false;
-            if (DoesDateSharesDataExist(date, out int index))
+            if (DoesDateSharesDataExist(date, out int _))
             {
                 editShares = fShares.TryEditData(date, shares);
             }
 
-            if (DoesDateUnitPriceDataExist(date, out int index3))
+            if (DoesDateUnitPriceDataExist(date, out int _))
             {
                 editUnitPrice = fUnitPrice.TryEditData(date, unitPrice);
             }

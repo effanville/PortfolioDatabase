@@ -131,8 +131,17 @@ namespace FinanceStructures
         /// </summary>
         public int CompareTo(object obj)
         {
-            Security a = (Security)obj;
-            return string.Compare(fName, a.GetName());
+            if (obj is Security value)
+            {
+                if (Company == value.Company)
+                {
+                    return Name.CompareTo(value.Name);
+                }
+
+                return Company.CompareTo(value.Company);
+            }
+
+            return 0;
         }
     }
 }

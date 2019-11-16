@@ -90,7 +90,7 @@ namespace FinanceStructures
                 }
             }
 
-            return FinancialFunctions.IRRTime(Investments, new DailyValuation(laterTime, laterValue), new DailyValuation(earlierTime, earlierValue));
+            return FinancialFunctions.IRRTime(new DailyValuation(earlierTime, earlierValue), Investments, new DailyValuation(laterTime, laterValue));
         }
     }
 }

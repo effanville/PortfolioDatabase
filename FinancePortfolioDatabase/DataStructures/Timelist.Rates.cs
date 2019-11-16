@@ -28,7 +28,14 @@ namespace DataStructures
         /// </summary>
         internal double CAR(DateTime earlierTime, DateTime laterTime)
         {
-            return FinancialFunctions.CAR(GetNearestEarlierValue(earlierTime), GetNearestEarlierValue(laterTime));
+            var earlierValue = GetNearestEarlierValue(earlierTime);
+            var laterValue = GetNearestEarlierValue(laterTime);
+            if (earlierValue == null || laterValue == null)
+            {
+                return double.NaN;
+            }
+
+            return FinancialFunctions.CAR(earlierValue, laterValue);
         }
         /// <summary>
         /// Returns internal rate of return of the values in the TimeList
@@ -60,7 +67,7 @@ namespace DataStructures
                 return FinancialFunctions.CAR(latestValue, startValue);
             }
 
-            return FinancialFunctions.IRRTime(GetValuesBetween(startValue.Day, latestValue.Day), latestValue, startValue);
+            return FinancialFunctions.IRRTime(startValue, GetValuesBetween(startValue.Day, latestValue.Day), latestValue);
         }
     }
 }

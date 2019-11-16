@@ -79,31 +79,5 @@ namespace FinanceStructures
 
             return double.NaN;
         }
-
-        /// <summary>
-        /// If possible, returns the IRR of all securities over the time period.
-        /// </summary>
-        public double IRRPortfolio(DateTime earlierTime, DateTime laterTime)
-        {
-            if (Funds.Count == 0)
-            {
-                return double.NaN;
-            }
-            double earlierValue = 0;
-            double laterValue = 0;
-            var Investments = new List<DailyValuation>();
-
-            foreach (var security in Funds)
-            {
-                if (security.Any())
-                {
-                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
-                }
-            }
-
-            return FinancialFunctions.IRRTime(Investments, new DailyValuation(laterTime, laterValue), new DailyValuation(earlierTime, earlierValue));
-        }
     }
 }

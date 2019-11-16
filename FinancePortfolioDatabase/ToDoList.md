@@ -14,6 +14,8 @@
 	1.1 Make debugging easier as less in one place
 	1.2 Make flow of data a bit more complicated 
 	1.3 May enable reusing common code a bit more.
+2. Order Securities based upon company and name
+3.In statistics pages add a total valuation.
 
 ## Major Features
 
