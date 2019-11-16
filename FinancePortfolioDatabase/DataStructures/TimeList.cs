@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +33,10 @@ namespace DataStructures
         /// <summary>
         /// Constructor adding values.
         /// </summary>
-        private TimeList(List<DailyValuation> values)
+        /// <remarks>
+        /// For testing only.
+        /// </remarks>
+        internal TimeList(List<DailyValuation> values)
         {
             fValues = values;
         }

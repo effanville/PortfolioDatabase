@@ -51,7 +51,7 @@ namespace FinanceStructures
             DailyValuation val = fUnitPrice.GetNearestEarlierValue(date);
             if (val == null)
             {
-                return null;
+                return new DailyValuation(date, 0.0);
             }
 
             double latestValue = fShares.GetNearestEarlierValue(date).Value * val.Value;
@@ -66,7 +66,7 @@ namespace FinanceStructures
             DailyValuation val = fUnitPrice.GetNearestLaterValue(date);
             if (val == null)
             {
-                return null;
+                return new DailyValuation(date, 0.0);
             }
 
             double latestValue = fShares.GetNearestLaterValue(date).Value * val.Value;
@@ -128,7 +128,7 @@ namespace FinanceStructures
                 var invs = GetInvestmentsBetween(earlierDate, laterDate);
                 var latestTime = GetNearestEarlierValuation(laterDate);
                 var firstTime = GetNearestEarlierValuation(earlierDate);
-                return FinancialFunctions.IRRTime(invs, latestTime, firstTime);
+                return FinancialFunctions.IRRTime(firstTime, invs, latestTime);
             }
             return double.NaN;
         }

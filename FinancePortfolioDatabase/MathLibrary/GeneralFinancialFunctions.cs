@@ -15,12 +15,20 @@ namespace FinanceFunctionsList
         /// </summary>
         public static double CAR(DateTime first, double firstValue, DateTime last, double lastValue)
         {
+            if (firstValue == lastValue)
+            {
+                return 0.0;
+            }
             if (firstValue == 0 || (last - first).Days == 0)
             {
                 return double.NaN;
             }
+            if (lastValue == 0)
+            {
+                return -1.0;
+            }
 
-            return Math.Pow(lastValue / firstValue, 365.0 / (last - first).Days);
+            return Math.Pow(lastValue / firstValue, 365.0 / (last - first).Days) - 1;
         }
 
         /// <summary>
@@ -58,6 +66,14 @@ namespace FinanceFunctionsList
         /// </summary>
         public static double IRR(List<DailyValuation> investments, DailyValuation latestValue)
         {
+            if (investments == null || !investments.Any())
+            {
+                return double.NaN;
+            }
+            if (investments.Count == 1)
+            {
+                return CAR(investments[0], latestValue);
+            }
             // More than one investment so have to perform bisection method.
             double lowestValue = -1;
             double highestValue = 2;
@@ -99,11 +115,16 @@ namespace FinanceFunctionsList
         /// <summary>
         /// Calculates Internal rate of return of a collection of investments over the last timelength number of months
         /// </summary>
-        public static double IRRTime(List<DailyValuation> investments, DailyValuation latestValue, DailyValuation startValue)
+        public static double IRRTime(DailyValuation startValue, List<DailyValuation> investments, DailyValuation latestValue)
         {
             if (latestValue == null || startValue == null || investments == null)
             {
                 return double.NaN;
+            }
+            // easy case to get rid of
+            if ((investments == null || investments.Count() == 0) &&latestValue.Value == startValue.Value)
+            {
+                return 0.0;
             }
             // reduce number of investments to recent only
             var recentInvestments = new List<DailyValuation>();

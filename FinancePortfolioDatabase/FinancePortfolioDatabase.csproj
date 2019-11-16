@@ -69,6 +69,10 @@
     </Compile>
     <Compile Include="GUI\DataEditWindows\BankAccEditWindowViewModel.cs" />
     <Compile Include="GUI\BasicDataViewModel.cs" />
+    <Compile Include="GUI\GuiSupport\BankAccountStatsHolder.cs" />
+    <Compile Include="GUI\GuiSupport\SecurityStatsHolder.cs" />
+    <Compile Include="GUI\GuiSupport\BasicDayDataView.cs" />
+    <Compile Include="GUI\GuiSupport\AccountDayDataView.cs" />
     <Compile Include="GUI\GuiSupport\OutputHelper.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
     <Compile Include="GUI\HelpWindow.xaml.cs">
@@ -142,14 +146,15 @@
     </Compile>
     <Compile Include="BankAccounts\CashAccount.cs" />
     <Compile Include="BankAccounts\CashAccountEditFns.cs" />
-    <Compile Include="DataStructures\GeneralFinancialFunctions.cs" />
+    <Compile Include="MathLibrary\GeneralFinancialFunctions.cs" />
     <Compile Include="DataStructures\Timelist.Rates.cs" />
     <Compile Include="GlobalEditors\BankAccountHelperFunctions.cs" />
     <Compile Include="GlobalEditors\SecurityCompanyStatsHelper.cs" />
     <Compile Include="GlobalEditors\SecurityStatsHelper.cs" />
     <Compile Include="GlobalEditors\SecurityEditor.cs" />
     <Compile Include="DataStructures\DailyValuation.cs" />
-    <Compile Include="GUI\GuiSupport\GUIDataStructs.cs" />
+    <Compile Include="GUI\GuiSupport\NameComp.cs" />
+    <Compile Include="MathLibrary\MathSupport.cs" />
     <Compile Include="Portfolio\Portfolio.StatisticsPageCreator.cs" />
     <Compile Include="Portfolio\PortfolioBankAccountCompany.cs" />
     <Compile Include="Portfolio\PortfolioSecurityCompany.cs" />

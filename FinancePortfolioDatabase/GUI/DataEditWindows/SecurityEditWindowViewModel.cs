@@ -163,7 +163,7 @@ namespace FinanceWindowsViewModels
         private void UpdateFundListBox()
         {
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
-
+            FundNames.Sort();
             selectedName = null;
             selectedNameEdit = null;
             selectedCompanyEdit = null;

@@ -32,8 +32,11 @@ namespace FinanceWindowsViewModels
         public void DataUpdate()
         {
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
+            FundNames.Sort();
             AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
+            AccountNames.Sort();
             SectorNames = DatabaseAccessor.GetSectorNames();
+            SectorNames.Sort();
         }
 
         Action<bool> UpdateMainWindow;
@@ -42,8 +45,11 @@ namespace FinanceWindowsViewModels
         {
             UpdateMainWindow = updateWindow;
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
-
+            FundNames.Sort();
             AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
+            AccountNames.Sort();
+            SectorNames = DatabaseAccessor.GetSectorNames();
+            SectorNames.Sort();
         }
     }
 }
