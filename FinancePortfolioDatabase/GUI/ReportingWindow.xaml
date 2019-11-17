@@ -4,39 +4,42 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
-      Height="200"
-      Width="Auto">
-    <StackPanel Orientation="Horizontal"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom">
-        <StackPanel>
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch">
+    
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Background="#F98866"
+              Grid.Column="0">
+        <StackPanel 
+                    VerticalAlignment="Top">
             <TextBlock Margin="10 10 10 10" Text="Error Reports"/>
             <Button Margin="10 10 10 10"
-                Content="Clear Reports"
+                    Content="Clear Reports"
                     Command="{Binding ClearReportsCommand}"/>
             <Button Margin="10 10 10 10"
                     Content="Clear Selected Report"
                     Command="{Binding ClearSingleReportCommand}"/>
         </StackPanel>
+        </Grid>
         <ListView Name="SecBox"
                   ItemsSource="{Binding ReportsToView, Mode=TwoWay}"
-                  MinHeight="150"
-                  MaxHeight="150"
-                  Margin="10,10,10,10"
-                  MinWidth="600"
-                  MaxWidth="1000"
-                  Width="Auto"
+                  Grid.Column="1"
+                  Margin="10 10 10 10"
                   ScrollViewer.VerticalScrollBarVisibility="Visible">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto" 
-                                    Header="Type" 
+                    <GridViewColumn Header="Type" 
                                     DisplayMemberBinding="{Binding ErrorType}"/>
-                    <GridViewColumn Width="Auto" 
-                                    Header="Message" 
+                    <GridViewColumn Header="Message" 
                                     DisplayMemberBinding="{Binding Message}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-    </StackPanel>
+    </Grid>
 </Grid>

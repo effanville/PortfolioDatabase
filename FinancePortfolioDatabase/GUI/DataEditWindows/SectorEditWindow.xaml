@@ -1,176 +1,223 @@
-﻿<StackPanel x:Class="FinanceWindows.SectorEditWindow"
+﻿<Grid x:Class="FinanceWindows.SectorEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-            Height="450" Width="690"
-        MinWidth="1200">
-    <StackPanel.Resources>
+        mc:Ignorable="d">
+    <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-    </StackPanel.Resources>
-    <Border BorderBrush="#FF000000" 
-            BorderThickness="1" 
-            CornerRadius="8"
-            Height="450">
-        <StackPanel>
-            <Border Background="Pink"
-                Height="45"
-                >
-                <TextBlock FontSize="14"
-                       Margin="12 12 12 12">Select the option on the left hand side</TextBlock>
-            </Border>
-            <StackPanel Orientation="Horizontal" >
-                <StackPanel Width="130"
-                        Height="500"
-                        Background="Pink">
-                    <Button Content="New Sector"
+    </Grid.Resources>
+    
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0"
+                    Width="130">
+                    
+            <Button Content="New Sector"
                         Margin="10 10 10 10 "
                         Command="{Binding AddSectorCommand}"
                         ToolTip="Create new Sector from Name and Company Data specified."/>
-                    <Button Content="Edit Sector"
+                    
+            <Button Content="Edit Sector"
                         Margin="10 10 10 10 "
                         Command="{Binding EditSectorCommand}"
                         ToolTip="Edit the Sector data highlighted."/>
-                    <Button Content="Delete Sector"
+                    
+            <Button Content="Delete Sector"
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteSectorCommand}"
                         ToolTip="Delete the Sector highlighted"/>
-                    <Button Content="Add Valuation"
+                    
+            <Button Content="Add Valuation"
                         Margin="10 10 10 10 "
                         Command="{Binding AddSectorDataCommand}"
                         ToolTip="Add a value to the Sector highlighted."/>
-                    <Button Content="Delete Valuation"
+                    
+            <Button Content="Delete Valuation"
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteDataCommand}"
                         ToolTip="Deletes the Sector data highlighted."/>
-                    <Button Content="Close Sector Edit"
+                    
+            <Button Content="Close Sector Edit"
                         Margin="10 10 10 10 "
                         Command="{Binding CloseCommand}"
                         ToolTip="Press here to close Add/Edit Sector"/>
-                </StackPanel>
-                <StackPanel >
-                <Border Height="100" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000" 
-                    BorderThickness="1" 
-                    CornerRadius="8"
-                        Visibility="{Binding NameAddEditVisibility, Converter={StaticResource BoolToVis}}">
-                    <StackPanel>
-                        <Label Content="NameData"/>
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="5 5 5 5"
-                                    >
-                            <StackPanel.ToolTip>
-                                <StackPanel>
-                                    <TextBlock Text="Either a) The name of the selected sector."/>
-                                    <TextBlock Text="       b) User entered name for a new/edited sector."/>
-                                </StackPanel>
-                            </StackPanel.ToolTip>
-                            <Label Width="110"
-                                   Content="Sector Name"/>
-                            <TextBox Text="{Binding selectedNameEdit}"
-                                     MinWidth="100"/>
-                        </StackPanel>
-                        <Button Content="Add Sector"
-                                    Margin="10 10 10 10 "
-                                    Command="{Binding CreateSectorCommand}"
-                                    Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
-                        <Button Content="Edit Sector"
-                                    Margin="10 10 10 10 "
-                                    Command="{Binding EditSectorNameCommand}"
-                                    Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
-                        
-                    </StackPanel>
-                </Border>
-                <Border Height="200" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000" 
-                    BorderThickness="1" 
-                    CornerRadius="8"
-                        Visibility="{Binding DataAddEditVisibility, Converter={StaticResource BoolToVis}}">
-                    <StackPanel>
-                        <Label>Valuation Data</Label>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Date of selected data, or new value to be added">
-                            <Label Width="120" Content="Date" />
-                            <TextBox 
-                             Text="{Binding DateEdit}"
-                            MinWidth="100"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Value in account on day specified">
-                            <Label Width="120">Value</Label>
-                            <TextBox 
-                             Text="{Binding ValuesEdit}"
-                            MinWidth="100"/>
-                        </StackPanel>
-                            <Button Content="Add Sector Data"
-                                    Margin="10 10 10 10 "
-                                    Command="{Binding AddValuationCommand}"
-                                    Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
-                            <Button Content="Edit Sector Data"
-                                    Margin="10 10 10 10 "
-                                    Command="{Binding EditAccountDataCommand}"
-                                    Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
-                        </StackPanel>
-                </Border>
-                </StackPanel>
-                <Border Height="380" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000"
-                    BorderThickness="1" 
-                    CornerRadius="8">
-                    <StackPanel ToolTip="Lists all Sector currently in the database. Select one to edit data.">
-                        <Label Content="Sector in Database"/>
-                        <ListView Name="SecBox"
-                              ItemsSource="{Binding SectorNames, Mode=TwoWay}"
-                              MinHeight="300"
-                              Margin="10,10,10,10"
-                              MinWidth="190"
-                              Width="190"
-                              SelectedItem="{Binding selectedName}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Width="90" 
-                                                    Header="Name" 
-                                                    DisplayMemberBinding="{Binding}" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </StackPanel>
-                </Border>
-                <Border Height="380" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000" 
-                    BorderThickness="1" 
-                    CornerRadius="8">
-                    <StackPanel ToolTip="Shows the data held on the Sector selected in the Securities in Database list.">
-                        <Label Content="Selected Sector Data"/>
-                        <ListView Name="SecValuesBox"
-                                ItemsSource="{Binding SelectedSectorData, Mode=TwoWay}"
-                                MinHeight="300"
-                                Margin="10,10,10,10"
-                                MinWidth="290"
-                                Width="290"
-                                SelectedItem="{Binding selectedSector}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Width="70" 
-                                                Header="Date" 
-                                                DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
-                                    <GridViewColumn Width="70" 
-                                                Header="Value" 
-                                                DisplayMemberBinding="{Binding Amount}" />
-
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
         </StackPanel>
-    </Border>
-</StackPanel>
+
+
+        <Grid Grid.Row="1"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" MinHeight="160"/>
+                <RowDefinition Height="1*" MinHeight="300"/>
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0"
+                  Visibility="{Binding NameAddEditVisibility, Converter={StaticResource BoolToVis}}"
+                  VerticalAlignment="Top">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Content="NameData"/>
+
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="Sector Name">
+                    <Label.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="Either a) The name of the selected sector."/>
+                            <TextBlock Text="       b) User entered name for a new/edited sector."/>
+                        </StackPanel>
+                        </Label.ToolTip>
+                </Label>
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Text="{Binding selectedNameEdit}"
+                         MinWidth="100"/>
+
+                <Button Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Add Sector"
+                        Margin="10 10 10 10 "
+                        Command="{Binding CreateSectorCommand}"
+                        Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
+
+                <Button Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Edit Sector"
+                        Margin="10 10 10 10 "
+                        Command="{Binding EditSectorNameCommand}"
+                        Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
+
+            </Grid>
+            
+            <Grid Grid.Row="1"
+                  Visibility="{Binding DataAddEditVisibility, Converter={StaticResource BoolToVis}}"
+                  VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2">Valuation Data</Label>
+                            
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       ToolTip="Date of selected data, or new value to be added"
+                       Content="Date" />
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Text="{Binding DateEdit}"
+                         MinWidth="100"/>
+
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                       ToolTip="Value in account on day specified">Value</Label>
+
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Text="{Binding ValuesEdit}"
+                         MinWidth="100"/>
+
+                <Button Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Add Sector Data"
+                        Margin="10 10 10 10 "
+                        Command="{Binding AddValuationCommand}"
+                        Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
+                <Button Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Edit Sector Data"
+                        Margin="10 10 10 10 "
+                        Command="{Binding EditAccountDataCommand}"
+                        Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
+            </Grid>
+        </Grid>
+
+        <Grid ToolTip="Lists all Sector currently in the database. Select one to edit data."
+              Grid.Row="1"
+              Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" 
+                   Content="Sector in Database"/>
+            <ListView Grid.Row="1"
+                      Name="SecBox"
+                      ItemsSource="{Binding SectorNames, Mode=TwoWay}"
+                      Margin="10,10,10,10"
+                      SelectedItem="{Binding selectedName}"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" 
+                                        DisplayMemberBinding="{Binding}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Grid.Column="3"
+              ToolTip="Shows the data held on the Sector selected in the Securities in Database list.">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" 
+                   Content="Selected Sector Data"/>
+            <ListView Grid.Row="1" 
+                      Name="SecValuesBox"
+                      ItemsSource="{Binding SelectedSectorData, Mode=TwoWay}"
+                      Margin="10,10,10,10"
+                      SelectedItem="{Binding selectedSector}"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Date" 
+                                        DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                        <GridViewColumn Header="Value" 
+                                        DisplayMemberBinding="{Binding Amount}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</Grid>
