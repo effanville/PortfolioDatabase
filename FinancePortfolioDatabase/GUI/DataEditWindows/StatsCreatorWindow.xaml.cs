@@ -5,7 +5,7 @@ namespace FinanceWindows
     /// <summary>
     /// Interaction logic for StatsCreatorWindow.xaml
     /// </summary>
-    public partial class StatsCreatorWindow : StackPanel
+    public partial class StatsCreatorWindow : Grid
     {
         public StatsCreatorWindow()
         {

@@ -1,233 +1,281 @@
-﻿<StackPanel x:Class="FinanceWindows.SecurityEditWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Height="450" 
-        MinHeight="450"
-        Width="800"
-        MinWidth="1125">
-    <StackPanel.Resources>
+﻿<Grid x:Class="FinanceWindows.SecurityEditWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+    <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-    </StackPanel.Resources>
-    <Border BorderBrush="#FF000000" 
-            BorderThickness="1" 
-            CornerRadius="8"
-            Height="450">
-    <StackPanel>
-        <Border Background="Pink"
-                Height="45"
-                >
-            <TextBlock FontSize="14"
-                       Margin="12 12 12 12">Select the option on the left hand side</TextBlock>
-        </Border>
-        <StackPanel Orientation="Horizontal" >
-            <StackPanel Width="130"
-                        Height="500"
-                        Background="Pink">
-                <Button Content="New Security"
-                        Margin="10 10 10 10 "
-                        Command="{Binding AddSecurityCommand}"
-                        ToolTip="Create new security from Name and Company Data specified."/>
+    </Grid.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
 
-                <Button Content="Delete Security"
-                        Margin="10 10 10 10 "
-                        Command="{Binding DeleteSecurityCommand}"
-                        ToolTip="Delete the security highlighted"/>
-                <Button Content="Add Valuation"
-                        Margin="10 10 10 10 "
-                        Command="{Binding AddValuationCommand}"
-                        ToolTip="Add a value to the security highlighted."/>
-                    <Button Content="Edit Securities"
-                        Margin="10 10 10 10 "
-                        Command="{Binding ShowEditSecurityCommand}"
-                        ToolTip="Edit the security data highlighted."/>
-                    <Button Content="Delete Valuation"
-                        Margin="10 10 10 10 "
-                        Command="{Binding DeleteValuationCommand}"
-                        ToolTip="Deletes the security data highlighted."/>
-                <Button Content="Close Security Edit"
-                        Margin="10 10 10 10 "
-                        Command="{Binding CloseCommand}"
-                        ToolTip="Press here to close Add/Edit Securities"/>
-            </StackPanel>
-                <StackPanel>
-                    <Border Height="150" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000" 
-                    BorderThickness="1" 
-                    CornerRadius="8"
-                            Visibility="{Binding NameAddEditVisibility, Converter={StaticResource BoolToVis}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Width="130">
+            <Button Content="New Security"
+                    Margin="10 10 10 10 "
+                    Command="{Binding AddSecurityCommand}"
+                    ToolTip="Create new security from Name and Company Data specified."/>
+
+            <Button Content="Delete Security"
+                    Margin="10 10 10 10 "
+                    Command="{Binding DeleteSecurityCommand}"
+                    ToolTip="Delete the security highlighted"/>
+            <Button Content="Add Valuation"
+                    Margin="10 10 10 10 "
+                    Command="{Binding AddValuationCommand}"
+                    ToolTip="Add a value to the security highlighted."/>
+            <Button Content="Edit Securities"
+                    Margin="10 10 10 10 "
+                    Command="{Binding ShowEditSecurityCommand}"
+                    ToolTip="Edit the security data highlighted."/>
+            <Button Content="Delete Valuation"
+                    Margin="10 10 10 10 "
+                    Command="{Binding DeleteValuationCommand}"
+                    ToolTip="Deletes the security data highlighted."/>
+            <Button Content="Close Security Edit"
+                    Margin="10 10 10 10 "
+                    Command="{Binding CloseCommand}"
+                    ToolTip="Press here to close Add/Edit Securities"/>
+        </StackPanel>
+        
+        <Grid Grid.Row="0"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" MinHeight="160"/>
+                <RowDefinition Height="2*" MinHeight="200"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  VerticalAlignment="Top"
+                  Visibility="{Binding NameAddEditVisibility, Converter={StaticResource BoolToVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Content="Name and Company Data">
+                    <Label.ToolTip>
                         <StackPanel>
-                            <Label Content="Name and Company Data"/>
-                            <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5">
-                                <StackPanel.ToolTip>
-                                    <StackPanel>
-                                        <TextBlock>Either a) The company of the selected security.</TextBlock>
-                                        <TextBlock>       b) User entered company for a new/edited security.</TextBlock>
-                                    </StackPanel>
-                                </StackPanel.ToolTip>
-                                <Label Width="110">Security Company</Label>
-                                <TextBox Text="{Binding selectedCompanyEdit}"
-                            MinWidth="100"/>
+                            <TextBlock>Either a) The company of the selected security.</TextBlock>
+                            <TextBlock>       b) User entered company for a new/edited security.</TextBlock>
+                        </StackPanel>
+                    </Label.ToolTip>
+                </Label>
+
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="Security Company"/>
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         MinWidth="120"
+                         Text="{Binding selectedCompanyEdit}"/>
+
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                       Content="Security Name">
+                    <Label.ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="Either a) The name of the selected security."/>
+                                <TextBlock Text="       b) User entered name for a new/edited security."/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal"
-                                    Margin="5 5 5 5">
-                                <StackPanel.ToolTip>
-                                    <StackPanel>
-                                        <TextBlock Text="Either a) The name of the selected security."/>
-                                        <TextBlock Text="       b) User entered name for a new/edited security."/>
-                                    </StackPanel>
-                                </StackPanel.ToolTip>
-                                <Label Width="110"
-                                   Content="Security Name"/>
-                                <TextBox Text="{Binding selectedNameEdit}"
-                                     MinWidth="100"/>
-                            </StackPanel>
-                            <Button Content="Add Security"
+                    </Label.ToolTip>
+                </Label>
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         MinWidth="120"
+                         Text="{Binding selectedNameEdit}"/>
+                
+                <Button Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Add Security"
                         Margin="10 10 10 10 "
                         Command="{Binding CreateSecurityCommand}"
-                                    Visibility="{Binding NotEditing,Converter={StaticResource BoolToVis}}"/>
-                            <Button Content="Edit Security Name"
+                        Visibility="{Binding NotEditing,Converter={StaticResource BoolToVis}}"/>
+                <Button Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Edit Security Name"
                         Margin="10 10 10 10 "
                         Command="{Binding EditSecurityNameCommand}"
                         ToolTip="Edits the highlighted security name."
-                                    Visibility="{Binding Editing,Converter={StaticResource BoolToVis}}"/>
-                        </StackPanel>
-                    </Border>
+                        Visibility="{Binding Editing,Converter={StaticResource BoolToVis}}"/>
+            </Grid>
 
 
-                    <Border Height="200" VerticalAlignment="Top" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8"
-                            Visibility="{Binding DataAddEditVisibility, Converter={StaticResource BoolToVis}}">
-                        <StackPanel >
+            <Grid VerticalAlignment="Top"
+                  Grid.Row="1"
+                  Visibility="{Binding DataAddEditVisibility, Converter={StaticResource BoolToVis}}" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
 
-                            <Label>Valuation Data</Label>
-                            <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Date of selected data, or new value to be added">
-                                <Label Width="120" Content="Date" />
-                                <TextBox 
-                             Text="{Binding Path=DateEdit}"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Valuation Data"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"/>
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                    Width="120" Content="Date"
+                                   ToolTip="Date of selected data, or new value to be added"/>
+                <TextBox Grid.Row="2"
+                       Grid.Column="1"
+                       Text="{Binding Path=DateEdit}"
                             MinWidth="100"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Date of selected data, or new value to be added">
-                                <Label Width="120">Number of Shares</Label>
-                                <TextBox 
+
+                    <Label Grid.Row="3"
+                       Grid.Column="0"
+                           ToolTip="Date of selected data, or new value to be added">Number of Shares</Label>
+                <TextBox Grid.Row="3"
+                       Grid.Column="1"
                              Text="{Binding SharesEdit}"
                             MinWidth="100"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5"
-                                ToolTip="Date of selected data, or new value to be added">
-                                <Label Width="120">Price of a Share</Label>
-                                <TextBox 
+                <Label Grid.Row="4"
+                       Grid.Column="0"
+                           Width="120">Price of a Share</Label>
+                    <TextBox Grid.Row="4"
+                       Grid.Column="1"
                              Text="{Binding UnitPriceEdit}"
                             MinWidth="100"/>
+
+                    <Label Grid.Row="5"
+                       Grid.Column="0"
+                       Width="120">
+                        <Label.ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="Details whether some/all the money specified in valuation above"/>
+                                <TextBlock Text="is a new investment or not."/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal"
-                                Margin="5 5 5 5">
-                                <StackPanel.ToolTip>
-                                    <StackPanel>
-                                        <TextBlock Text="Details whether some/all the money specified in valuation above"/>
-                                        <TextBlock Text="is a new investment or not."/>
-                                    </StackPanel>
-                                </StackPanel.ToolTip>
-                                <Label Width="120">New Investment?</Label>
-                                <CheckBox IsChecked="{Binding NewInvestment}"
+                        </Label.ToolTip>
+                        New Investment?</Label>
+                <CheckBox Grid.Row="5"
+                       Grid.Column="1"
+                          IsChecked="{Binding NewInvestment}"
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Center"/>
-                            </StackPanel>
-                            <Button Content="Add Data"
+                <Button Grid.Row="6"
+                       Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Add Data"
                         Margin="10 10 10 10 "
                         Command="{Binding AddDataCommand}"
                                     Visibility="{Binding NotEditing,Converter={StaticResource BoolToVis}}"/>
-                            <Button Content="Edit Valuation"
+                <Button Grid.Row="6"
+                       Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="Edit Valuation"
                         Margin="10 10 10 10 "
                         Command="{Binding EditSecurityCommand}"
                         ToolTip="Edit the security data highlighted."
                                     Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
-                        </StackPanel>
 
-                    </Border>
-                </StackPanel>
+            </Grid>
+        </Grid>
+
+
+        <Grid ToolTip="Lists all securities currently in the database. Select one to edit data."
+              Grid.Row="0"
+              Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Securities in Database"
+                   Grid.Row="0"/>
+            <ListView Name="SecBox"
+                      Margin="10 10 10 10 "
+                      ItemsSource="{Binding FundNames, Mode=TwoWay}"
+                      Grid.Row="1"
+                      SelectedItem="{Binding selectedName}"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="Auto"
+                                            Header="Company" 
+                                            DisplayMemberBinding="{Binding Company}"/>
+                        <GridViewColumn Width="Auto" 
+                                        Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Grid.Row="2"
+                    Content="Clear Selection"
+                    Command="{Binding ClearFundSelectionCommand}"
+                    Margin="10 2 10 5"/>
+        </Grid>
+
+        <Grid  ToolTip="Shows the data held on the security selected in the Securities in Database list."
+                Grid.Row="0"
+                Grid.Column="3">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
             
-            <Border Height="380" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000"
-                    BorderThickness="1" 
-                    CornerRadius="8">
-                <StackPanel ToolTip="Lists all securities currently in the database. Select one to edit data.">
-                    <Label Content="Securities in Database"/>
-                    <ListView Name="SecBox"
-                              ItemsSource="{Binding FundNames, Mode=TwoWay}"
-                              MinHeight="300"
-                              MaxHeight="300"
-                              Margin="10,10,10,10"
-                              MinWidth="190"
-                              Width="Auto"
-                              SelectedItem="{Binding selectedName}"
-                              ScrollViewer.VerticalScrollBarVisibility="Visible">
-                        <ListView.View>
-                            <GridView>
-                                    <GridViewColumn Width="Auto"
-                                                    Header="Company" 
-                                                    DisplayMemberBinding="{Binding Company}"/>
-                                    <GridViewColumn Width="Auto" 
-                                                    Header="Name" 
-                                                    DisplayMemberBinding="{Binding Name}" />
-                                </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button Content="Clear Selection"
-                            Command="{Binding ClearFundSelectionCommand}"/>
-                    </StackPanel>
-            </Border>
-            <Border Height="380" 
-                    VerticalAlignment="Top" 
-                    BorderBrush="#FF000000" 
-                    BorderThickness="1" 
-                    CornerRadius="8">
-                    <StackPanel ToolTip="Shows the data held on the security selected in the Securities in Database list.">
-                        <Label Content="Selected Security Data"/>
-                        <ListView Name="SecValuesBox"
-                                ItemsSource="{Binding SelectedSecurityData, Mode=TwoWay}"
-                                MinHeight="300"
-                                  MaxHeight="300"
-                                Margin="10,10,10,10"
-                                MinWidth="290"
-                                Width="Auto"
-                                SelectedItem="{Binding selectedValues}"
-                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
-                        <ListView.View>
-                            <GridView>
-                                    <GridViewColumn Width="Auto" 
-                                                Header="Date" 
-                                                DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
-                                    <GridViewColumn Width="Auto" 
-                                                Header="UnitPrice" 
-                                                DisplayMemberBinding="{Binding UnitPrice}" />
-                                    <GridViewColumn Width="Auto" 
-                                                Header="NumberShares" 
-                                                DisplayMemberBinding="{Binding ShareNo}" />
-                                    <GridViewColumn Width="Auto" 
-                                                Header="Value" 
-                                                DisplayMemberBinding="{Binding Value}" />
-                                    <GridViewColumn Width="Auto" 
-                                                Header="New Investment" 
-                                                DisplayMemberBinding="{Binding Investment}" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                        <Button Content="Clear Data Selection"
-                                Command="{Binding ClearDataSelectionCommand}"/>
-                    </StackPanel>
-            </Border>
-               
-            </StackPanel>
-    </StackPanel>
-    </Border>
-</StackPanel>
+            <Label Grid.Row="0"
+                   Content="Selected Security Data"/>
+
+            <ListView Grid.Row="1"
+                      Margin="10 10 10 10 "
+                      Name="SecValuesBox"
+                      ItemsSource="{Binding SelectedSecurityData, Mode=TwoWay}"
+                      SelectedItem="{Binding selectedValues}"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Date" 
+                                            DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                            <GridViewColumn Header="UnitPrice" 
+                                            DisplayMemberBinding="{Binding UnitPrice}" />
+                            <GridViewColumn Header="NumberShares" 
+                                            DisplayMemberBinding="{Binding ShareNo}" />
+                            <GridViewColumn Header="Value" 
+                                            DisplayMemberBinding="{Binding Value}" />
+                            <GridViewColumn Header="New Investment" 
+                                            DisplayMemberBinding="{Binding Investment}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            <Button Grid.Row="2"
+                    Margin="10 2 10 5"
+                    Content="Clear Data Selection"
+                    Command="{Binding ClearDataSelectionCommand}"/>
+        </Grid>
+    </Grid>
+</Grid>

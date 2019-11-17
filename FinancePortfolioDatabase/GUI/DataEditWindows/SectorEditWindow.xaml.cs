@@ -5,7 +5,7 @@ namespace FinanceWindows
     /// <summary>
     /// Interaction logic for SectorEditWindow.xaml
     /// </summary>
-    public partial class SectorEditWindow : StackPanel
+    public partial class SectorEditWindow : Grid
     {
         public SectorEditWindow()
         {

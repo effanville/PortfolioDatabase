@@ -6,16 +6,19 @@
         xmlns:local="clr-namespace:FinanceWindows"
         mc:Ignorable="d"
         Title="{Binding TitleValue}"
-        Height="Auto" 
-        MinHeight="650"
-        Width="Auto"
-        MinWidth="500"
+        MinHeight="400"
+        MinWidth="400"
         Background="LightPink">
-    <StackPanel Height="Auto"
+    <Grid Height="Auto"
                 Width="Auto">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
         <Border Background="#F98866"
-                Height="50">
+                Height="50"
+                VerticalAlignment="Top"
+                Grid.Row="0">
             <StackPanel Orientation="Horizontal"
                         Width="Auto">
                 <TextBlock FontSize="14"
@@ -35,9 +38,8 @@
             </StackPanel>
         </Border>
 
-        <local:MainUserControl Width="Auto"
-                               Height="Auto"/>
+        <local:MainUserControl Grid.Row="1"/>
 
-    </StackPanel>
+    </Grid>
 
 </Window>
