@@ -148,7 +148,7 @@
 
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
-                         Text="{Binding DateEdit}"
+                         Text="{Binding DateEdit }"
                          MinWidth="100"/>
 
                 <Label Grid.Row="2"
@@ -191,7 +191,7 @@
                       Grid.Row="1"
                       ItemsSource="{Binding AccountNames, Mode=TwoWay}"
                       Margin="10,10,10,10"
-                      SelectedItem="{Binding selectedName}">
+                      SelectedItem="{Binding selectedName, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Company" 
@@ -218,11 +218,11 @@
                       Name="SecValuesBox"
                       ItemsSource="{Binding SelectedAccountData, Mode=TwoWay}"
                       Margin="10,10,10,10"
-                      SelectedItem="{Binding selectedAccount}">
+                      SelectedItem="{Binding selectedAccount, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Date" 
-                                        DisplayMemberBinding="{Binding Date}" />
+                                        DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
                         <GridViewColumn Header="Amount Held" 
                                         DisplayMemberBinding="{Binding Amount}" />
                     </GridView>

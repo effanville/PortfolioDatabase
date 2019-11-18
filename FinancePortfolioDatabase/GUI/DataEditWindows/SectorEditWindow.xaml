@@ -183,7 +183,7 @@
                       Name="SecBox"
                       ItemsSource="{Binding SectorNames, Mode=TwoWay}"
                       Margin="10,10,10,10"
-                      SelectedItem="{Binding selectedName}"
+                      SelectedItem="{Binding selectedName, Mode=TwoWay}"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
@@ -207,7 +207,7 @@
                       Name="SecValuesBox"
                       ItemsSource="{Binding SelectedSectorData, Mode=TwoWay}"
                       Margin="10,10,10,10"
-                      SelectedItem="{Binding selectedSector}"
+                      SelectedItem="{Binding selectedSector, Mode=TwoWay}"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>

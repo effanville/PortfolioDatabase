@@ -1,6 +1,8 @@
 ﻿using FinanceStructures;
 using GlobalHeldData;
 using System;
+using System.Collections.Generic;
+using GUIFinanceStructures;
 
 namespace SectorHelperFunctions
 {
@@ -39,6 +41,21 @@ namespace SectorHelperFunctions
                 } 
             }
             Desired = null;
+            return false;
+        }
+
+        public static bool TryGetSectorData(string name, out List<AccountDayDataView> data)
+        {
+            data = new List<AccountDayDataView>();
+            foreach (Sector sec in GlobalData.BenchMarks)
+            {
+                if (sec.GetName() == name)
+                {
+                    data = sec.GetDataForDisplay();
+                    return true;
+                }
+            }
+
             return false;
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReportingStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -136,11 +137,14 @@ namespace DataStructures
                 {
                     if (fValues[i].Day == date)
                     {
+                        ErrorReports.AddReport($"Editing Data: {date} value changed from {fValues[i].Value} to {value}");
                         fValues[i].Value = value;
+                        
                         return true;
                     }
                 }
             }
+
             return false;
         }
 
@@ -181,12 +185,14 @@ namespace DataStructures
                 {
                     if (fValues[i].Day == date)
                     {
-
+                        ErrorReports.AddReport($"Deleted value: date - {date} and value - {fValues[i].Value}");
                         fValues.RemoveAt(i);
                         return true;
                     }
                 }
             }
+
+            ErrorReports.AddError($"Deleting Value: Could not find data on date {date}.");
             return false;
         }
 

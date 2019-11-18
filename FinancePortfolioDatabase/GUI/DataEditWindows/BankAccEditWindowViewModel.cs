@@ -1,6 +1,7 @@
 ﻿using System;
 using GUISupport;
 using FinanceStructures;
+using ReportingStructures;
 using GUIFinanceStructures;
 using BankAccountHelperFunctions;
 using System.Collections.Generic;
@@ -139,12 +140,18 @@ namespace FinanceWindowsViewModels
 
         private void UpdateAccountListBox()
         {
+            var currentSelectionName = selectedName;
             AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
-            selectedName = null;
-            selectedNameEdit = null;
-            selectedCompanyEdit = null;
-            DateEdit = null;
-            AmountsEdit = null;
+            AccountNames.Sort();
+            for (int i = 0; i < AccountNames.Count; i++)
+            {
+                if (AccountNames[i].CompareTo(currentSelectionName) == 0)
+                {
+                    selectedName = AccountNames[i];
+                }
+            }
+
+            UpdateSelectedSecurityListBox();
         }
 
         private void UpdateSelectedSecurityListBox()
@@ -160,20 +167,16 @@ namespace FinanceWindowsViewModels
                 {
                     SelectedAccountData = values;
                 }
+
+                SelectLatestValue();
             }
         }
 
-        private void UpdateValuationData()
+        private void SelectLatestValue()
         {
-            if (selectedValues != null)
+            if (SelectedAccountData != null && SelectedAccountData.Count > 0)
             {
-                DateEdit = selectedValues.Date.ToShortDateString();
-                AmountsEdit = selectedValues.Amount.ToString();
-            }
-            else
-            {
-                DateEdit = null;
-                AmountsEdit = null;
+                selectedValues = SelectedAccountData[SelectedAccountData.Count - 1];
             }
         }
 
@@ -281,7 +284,16 @@ namespace FinanceWindowsViewModels
 
                     ClearSelection();
                 }
+                else 
+                {
+                    ErrorReports.AddError($"EditingData: {DateEdit} or {AmountsEdit} was not in a suitable format.");
+                }
             }
+            else
+            {
+                ErrorReports.AddError("No Bank Account was selected when trying to delete data.");
+            }
+
             DataAddEditVisibility = false;
             NameAddEditVisibility = false;
             UpdateMainWindow(true);
@@ -289,9 +301,16 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteDeleteSecurity(Object obj)
         {
-            BankAccountEditor.TryDeleteBankAccount(selectedNameEdit, selectedCompanyEdit);
-            UpdateAccountListBox();
-            UpdateMainWindow(true);
+            if (selectedNameEdit != null || selectedCompanyEdit != null)
+            {
+                BankAccountEditor.TryDeleteBankAccount(selectedNameEdit, selectedCompanyEdit);
+                UpdateAccountListBox();
+                UpdateMainWindow(true);
+            }
+            else 
+            {
+                ErrorReports.AddError("No Bank Account was selected when trying to delete.");
+            }
         }
 
         private void ExecuteDeleteValuation(Object obj)
@@ -300,6 +319,10 @@ namespace FinanceWindowsViewModels
             {
                 BankAccountEditor.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date);
             }
+            else 
+            {
+                ErrorReports.AddError("No Bank Account was selected when trying to delete data.");
+            }
 
             UpdateSelectedSecurityListBox();
             UpdateMainWindow(true);
@@ -307,7 +330,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCloseCommand(Object obj)
         {
-            UpdateMainWindow(true);
+            UpdateMainWindow(false);
             windowToView("dataview");
         }
         Action<bool> UpdateMainWindow;

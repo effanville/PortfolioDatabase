@@ -11,8 +11,26 @@ namespace FinanceStructures
     /// Eventually will also work for cash isa etc.
     /// </remarks>
     /// <!--The name and company are used to uniquely specify this.-->
-    public partial class CashAccount
+    public partial class CashAccount : IComparable
     {
+        /// <summary>
+        /// Method of comparison
+        /// </summary>
+        public int CompareTo(object obj)
+        {
+            if (obj is Security value)
+            {
+                if (Company == value.Company)
+                {
+                    return Name.CompareTo(value.Name);
+                }
+
+                return Company.CompareTo(value.Company);
+            }
+
+            return 0;
+        }
+
         /// <summary>
         /// The name associated to the account
         /// </summary>

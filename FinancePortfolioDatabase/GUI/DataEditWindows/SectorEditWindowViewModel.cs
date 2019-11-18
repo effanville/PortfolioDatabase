@@ -6,6 +6,7 @@ using SectorHelperFunctions;
 using GUISupport;
 using GUIFinanceStructures;
 using ReportingStructures;
+using FinanceStructures;
 
 namespace FinanceWindowsViewModels
 {
@@ -140,6 +141,25 @@ namespace FinanceWindowsViewModels
 
         private void UpdateSelectedSectorListBox()
         {
+            if (fSelectedName != null)
+            {
+                selectedNameEdit = fSelectedName;
+
+                if (SectorEditor.TryGetSectorData(fSelectedName, out List<AccountDayDataView> values))
+                {
+                    SelectedSectorData = values;
+                }
+
+                SelectLatestValue();
+            }
+        }
+
+        private void SelectLatestValue()
+        {
+            if (SelectedSectorData != null && SelectedSectorData.Count > 0)
+            {
+                selectedSector = SelectedSectorData[SelectedSectorData.Count - 1];
+            }
         }
 
         private void ClearSelection()

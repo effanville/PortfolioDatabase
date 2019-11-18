@@ -12,7 +12,7 @@
     <Grid VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="200"></RowDefinition>
+            <RowDefinition Height="170"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
@@ -62,7 +62,7 @@
             <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
         </Grid>
         
-        <local:ReportingWindow VerticalAlignment="Bottom" 
+        <local:ReportingWindow VerticalAlignment="Stretch" 
                                DataContext="{Binding ReportsViewModel}"
                                Grid.Column="0"
                                Grid.ColumnSpan="2"

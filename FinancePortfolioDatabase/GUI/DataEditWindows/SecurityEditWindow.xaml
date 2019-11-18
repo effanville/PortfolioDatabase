@@ -219,7 +219,7 @@
                       Margin="10 10 10 10 "
                       ItemsSource="{Binding FundNames, Mode=TwoWay}"
                       Grid.Row="1"
-                      SelectedItem="{Binding selectedName}"
+                      SelectedItem="{Binding selectedName, Mode=TwoWay}"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
@@ -255,7 +255,7 @@
                       Margin="10 10 10 10 "
                       Name="SecValuesBox"
                       ItemsSource="{Binding SelectedSecurityData, Mode=TwoWay}"
-                      SelectedItem="{Binding selectedValues}"
+                      SelectedItem="{Binding selectedValues, Mode=TwoWay}"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <ListView.View>
                         <GridView>
