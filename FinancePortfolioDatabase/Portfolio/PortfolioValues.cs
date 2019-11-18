@@ -16,10 +16,13 @@ namespace FinanceStructures
             output = DateTime.Today;
             foreach (var sec in fFunds)
             {
-                var securityEarliest = sec.FirstValue().Day;
-                if (securityEarliest < output)
+                if (sec.Any())
                 {
-                    output = securityEarliest;
+                    var securityEarliest = sec.FirstValue().Day;
+                    if (securityEarliest < output)
+                    {
+                        output = securityEarliest;
+                    }
                 }
             }
             return output;

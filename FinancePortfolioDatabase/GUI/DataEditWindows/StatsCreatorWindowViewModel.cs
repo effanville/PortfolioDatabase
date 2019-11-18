@@ -70,12 +70,13 @@ namespace FinanceWindowsViewModels
                     statsWriter.WriteLine(BankAccData);
                 }
 
+                ErrorReports.AddReport($"Created csv statistics at ${saving.FileName}");
                 statsWriter.Close();
 
             }
             else 
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, "Was not able to create csv file in place specified.");
+                ErrorReports.AddGeneralReport(ReportType.Error, $"Was not able to create csv file at {saving.FileName}");
             }
             saving.Dispose();
         }
@@ -103,7 +104,7 @@ namespace FinanceWindowsViewModels
             }
             else
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, "Was not able to create Investment list page in place specified.");
+                ErrorReports.AddGeneralReport(ReportType.Error, $"Was not able to create Investment list page at {saving.FileName}");
             }
             saving.Dispose();
         }

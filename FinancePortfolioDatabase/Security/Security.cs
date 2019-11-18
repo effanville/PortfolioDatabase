@@ -10,19 +10,6 @@ namespace FinanceStructures
     public partial class Security : IComparable
     {
         /// <summary>
-        /// The mechanism to compare two instances of a security.
-        /// </summary>
-        private class sort : IComparer
-        {
-            int IComparer.Compare(object a, object b)
-            {
-                Security aa = (Security)a;
-                var bb = (Security)b;
-                return string.Compare(aa.GetName(), bb.GetName());
-            }
-        }
-
-        /// <summary>
         /// The name of the security in question.
         /// </summary>
         private string fName;

@@ -85,7 +85,6 @@
     <Compile Include="ErrorReports\ErrorReports.cs" />
     <Compile Include="GUI\GuiSupport\EventArgs.cs" />
     <Compile Include="GUI\GuiSupport\EventRaiser.cs" />
-    <Compile Include="GUI\OpeningWindowViewModel.cs" />
     <Compile Include="GUI\MainWindowViewModel.cs" />
     <Compile Include="GUI\GuiSupport\Basic Command.cs" />
     <Compile Include="GUI\BasicDataView.xaml.cs">
@@ -116,9 +115,6 @@
     </Compile>
     <Compile Include="GUI\OptionsPanel.xaml.cs">
       <DependentUpon>OptionsPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\OpeningWindow.xaml.cs">
-      <DependentUpon>OpeningWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="GUI\DataEditWindows\BankAccEditWindow.xaml">
       <SubType>Designer</SubType>
@@ -204,10 +200,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\OptionsPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\OpeningWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

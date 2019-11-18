@@ -1,5 +1,7 @@
 ﻿
+using GUIFinanceStructures;
 using System;
+using System.Collections.Generic;
 
 namespace FinanceStructures
 {
@@ -11,6 +13,22 @@ namespace FinanceStructures
         public string GetName()
         {
             return fName;
+        }
+
+        internal List<AccountDayDataView> GetDataForDisplay()
+        {
+            var output = new List<AccountDayDataView>();
+            if (fValues.Any())
+            {
+                foreach (var datevalue in fValues.GetValuesBetween(fValues.GetFirstDate(), fValues.GetLatestDate()))
+                {
+                    fValues.TryGetValue(datevalue.Day, out double UnitPrice);
+                    var thisday = new AccountDayDataView(datevalue.Day, UnitPrice);
+                    output.Add(thisday);
+                }
+            }
+
+            return output;
         }
 
         internal bool TryEditName(string name)

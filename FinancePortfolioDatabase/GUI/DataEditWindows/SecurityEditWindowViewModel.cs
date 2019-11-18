@@ -162,15 +162,19 @@ namespace FinanceWindowsViewModels
 
         private void UpdateFundListBox()
         {
+            var currentSelectedName = selectedName;
+            var currentSelectedData = selectedValues;
+
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
             FundNames.Sort();
-            selectedName = null;
-            selectedNameEdit = null;
-            selectedCompanyEdit = null;
-            DateEdit = null;
-            SharesEdit = null;
-            UnitPriceEdit = null;
-            NewInvestment = false;
+
+            for(int i = 0; i < FundNames.Count; i++)
+            {
+                if (FundNames[i].CompareTo(currentSelectedName)==0)
+                {
+                    selectedName = FundNames[i];
+                }
+            }
         }
 
         private void UpdateSelectedSecurityListBox()
@@ -256,7 +260,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCreateSecurity(Object obj)
         {
-            if (selectedNameEdit != null && selectedCompanyEdit != null)
+            if (selectedNameEdit != null || selectedCompanyEdit != null)
             {
                 SecurityEditor.TryAddSecurity(selectedNameEdit, selectedCompanyEdit);
                 UpdateFundListBox();
@@ -265,7 +269,7 @@ namespace FinanceWindowsViewModels
             }
             else 
             {
-                ErrorReports.AddError("Name or company given were null");
+                ErrorReports.AddError("Both Name and company given were null");
             }
             NameAddEditVisibility = false;
             DataAddEditVisibility = false;

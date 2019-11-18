@@ -150,10 +150,11 @@ namespace FinanceStructures
                 if (acc.GetCompany() == company && acc.GetName() == name)
                 {
                     BankAccounts.Remove(acc);
+                    ErrorReports.AddWarning($"Deleting Bank Account: Deleted `{company}'-`{name}'.");
                     return true;
                 }
             }
-
+            ErrorReports.AddError($"Deleting Bank Account: Could not find account `{company}'-`{name}'.");
             return false;
         }
 
@@ -182,6 +183,7 @@ namespace FinanceStructures
                 }
             }
 
+            ErrorReports.AddError($"Editing BankAccount Data: Could not find bank account `{company}'-`{name}'.");
             return false;
         }
 
@@ -195,7 +197,7 @@ namespace FinanceStructures
                     return BankAccounts[AccountIndex].EditNameCompany(newName, newCompany);
                 }
             }
-
+            ErrorReports.AddError($"Renaming BankAccount: Could not find bank account `{company}'-`{name}'.");
             return false;
         }
 
@@ -210,6 +212,7 @@ namespace FinanceStructures
                 }
             }
 
+            ErrorReports.AddError($"Deleting Bank Account Data: Could not find bank account `{company}'-`{name}'.");
             return false;
         }
     }
