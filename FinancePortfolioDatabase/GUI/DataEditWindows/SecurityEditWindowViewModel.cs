@@ -41,6 +41,8 @@ namespace FinanceWindowsViewModels
             set { fEditing = !value; OnPropertyChanged(); }
         }
 
+        private List<NameComp> fPreEditFundNames;
+
         private List<NameComp> fFundNames;
         /// <summary>
         /// Name and Company data of Funds in database for view.
@@ -138,7 +140,11 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddSecurityCommand { get; }
 
-        public ICommand CreateSecurityCommand { get; }
+        public ICommand CreateSecurityButtonCommand { get; }
+
+        public ICommand CreateSecurityCommand { get; set; }
+
+        public ICommand AddEditSecurityDataCommand { get; set; }
 
         public ICommand AddValuationCommand { get; }
 
@@ -160,7 +166,7 @@ namespace FinanceWindowsViewModels
 
         public ICommand ClearDataSelectionCommand { get; }
 
-        private void UpdateFundListBox()
+        public void UpdateFundListBox()
         {
             var currentSelectedName = selectedName;
             var currentSelectedData = selectedValues;
@@ -168,7 +174,10 @@ namespace FinanceWindowsViewModels
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
             FundNames.Sort();
 
-            for(int i = 0; i < FundNames.Count; i++)
+            fPreEditFundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
+            fPreEditFundNames.Sort();
+
+            for (int i = 0; i < FundNames.Count; i++)
             {
                 if (FundNames[i].CompareTo(currentSelectedName)==0)
                 {
@@ -258,7 +267,7 @@ namespace FinanceWindowsViewModels
             NotEditing = true;
         }
 
-        private void ExecuteCreateSecurity(Object obj)
+        private void ExecuteCreateSecurityButton(Object obj)
         {
             if (selectedNameEdit != null || selectedCompanyEdit != null)
             {
@@ -271,6 +280,54 @@ namespace FinanceWindowsViewModels
             {
                 ErrorReports.AddError("Both Name and company given were null");
             }
+            NameAddEditVisibility = false;
+            DataAddEditVisibility = false;
+            UpdateMainWindow(true);
+        }
+
+        private void ExecuteCreateEditCommand(Object obj)
+        {
+            if (DatabaseAccessor.GetPortfolio().Funds.Count != FundNames.Count)
+            {
+                bool edited = false;
+                foreach (var name in FundNames)
+                {
+                    if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
+                    {
+                        edited = true;
+                        SecurityEditor.TryAddSecurity(name.Name, name.Company);
+                        name.NewValue = false;
+                    }
+                }
+                if (!edited)
+                {
+                    ErrorReports.AddError("No Name provided to create a sector.");
+                }
+            }
+            else
+            {
+                // maybe fired from editing stuff. Try that
+                bool edited = false;
+                for (int i = 0; i < FundNames.Count; i++)
+                {
+                    var name = FundNames[i];
+
+                    if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
+                    {
+                        edited = true;
+                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company);
+                        name.NewValue = false;
+                    }
+                }
+                if (!edited)
+                {
+                    ErrorReports.AddError("Was not able to edit desired security.");
+                }
+            }
+
+            UpdateFundListBox();
+            ClearSelection();
+            NotEditing = true;
             NameAddEditVisibility = false;
             DataAddEditVisibility = false;
             UpdateMainWindow(true);
@@ -314,7 +371,7 @@ namespace FinanceWindowsViewModels
 
                         //Current 
                         SecurityEditor.TryAddDataToSecurity(fSelectedName.Name, fSelectedName.Company, date, shares, unitPrice, investmentValue);
-                        UpdateFundListBox();
+                        UpdateSelectedSecurityListBox();
                     }
                     else
                     {
@@ -330,6 +387,39 @@ namespace FinanceWindowsViewModels
             NameAddEditVisibility = false;
             DataAddEditVisibility = false;
             UpdateMainWindow(true);
+        }
+
+        private void ExecuteAddEditSecData(Object obj)
+        {
+            if (selectedName != null && selectedSecurity != null)
+            {
+                if (DatabaseAccessor.GetSecurityFromName(selectedName.Name, selectedName.Company).Count() != SelectedSecurityData.Count)
+                {
+                    SecurityEditor.TryAddDataToSecurity(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                    selectedName.NewValue = false;
+                }
+                else
+                {
+                    bool edited = false;
+                    for (int i = 0; i < SelectedSecurityData.Count; i++)
+                    {
+                        var name = SelectedSecurityData[i];
+
+                        if (name.NewValue)
+                        {
+                            edited = true;
+                            SecurityEditor.TryEditSecurity(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                            name.NewValue = false;
+                        }
+                    }
+                    if (!edited)
+                    {
+                        ErrorReports.AddError("Was not able to edit security data.");
+                    }
+                }
+            }
+
+            UpdateSelectedSecurityListBox();
         }
 
         private void ExecuteEditSecurityName(Object obj)
@@ -390,7 +480,15 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteDeleteSecurity(Object obj)
         {
-            SecurityEditor.TryDeleteSecurity(selectedNameEdit, selectedCompanyEdit);
+            if (selectedName != null)
+            {
+                SecurityEditor.TryDeleteSecurity(selectedName.Name, selectedName.Company);
+            }
+            else 
+            {
+                ErrorReports.AddError("Something went wrong when trying to delete security.");
+            }
+
             UpdateFundListBox();
             ClearSelection();
             UpdateMainWindow(true);
@@ -425,10 +523,13 @@ namespace FinanceWindowsViewModels
             NameAddEditVisibility = false;
             Editing = false;
             fFundNames = new List<NameComp>();
+            fPreEditFundNames = new List<NameComp>();
             fSelectedSecurityData = new List<BasicDayDataView>();
             UpdateFundListBox();
             AddSecurityCommand = new BasicCommand(ExecuteAddSecurity);
-            CreateSecurityCommand = new BasicCommand(ExecuteCreateSecurity);
+            CreateSecurityButtonCommand = new BasicCommand(ExecuteCreateSecurityButton);
+            CreateSecurityCommand = new BasicCommand(ExecuteCreateEditCommand);
+            AddEditSecurityDataCommand = new BasicCommand(ExecuteAddEditSecData);
             AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
             AddDataCommand = new BasicCommand(ExecuteAddDataCommand);
             EditSecurityCommand = new BasicCommand(ExecuteEditSecurity);

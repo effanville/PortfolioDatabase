@@ -50,7 +50,7 @@ namespace FinanceStructures
 
             foreach (var bankAcc in BankAccounts)
             {
-                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany()));
+                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany(), false));
             }
 
             return namesAndCompanies;

@@ -3,6 +3,7 @@ using GlobalHeldData;
 using System;
 using System.Collections.Generic;
 using GUIFinanceStructures;
+using ReportingStructures;
 
 namespace SectorHelperFunctions
 {
@@ -20,10 +21,12 @@ namespace SectorHelperFunctions
             {
                 if (name == sector.GetName())
                 {
+                    ErrorReports.AddError($"Sector with name {name} already exists.");
                     return false;
                 }
             }
             Sector newSector = new Sector(name);
+            ErrorReports.AddReport($"Added sector with name {name}.");
             GlobalData.BenchMarks.Add(newSector);
             return true;
         }
@@ -108,9 +111,13 @@ namespace SectorHelperFunctions
                 if (sector.GetName() == oldName)
                 {
                     sector.TryEditName(newName);
+                    ErrorReports.AddReport($"Renamed sector {oldName} with new name {newName}.");
+                    return true;
                 }
             }
-                return true;
+
+            ErrorReports.AddError($"Could not rename sector {oldName} with new name {newName}.");
+            return false;
         }
 
         /// <summary>

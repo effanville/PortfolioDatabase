@@ -43,7 +43,7 @@ namespace FinanceStructures
 
             foreach (var security in Funds)
             {
-                namesAndCompanies.Add(new NameComp(security.GetName(), security.GetCompany()));
+                namesAndCompanies.Add(new NameComp(security.GetName(), security.GetCompany(), false));
             }
 
             return namesAndCompanies;
@@ -184,7 +184,7 @@ namespace FinanceStructures
                     return Funds[fundIndex].TryAddData(date, unitPrice, shares, Investment);
                 }
             }
-
+            ErrorReports.AddError($"Security `{company}'-`{name}' could not be found in the database.");
             return false;
         }
 

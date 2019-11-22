@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d">
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -110,7 +111,7 @@
                         Grid.ColumnSpan="2"
                         Content="Add Security"
                         Margin="10 10 10 10 "
-                        Command="{Binding CreateSecurityCommand}"
+                        Command="{Binding CreateSecurityButtonCommand}"
                         Visibility="{Binding NotEditing,Converter={StaticResource BoolToVis}}"/>
                 <Button Grid.Row="3"
                         Grid.Column="0"
@@ -215,23 +216,25 @@
 
             <Label Content="Securities in Database"
                    Grid.Row="0"/>
-            <ListView Name="SecBox"
+            <DataGrid Grid.Row="1"
                       Margin="10 10 10 10 "
-                      ItemsSource="{Binding FundNames, Mode=TwoWay}"
-                      Grid.Row="1"
-                      SelectedItem="{Binding selectedName, Mode=TwoWay}"
+                      SelectionUnit="FullRow"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="False"
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Path=FundNames, Mode=TwoWay}"
+                      SelectedItem="{Binding Path=selectedName, Mode=TwoWay}"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Width="Auto"
-                                            Header="Company" 
-                                            DisplayMemberBinding="{Binding Company}"/>
-                        <GridViewColumn Width="Auto" 
-                                        Header="Name" 
-                                        DisplayMemberBinding="{Binding Name}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="RowEditEnding">
+                        <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateSecurityCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Company" Binding="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
             <Button Grid.Row="2"
                     Content="Clear Selection"
                     Command="{Binding ClearFundSelectionCommand}"
@@ -250,28 +253,29 @@
             
             <Label Grid.Row="0"
                    Content="Selected Security Data"/>
-
-            <ListView Grid.Row="1"
+            <DataGrid Grid.Row="1"
                       Margin="10 10 10 10 "
-                      Name="SecValuesBox"
-                      ItemsSource="{Binding SelectedSecurityData, Mode=TwoWay}"
-                      SelectedItem="{Binding selectedValues, Mode=TwoWay}"
+                      SelectionUnit="FullRow"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="False"
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Path=SelectedSecurityData, Mode=TwoWay}"
+                      SelectedItem="{Binding Path=selectedValues, Mode=TwoWay}"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Date" 
-                                            DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
-                            <GridViewColumn Header="UnitPrice" 
-                                            DisplayMemberBinding="{Binding UnitPrice}" />
-                            <GridViewColumn Header="NumberShares" 
-                                            DisplayMemberBinding="{Binding ShareNo}" />
-                            <GridViewColumn Header="Value" 
-                                            DisplayMemberBinding="{Binding Value}" />
-                            <GridViewColumn Header="New Investment" 
-                                            DisplayMemberBinding="{Binding Investment}" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="RowEditEnding">
+                        <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=AddEditSecurityDataCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Path=Date, StringFormat='{}{0:dd/MM/yyyy}', UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Unit Price" Binding="{Binding Path=UnitPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Number of Shares" Binding="{Binding Path=ShareNo, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Value" Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="New Investment"  Binding="{Binding Path=Investment, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+           
             <Button Grid.Row="2"
                     Margin="10 2 10 5"
                     Content="Clear Data Selection"

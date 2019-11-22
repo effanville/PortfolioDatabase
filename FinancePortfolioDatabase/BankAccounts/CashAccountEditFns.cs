@@ -31,7 +31,7 @@ namespace FinanceStructures
             foreach (var datevalue in fAmounts.GetValuesBetween(fAmounts.GetFirstDate(), fAmounts.GetLatestDate()))
             {
                 fAmounts.TryGetValue(datevalue.Day, out double UnitPrice);
-                var thisday = new AccountDayDataView(datevalue.Day, UnitPrice);
+                var thisday = new AccountDayDataView(datevalue.Day, UnitPrice, false);
                 output.Add(thisday);
             }
 
