@@ -19,14 +19,34 @@ namespace GUIFinanceStructures
             return 0;
         }
 
+        public bool NewValue {get; set; }
+
         public NameComp()
-        { }
-        public NameComp(string n, string c)
+        { 
+            NewValue = true;
+        }
+
+        public NameComp(string n, string c, bool newValue = true)
         {
             Name = n;
             Company = c;
+            NewValue = newValue;
         }
-        public string Name { get; set; }
-        public string Company { get; set; }
+
+        private string fName;
+
+        public string Name 
+        {
+            get { return fName; }
+            set { fName = value; NewValue = true; }
+        }
+
+        private string fCompany;
+
+        public string Company 
+        {
+            get { return fCompany; }
+            set { fCompany = value; NewValue = true; } 
+        }
     }
 }

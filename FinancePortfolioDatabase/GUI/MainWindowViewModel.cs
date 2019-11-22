@@ -41,7 +41,7 @@ namespace FinanceWindowsViewModels
 
         public MainWindowViewModel()
         {
-            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow, displayWindowChoice);
+            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow,UpdateSubWindow, displayWindowChoice);
             DataView = new BasicDataViewModel(UpdateWindow);
             ReportsViewModel = new ReportingWindowViewModel();
             DataWindowVisibility = true;
@@ -60,6 +60,28 @@ namespace FinanceWindowsViewModels
                 }
 
                 ReportsViewModel.Update();
+            }
+        }
+
+        Action<bool> UpdateSubWindow => (val) => UpdateSubWindowData(val);
+
+        public void UpdateSubWindowData(object obj)
+        {
+            if (SecurityEditViewModel != null)
+            {
+                SecurityEditViewModel.UpdateFundListBox();
+            }
+            if (BankAccEditViewModel != null)
+            {
+                BankAccEditViewModel.UpdateAccountListBox();
+            }
+            if (SectorEditViewModel != null)
+            {
+                SectorEditViewModel.UpdateSectorListBox();
+            }
+            if (StatsEditViewModel != null)
+            {
+                StatsEditViewModel.GenerateStatistics();
             }
         }
 

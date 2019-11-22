@@ -154,15 +154,19 @@ namespace FinanceWindowsViewModels
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
 
+        public void GenerateStatistics()
+        {
+            SecuritiesStats = DatabaseAccessor.GenerateSecurityStatistics();
+            SecuritiesInvestments = DatabaseAccessor.AllSecuritiesInvestments();
+            BankAccountStats = DatabaseAccessor.GenerateBankAccountStatistics();
+        }
+
         public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
         {
             SecStatsVisibility = true;
             SecInvestsVisibility = false;
             BankAccStatsVisibility = false;
-            SecuritiesStats = DatabaseAccessor.GenerateSecurityStatistics();
-            SecuritiesInvestments = DatabaseAccessor.AllSecuritiesInvestments();
-
-            BankAccountStats = DatabaseAccessor.GenerateBankAccountStatistics();
+            GenerateStatistics();
             windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;
             CreateCSVStatsCommand = new BasicCommand(ExecuteExportToCSVCommand);

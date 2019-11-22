@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d">
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d">
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Grid.Resources>
@@ -108,7 +109,7 @@
                         Grid.ColumnSpan="2"
                         Content="Add Bank Account"
                         Margin="10 10 10 10 "
-                        Command="{Binding CreateAccountCommand}"
+                        Command="{Binding CreateAccountButtonCommand}"
                         Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
 
                 <Button Grid.Row="3"
@@ -186,21 +187,25 @@
             </Grid.RowDefinitions>
             
             <Label Grid.Row="0" Content="BankAccount in Database"/>
-
-            <ListView Name="SecBox"
-                      Grid.Row="1"
-                      ItemsSource="{Binding AccountNames, Mode=TwoWay}"
-                      Margin="10,10,10,10"
-                      SelectedItem="{Binding selectedName, Mode=TwoWay}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Company" 
-                                        DisplayMemberBinding="{Binding Company}"/>
-                        <GridViewColumn Header="Name" 
-                                        DisplayMemberBinding="{Binding Name}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <DataGrid Grid.Row="1"
+                      Margin="10 10 10 10"
+                      SelectionUnit="FullRow"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="False"
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Path=AccountNames, Mode=TwoWay}"
+                      SelectedItem="{Binding Path=selectedName, Mode=TwoWay}"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="RowEditEnding">
+                        <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateAccountCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Company" Binding="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
 
         <Grid Grid.Column="3" 
@@ -213,21 +218,27 @@
 
             <Label Grid.Row="0" 
                    Content="Selected BankAccount Data"/>
-
-            <ListView Grid.Row="1" 
-                      Name="SecValuesBox"
-                      ItemsSource="{Binding SelectedAccountData, Mode=TwoWay}"
-                      Margin="10,10,10,10"
-                      SelectedItem="{Binding selectedAccount, Mode=TwoWay}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Date" 
-                                        DisplayMemberBinding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
-                        <GridViewColumn Header="Amount Held" 
-                                        DisplayMemberBinding="{Binding Amount}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <DataGrid Grid.Row="1"
+                      Margin="10 10 10 10"
+                      SelectionUnit="FullRow"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="False"
+                      AutoGenerateColumns="False"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible"
+                      ItemsSource="{Binding Path=SelectedAccountData, Mode=TwoWay}"
+                      SelectedItem="{Binding Path=selectedAccount, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="RowEditEnding">
+                        <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=EditAccountDataCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" 
+                                        Binding="{Binding Path=Date,StringFormat=\{0:dd.MM.yyyy\}, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Value" 
+                                        Binding="{Binding Path=Amount, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </Grid>
 </Grid>

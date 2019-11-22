@@ -12,17 +12,23 @@ namespace GUIFinanceStructures
             }
             return 0;
         }
-        public BasicDayDataView()
-        { }
 
-        public BasicDayDataView(DateTime date, double unitPrice, double shareNo, double investment)
+        public BasicDayDataView()
+        { 
+            NewValue = true;
+        }
+
+        public BasicDayDataView(DateTime date, double unitPrice, double shareNo, double investment, bool newValue = true)
         {
             Date = date;
             UnitPrice = unitPrice;
             ShareNo = shareNo;
             Value = UnitPrice * ShareNo;
             Investment = investment;
+            NewValue = newValue;
         }
+
+        public bool NewValue { get; set; }
 
         public DateTime Date { get; set; }
         public double UnitPrice { get; set; }

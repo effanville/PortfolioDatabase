@@ -5,15 +5,31 @@ namespace GUIFinanceStructures
     public class AccountDayDataView
     {
         public AccountDayDataView()
-        { }
-
-        public AccountDayDataView(DateTime date, double unitPrice)
-        {
-            Date = date;
-            Amount = unitPrice;
+        { 
+            NewValue = true;
         }
 
-        public DateTime Date { get; set; }
-        public double Amount { get; set; }
+        public AccountDayDataView(DateTime date, double unitPrice, bool newValue = true)
+        {
+            fDate = date;
+            fAmount = unitPrice;
+            NewValue=newValue;
+        }
+
+        public bool NewValue { get; set; }
+        private DateTime fDate;
+        public DateTime Date 
+        {
+            get { return fDate; }
+            set { fDate = value; }
+        }
+
+        private double fAmount;
+
+        public double Amount 
+        {
+            get { return fAmount; }
+            set { fAmount = value; NewValue = true; } 
+        }
     }
 }

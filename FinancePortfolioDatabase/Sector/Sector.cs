@@ -45,7 +45,7 @@ namespace FinanceStructures
         /// <summary>
         /// default constructor.
         /// </summary>
-        private Sector()
+        public Sector()
         { }
 
         /// <summary>

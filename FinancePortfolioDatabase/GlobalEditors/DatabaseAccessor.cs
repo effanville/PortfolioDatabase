@@ -22,19 +22,59 @@ namespace GUIAccessorFunctions
         public static Portfolio GetPortfolio()
         {
             var PortfoCopy = new Portfolio();
-            // the following assigns the pointers as the same
-            // need to be more sophisticated to get a new copy
-            // implement a copy routine for Portfolio
-            PortfoCopy = GlobalData.Finances;
+
+            foreach (var security in GlobalData.Finances.Funds)
+            {
+                PortfoCopy.Funds.Add(security);
+            }
+            foreach (var bankAcc in GlobalData.Finances.BankAccounts)
+            {
+                PortfoCopy.BankAccounts.Add(bankAcc);
+            }
+
             return PortfoCopy;
         }
 
+        /// <summary>
+        /// returns a copy of the 
+        /// </summary>
         public static List<Sector> GetBenchMarks()
         {
             var output = new List<Sector>();
-            output = GlobalData.BenchMarks;
+            foreach (var sector in GlobalData.BenchMarks)
+            { 
+                output.Add(sector);
+            }
             return output;
         }
+
+        public static Sector GetSectorFromName(string name)
+        {
+            var benchmarks = GetBenchMarks();
+            foreach (var sector in benchmarks)
+            {
+                if (sector.GetName() == name)
+                {
+                    return sector.Copy();
+                }
+            }
+
+            return null;
+        }
+
+        public static Security GetSecurityFromName(string name, string company)
+        {
+            foreach (var security in GlobalData.Finances.Funds)
+            {
+                if (security.GetName() == name && security.GetCompany() == company)
+                {
+                    return security.Copy();
+                }
+            }
+
+            return null;
+        }
+
         public static List<string> GetSecurityNames()
         {
             if (GlobalData.Finances != null)
@@ -43,14 +83,14 @@ namespace GUIAccessorFunctions
             }
             return new List<string>();
         }
-        public static List<string> GetSectorNames()
+        public static List<NameComp> GetSectorNames()
         {
-            var outputs = new List<string>();
+            var outputs = new List<NameComp>();
             if (GlobalData.BenchMarks != null)
             {
                 foreach (Sector thing in GlobalData.BenchMarks)
                 {
-                    outputs.Add(thing.GetName());
+                    outputs.Add(new NameComp(thing.GetName(), string.Empty, false));
                 }
             }
             return outputs;

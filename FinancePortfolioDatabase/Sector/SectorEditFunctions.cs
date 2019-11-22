@@ -10,6 +10,11 @@ namespace FinanceStructures
     /// </summary>
     public partial class Sector
     {
+        public int Count()
+        {
+            return fValues.Count();
+        }
+
         public string GetName()
         {
             return fName;
@@ -23,7 +28,7 @@ namespace FinanceStructures
                 foreach (var datevalue in fValues.GetValuesBetween(fValues.GetFirstDate(), fValues.GetLatestDate()))
                 {
                     fValues.TryGetValue(datevalue.Day, out double UnitPrice);
-                    var thisday = new AccountDayDataView(datevalue.Day, UnitPrice);
+                    var thisday = new AccountDayDataView(datevalue.Day, UnitPrice, false);
                     output.Add(thisday);
                 }
             }

@@ -22,8 +22,8 @@ namespace FinanceWindowsViewModels
             set { fAccountNames = value; OnPropertyChanged(); }
         }
 
-        private List<string> fSectorNames;
-        public List<string> SectorNames
+        private List<NameComp> fSectorNames;
+        public List<NameComp> SectorNames
         {
             get { return fSectorNames; }
             set { fSectorNames = value; OnPropertyChanged(); }

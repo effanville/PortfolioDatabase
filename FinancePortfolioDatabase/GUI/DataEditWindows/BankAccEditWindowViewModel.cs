@@ -38,6 +38,9 @@ namespace FinanceWindowsViewModels
             get { return !fEditing; }
             set { fEditing = !value; OnPropertyChanged(); }
         }
+
+        private List<NameComp> fPreEditAccountNames;
+
         private List<NameComp> fAccountNames;
         /// <summary>
         /// Name and Company data of Funds in database for view.
@@ -56,7 +59,7 @@ namespace FinanceWindowsViewModels
         public NameComp selectedName
         {
             get { return fSelectedName; }
-            set { fSelectedName = value; OnPropertyChanged(); UpdateSelectedSecurityListBox(); }
+            set { fSelectedName = value; OnPropertyChanged(); UpdateSelectedAccountListBox(); }
         }
 
         private CashAccount fSelectedAccount;
@@ -116,7 +119,9 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddAccountCommand { get; }
 
-        public ICommand CreateAccountCommand { get; }
+        public ICommand CreateAccountButtonCommand { get; }
+
+        public ICommand CreateAccountCommand { get; set; }
 
         public ICommand AddValuationCommand { get; }
 
@@ -128,7 +133,9 @@ namespace FinanceWindowsViewModels
 
         public ICommand DeleteAccountCommand { get; }
 
-        public ICommand EditAccountDataCommand { get; }
+        public ICommand EditAccountDataButtonCommand { get; }
+
+        public ICommand EditAccountDataCommand { get; set; }
 
         public ICommand DeleteValuationCommand { get; }
 
@@ -138,11 +145,14 @@ namespace FinanceWindowsViewModels
 
         public ICommand ClearDataSelectionCommand { get; }
 
-        private void UpdateAccountListBox()
+        public void UpdateAccountListBox()
         {
             var currentSelectionName = selectedName;
             AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
+            fPreEditAccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
+            fPreEditAccountNames.Sort();
+
             for (int i = 0; i < AccountNames.Count; i++)
             {
                 if (AccountNames[i].CompareTo(currentSelectionName) == 0)
@@ -151,10 +161,10 @@ namespace FinanceWindowsViewModels
                 }
             }
 
-            UpdateSelectedSecurityListBox();
+            UpdateSelectedAccountListBox();
         }
 
-        private void UpdateSelectedSecurityListBox()
+        private void UpdateSelectedAccountListBox()
         {
             if (fSelectedName != null)
             {
@@ -183,7 +193,6 @@ namespace FinanceWindowsViewModels
         private void ExecuteClearSelection(Object obj)
         {
             ClearSelection();
-
         }
 
         /// <summary>
@@ -223,9 +232,56 @@ namespace FinanceWindowsViewModels
             DataAddEditVisibility = true;
         }
 
-        private void ExecuteCreateSecurity(Object obj)
+        private void ExecuteCreateBankAccountButton(Object obj)
         {
             BankAccountEditor.TryAddBankAccount(selectedNameEdit, selectedCompanyEdit);
+            UpdateAccountListBox();
+            ClearSelection();
+            DataAddEditVisibility = false;
+            NameAddEditVisibility = false;
+            UpdateMainWindow(true);
+        }
+
+        private void ExecuteCreateBankAccount(Object obj)
+        {
+            if (DatabaseAccessor.GetPortfolio().BankAccounts.Count != AccountNames.Count)
+            {
+                bool edited = false;
+                foreach (var name in AccountNames)
+                {
+                    if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
+                    {
+                        edited = true;
+                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company);
+                        name.NewValue = false;
+                    }
+                }
+                if (!edited)
+                {
+                    ErrorReports.AddError("No Name provided to create a sector.");
+                }
+            }
+            else
+            {
+                // maybe fired from editing stuff. Try that
+                bool edited = false;
+                for (int i = 0; i < AccountNames.Count; i++)
+                {
+                    var name = AccountNames[i];
+
+                    if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
+                    {
+                        edited = true;
+                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company);
+                        name.NewValue = false;
+                    }
+                }
+                if (!edited)
+                {
+                    ErrorReports.AddError("Was not able to edit desired sector.");
+                }
+            }
+
             UpdateAccountListBox();
             ClearSelection();
             DataAddEditVisibility = false;
@@ -273,7 +329,7 @@ namespace FinanceWindowsViewModels
             NameAddEditVisibility = true;
         }
 
-        private void ExecuteEditDataCommand(Object obj)
+        private void ExecuteEditDataButtonCommand(Object obj)
         {
             if (fSelectedName != null)
             {
@@ -299,18 +355,51 @@ namespace FinanceWindowsViewModels
             UpdateMainWindow(true);
         }
 
-        private void ExecuteDeleteSecurity(Object obj)
+        private void ExecuteEditDataCommand(Object obj)
         {
-            if (selectedNameEdit != null || selectedCompanyEdit != null)
+            if (selectedName != null && selectedAccount != null)
             {
-                BankAccountEditor.TryDeleteBankAccount(selectedNameEdit, selectedCompanyEdit);
-                UpdateAccountListBox();
-                UpdateMainWindow(true);
+                if (DatabaseAccessor.GetSectorFromName(selectedName.Name).Count() != SelectedAccountData.Count)
+                {
+                    BankAccountEditor.TryAddDataToBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount);
+                    selectedName.NewValue = false;
+                }
+                else
+                {
+                    bool edited = false;
+                    for (int i = 0; i < SelectedAccountData.Count; i++)
+                    {
+                        var name = SelectedAccountData[i];
+
+                        if (name.NewValue)
+                        {
+                            edited = true;
+                            BankAccountEditor.TryEditBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount);
+                            name.NewValue = false;
+                        }
+                    }
+                    if (!edited)
+                    {
+                        ErrorReports.AddError("Was not able to edit sector data.");
+                    }
+                }
+            }
+            UpdateSelectedAccountListBox();
+        }
+
+        private void ExecuteDeleteBankAccount(Object obj)
+        {
+            if (selectedName.Name != null)
+            {
+                BankAccountEditor.TryDeleteBankAccount(selectedName.Name, selectedName.Company);
             }
             else 
             {
                 ErrorReports.AddError("No Bank Account was selected when trying to delete.");
             }
+
+            UpdateAccountListBox();
+            UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteValuation(Object obj)
@@ -324,7 +413,7 @@ namespace FinanceWindowsViewModels
                 ErrorReports.AddError("No Bank Account was selected when trying to delete data.");
             }
 
-            UpdateSelectedSecurityListBox();
+            UpdateSelectedAccountListBox();
             UpdateMainWindow(true);
         }
 
@@ -341,18 +430,21 @@ namespace FinanceWindowsViewModels
             UpdateMainWindow = updateWindow;
             windowToView = pageViewChoice;
             fAccountNames = new List<NameComp>();
+            fPreEditAccountNames = new List<NameComp>();
             fSelectedAccountData = new List<AccountDayDataView>();
             UpdateAccountListBox();
             AddAccountCommand = new BasicCommand(ExecuteAddSecurity);
-            CreateAccountCommand = new BasicCommand(ExecuteCreateSecurity);
+            CreateAccountButtonCommand = new BasicCommand(ExecuteCreateBankAccountButton);
+            CreateAccountCommand = new BasicCommand(ExecuteCreateBankAccount);
             AddDataCommand = new BasicCommand(ShowDataAdding);
             AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
 
             EditAccountCommand = new BasicCommand(ExecuteEditBankAccount);
 
+            EditAccountDataButtonCommand = new BasicCommand(ExecuteEditDataButtonCommand);
             EditAccountDataCommand = new BasicCommand(ExecuteEditDataCommand);
             EditAccountNameCommand = new BasicCommand(ExecuteEditSecurityName);
-            DeleteAccountCommand = new BasicCommand(ExecuteDeleteSecurity);
+            DeleteAccountCommand = new BasicCommand(ExecuteDeleteBankAccount);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);
             CloseCommand = new BasicCommand(ExecuteCloseCommand);
 

@@ -29,6 +29,10 @@ namespace FinanceStructures
             return true;
         }
 
+        public int Count()
+        {
+            return fUnitPrice.Count();
+        }
         /// <summary>
         /// Returns true if shares and unit prices have an item or are not null.
         /// </summary>

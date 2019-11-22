@@ -72,14 +72,17 @@ namespace FinanceWindowsViewModels
             }
             openFile.Dispose();
             UpdateMainWindow(false);
+            UpdateSubWindows(false);
         }
 
         Action<bool> UpdateMainWindow;
+        Action<bool> UpdateSubWindows;
         Action<string> windowToView;
 
-        public OptionsPanelViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
+        public OptionsPanelViewModel(Action<bool> updateWindow, Action<bool> updateSubWindow, Action<string> pageViewChoice)
         {
             UpdateMainWindow = updateWindow;
+            UpdateSubWindows = updateSubWindow;
             windowToView = pageViewChoice;
 
             OpenSecurityEditWindowCommand = new BasicCommand(ExecuteSecurityEditWindow);
