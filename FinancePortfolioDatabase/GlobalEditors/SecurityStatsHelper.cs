@@ -49,5 +49,15 @@ namespace SecurityStatisticsFunctions
         {
             return GlobalData.Finances.Profit(name, company);
         }
+
+        public static double FundsFraction(string name, string company)
+        {
+            return GlobalData.Finances.FundsFraction(name, company);
+        }
+
+        public static double TotalValue(DateTime date)
+        {
+            return GlobalData.Finances.Value(date);
+        }
     }
 }

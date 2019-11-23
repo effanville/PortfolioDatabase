@@ -114,7 +114,7 @@ namespace FinanceWindowsViewModels
             SaveFileDialog saving = new SaveFileDialog();
             if (saving.ShowDialog() == DialogResult.OK)
             {
-                PortfolioStatsCreators.TryCreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName);
+                PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName);
                 ErrorReports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
             else 
@@ -160,6 +160,7 @@ namespace FinanceWindowsViewModels
             SecuritiesInvestments = DatabaseAccessor.AllSecuritiesInvestments();
             BankAccountStats = DatabaseAccessor.GenerateBankAccountStatistics();
         }
+
 
         public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
         {

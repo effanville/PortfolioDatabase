@@ -59,7 +59,8 @@ namespace FinanceWindowsViewModels
                     DataView.DataUpdate();
                 }
 
-                ReportsViewModel.Update();
+                ReportsViewModel.Update(); 
+                UpdateSubWindowData(false);
             }
         }
 

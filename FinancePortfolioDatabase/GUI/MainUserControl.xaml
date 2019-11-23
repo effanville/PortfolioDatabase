@@ -12,10 +12,10 @@
     <Grid VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="170"></RowDefinition>
+            <RowDefinition Height="150"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         

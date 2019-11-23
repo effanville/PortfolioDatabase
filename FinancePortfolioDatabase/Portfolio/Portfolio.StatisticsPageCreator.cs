@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using mathematics;
+using GUIAccessorFunctions;
+using DataStructures;
+using BankAccountHelperFunctions;
 
 namespace PortfolioStatsCreatorHelper
 {
     public static class PortfolioStatsCreators
     {
-
-
-
-        public static bool TryCreateHTMLPage(Portfolio funds, List<string> toExport, string filepath)
+        public static bool CreateHTMLPage(Portfolio funds, List<string> toExport, string filepath)
         {
             StreamWriter htmlWriter = new StreamWriter(filepath);
             CreateHTMLHeader(htmlWriter);
@@ -20,54 +20,182 @@ namespace PortfolioStatsCreatorHelper
             htmlWriter.WriteLine(" ");
             htmlWriter.WriteLine("Funds Data");
             htmlWriter.WriteLine(" ");
-            string header = "name".PadRight(25) + "Latest Value".PadRight(15) + "CAR 3 Months(%)".PadRight(15) + "CAR 6 Months(%)".PadRight(15) + "CAR 1 Year(%)".PadRight(15) + "CARTotal(%)".PadRight(15);
+
+            var totals = DatabaseAccessor.GeneratePortfolioStatistics();
+            var properties = totals.GetType().GetProperties();
+            string header = string.Empty;
+            foreach (var props in properties)
+            {
+                if (props.PropertyType == typeof(string))
+                { 
+                    header += props.Name.PadRight(25);
+                }
+
+                if (props.PropertyType == typeof(double))
+                { 
+                    header += props.Name.PadRight(15);
+                }
+            }
+
             htmlWriter.WriteLine(header);
+            htmlWriter.WriteLine("");
             List<string> companies = funds.GetSecuritiesCompanyNames();
             foreach (string compName in companies)
             {
-                htmlWriter.WriteLine("");
-                var securities = funds.CompanySecurities(compName);
+                
+                var securities = DatabaseAccessor.GenerateCompanyFundsStatistics(compName);
                 foreach (var sec in securities)
                 {
-                    string line = sec.GetName().PadRight(25) + MathSupport.Trunc(SecurityStatistics.SecurityLatestValue(sec.GetName(), compName), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-3), DateTime.Today), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-6), DateTime.Today), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRRTime(sec.GetName(), compName, DateTime.Today.AddMonths(-12), DateTime.Today), 3).PadRight(15) + MathSupport.Trunc(100 * SecurityStatistics.SecurityIRR(sec.GetName(), compName), 3).PadRight(15);
+                    string line = string.Empty;
+                    foreach (var props in properties)
+                    {
+                        if (Double.TryParse(props.GetValue(sec).ToString(), out double result))
+                        {
+                            line += result.ToString().PadRight(15);
+                        }
+                        else
+                        {
+                            line += props.GetValue(sec).ToString().PadRight(25);
+                        }
+                    }
                     htmlWriter.WriteLine(line);
                 }
 
-                string compLine = compName.PadRight(25) + MathSupport.Trunc(funds.CompanyValue(compName, DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRCompany(compName,DateTime.Today.AddMonths(-3), DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRCompany(compName, DateTime.Today.AddMonths(-6), DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRCompany(compName, DateTime.Today.AddMonths(-12), DateTime.Today), 4).PadRight(15);
-                htmlWriter.WriteLine(compLine);
                 htmlWriter.WriteLine("");
-
             }
 
             htmlWriter.WriteLine("");
+            string fundTotalLine = string.Empty;
+            foreach (var props in properties)
+            {
+                if (Double.TryParse(props.GetValue(totals).ToString(), out double result))
+                {
+                    fundTotalLine += result.ToString().PadRight(15);
+                }
+                else 
+                {
+                    fundTotalLine += props.GetValue(totals).ToString().PadRight(25);
+                }
+            }
 
-            string totalLine = "Funds Total".PadRight(25) + MathSupport.Trunc(funds.AllSecuritiesValue(DateTime.Today), 4).PadRight(15) + MathSupport.Trunc(funds.IRRPortfolio(DateTime.Today.AddMonths(-3), DateTime.Today), 4).PadRight(15);
-            htmlWriter.WriteLine(totalLine) ;
+            htmlWriter.WriteLine(fundTotalLine);
+            htmlWriter.WriteLine("");
+            DailyValuation_Named bankTotals = new DailyValuation_Named("Totals", string.Empty, DateTime.Today, BankAccountEditor.AllBankAccountValue(DateTime.Today));
+            var bankProperties = bankTotals.GetType().GetProperties();
+            string bankheader = string.Empty;
+
+            foreach (var props in properties)
+            {
+                if (props.PropertyType == typeof(string))
+                {
+                    bankheader += props.Name.PadRight(25);
+                }
+
+                if (props.PropertyType == typeof(double))
+                {
+                    bankheader += props.Name.PadRight(15);
+                }
+            }
+
+            htmlWriter.WriteLine(bankheader);
             htmlWriter.WriteLine("");
 
-            htmlWriter.WriteLine("Name".PadRight(25) + "Value".PadRight(15));
             List<string> BankCompanies = funds.GetBankAccountCompanyNames();
             foreach (string compName in BankCompanies)
             {
-                htmlWriter.WriteLine("");
-                var bankAccounts = funds.CompanyBankAccounts(compName);
-                foreach (CashAccount acc in bankAccounts)
+                var bankAccounts = funds.GenerateBankAccountStatistics(compName);
+                foreach (var acc in bankAccounts)
                 {
-                    string line = acc.GetName().PadRight(25) + MathSupport.Trunc(acc.LatestValue().Value, 3).PadRight(15);
+                    string line = string.Empty;
+                    foreach (var prop in bankProperties)
+                    {
+                        if (Double.TryParse(prop.GetValue(acc).ToString(), out double result))
+                        {
+                            line += result.ToString().PadRight(15);
+                        }
+                        else
+                        {
+                            if (prop.PropertyType == typeof(string))
+                            {
+                                line += prop.GetValue(acc).ToString().PadRight(25);
+                            }
+                        }
+                    }
+
                     htmlWriter.WriteLine(line);
                 }
-                string compLine = compName.PadRight(25) + MathSupport.Trunc(funds.BankAccountCompanyValue(compName, DateTime.Today), 4).PadRight(15);
-                htmlWriter.WriteLine(compLine);
+
                 htmlWriter.WriteLine("");
             }
 
-            string totalAccountsLine = "BankAccounts Total".PadRight(15) + MathSupport.Trunc(funds.AllBankAccountsValue(DateTime.Today), 4).PadRight(15);
+            WriteSeparatorLine(htmlWriter);
+
+            string totalAccountsLine = string.Empty;
+            foreach (var prop in bankProperties)
+            {
+                if (Double.TryParse(prop.GetValue(bankTotals).ToString(), out double result))
+                {
+                    totalAccountsLine += result.ToString().PadRight(15);
+                }
+                else
+                {
+                    if (prop.PropertyType == typeof(string))
+                    {
+                        totalAccountsLine += prop.GetValue(bankTotals).ToString().PadRight(25);
+                    }
+                }
+            }
+
             htmlWriter.WriteLine(totalAccountsLine);
             htmlWriter.WriteLine("");
+            WriteSeparatorLine(htmlWriter);
+
+            DailyValuation_Named portfolioTotals = new DailyValuation_Named("Totals", string.Empty, DateTime.Today, SecurityStatistics.TotalValue(DateTime.Today));
+            var portfolioProperties = bankTotals.GetType().GetProperties();
+            string portfolioHeader = string.Empty;
+            htmlWriter.WriteLine("Name".PadRight(25) + "Value".PadRight(15));
+            foreach (var props in portfolioProperties)
+            {
+                if (props.PropertyType == typeof(string))
+                {
+                    portfolioHeader += props.Name.PadRight(25);
+                }
+
+                if (props.PropertyType == typeof(double))
+                {
+                    portfolioHeader += props.Name.PadRight(15);
+                }
+            }
+
+            htmlWriter.WriteLine(portfolioHeader);
+
+            string totalLine = string.Empty;
+            foreach (var prop in portfolioProperties)
+            {
+                if (Double.TryParse(prop.GetValue(portfolioTotals).ToString(), out double result))
+                {
+                    totalLine += result.ToString().PadRight(15);
+                }
+                else
+                {
+                    if (prop.PropertyType == typeof(string))
+                    {
+                        totalLine += prop.GetValue(portfolioTotals).ToString().PadRight(25);
+                    }
+                }
+            }
+
+
+            htmlWriter.WriteLine(totalLine);
 
             CreateHTMLFooter(htmlWriter);
             htmlWriter.Close();
             return true;
+        }
+
+        private static void WriteSeparatorLine(StreamWriter writer)
+        {
+            writer.WriteLine("=========================================================================================================="); 
         }
 
         private static void CreateHTMLHeader(StreamWriter writer)
@@ -80,19 +208,19 @@ namespace PortfolioStatsCreatorHelper
             writer.WriteLine("</head>");
             writer.WriteLine("<body>");
             writer.WriteLine("<pre style='color:#1f1c1b;background-color:#ffffff;'><span class=\"inner - pre\" style=\"font - size: 13px\">");
-            writer.WriteLine("==========================================================================================================");
+            WriteSeparatorLine(writer);
 
             writer.WriteLine("<h1>Portfolio Statement</h1>");
             writer.WriteLine($"on the date {DateTime.Today.ToShortDateString()}.");
             writer.WriteLine($"Produced by Finance Portfolio Database v{GlobalHeldData.GlobalData.versionNumber}");
             writer.WriteLine("as written by Matthew Egginton");
 
-            writer.WriteLine("==========================================================================================================");
+            WriteSeparatorLine(writer);
         }
 
         private static void CreateHTMLFooter(StreamWriter writer)
         {
-            writer.WriteLine("===========================================================================================================");
+            WriteSeparatorLine(writer);
             writer.WriteLine("</span></pre>");
             writer.WriteLine("</body>");
             writer.WriteLine("</html>");

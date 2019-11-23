@@ -12,22 +12,21 @@
     <Grid Height="Auto"
                 Width="Auto">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Border Background="#F98866"
-                Height="50"
+                Height="40"
                 VerticalAlignment="Top"
                 Grid.Row="0">
             <StackPanel Orientation="Horizontal"
                         Width="Auto">
-                <TextBlock FontSize="14"
+                <TextBlock FontSize="13"
                            Margin="12 12 12 12"
                            Text="Select the option on the left hand side "/>
-                <Button Width="30"
-                        Height="30" 
+                <Button Width="25"
+                        Height="25" 
                         HorizontalAlignment="Right"
-                        Margin="12 12 12 12"
                         Click="OpenHelpDocsCommand" 
                         ClickMode="Press">
                     <StackPanel Orientation="Horizontal">
