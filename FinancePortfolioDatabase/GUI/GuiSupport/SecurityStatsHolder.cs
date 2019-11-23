@@ -2,6 +2,7 @@
 using SecurityStatisticsFunctions;
 using GlobalHeldData;
 using mathematics;
+using CompanyStatisticsFunctions;
 
 namespace GUIFinanceStructures
 {
@@ -29,9 +30,10 @@ namespace GUIFinanceStructures
             Name = n;
             Company = c;
             
-            if (n == "Totals")
+            if (n == "Totals" && string.IsNullOrEmpty(c))
             {
-                LatestVal = MathSupport.Truncate(GlobalData.Finances.AllSecuritiesValue(DateTime.Today),100);
+                LatestVal = MathSupport.Truncate(GlobalData.Finances.AllSecuritiesValue(DateTime.Today));
+                FundsFraction = 1.0;
                 Profit = MathSupport.Truncate(GlobalData.Finances.TotalProfit());
                 CAR3M = MathSupport.Truncate(100 * GlobalData.Finances.IRRPortfolio(DateTime.Today.AddMonths(-3), DateTime.Today)) ;
                 CAR6M = MathSupport.Truncate(100 * GlobalData.Finances.IRRPortfolio(DateTime.Today.AddMonths(-6), DateTime.Today));
@@ -39,21 +41,35 @@ namespace GUIFinanceStructures
                 CAR5Y = MathSupport.Truncate(100 * GlobalData.Finances.IRRPortfolio(DateTime.Today.AddMonths(-60), DateTime.Today));
                 CARTotal = MathSupport.Truncate(100 * GlobalData.Finances.IRRPortfolio(GlobalData.Finances.FirstValueDate(), DateTime.Today));
             }
+            else if (n =="Totals" && !string.IsNullOrEmpty(c))
+            {
+                LatestVal = MathSupport.Truncate(CompanyStatistics.CompanyLatestValue( c));
+                FundsFraction = MathSupport.Truncate(CompanyStatistics.FundsCompanyFraction(c, DateTime.Today), 4);
+                Profit = MathSupport.Truncate(CompanyStatistics.CompanyProfit(c));
+                CAR3M = MathSupport.Truncate(100 * CompanyStatistics.IRRCompany(c, DateTime.Today.AddMonths(-3), DateTime.Today));
+                CAR6M = MathSupport.Truncate(100 * CompanyStatistics.IRRCompany(c, DateTime.Today.AddMonths(-6), DateTime.Today));
+                CAR1Y = MathSupport.Truncate(100 * CompanyStatistics.IRRCompany(c, DateTime.Today.AddMonths(-12), DateTime.Today));
+                CAR5Y = MathSupport.Truncate(100 * CompanyStatistics.IRRCompany(c, DateTime.Today.AddMonths(-60), DateTime.Today));
+                CARTotal = MathSupport.Truncate(100 * CompanyStatistics.IRRCompanyTotal(c));
+            }
             else
             {
                 LatestVal = MathSupport.Truncate(SecurityStatistics.SecurityLatestValue(n, c));
+                FundsFraction = MathSupport.Truncate(SecurityStatistics.FundsFraction(n, c), 4);
                 Profit = MathSupport.Truncate(SecurityStatistics.Profit(n, c));
-                CAR3M = Math.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-3), DateTime.Today));
-                CAR6M = Math.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-6), DateTime.Today));
-                CAR1Y = Math.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-12), DateTime.Today));
-                CAR5Y = Math.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-60), DateTime.Today));
-                CARTotal = Math.Truncate(100 * SecurityStatistics.SecurityIRR(n, c));
+                CAR3M = MathSupport.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-3), DateTime.Today));
+                CAR6M = MathSupport.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-6), DateTime.Today));
+                CAR1Y = MathSupport.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-12), DateTime.Today));
+                CAR5Y = MathSupport.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-60), DateTime.Today));
+                CARTotal = MathSupport.Truncate(100 * SecurityStatistics.SecurityIRR(n, c));
             }
         }
-        public string Name { get; set; }
-        public string Company { get; set; }
-        public double LatestVal { get; set; }
 
+        public string Company { get; set; }
+        public string Name { get; set; }
+        
+        public double LatestVal { get; set; }
+        public double FundsFraction { get; set; }
         public double Profit { get; set; }
         public double CAR3M { get; set; }
         public double CAR6M { get; set; }

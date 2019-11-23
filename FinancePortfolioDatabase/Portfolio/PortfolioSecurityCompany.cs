@@ -65,6 +65,29 @@ namespace FinanceStructures
             return value;
         }
 
+        public double CompanyProfit(string company)
+        {
+            var securities = CompanySecurities(company);
+            if (securities.Count() == 0)
+            {
+                return double.NaN;
+            }
+            double value = 0;
+            foreach (var security in securities)
+            {
+                if (security.Any())
+                {
+                    value += security.LatestValue().Value - security.TotalInvestment();
+                }
+            }
+
+            return value;
+        }
+
+        public double FundsCompanyFraction(string company, DateTime date)
+        {
+            return CompanyValue(company, date) / AllSecuritiesValue(date);
+        }
 
         /// <summary>
         /// If possible, returns the IRR of all securities in the company specified over the time period.

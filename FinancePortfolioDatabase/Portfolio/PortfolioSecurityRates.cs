@@ -19,6 +19,19 @@ namespace FinanceStructures
 
             return double.NaN;
         }
+
+        public double FundsFraction(string name, string company)
+        {
+            if (TryGetSecurity(name, company, out Security desired))
+            {
+                if (desired.Any())
+                {
+                    return desired.LatestValue().Value / AllSecuritiesValue(DateTime.Today);
+                }
+            }
+
+            return double.NaN;
+        }
         public List<DailyValuation_Named> GetSecurityInvestments(string name, string company)
         {
             if (TryGetSecurity(name, company, out Security desired))

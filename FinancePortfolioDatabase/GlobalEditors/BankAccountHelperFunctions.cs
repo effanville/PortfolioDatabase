@@ -79,5 +79,10 @@ namespace BankAccountHelperFunctions
         {
             return GlobalData.Finances.TryDeleteBankAccountData(name, company, date);
         }
+
+        public static double AllBankAccountValue(DateTime date)
+        {
+            return GlobalData.Finances.AllBankAccountsValue(date);
+        }
     }
 }

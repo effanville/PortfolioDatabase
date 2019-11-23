@@ -16,6 +16,7 @@ namespace GUIFinanceStructures
         public BasicDayDataView()
         { 
             NewValue = true;
+            Date = DateTime.Today;
         }
 
         public BasicDayDataView(DateTime date, double unitPrice, double shareNo, double investment, bool newValue = true)

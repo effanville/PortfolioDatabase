@@ -7,6 +7,7 @@ using GUIFinanceStructures;
 using SavingDummyClasses;
 using ReportingStructures;
 using DataStructures;
+using System;
 
 namespace GUIAccessorFunctions
 {
@@ -100,6 +101,7 @@ namespace GUIAccessorFunctions
         {
             GlobalData.fDatabaseFilePath = path;
         }
+
         public static List<NameComp> GetSecurityNamesAndCompanies()
         {
             if (GlobalData.Finances != null)
@@ -109,6 +111,10 @@ namespace GUIAccessorFunctions
             return new List<NameComp>();
         }
 
+        /// <summary>
+        /// returns a sorted list of all funds in portfolio, ordering by company then by fund name.
+        /// </summary>
+        /// <returns></returns>
         public static List<SecurityStatsHolder> GenerateSecurityStatistics()
         {
             if (GlobalData.Finances != null)
@@ -116,6 +122,45 @@ namespace GUIAccessorFunctions
                 return GlobalData.Finances.GenerateSecurityStatistics();
             }
             return new List<SecurityStatsHolder>();
+        }
+
+        /// <summary>
+        /// returns the securities under the company name.
+        /// </summary>
+        public static List<SecurityStatsHolder> GenerateCompanyFundsStatistics(string company)
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GenerateCompanyFundsStatistics(company);
+            }
+            return new List<SecurityStatsHolder>();
+        }
+
+        public static SecurityStatsHolder GenerateCompanyStatistics(string company)
+        {
+            if (GlobalData.Finances != null)
+            {
+                return new SecurityStatsHolder("Totals", company);
+            }
+            return new SecurityStatsHolder();
+        }
+
+        public static List<DailyValuation_Named> GenerateBankAccountStatistics(string company)
+        {
+            if (GlobalData.Finances != null)
+            {
+                return GlobalData.Finances.GenerateBankAccountStatistics(company);
+            }
+            return new List<DailyValuation_Named>();
+        }
+
+        public static SecurityStatsHolder GeneratePortfolioStatistics()
+        {
+            if (GlobalData.Finances != null)
+            {
+                return new SecurityStatsHolder("Totals", string.Empty);
+            }
+            return new SecurityStatsHolder();
         }
 
         public static List<string> GetBankAccountNames()
@@ -198,6 +243,10 @@ namespace GUIAccessorFunctions
                 writer = new StreamWriter(filePath, append);
                 serializer.Serialize(writer, objectToWrite);
             }
+            catch (Exception ex)
+            {
+                return;
+            }
             finally
             {
                 if (writer != null)
@@ -220,6 +269,10 @@ namespace GUIAccessorFunctions
                 var serializer = new XmlSerializer(typeof(T));
                 reader = new StreamReader(filePath);
                 return (T)serializer.Deserialize(reader);
+            }
+            catch (Exception ex)
+            {
+                return default(T);
             }
             finally
             {

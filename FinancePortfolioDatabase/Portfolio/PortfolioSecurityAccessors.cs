@@ -57,9 +57,30 @@ namespace FinanceStructures
             {
                 namesAndCompanies.Add(new SecurityStatsHolder(security.GetName(), security.GetCompany()));
             }
+            namesAndCompanies.Sort();
+
             namesAndCompanies.Add(new SecurityStatsHolder("Totals", ""));
             return namesAndCompanies;
         }
+
+        public List<SecurityStatsHolder> GenerateCompanyFundsStatistics(string company)
+        {
+            var namesAndCompanies = new List<SecurityStatsHolder>();
+
+            foreach (var security in Funds)
+            {
+                if (security.GetCompany() == company)
+                {
+                    namesAndCompanies.Add(new SecurityStatsHolder(security.GetName(), security.GetCompany()));
+                }
+            }
+
+            namesAndCompanies.Sort();
+
+            namesAndCompanies.Add(new SecurityStatsHolder("Totals", company));
+            return namesAndCompanies;
+        }
+
 
         public bool DoesSecurityExist(Security fund)
         {
