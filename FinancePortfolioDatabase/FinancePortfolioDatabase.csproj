@@ -60,13 +60,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BankAccounts\CashAccount.Rates.cs" />
-    <Compile Include="DataStructures\DailyValuation_Named.cs" />
-    <Compile Include="ErrorReports\ErrorReport.cs" />
-    <Compile Include="ErrorReports\reportType.cs" />
-    <Compile Include="GlobalEditors\AllData.cs" />
-    <Compile Include="GlobalEditors\SectorEditor.cs" />
-    <Compile Include="GlobalEditors\BankAccountStatsHelper.cs" />
     <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml.cs">
       <DependentUpon>BankAccEditWindow.xaml</DependentUpon>
     </Compile>
@@ -84,10 +77,6 @@
       <DependentUpon>UserButtons.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtonsViewModel.cs" />
-    <Compile Include="GUI\GuiSupport\BankAccountStatsHolder.cs" />
-    <Compile Include="GUI\GuiSupport\SecurityStatsHolder.cs" />
-    <Compile Include="GUI\GuiSupport\BasicDayDataView.cs" />
-    <Compile Include="GUI\GuiSupport\AccountDayDataView.cs" />
     <Compile Include="GUI\GuiSupport\OutputHelper.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
     <Compile Include="GUI\HelpWindow.xaml.cs">
@@ -97,7 +86,6 @@
       <DependentUpon>MainUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\OptionsPanelViewModel.cs" />
-    <Compile Include="ErrorReports\ErrorReports.cs" />
     <Compile Include="GUI\GuiSupport\EventArgs.cs" />
     <Compile Include="GUI\GuiSupport\EventRaiser.cs" />
     <Compile Include="GUI\MainWindowViewModel.cs" />
@@ -167,33 +155,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BankAccounts\CashAccount.cs" />
-    <Compile Include="BankAccounts\CashAccountEditFns.cs" />
-    <Compile Include="MathLibrary\GeneralFinancialFunctions.cs" />
-    <Compile Include="DataStructures\Timelist.Rates.cs" />
-    <Compile Include="GlobalEditors\BankAccountHelperFunctions.cs" />
-    <Compile Include="GlobalEditors\SecurityCompanyStatsHelper.cs" />
-    <Compile Include="GlobalEditors\SecurityStatsHelper.cs" />
-    <Compile Include="GlobalEditors\SecurityEditor.cs" />
-    <Compile Include="DataStructures\DailyValuation.cs" />
-    <Compile Include="GUI\GuiSupport\NameComp.cs" />
-    <Compile Include="MathLibrary\MathSupport.cs" />
-    <Compile Include="Portfolio\Portfolio.StatisticsPageCreator.cs" />
-    <Compile Include="Portfolio\PortfolioBankAccountCompany.cs" />
-    <Compile Include="Portfolio\PortfolioSecurityCompany.cs" />
-    <Compile Include="Portfolio\PortfolioSecurityRates.cs" />
-    <Compile Include="Portfolio\PortfolioBankAccAccessors.cs" />
-    <Compile Include="Portfolio\PortfolioValues.cs" />
-    <Compile Include="Sector\Sector.cs" />
-    <Compile Include="Portfolio\PortfolioSecurityAccessors.cs" />
-    <Compile Include="GlobalEditors\GlobalData.cs" />
-    <Compile Include="Sector\SectorEditFunctions.cs" />
-    <Compile Include="Security\Security.Rates.cs" />
-    <Compile Include="Security\SecurityEditFns.cs" />
-    <Compile Include="DataStructures\TimeList.cs" />
-    <Compile Include="GlobalEditors\DatabaseAccessor.cs" />
-    <Compile Include="Portfolio\Portfolio.cs" />
-    <Compile Include="Security\Security.cs" />
     <Compile Include="GUI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -258,6 +219,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="GlobalEditors\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +230,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="PAD.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj">
+      <Project>{0738a1ca-623a-4f3e-96fa-8a9439f74446}</Project>
+      <Name>FinancialStructures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PADGlobals\PADGlobals.csproj">
+      <Project>{9ac5bde6-a6af-4806-8f84-f6a1688d93c5}</Project>
+      <Name>PADGlobals</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

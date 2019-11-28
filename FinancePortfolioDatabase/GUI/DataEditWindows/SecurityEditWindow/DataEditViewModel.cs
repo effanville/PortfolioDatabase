@@ -1,8 +1,8 @@
-﻿using DataStructures;
-using FinanceStructures;
-using GUIFinanceStructures;
+﻿using FinancialStructures.DataStructures;
+using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using GUISupport;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;

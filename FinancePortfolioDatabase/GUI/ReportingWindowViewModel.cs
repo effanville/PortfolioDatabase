@@ -1,5 +1,5 @@
 ﻿using GUISupport;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;

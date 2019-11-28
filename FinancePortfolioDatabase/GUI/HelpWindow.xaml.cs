@@ -1,4 +1,4 @@
-﻿using ReportingStructures;
+﻿using FinancialStructures.ReportingStructures;
 using System;
 using System.IO;
 using System.Windows;

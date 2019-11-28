@@ -1,5 +1,5 @@
 ﻿using GUIAccessorFunctions;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 using System.Windows;
 using GlobalHeldData;
 

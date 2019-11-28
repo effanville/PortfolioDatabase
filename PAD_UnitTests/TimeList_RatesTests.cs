@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using FinanceFunctionsList;
+using FinancialStructures.FinanceFunctionsList;
 using System;
-using DataStructures;
+using FinancialStructures.DataStructures;
 using System.Collections.Generic;
 
 namespace PAD_UnitTests

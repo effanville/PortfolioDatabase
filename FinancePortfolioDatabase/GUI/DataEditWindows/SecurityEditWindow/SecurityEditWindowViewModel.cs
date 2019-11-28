@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using SecurityHelperFunctions;
 using GUISupport;
-using FinanceStructures;
-using GUIFinanceStructures;
-using ReportingStructures;
+using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
 using FinanceWindowsViewModels.SecurityEdit;
 
 namespace FinanceWindowsViewModels

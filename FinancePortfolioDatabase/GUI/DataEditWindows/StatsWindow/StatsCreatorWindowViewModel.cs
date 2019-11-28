@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
-using DataStructures;
+using FinancialStructures.DataStructures;
 using GUIAccessorFunctions;
-using GUIFinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using GUISupport;
 using PortfolioStatsCreatorHelper;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
