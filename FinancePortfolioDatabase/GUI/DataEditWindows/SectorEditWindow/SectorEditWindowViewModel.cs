@@ -4,8 +4,8 @@ using System.Windows.Input;
 using GUIAccessorFunctions;
 using SectorHelperFunctions;
 using GUISupport;
-using GUIFinanceStructures;
-using ReportingStructures;
+using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {

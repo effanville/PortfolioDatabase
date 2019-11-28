@@ -1,6 +1,6 @@
-﻿using GUIFinanceStructures;
+﻿using FinancialStructures.GUIFinanceStructures;
 using GUISupport;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;

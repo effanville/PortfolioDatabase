@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using GUIAccessorFunctions;
-using GUIFinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using GUISupport;
 using System;
 

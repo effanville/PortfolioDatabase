@@ -1,8 +1,8 @@
 ﻿using System;
 using GUISupport;
-using FinanceStructures;
-using ReportingStructures;
-using GUIFinanceStructures;
+using FinancialStructures.FinanceStructures;
+using FinancialStructures.ReportingStructures;
+using FinancialStructures.GUIFinanceStructures;
 using BankAccountHelperFunctions;
 using System.Collections.Generic;
 using System.Windows.Input;

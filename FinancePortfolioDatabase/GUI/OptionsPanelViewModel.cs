@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using FinanceWindows;
 using GUISupport;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
