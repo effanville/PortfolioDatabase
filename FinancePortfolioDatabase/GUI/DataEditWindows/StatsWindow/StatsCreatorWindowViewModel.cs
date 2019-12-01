@@ -37,6 +37,20 @@ namespace FinanceWindowsViewModels
             get { return fBankAccStatsVisibility; }
             set { fBankAccStatsVisibility = value; OnPropertyChanged(); }
         }
+
+        private bool fDatabaseStatsVisibility;
+        public bool DatabaseStatsVisibility
+        {
+            get { return fDatabaseStatsVisibility; }
+            set { fDatabaseStatsVisibility = value; }
+        }
+
+        private bool fDisplayValueFunds = true;
+        public bool DisplayValueFunds
+        {
+            get { return fDisplayValueFunds; }
+            set { fDisplayValueFunds = value; OnPropertyChanged(); GenerateStatistics(); }
+        }
         public ICommand CreateCSVStatsCommand { get; }
 
         public ICommand CreateInvestmentListCommand { get; }
@@ -46,6 +60,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteExportToCSVCommand(Object obj)
         {
             SaveFileDialog saving = new SaveFileDialog();
+            saving.DefaultExt = ".csv";
             if (saving.ShowDialog() == DialogResult.OK)
             {
                 if (!saving.FileName.EndsWith(".csv"))
@@ -58,8 +73,11 @@ namespace FinanceWindowsViewModels
                 statsWriter.WriteLine("Company, Name, Latest Value, CAR total");
                 foreach (SecurityStatsHolder stats in SecuritiesStats)
                 {
-                    string securitiesData = stats.Company + ", " + stats.Name + ", " + stats.LatestVal.ToString() + ", " + stats.CARTotal.ToString();
-                    statsWriter.WriteLine(securitiesData);
+                    if (stats.LatestVal > 0)
+                    {
+                        string securitiesData = stats.Company + ", " + stats.Name + ", " + stats.LatestVal.ToString() + ", " + stats.CARTotal.ToString();
+                        statsWriter.WriteLine(securitiesData);
+                    }
                 }
                 statsWriter.WriteLine("");
                 statsWriter.WriteLine("Bank Account Data");
@@ -114,7 +132,7 @@ namespace FinanceWindowsViewModels
             SaveFileDialog saving = new SaveFileDialog();
             if (saving.ShowDialog() == DialogResult.OK)
             {
-                PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName);
+                PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName, DisplayValueFunds);
                 ErrorReports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
             else 
@@ -126,6 +144,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCloseCommand(Object obj)
         {
+            UpdateMainWindow(false);
             windowToView("dataview");
         }
         private List<SecurityStatsHolder> fSecuritiesStats;
@@ -151,14 +170,22 @@ namespace FinanceWindowsViewModels
             set { fBankAccountStats = value; OnPropertyChanged(); }
         }
 
+        private List<DatabaseStatistics> fDatabaseStats;
+        public List<DatabaseStatistics> DatabaseStats
+        {
+            get { return fDatabaseStats; }
+            set { fDatabaseStats = value; OnPropertyChanged(); }
+        }
+
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
 
         public void GenerateStatistics()
         {
-            SecuritiesStats = DatabaseAccessor.GenerateSecurityStatistics();
+            SecuritiesStats = DatabaseAccessor.GenerateSecurityStatistics(DisplayValueFunds);
             SecuritiesInvestments = DatabaseAccessor.AllSecuritiesInvestments();
-            BankAccountStats = DatabaseAccessor.GenerateBankAccountStatistics();
+            BankAccountStats = DatabaseAccessor.GenerateBankAccountStatistics(DisplayValueFunds);
+            DatabaseStats = DatabaseAccessor.GenerateDatabaseStatistics();
         }
 
 
@@ -167,6 +194,7 @@ namespace FinanceWindowsViewModels
             SecStatsVisibility = true;
             SecInvestsVisibility = false;
             BankAccStatsVisibility = false;
+            DatabaseStatsVisibility = false;
             GenerateStatistics();
             windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;

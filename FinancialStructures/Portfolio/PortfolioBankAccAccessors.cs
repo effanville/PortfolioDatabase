@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.FinanceStructures;
 using FinancialStructures.ReportingStructures;
 
 namespace FinancialStructures.FinanceStructures
@@ -57,19 +56,6 @@ namespace FinancialStructures.FinanceStructures
             return namesAndCompanies;
         }
 
-        public bool DoesAccountExist(CashAccount Account)
-        {
-            foreach (CashAccount acc in BankAccounts)
-            {
-                if (acc.IsEqualTo(Account))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public bool DoesBankAccountExistFromName(string name, string company)
         {
             foreach (CashAccount acc in BankAccounts)
@@ -114,17 +100,6 @@ namespace FinancialStructures.FinanceStructures
 
             desired = null;
             return false;
-        }
-
-        public bool TryAddBankAccount(CashAccount NewAccount)
-        {
-            if (DoesAccountExist(NewAccount))
-            {
-                return false;
-            }
-
-            BankAccounts.Add(NewAccount);
-            return true;
         }
 
         public bool TryAddBankAccountFromName(string name, string company)

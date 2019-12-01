@@ -10,6 +10,28 @@ namespace FinancialStructures.FinanceStructures
     public partial class CashAccount
     {
         /// <summary>
+        /// Compares another security and determines if has same name and company.
+        /// </summary>
+        internal bool IsEqualTo(CashAccount otherAccount)
+        {
+            if (otherAccount.GetName() != fName)
+            {
+                return false;
+            }
+
+            if (otherAccount.GetCompany() != fCompany)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public int Count()
+        {
+            return fAmounts.Count();
+        }
+        /// <summary>
         /// Adds <param name="value"> to amounts on <paramref name="date"/> if data doesnt exist.
         /// </summary>
         internal bool TryAddValue(DateTime date, double value)
@@ -69,23 +91,6 @@ namespace FinancialStructures.FinanceStructures
         internal bool TryDeleteData(DateTime date)
         {
             return fAmounts.TryDeleteValue(date);
-        }
-
-        /// <summary>
-        /// Checks if another account with the same name and company exists. 
-        /// </summary>
-        internal bool IsEqualTo(CashAccount otherAccount)
-        {
-            if (otherAccount.GetName() != fName)
-            {
-                return false;
-            }
-            if (otherAccount.GetCompany() != fCompany)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>

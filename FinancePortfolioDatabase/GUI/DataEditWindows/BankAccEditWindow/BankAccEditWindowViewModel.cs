@@ -166,6 +166,7 @@ namespace FinanceWindowsViewModels
 
         private void UpdateSelectedAccountListBox()
         {
+            
             if (fSelectedName != null)
             {
                 DatabaseAccessor.GetPortfolio().TryGetBankAccount(fSelectedName.Name, fSelectedName.Company, out CashAccount wanted);
@@ -357,7 +358,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteEditDataCommand(Object obj)
         {
-            if (selectedName != null && selectedAccount != null)
+            if (fSelectedName != null && selectedAccount != null)
             {
                 if (DatabaseAccessor.GetSectorFromName(selectedName.Name).Count() != SelectedAccountData.Count)
                 {

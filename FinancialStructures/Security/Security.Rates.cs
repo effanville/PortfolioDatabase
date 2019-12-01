@@ -102,7 +102,7 @@ namespace FinancialStructures.FinanceStructures
             List<DailyValuation_Named> namedValues = new List<DailyValuation_Named>();
             foreach (var val in values)
             {
-                if (val != null && val.Value > 0)
+                if (val != null && val.Value != 0)
                 {
                     namedValues.Add(new DailyValuation_Named(this.fName, this.fCompany, val));
                 }

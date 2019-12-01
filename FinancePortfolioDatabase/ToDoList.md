@@ -12,7 +12,7 @@
 	1.2 Make flow of data a bit more complicated 
 	1.3 May enable reusing common code a bit more.
 
-3.In statistics pages add a total valuation.
+
 
 ## Major Features
 
@@ -21,6 +21,7 @@
 	2.1 Modify this so it is also for display in the GUI
 3. Include sectors within securities, and implement comparisons with the sector.
 4. More in depth portfolio analytics.
+5. On closing, prompt user to save database.
 
 # Fixed issues
 
@@ -28,3 +29,4 @@
 	- It doesn't currently update itself when new data is added
 	- Requires user to add investments in date order.
 2. Order Securities based upon company and name
+3.In statistics pages add a total valuation.

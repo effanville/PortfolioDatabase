@@ -26,7 +26,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// returns the CAR of the timelist between the dates provided.
         /// </summary>
-        internal double CAR(DateTime earlierTime, DateTime laterTime)
+        public double CAR(DateTime earlierTime, DateTime laterTime)
         {
             var earlierValue = GetNearestEarlierValue(earlierTime);
             var laterValue = GetNearestEarlierValue(laterTime);

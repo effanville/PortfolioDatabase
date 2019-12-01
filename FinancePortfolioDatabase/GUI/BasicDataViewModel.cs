@@ -8,8 +8,8 @@ namespace FinanceWindowsViewModels
 {
     public class BasicDataViewModel : PropertyChangedBase
     {
-        private List<NameComp> fFundNames;
-        public List<NameComp> FundNames
+        private List<NameCompDate> fFundNames;
+        public List<NameCompDate> FundNames
         {
             get { return fFundNames; }
             set { fFundNames = value; OnPropertyChanged(); }

@@ -5,7 +5,8 @@ namespace FinancialStructures.GUIFinanceStructures
     public class AccountDayDataView
     {
         public AccountDayDataView()
-        { 
+        {
+            Date = DateTime.Today;
             NewValue = true;
         }
 

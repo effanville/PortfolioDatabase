@@ -37,13 +37,19 @@ namespace FinancialStructures.FinanceStructures
             return companies;
         }
 
-        public List<NameComp> GetSecurityNamesAndCompanies()
+        public List<NameCompDate> GetSecurityNamesAndCompanies()
         {
-            var namesAndCompanies = new List<NameComp>();
+            var namesAndCompanies = new List<NameCompDate>();
 
             foreach (var security in Funds)
             {
-                namesAndCompanies.Add(new NameComp(security.GetName(), security.GetCompany(), false));
+                DateTime date = DateTime.MinValue;
+                if (security.Any())
+                {
+                    date = security.LatestValue().Day;
+                }
+
+                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), date, false));
             }
 
             return namesAndCompanies;
