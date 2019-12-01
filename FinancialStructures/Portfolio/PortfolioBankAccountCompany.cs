@@ -50,7 +50,10 @@ namespace FinancialStructures.FinanceStructures
             double value = 0;
             foreach (var account in bankAccounts)
             {
-                value += account.GetNearestEarlierValuation(date).Value;
+                if (account !=null && account.Any())
+                {
+                    value += account.GetNearestEarlierValuation(date).Value;
+                }
             }
 
             return value;
@@ -64,7 +67,10 @@ namespace FinancialStructures.FinanceStructures
             double value = 0;
             foreach (var account in BankAccounts)
             {
-                value += account.GetNearestEarlierValuation(date).Value;
+                if (account != null && account.Any())
+                {
+                    value += account.GetNearestEarlierValuation(date).Value;
+                }
             }
 
             return value;

@@ -71,6 +71,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Company" Binding="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Last Date" Binding="{Binding Path=DateToRecord, StringFormat=\{0:dd.MM.yyyy\}}"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Button Grid.Row="2"

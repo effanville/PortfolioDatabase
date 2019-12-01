@@ -19,6 +19,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -43,6 +44,12 @@
             <Button Content="Close StatsCreator"
                     Margin="10 10 10 10 "
                     Command="{Binding CloseCommand}"/>
+            
+            <CheckBox IsChecked="{Binding DisplayValueFunds}"
+                      Margin="10,10,10,10">
+                <TextBlock Text="Display Funds with no current value?" 
+                           TextWrapping="Wrap"/>
+            </CheckBox>
             <Label>
                 <TextBlock Text="Choose Statistics to view." 
                            TextWrapping="Wrap"/>
@@ -63,6 +70,12 @@
             <CheckBox IsChecked="{Binding BankAccStatsVisibility}"
                       Margin="10,10,10,10">
                 <TextBlock Text="Show Bank Accounts Values" 
+                           TextWrapping="Wrap"/>
+            </CheckBox>
+
+            <CheckBox IsChecked="{Binding DatabaseStatsVisibility}"
+                      Margin="10,10,10,10">
+                <TextBlock Text="Show database statistics" 
                            TextWrapping="Wrap"/>
             </CheckBox>
         </StackPanel>
@@ -169,7 +182,37 @@
                 </ListView.View>
             </ListView>
         </Grid>
-        
+
+        <Grid Visibility="{Binding DatabaseStatsVisibility, Converter={StaticResource BoolToVis}}"
+              Grid.Row="1"
+              Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" 
+                   Content="Fund Statistics"/>
+
+            <ListView Grid.Row="1"
+                      Name="StatsBox"
+                      ItemsSource="{Binding BankAccountStats}"
+                      Margin="10,10,10,10">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Company" 
+                                        DisplayMemberBinding="{Binding Company}"/>
+                        <GridViewColumn Header="Name" 
+                                        DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="Latest Date" 
+                                        DisplayMemberBinding="{Binding Date}" />
+                        <GridViewColumn Header="Number Entries" 
+                                        DisplayMemberBinding="{Binding NumEntries}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
     </Grid>
     
 </Grid>

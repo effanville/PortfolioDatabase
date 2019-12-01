@@ -46,13 +46,13 @@ namespace FinanceWindowsViewModels
             set { fEditing = !value; OnPropertyChanged(); }
         }
 
-        private List<NameComp> fPreEditFundNames;
+        private List<NameCompDate> fPreEditFundNames;
 
-        private List<NameComp> fFundNames;
+        private List<NameCompDate> fFundNames;
         /// <summary>
         /// Name and Company data of Funds in database for view.
         /// </summary>
-        public List<NameComp> FundNames
+        public List<NameCompDate> FundNames
         {
             get { return fFundNames; }
             set { fFundNames = value; OnPropertyChanged(); }
@@ -373,8 +373,8 @@ namespace FinanceWindowsViewModels
 
             UpdateSubWindowView("default", false);
 
-            fFundNames = new List<NameComp>();
-            fPreEditFundNames = new List<NameComp>();
+            fFundNames = new List<NameCompDate>();
+            fPreEditFundNames = new List<NameCompDate>();
             fSelectedSecurityData = new List<BasicDayDataView>();
 
             UpdateFundListBox();

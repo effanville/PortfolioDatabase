@@ -102,20 +102,20 @@ namespace GUIAccessorFunctions
             GlobalData.fDatabaseFilePath = path;
         }
 
-        public static List<NameComp> GetSecurityNamesAndCompanies()
+        public static List<NameCompDate> GetSecurityNamesAndCompanies()
         {
             if (GlobalData.Finances != null)
             {
                 return GlobalData.Finances.GetSecurityNamesAndCompanies();
             }
-            return new List<NameComp>();
+            return new List<NameCompDate>();
         }
 
         /// <summary>
         /// returns a sorted list of all funds in portfolio, ordering by company then by fund name.
         /// </summary>
         /// <returns></returns>
-        public static List<SecurityStatsHolder> GenerateSecurityStatistics()
+        public static List<SecurityStatsHolder> GenerateSecurityStatistics(bool DisplayValueFunds)
         {
             if (GlobalData.Finances != null)
             {
@@ -126,15 +126,22 @@ namespace GUIAccessorFunctions
                 {
                     var latest = new SecurityStatsHolder(security.GetName(), security.GetCompany());
                     SecurityStatsHolderHelper.AddSecurityStats(latest);
-                    namesAndCompanies.Add(latest);
+                    if ((DisplayValueFunds && latest.LatestVal > 0) || !DisplayValueFunds)
+                    {
+                        namesAndCompanies.Add(latest);
+                    }
                 }
                 namesAndCompanies.Sort();
 
                 var totals = new SecurityStatsHolder("Totals", "");
                 SecurityStatsHolderHelper.AddSecurityStats(totals);
-                namesAndCompanies.Add(totals);
+                if ((DisplayValueFunds && totals.LatestVal > 0) || !DisplayValueFunds)
+                {
+                    namesAndCompanies.Add(totals);
+                }
                 return namesAndCompanies;
             }
+
             return new List<SecurityStatsHolder>();
         }
 
@@ -172,7 +179,9 @@ namespace GUIAccessorFunctions
         {
             if (GlobalData.Finances != null)
             {
-                return new SecurityStatsHolder("Totals", company);
+                var totals = new SecurityStatsHolder("Totals", company);
+                SecurityStatsHolderHelper.AddSecurityStats(totals);
+                return totals;
             }
             return new SecurityStatsHolder();
         }
@@ -190,8 +199,11 @@ namespace GUIAccessorFunctions
         {
             if (GlobalData.Finances != null)
             {
-                return new SecurityStatsHolder("Totals", string.Empty);
+                var totals = new SecurityStatsHolder("Totals", string.Empty);
+                SecurityStatsHolderHelper.AddSecurityStats(totals);
+                return totals;
             }
+
             return new SecurityStatsHolder();
         }
 
@@ -204,13 +216,23 @@ namespace GUIAccessorFunctions
             return new List<string>();
         }
 
-        public static List<BankAccountStatsHolder> GenerateBankAccountStatistics()
+        public static List<BankAccountStatsHolder> GenerateBankAccountStatistics(bool DisplayValueFunds)
         {
             if (GlobalData.Finances != null)
             {
                 return GlobalData.Finances.GenerateBankAccountStatistics();
             }
             return new List<BankAccountStatsHolder>();
+        }
+
+        public static List<DatabaseStatistics> GenerateDatabaseStatistics()
+        {
+            var outputs = new List<DatabaseStatistics>();
+            if (GlobalData.Finances != null)
+            {
+                outputs.AddRange(GlobalData.Finances.GenerateDatabaseStatistics());
+            }
+            return outputs;
         }
 
         public static List<NameComp> GetBankAccountNamesAndCompanies()

@@ -3,6 +3,8 @@ using FinancialStructures.FinanceFunctionsList;
 using System;
 using System.Collections.Generic;
 
+using FinancialStructures.GUIFinanceStructures;
+
 namespace FinancialStructures.FinanceStructures
 {
     public partial class Portfolio
@@ -12,8 +14,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public DateTime FirstValueDate()
         {
-            var output = new DateTime();
-            output = DateTime.Today;
+            var output = DateTime.Today;
             foreach (var sec in fFunds)
             {
                 if (sec.Any())
@@ -27,10 +28,10 @@ namespace FinancialStructures.FinanceStructures
             }
             return output;
         }
+
         /// <summary>
         /// Returns a list of all investments in the portfolio securities.
         /// </summary>
-        /// <returns></returns>
         public List<DailyValuation_Named> AllSecuritiesInvestments()
         {
             var output = new List<DailyValuation_Named>();
@@ -122,6 +123,21 @@ namespace FinancialStructures.FinanceStructures
         public double Value(DateTime date)
         {
             return AllSecuritiesValue(date) + AllBankAccountsValue(date);
+        }
+
+        public List<DatabaseStatistics> GenerateDatabaseStatistics()
+        {
+            var names = new List<DatabaseStatistics>();
+            foreach (var sec in Funds)
+            {
+                names.Add(new DatabaseStatistics(sec.GetCompany(), sec.GetName(), sec.LatestValue().Day, sec.Count() ));
+            }
+            foreach (var bankAcc in BankAccounts)
+            {
+                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.LatestValue().Day, bankAcc.Count()));
+            }
+
+            return names;
         }
     }
 }

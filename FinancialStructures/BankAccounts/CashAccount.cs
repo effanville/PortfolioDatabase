@@ -106,7 +106,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public bool Any()
         {
-            return fAmounts != null || fAmounts.Any();
+            return fAmounts != null && fAmounts.Any();
         }
     }
 }
