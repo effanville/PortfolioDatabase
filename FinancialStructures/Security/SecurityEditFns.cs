@@ -51,7 +51,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public Security Copy()
         {
-            return new Security(fName, fCompany, fShares, fUnitPrice, fInvestments);
+            return new Security(fName, fCompany, fUrl, fShares, fUnitPrice, fInvestments);
         }
 
         /// <summary>
@@ -68,6 +68,14 @@ namespace FinancialStructures.FinanceStructures
         public string GetCompany()
         {
             return fCompany;
+        }
+
+        /// <summary>
+        /// Returns the Uri field of the security
+        /// </summary>
+        public string GetUrl()
+        {
+            return fUrl;
         }
 
         /// <summary>
@@ -194,7 +202,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits name and company data of security.
         /// </summary>
-        internal bool TryEditNameCompany(string name, string company)
+        internal bool TryEditNameCompany(string name, string company, string url)
         {
             if (name != fName)
             {
@@ -205,6 +213,11 @@ namespace FinancialStructures.FinanceStructures
             {
                 ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has company `{fCompany}' edited to `{company}'.");
                 fCompany = company;
+            }
+            if (url != fUrl)
+            {
+                ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has url `{fUrl}' edited to `{url}'.");
+                fUrl = url;
             }
 
             return true;

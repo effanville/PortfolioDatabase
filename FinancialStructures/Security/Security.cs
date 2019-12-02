@@ -36,6 +36,14 @@ namespace FinancialStructures.FinanceStructures
             set { fCompany = value; }
         }
 
+        private string fUrl;
+
+        public string Url
+        {
+            get { return fUrl; }
+            set { fUrl = value; }
+        }
+
         /// <summary>
         /// The number of shares held in this security.
         /// </summary>
@@ -101,12 +109,38 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
+        /// Constructor creating a new security.
+        /// </summary>
+        public Security(string name, string company, string url)
+        {
+            fName = name;
+            fCompany = company;
+            fUrl = url;
+            fShares = new TimeList();
+            fUnitPrice = new TimeList();
+            fInvestments = new TimeList();
+        }
+
+        /// <summary>
         /// Constructor to make a new security from known data.
         /// </summary>
         private Security(string name, string company, TimeList shares, TimeList prices, TimeList investments)
         {
             fName = name;
             fCompany = company;
+            fShares = shares;
+            fUnitPrice = prices;
+            fInvestments = investments;
+        }
+
+        /// <summary>
+        /// Constructor to make a new security from known data.
+        /// </summary>
+        private Security(string name, string company, string url, TimeList shares, TimeList prices, TimeList investments)
+        {
+            fName = name;
+            fCompany = company;
+            fUrl = url;
             fShares = shares;
             fUnitPrice = prices;
             fInvestments = investments;

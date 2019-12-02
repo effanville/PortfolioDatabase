@@ -14,9 +14,9 @@ namespace SecurityHelperFunctions
         /// <summary>
         /// Tries to add a security to the underlying global database
         /// </summary>
-        public static bool TryAddSecurity(string name, string company)
+        public static bool TryAddSecurity(string name, string company, string url)
         {
-            return GlobalData.Finances.TryAddSecurityFromName(name, company);
+            return GlobalData.Finances.TryAddSecurityFromName(name, company, url);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace SecurityHelperFunctions
         /// <summary>
         /// Renames the security if this exists.
         /// </summary>
-        public static bool TryEditSecurityName(string name, string company, string newName, string newCompany)
+        public static bool TryEditSecurityName(string name, string company, string newName, string newCompany, string url)
         {
-            return GlobalData.Finances.TryEditSecurityNameCompany(name, company, newName, newCompany);
+            return GlobalData.Finances.TryEditSecurityNameCompany(name, company, newName, newCompany, url);
         }
 
         /// <summary>

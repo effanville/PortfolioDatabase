@@ -19,6 +19,11 @@ namespace FinancialStructures.FinanceStructures
             return fName;
         }
 
+        public string GetUrl()
+        {
+            return fUrl;
+        }
+
         public List<AccountDayDataView> GetDataForDisplay()
         {
             var output = new List<AccountDayDataView>();
@@ -35,11 +40,15 @@ namespace FinancialStructures.FinanceStructures
             return output;
         }
 
-        public bool TryEditName(string name)
+        public bool TryEditNameUrl(string name, string url)
         {
             if (name != fName)
             {
                 fName = name;
+            }
+            if (url != fUrl)
+            {
+                fUrl = url;
             }
 
             return true;

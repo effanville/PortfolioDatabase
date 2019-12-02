@@ -49,7 +49,7 @@ namespace FinancialStructures.FinanceStructures
                     date = security.LatestValue().Day;
                 }
 
-                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), date, false));
+                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), security.GetUrl(), date, false));
             }
 
             return namesAndCompanies;
@@ -74,6 +74,11 @@ namespace FinancialStructures.FinanceStructures
         public List<Security> GetSecurities()
         {
             return Funds;
+        }
+
+        public List<CashAccount> GetBankAccounts()
+        {
+            return BankAccounts;
         }
 
         /// <summary>
@@ -132,7 +137,7 @@ namespace FinancialStructures.FinanceStructures
             return true;
         }
 
-        public bool TryAddSecurityFromName(string name, string company)
+        public bool TryAddSecurityFromName(string name, string company, string url)
         {
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(company))
             {
@@ -146,7 +151,7 @@ namespace FinancialStructures.FinanceStructures
                 return false;
             }
             
-            var NewFund = new Security(name, company);
+            var NewFund = new Security(name, company, url);
             Funds.Add(NewFund);
             ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' added to database.");
             var reps = ErrorReports.GetReports();
@@ -196,14 +201,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany)
+        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string url)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany);
+                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, url);
                 }
             }
 

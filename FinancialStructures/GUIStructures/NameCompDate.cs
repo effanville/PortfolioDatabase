@@ -14,12 +14,12 @@ namespace FinancialStructures.GUIFinanceStructures
         {
         }
 
-        public NameCompDate(string name, string company, DateTime date, bool newValue) : base(name, company, newValue)
+        public NameCompDate(string name, string company, string url, DateTime date, bool newValue) : base(name, company,url, newValue)
         {
             fDateToRecord = date;
         }
 
-        public NameCompDate(string name, string company, bool newValue) : base(name, company, newValue)
+        public NameCompDate(string name, string company, string url, bool newValue) : base(name, company, url, newValue)
         {
             fDateToRecord = DateTime.MinValue;
         }

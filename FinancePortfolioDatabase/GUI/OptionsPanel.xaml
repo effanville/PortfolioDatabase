@@ -25,5 +25,8 @@
         <Button Content="Load Database"
                 Command="{Binding LoadDatabaseCommand}"
                 Margin="10 10 10 10"/>
+        <Button Content="Update Data"
+                Command="{Binding UpdateDataCommand}"
+                Margin="10 10 10 10"/>
     </StackPanel>
 </Grid>

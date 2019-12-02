@@ -5,6 +5,7 @@ using System.Windows.Input;
 using FinanceWindows;
 using GUISupport;
 using FinancialStructures.ReportingStructures;
+using PADGlobals;
 
 namespace FinanceWindowsViewModels
 {
@@ -21,6 +22,7 @@ namespace FinanceWindowsViewModels
         public ICommand SaveDatabaseCommand { get; }
 
         public ICommand LoadDatabaseCommand { get; }
+        public ICommand UpdateDataCommand { get; }
 
         public void ExecuteSecurityEditWindow(Object obj)
         {
@@ -75,6 +77,11 @@ namespace FinanceWindowsViewModels
             UpdateSubWindows(false);
         }
 
+        public void ExecuteUpdateData(Object obj)
+        {
+            DataUpdater.Downloader();
+        }
+
         Action<bool> UpdateMainWindow;
         Action<bool> UpdateSubWindows;
         Action<string> windowToView;
@@ -91,6 +98,7 @@ namespace FinanceWindowsViewModels
             OpenStatsCreatorWindowCommand = new BasicCommand(ExecuteStatsCreatorWindow);
             SaveDatabaseCommand = new BasicCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new BasicCommand(ExecuteLoadDatabase);
+            UpdateDataCommand = new BasicCommand(ExecuteUpdateData);
         }
     }
 }

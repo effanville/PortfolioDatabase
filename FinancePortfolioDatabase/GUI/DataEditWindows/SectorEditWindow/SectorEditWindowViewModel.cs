@@ -121,7 +121,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        SectorEditor.TryAddSector(name.Name);
+                        SectorEditor.TryAddSector(name.Name, name.Url);
                         name.NewValue = false;
                     }
                 }
@@ -134,14 +134,14 @@ namespace FinanceWindowsViewModels
             {
                 // maybe fired from editing stuff. Try that
                 bool edited = false;
-                for(int i = 0;i < SectorNames.Count; i++)
+                for(int i = 0; i < SectorNames.Count; i++)
                 {
                     var name = SectorNames[i];
 
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        SectorEditor.TryEditSectorName(fPreEditSectorNames[i].Name, name.Name);
+                        SectorEditor.TryEditSectorName(fPreEditSectorNames[i].Name, name.Name, name.Url);
                         name.NewValue = false;
                     }
                 }

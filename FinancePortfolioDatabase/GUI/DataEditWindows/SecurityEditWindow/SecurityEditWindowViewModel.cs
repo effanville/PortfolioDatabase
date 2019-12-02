@@ -141,7 +141,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryAddSecurity(name.Name, name.Company);
+                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Url);
                         name.NewValue = false;
                     }
                 }
@@ -161,7 +161,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company);
+                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Url);
                         name.NewValue = false;
                     }
                 }
