@@ -60,6 +60,20 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
+        /// The url associated to the account.
+        /// </summary>
+        private string fUrl;
+
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
+        public string Url
+        {
+            get { return fUrl; }
+            set { fUrl = value; }
+        }
+
+        /// <summary>
         /// The time indexed data for the Cash Account.
         /// </summary>
         private TimeList fAmounts;

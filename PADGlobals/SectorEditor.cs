@@ -15,7 +15,7 @@ namespace SectorHelperFunctions
         /// <summary>
         /// Tries to add a sector to the underlying global database
         /// </summary>
-        public static bool TryAddSector(string name)
+        public static bool TryAddSector(string name, string url)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
@@ -25,7 +25,7 @@ namespace SectorHelperFunctions
                     return false;
                 }
             }
-            Sector newSector = new Sector(name);
+            Sector newSector = new Sector(name, url);
             ErrorReports.AddReport($"Added sector with name {name}.");
             GlobalData.BenchMarks.Add(newSector);
             return true;
@@ -104,13 +104,13 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryEditSectorName(string oldName, string newName)
+        public static bool TryEditSectorName(string oldName, string newName, string url)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
                 if (sector.GetName() == oldName)
                 {
-                    sector.TryEditName(newName);
+                    sector.TryEditNameUrl(newName, url);
                     ErrorReports.AddReport($"Renamed sector {oldName} with new name {newName}.");
                     return true;
                 }

@@ -62,6 +62,7 @@
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Url" Binding="{Binding Path=Url, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

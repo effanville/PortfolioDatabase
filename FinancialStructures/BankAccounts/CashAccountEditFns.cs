@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
 
 namespace FinancialStructures.FinanceStructures
@@ -42,6 +43,14 @@ namespace FinancialStructures.FinanceStructures
             }
 
             return fAmounts.TryAddValue(date, value);
+        }
+
+        /// <summary>
+        /// Trys to get latest data earlier than date requested. Only returns true if all data present.
+        /// </summary>
+        public bool TryGetEarlierData(DateTime date, out DailyValuation Value)
+        {
+            return fAmounts.TryGetNearestEarlierValue(date, out Value);
         }
 
         /// <summary>
@@ -115,6 +124,14 @@ namespace FinancialStructures.FinanceStructures
         public string GetCompany()
         {
             return fCompany;
+        }
+
+        /// <summary>
+        /// Returns the Url of the CashAccount.
+        /// </summary>
+        public string GetUrl()
+        {
+            return fUrl;
         }
     }
 }

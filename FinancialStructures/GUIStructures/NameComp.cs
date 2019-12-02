@@ -10,6 +10,14 @@ namespace FinancialStructures.GUIFinanceStructures
             {
                 if (Company == value.Company)
                 {
+                    if (Name == null)
+                    {
+                        if (value.Name == null)
+                        {
+                            return 0;
+                        }
+                        return 1;
+                    }
                     return Name.CompareTo(value.Name);
                 }
 
@@ -26,11 +34,27 @@ namespace FinancialStructures.GUIFinanceStructures
             NewValue = true;
         }
 
+        public NameComp(string n, string c, string u, bool newValue = true)
+        {
+            Name = n;
+            Company = c;
+            Url = u;
+            NewValue = newValue;
+        }
+
         public NameComp(string n, string c, bool newValue = true)
         {
             Name = n;
             Company = c;
             NewValue = newValue;
+        }
+
+        private string fUrl;
+
+        public string Url
+        {
+            get { return fUrl; }
+            set { fUrl = value; NewValue = true; }
         }
 
         private string fName;

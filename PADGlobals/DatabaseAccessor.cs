@@ -103,7 +103,7 @@ namespace GUIAccessorFunctions
             {
                 foreach (Sector thing in GlobalData.BenchMarks)
                 {
-                    outputs.Add(new NameComp(thing.GetName(), string.Empty, false));
+                    outputs.Add(new NameComp(thing.GetName(), string.Empty, thing.GetUrl(), false));
                 }
             }
             return outputs;

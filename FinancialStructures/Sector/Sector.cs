@@ -28,6 +28,14 @@ namespace FinancialStructures.FinanceStructures
             set => fName = value;
         }
 
+        private string fUrl;
+
+        public string Url
+        {
+            get => fUrl;
+            set => fUrl = value;
+        }
+
         /// <summary>
         /// The values of the sector.
         /// </summary>
@@ -57,9 +65,23 @@ namespace FinancialStructures.FinanceStructures
             fValues = new TimeList();
         }
 
+        public Sector(string name, string url)
+        {
+            fName = name;
+            fUrl = url;
+            fValues = new TimeList();
+        }
+
         private Sector(string name, TimeList values)
         {
             fName = name;
+            fValues = values;
+        }
+
+        private Sector(string name, string url, TimeList values)
+        {
+            fName = name;
+            fUrl = url;
             fValues = values;
         }
 

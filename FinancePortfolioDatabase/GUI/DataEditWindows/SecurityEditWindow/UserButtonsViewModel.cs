@@ -4,6 +4,8 @@ using FinancialStructures.ReportingStructures;
 using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;
+using FinancialStructures.FinanceStructures;
+using PADGlobals;
 
 namespace FinanceWindowsViewModels.SecurityEdit
 {
@@ -13,7 +15,16 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
 
         private BasicDayDataView fSelectedValues;
+        public ICommand DownloadCommand { get; }
 
+        private void ExecuteDownloadCommand(Object obj)
+        {
+            if (fSelectedName != null)
+            {
+                DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name);
+            }
+            UpdateMainWindow(true);
+        }
         public ICommand DeleteSecurityCommand { get; }
 
         private void ExecuteDeleteSecurity(Object obj)
@@ -62,6 +73,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
         {
             UpdateMainWindow = updateWindow;
             windowToView = pageViewChoice;
+            DownloadCommand = new BasicCommand(ExecuteDownloadCommand);
             DeleteSecurityCommand = new BasicCommand(ExecuteDeleteSecurity);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);
             CloseCommand = new BasicCommand(ExecuteCloseCommand);
