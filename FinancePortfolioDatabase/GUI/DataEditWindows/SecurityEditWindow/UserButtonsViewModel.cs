@@ -14,14 +14,6 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
         private BasicDayDataView fSelectedValues;
 
-        public ICommand AddSecurityCommand { get; }
-
-        
-        private void ExecuteAddSecurity(Object obj)
-        {
-            SubWindowView("Name", false);
-        }
-
         public ICommand DeleteSecurityCommand { get; }
 
         private void ExecuteDeleteSecurity(Object obj)
@@ -42,20 +34,6 @@ namespace FinanceWindowsViewModels.SecurityEdit
         {
             fSelectedName = newName;
             fSelectedValues = newData;
-        }
-
-        public ICommand AddValuationCommand { get; }
-
-        private void ExecuteAddValuationCommand(Object obj)
-        {
-            SubWindowView("Data", false);
-        }
-
-        public ICommand ShowEditSecurityCommand { get; }
-
-        private void ExecuteShowEditSecurity(Object obj)
-        {
-            SubWindowView("Data", true);
         }
 
         public ICommand DeleteValuationCommand { get; }
@@ -80,16 +58,11 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
-        Action<string, bool> SubWindowView;
-        public UserButtonsViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<string, bool> subWindowToView, NameComp newName, BasicDayDataView newData)
+        public UserButtonsViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, NameComp newName, BasicDayDataView newData)
         {
             UpdateMainWindow = updateWindow;
             windowToView = pageViewChoice;
-            SubWindowView = subWindowToView;
-            AddSecurityCommand = new BasicCommand(ExecuteAddSecurity);
             DeleteSecurityCommand = new BasicCommand(ExecuteDeleteSecurity);
-            AddValuationCommand = new BasicCommand(ExecuteAddValuationCommand);
-            ShowEditSecurityCommand = new BasicCommand(ExecuteShowEditSecurity);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);
             CloseCommand = new BasicCommand(ExecuteCloseCommand);
             fSelectedName = newName;

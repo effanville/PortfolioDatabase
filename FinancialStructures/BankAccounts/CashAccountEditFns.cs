@@ -96,7 +96,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Produces a copy of the specified CashAccount.
         /// </summary>
-        internal CashAccount Copy()
+        public CashAccount Copy()
         {
             return new CashAccount(fName, fCompany, fAmounts);
         }
@@ -104,7 +104,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the name of the CashAccount.
         /// </summary>
-        internal string GetName()
+        public string GetName()
         {
             return fName;
         }
@@ -112,7 +112,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the company of the CashAccount.
         /// </summary>
-        internal string GetCompany()
+        public string GetCompany()
         {
             return fCompany;
         }

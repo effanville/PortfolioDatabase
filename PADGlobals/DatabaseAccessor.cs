@@ -75,6 +75,18 @@ namespace GUIAccessorFunctions
 
             return null;
         }
+        public static CashAccount GetBankAccountFromName(string name, string company)
+        {
+            foreach (var account in GlobalData.Finances.BankAccounts)
+            {
+                if (account.GetName() == name && account.GetCompany() == company)
+                {
+                    return account.Copy();
+                }
+            }
+
+            return null;
+        }
 
         public static List<string> GetSecurityNames()
         {

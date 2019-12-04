@@ -7,23 +7,10 @@
       d:DesignHeight="450" d:DesignWidth="800">
 
     <StackPanel Width="130">
-        <Button Content="New Security"
-                    Margin="10 10 10 10 "
-                    Command="{Binding AddSecurityCommand}"
-                    ToolTip="Create new security from Name and Company Data specified."/>
-
         <Button Content="Delete Security"
                     Margin="10 10 10 10 "
                     Command="{Binding DeleteSecurityCommand}"
                     ToolTip="Delete the security highlighted"/>
-        <Button Content="Add Valuation"
-                    Margin="10 10 10 10 "
-                    Command="{Binding AddValuationCommand}"
-                    ToolTip="Add a value to the security highlighted."/>
-        <Button Content="Edit Securities"
-                    Margin="10 10 10 10 "
-                    Command="{Binding ShowEditSecurityCommand}"
-                    ToolTip="Edit the security data highlighted."/>
         <Button Content="Delete Valuation"
                     Margin="10 10 10 10 "
                     Command="{Binding DeleteValuationCommand}"

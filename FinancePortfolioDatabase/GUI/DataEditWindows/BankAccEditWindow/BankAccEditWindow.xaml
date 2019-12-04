@@ -12,7 +12,6 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
@@ -20,22 +19,11 @@
         <StackPanel Width="130"
                     Grid.Row="0"
                     Grid.Column="0">
-            <Button Content="New Bank Account"
-                        Margin="10 10 10 10 "
-                        Command="{Binding AddAccountCommand}"
-                        ToolTip="Create new BankAccount from Name and Company Data specified."/>
+
             <Button Content="Delete BankAccount"
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteAccountCommand}"
                         ToolTip="Delete the BankAccount highlighted"/>
-            <Button Content="Add Valuation"
-                        Margin="10 10 10 10 "
-                        Command="{Binding AddDataCommand}"
-                        ToolTip="Add a value to the BankAccount highlighted."/>
-            <Button Content="Edit Valuation"
-                        Margin="10 10 10 10 "
-                        Command="{Binding EditAccountCommand}"
-                        ToolTip="Edit the BankAccount data highlighted."/>
             <Button Content="Delete Valuation"
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteValuationCommand}"
@@ -46,140 +34,8 @@
                         ToolTip="Press here to close Add/Edit BankAccount"/>
         </StackPanel>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" MinHeight="160"/>
-                <RowDefinition Height="1*" MinHeight="200"/>
-            </Grid.RowDefinitions>
-            
-            <Grid Grid.Row="0"
-                  VerticalAlignment="Top"
-                  Visibility="{Binding NameAddEditVisibility, Converter={StaticResource BoolToVis}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                
-                <Label Grid.Row="0"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       Content="Name and Company Data"/>
-                
-                <Label Grid.Row="1"
-                       Grid.Column="0"
-                       Content="Bank Account Name">
-                    <Label.ToolTip>
-                        <StackPanel>
-                                <TextBlock Text="Either a) The name of the selected bank account."/>
-                                <TextBlock Text="       b) User entered name for a new/edited bank account."/>
-                            </StackPanel>
-                    </Label.ToolTip>
-                </Label>
-                    
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         Text="{Binding selectedNameEdit}"
-                         MinWidth="100"/>
-                
-                <Label Grid.Row="2"
-                       Grid.Column="0">
-                    <Label.ToolTip>
-                        <StackPanel>
-                            <TextBlock>Either a) The company of the selected bank account.</TextBlock>
-                            <TextBlock>       b) User entered company for a new/edited bank account.</TextBlock>
-                        </StackPanel>
-                    </Label.ToolTip> 
-                    Bank Account Company
-                </Label>
-
-                <TextBox Grid.Row="2"
-                         Grid.Column="1"
-                         Text="{Binding selectedCompanyEdit}"
-                         MinWidth="100"/>
-
-                <Button Grid.Row="3"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Content="Add Bank Account"
-                        Margin="10 10 10 10 "
-                        Command="{Binding CreateAccountButtonCommand}"
-                        Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
-
-                <Button Grid.Row="3"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Content="Edit Bank Account"
-                        Margin="10 10 10 10 "
-                        Command="{Binding EditAccountNameCommand}"
-                        Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
-            </Grid>
-
-            <Grid Grid.Row="1"
-                  VerticalAlignment="Top" 
-                  Visibility="{Binding DataAddEditVisibility, Converter={StaticResource BoolToVis}}">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-
-                <Label Grid.Row="0"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       Content="Valuation Data"/>
-
-                <Label Grid.Row="1"
-                       Grid.Column="0"
-                       ToolTip="Date of selected data, or new value to be added"
-                       Content="Date" />
-
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         Text="{Binding DateEdit }"
-                         MinWidth="100"/>
-
-                <Label Grid.Row="2"
-                       Grid.Column="0"
-                       ToolTip="Value in account on day specified" 
-                       Content="Amount Held"/>
-
-                <TextBox Grid.Row="2"
-                         Grid.Column="1"
-                         Text="{Binding AmountsEdit}"
-                         MinWidth="100"/>
-                <Button Grid.Row="3"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Content="Add Data"
-                        Margin="10 10 10 10 "
-                        Command="{Binding AddValuationCommand}"
-                        Visibility="{Binding NotEditing, Converter={StaticResource BoolToVis}}"/>
-                <Button Grid.Row="3"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Content="Edit Data"
-                        Margin="10 10 10 10 "
-                        Command="{Binding EditAccountDataCommand}"
-                        Visibility="{Binding Editing, Converter={StaticResource BoolToVis}}"/>
-            </Grid>
-        </Grid>
-        
         <Grid Grid.Row="0"
-              Grid.Column="2"
+              Grid.Column="1"
               ToolTip="Lists all BankAccount currently in the database. Select one to edit data.">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
@@ -208,7 +64,7 @@
             </DataGrid>
         </Grid>
 
-        <Grid Grid.Column="3" 
+        <Grid Grid.Column="2" 
               ToolTip="Shows the data held on the BankAccount selected in the BankAccount in Database list.">
 
             <Grid.RowDefinitions>
@@ -226,7 +82,7 @@
                       AutoGenerateColumns="False"
                       ScrollViewer.VerticalScrollBarVisibility="Visible"
                       ItemsSource="{Binding Path=SelectedAccountData, Mode=TwoWay}"
-                      SelectedItem="{Binding Path=selectedAccount, Mode=TwoWay}">
+                      SelectedItem="{Binding Path=selectedValues, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="RowEditEnding">
                         <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=EditAccountDataCommand}"/>
@@ -234,7 +90,7 @@
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" 
-                                        Binding="{Binding Path=Date,StringFormat=\{0:dd.MM.yyyy\}, UpdateSourceTrigger=PropertyChanged}" />
+                                        Binding="{Binding Path=Date,StringFormat=\{0:MM.dd.yyyy\}, UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Value" 
                                         Binding="{Binding Path=Amount, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
