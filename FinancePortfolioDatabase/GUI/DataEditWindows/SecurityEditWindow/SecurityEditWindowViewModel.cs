@@ -13,39 +13,6 @@ namespace FinanceWindowsViewModels
 {
     public class SecurityEditWindowViewModel : PropertyChangedBase
     {
-        private bool fDataAddEditVisibility;
-        public bool DataAddEditVisibility
-        {
-            get { return fDataAddEditVisibility; }
-            set { fDataAddEditVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fNameAddEditVisibility;
-        public bool NameAddEditVisibility
-        {
-            get { return fNameAddEditVisibility; }
-            set { fNameAddEditVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fEditing;
-
-        public bool Editing
-        {
-            get { return fEditing; }
-            set { fEditing = value; OnPropertyChanged(); }
-        }
-
-
-        private string fSelectedCompanyEdit;
-
-        private string fSelectedNameEdit;
-
-        public bool NotEditing
-        {
-            get { return !fEditing; }
-            set { fEditing = !value; OnPropertyChanged(); }
-        }
-
         private List<NameCompDate> fPreEditFundNames;
 
         private List<NameCompDate> fFundNames;
@@ -94,16 +61,8 @@ namespace FinanceWindowsViewModels
         public BasicDayDataView selectedValues
         {
             get { return fSelectedValues; }
-            set { fSelectedValues = value; OnPropertyChanged(); UpdateValuationData(); }
+            set { fSelectedValues = value; OnPropertyChanged(); UpdateSubWindows(); }
         }
-
-        private string fDateEdit;
-
-        private string fSharesEdit;
-
-        private string fUnitPriceEdit;
-
-        private bool fNewInvestment;
 
         private UserButtonsViewModel fUserClickingVM;
 
@@ -113,38 +72,15 @@ namespace FinanceWindowsViewModels
             set { fUserClickingVM = value; OnPropertyChanged(); }
         }
 
-        private NameCompanyEditViewModel fNameCompanyEditVM;
-
-        public NameCompanyEditViewModel NameCompanyEditVM
-        {
-            get { return fNameCompanyEditVM; }
-            set { fNameCompanyEditVM = value; OnPropertyChanged(); }
-        }
-
-        private DataEditViewModel fDataEditVM;
-
-        public DataEditViewModel DataEditVM
-        {
-            get { return fDataEditVM; }
-            set { fDataEditVM = value; OnPropertyChanged(); }
-        }
-
         public ICommand CreateSecurityCommand { get; set; }
 
         public ICommand AddEditSecurityDataCommand { get; set; }
 
-        public ICommand ClearFundSelectionCommand { get; }
-
-        public ICommand ClearDataSelectionCommand { get; }
-
         public void UpdateFundListBox()
         {
             var currentSelectedName = selectedName;
-            var currentSelectedData = selectedValues;
-
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
             FundNames.Sort();
-
             fPreEditFundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
             fPreEditFundNames.Sort();
 
@@ -163,9 +99,6 @@ namespace FinanceWindowsViewModels
             {
                 DatabaseAccessor.GetPortfolio().TryGetSecurity(fSelectedName.Name, fSelectedName.Company, out Security wanted);
                 selectedSecurity = wanted;
-                fSelectedCompanyEdit = fSelectedName.Company;
-                fSelectedNameEdit = fSelectedName.Name;
-
                 if (SecurityEditor.TryGetSecurityData(fSelectedName.Name, fSelectedName.Company, out List<BasicDayDataView> values))
                 {
                     SelectedSecurityData = values;
@@ -173,14 +106,12 @@ namespace FinanceWindowsViewModels
 
                 SelectLatestValue();
                 UpdateSubWindows();
-                
             }
         }
 
         private void UpdateSubWindows()
         {
             UserClickingVM.UpdateButtonViewData(selectedName, selectedValues);
-            NameCompanyEditVM.UpdateNameCompEditViewData(fSelectedNameEdit, fSelectedCompanyEdit, selectedName);
         }
 
         private void SelectLatestValue()
@@ -191,54 +122,12 @@ namespace FinanceWindowsViewModels
             }
         }
 
-        private void UpdateValuationData()
-        {
-            if (selectedValues != null)
-            {
-                fDateEdit = selectedValues.Date.ToShortDateString();
-                fSharesEdit = selectedValues.ShareNo.ToString();
-                fUnitPriceEdit = selectedValues.UnitPrice.ToString();
-                fNewInvestment = selectedValues.Investment > 0 ? true : false;
-            }
-            else 
-            {
-                fDateEdit = null;
-                fSharesEdit = null;
-                fUnitPriceEdit = null;
-                fNewInvestment = false;
-            }
-
-            UpdateSubWindows();
-        }
-
-        private void ExecuteClearSelection(Object obj)
-        {
-            ClearSelection();
-        }
-
         /// <summary>
         /// Clears selected data in both Gridviews
         /// </summary>
         private void ClearSelection()
         {
             selectedSecurity = null;
-            fSelectedNameEdit = null;
-            fSelectedCompanyEdit = null;
-            ClearDataSelection();
-        }
-
-        private void ExecuteClearDataSelection(Object obj)
-        {
-            ClearDataSelection();
-        }
-
-        private void ClearDataSelection()
-        {
-            SelectedSecurityData = null;
-            fDateEdit = null;
-            fSharesEdit = null;
-            fUnitPriceEdit = null;
-            fNewInvestment = false;
             UpdateSubWindows();
         }
 
@@ -284,7 +173,6 @@ namespace FinanceWindowsViewModels
 
             UpdateFundListBox();
             ClearSelection();
-            UpdateSubWindowView("nowt", false);
             UpdateMainWindow(true);
         }
 
@@ -322,56 +210,11 @@ namespace FinanceWindowsViewModels
         }
 
         Action<bool> UpdateMainWindow;
-        Action<string> windowToView;
-
-        Action<string, bool> subWindowToView => (val, edit) => UpdateSubWindowView(val, edit);
-
-        public void UpdateSubWindowView(string name, bool edit)
-        {
-            switch (name)
-            {
-                case "Name":
-                    NameAddEditVisibility = true;
-                    DataAddEditVisibility = false;
-                    if (edit)
-                    {
-                        Editing = true;
-                    }
-                    else 
-                    { 
-                        NotEditing = true; 
-                    }
-                    break;
-                case "Data":
-                    NameAddEditVisibility = true;
-                    DataAddEditVisibility = true;
-                    if (edit)
-                    {
-                        Editing = true;
-                    }
-                    else 
-                    {
-                        NotEditing = true;
-                    }
-                    break;
-                default:
-                    NameAddEditVisibility = false;
-                    DataAddEditVisibility = false;
-                    Editing = false;
-                    break;
-            }
-        }
 
         public SecurityEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
         {
             UpdateMainWindow = updateWindow;
-            windowToView = pageViewChoice;
-
-            UserClickingVM = new UserButtonsViewModel(updateWindow, pageViewChoice, subWindowToView, selectedName, selectedValues);
-            NameCompanyEditVM = new NameCompanyEditViewModel(updateWindow, pageViewChoice, subWindowToView, fSelectedNameEdit, fSelectedCompanyEdit, selectedName);
-            DataEditVM = new DataEditViewModel(updateWindow, pageViewChoice, subWindowToView);
-
-            UpdateSubWindowView("default", false);
+            UserClickingVM = new UserButtonsViewModel(updateWindow, pageViewChoice, selectedName, selectedValues);
 
             fFundNames = new List<NameCompDate>();
             fPreEditFundNames = new List<NameCompDate>();
@@ -381,9 +224,6 @@ namespace FinanceWindowsViewModels
 
             CreateSecurityCommand = new BasicCommand(ExecuteCreateEditCommand);
             AddEditSecurityDataCommand = new BasicCommand(ExecuteAddEditSecData);
-            
-            ClearFundSelectionCommand = new BasicCommand(ExecuteClearSelection);
-            ClearDataSelectionCommand = new BasicCommand(ExecuteClearDataSelection);
         }
     }
 }

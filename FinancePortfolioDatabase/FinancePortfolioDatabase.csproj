@@ -82,14 +82,6 @@
     </Compile>
     <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindowViewModel.cs" />
     <Compile Include="GUI\BasicDataViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\DataEditBox.xaml.cs">
-      <DependentUpon>DataEditBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\DataEditViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\NameCompanyEditBox.xaml.cs">
-      <DependentUpon>NameCompanyEditBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\NameCompanyEditViewModel.cs" />
     <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml.cs">
       <DependentUpon>UserButtons.xaml</DependentUpon>
     </Compile>
@@ -137,14 +129,6 @@
       <DependentUpon>OptionsPanel.xaml</DependentUpon>
     </Compile>
     <Page Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow\DataEditBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow\NameCompanyEditBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
