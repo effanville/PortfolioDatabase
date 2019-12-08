@@ -33,7 +33,7 @@
                   Height="Auto"
                   MinWidth="200"
                   Width="Auto"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" 
@@ -67,7 +67,7 @@
                       MinHeight="300"
                       MinWidth="200"
                       Margin="10,10,10,10"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="Auto" 

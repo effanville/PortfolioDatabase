@@ -24,8 +24,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Disabled" 
                       HorizontalScrollBarVisibility="Disabled"
                       Grid.Row="0"
-                      Grid.Column="1"
-                      Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type Grid}},Path=ActualWidth}">
+                      Grid.Column="1">
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -50,17 +49,17 @@
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding Path=FundNames, Mode=TwoWay}"
                       SelectedItem="{Binding Path=selectedName, Mode=TwoWay}"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="RowEditEnding">
                                 <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateSecurityCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Company" Binding="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn Header="Url" Binding="{Binding Path=Url, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn Header="Last Date" Binding="{Binding Path=DateToRecord, StringFormat=\{0:dd.MM.yyyy\}}"/>
+                            <DataGridTextColumn Header="Company" MaxWidth="200" Binding="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Name" MaxWidth="200" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Url" MaxWidth="400" Binding="{Binding Path=Url, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Last Date" MaxWidth="200" Binding="{Binding Path=DateToRecord, StringFormat=\{0:dd.MM.yyyy\}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -83,7 +82,7 @@
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding Path=SelectedSecurityData, Mode=TwoWay}"
                       SelectedItem="{Binding Path=selectedValues, Mode=TwoWay}"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="RowEditEnding">
                                 <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=AddEditSecurityDataCommand}"/>

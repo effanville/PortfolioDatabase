@@ -1,7 +1,7 @@
 ﻿using GUIAccessorFunctions;
 using GlobalHeldData;
 using System.Windows;
-using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace FinanceWindows
 {
@@ -28,7 +28,7 @@ namespace FinanceWindows
         {
             string msg = "Data may not be saved. Would you like to save before closing?";
             MessageBoxResult result =
-                  System.Windows.MessageBox.Show(
+                  MessageBox.Show(
                     msg,
                     $"Closing {Title}.",
                     MessageBoxButton.YesNoCancel,
@@ -36,7 +36,7 @@ namespace FinanceWindows
             if (result == MessageBoxResult.Yes)
             {
                 SaveFileDialog saving = new SaveFileDialog();
-                if (saving.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (saving.ShowDialog() == true)
                 {
                     //if (!File.Exists(saving.FileName))
                     {
@@ -45,7 +45,7 @@ namespace FinanceWindows
                 }
 
                 DatabaseAccessor.SavePortfolio();
-                saving.Dispose();
+                // saving.Dispose();
             }
             if (result == MessageBoxResult.Cancel)
             {

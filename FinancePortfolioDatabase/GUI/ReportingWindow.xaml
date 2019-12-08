@@ -31,7 +31,7 @@
                   ItemsSource="{Binding ReportsToView, Mode=TwoWay}"
                   Grid.Column="1"
                   Margin="10 10 10 10"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type" 

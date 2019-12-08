@@ -19,7 +19,7 @@ namespace FinancialStructures.FinanceStructures
             DailyValuation latestDate = fUnitPrice.GetLatestValuation();
             if (latestDate == null)
             {
-                return null;
+                return new DailyValuation(DateTime.Today, 0.0); ;
             }
 
             double latestValue = latestDate.Value * fShares.GetLatestValue();
@@ -35,7 +35,7 @@ namespace FinancialStructures.FinanceStructures
             DailyValuation firstDate = fUnitPrice.GetFirstValuation();
             if (firstDate == null)
             {
-                return null;
+                return new DailyValuation(DateTime.MinValue, 0.0); ;
             }
 
             double latestValue = firstDate.Value * fShares.GetFirstValue();
