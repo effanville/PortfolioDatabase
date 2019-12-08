@@ -15,8 +15,7 @@ namespace FinancialStructures.FinanceStructures
         private static HttpClient client = new HttpClient();
         private static bool IsValidWebAddress(string address)
         {
-            Uri uri = null;
-            if (!Uri.TryCreate(address, UriKind.Absolute, out uri) || null == uri)
+            if (!Uri.TryCreate(address, UriKind.Absolute, out Uri uri) || null == uri)
             {
                 return false;
             }
@@ -37,6 +36,11 @@ namespace FinancialStructures.FinanceStructures
         private static bool IsGoogleAddress(string address)
         {
             return address.Contains("google");
+        }
+
+        private static bool IsTrustNetAddress(string address)
+        {
+            return address.Contains("trustnet");
         }
 
         private static async Task<string> DownloadFromURL(string url)
@@ -105,6 +109,16 @@ namespace FinancialStructures.FinanceStructures
                 if (double.IsNaN(value))
                 {
                     ErrorReports.AddError($"Could not download data from google url: {url}");
+                    return false;
+                }
+                return true;
+            }
+            if (IsTrustNetAddress(url))
+            {
+                value = ProcessFromTrustNet(data);
+                if (double.IsNaN(value))
+                {
+                    ErrorReports.AddError($"Could not download data from Trustnet url: {url}");
                     return false;
                 }
                 return true;
@@ -198,6 +212,37 @@ namespace FinancialStructures.FinanceStructures
         }
 
         private static double ProcessFromGoogle(string data)
+        {
+            bool continuer(char c)
+            {
+                if (char.IsDigit(c) || c == '.')
+                {
+                    return true;
+                }
+
+                return false;
+            };
+            string searchName = "regularMarketPrice";
+            int penceValue = data.IndexOf(searchName);
+            if (penceValue != -1)
+            {
+                string containsNewValue = data.Substring(searchName.Length + penceValue, 20);
+
+                var digits = containsNewValue.SkipWhile(c => !char.IsDigit(c)).TakeWhile(continuer).ToArray();
+
+                var str = new string(digits);
+                if (string.IsNullOrEmpty(str))
+                {
+                    return double.NaN;
+                }
+                double i = double.Parse(str);
+                return i;
+            }
+
+            return double.NaN;
+        }
+
+        private static double ProcessFromTrustNet(string data)
         {
             bool continuer(char c)
             {
