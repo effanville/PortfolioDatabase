@@ -4,41 +4,68 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FinanceWindows"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Width="Auto"
-             Height="Auto">
+             mc:Ignorable="d">
+    
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
+    <Grid VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="150"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Column="0" 
+              Grid.Row="0" 
+              Grid.RowSpan="2" 
+              Background="#F98866"></Grid>
+        
+        <local:OptionsPanel DataContext="{Binding OptionsPanelCommands}"
+                            Grid.Row="0"
+                            Grid.Column="0"/>
+        
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              VerticalAlignment="Stretch"
+              Visibility="{Binding DataWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:BasicDataView DataContext="{Binding DataView}"/>
+        </Grid>
+        
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              VerticalAlignment="Stretch"
+              Visibility="{Binding SecurityEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"/>
+        </Grid>
 
-            <local:OptionsPanel DataContext="{Binding OptionsPanelCommands}"
-                                Height="Auto"/>
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              VerticalAlignment="Stretch"
+              Visibility="{Binding BankAccEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"/>
+        </Grid>
 
-            <StackPanel Visibility="{Binding DataWindowVisibility, Converter={StaticResource BoolToVis}}">
-                <local:BasicDataView DataContext="{Binding DataView}"/>
-            </StackPanel>
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              VerticalAlignment="Stretch"
+              Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
+        </Grid>
 
-            <StackPanel Visibility="{Binding SecurityEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-                <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"/>
-            </StackPanel>
-
-            <StackPanel Visibility="{Binding BankAccEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-                <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"/>
-            </StackPanel>
-
-            <StackPanel Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-                <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
-            </StackPanel>
-
-            <StackPanel Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-                <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
-            </StackPanel>
-        </StackPanel>
-        <local:ReportingWindow DockPanel.Dock="Bottom" 
-                                   VerticalAlignment="Bottom" 
-                                   DataContext="{Binding ReportsViewModel}"/>
-    </StackPanel>
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
+        </Grid>
+        
+        <local:ReportingWindow VerticalAlignment="Stretch" 
+                               DataContext="{Binding ReportsViewModel}"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"/>
+    </Grid>
 </UserControl>

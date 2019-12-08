@@ -1,8 +1,9 @@
 ﻿using GUISupport;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace FinanceWindowsViewModels
 {
@@ -12,12 +13,20 @@ namespace FinanceWindowsViewModels
 
         public ICommand ClearSingleReportCommand { get; }
 
-        private List<ErrorReport> fReportsToView;
-        
-        public List<ErrorReport> ReportsToView
-        { 
+        private ObservableCollection<ErrorReport> fReportsToView;
+
+        public ObservableCollection<ErrorReport> ReportsToView
+        {
             get { return fReportsToView; }
             set { fReportsToView = value; OnPropertyChanged(); }
+        }
+
+        private ErrorReports fReports;
+        
+        public ErrorReports Reports
+        { 
+            get { return fReports; }
+            set { fReports = value; OnPropertyChanged(); }
         }
 
         private int fIndexToDelete;
@@ -28,29 +37,39 @@ namespace FinanceWindowsViewModels
             set { fIndexToDelete = value; OnPropertyChanged(); }
         }
 
+        private void SyncReports()
+        {
+            ReportsToView = null;
+            ReportsToView = new ObservableCollection<ErrorReport>(Reports.GetReports());
+            OnPropertyChanged(nameof(ReportsToView));
+        }
+
         void ExecuteClearReports(Object obj)
-        { 
-            ErrorReports.Clear();
-            Update();
+        {
+            Reports = new ErrorReports();
+            SyncReports();
         }
 
         void ExecuteClearSelectedReport(Object obj)
         {
-            ErrorReports.RemoveReport(IndexToDelete);
-            Update();
+            Reports.RemoveReport(IndexToDelete);
+            SyncReports();
+        }
+
+        public void UpdateReports(ErrorReports reports)
+        {
+            Reports.AddReports(reports);
+            SyncReports();
         }
 
         public ReportingWindowViewModel()
         {
+            Reports = new ErrorReports();
+            ReportsToView = new ObservableCollection<ErrorReport>();
             ClearReportsCommand = new BasicCommand(ExecuteClearReports);
             ClearSingleReportCommand = new BasicCommand(ExecuteClearSelectedReport);
-            Update();
+            SyncReports();
         }
 
-        public void Update()
-        {
-            ReportsToView = null;
-            ReportsToView = ErrorReports.GetReports();
-        }
     }
 }

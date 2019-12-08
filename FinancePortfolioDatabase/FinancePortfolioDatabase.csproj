@@ -14,6 +14,23 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>false</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ProductName>PAD</ProductName>
+    <PublisherName>Matthew Egginton</PublisherName>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +50,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>PAD.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,18 +77,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BankAccounts\CashAccount.Rates.cs" />
-    <Compile Include="DataStructures\DailyValuation_Named.cs" />
-    <Compile Include="ErrorReports\ErrorReport.cs" />
-    <Compile Include="ErrorReports\reportType.cs" />
-    <Compile Include="GlobalEditors\AllData.cs" />
-    <Compile Include="GlobalEditors\SectorEditor.cs" />
-    <Compile Include="GlobalEditors\BankAccountStatsHelper.cs" />
-    <Compile Include="GUI\DataEditWindows\BankAccEditWindow.xaml.cs">
+    <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml.cs">
       <DependentUpon>BankAccEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\BankAccEditWindowViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindowViewModel.cs" />
     <Compile Include="GUI\BasicDataViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml.cs">
+      <DependentUpon>UserButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtonsViewModel.cs" />
     <Compile Include="GUI\GuiSupport\OutputHelper.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
     <Compile Include="GUI\HelpWindow.xaml.cs">
@@ -78,10 +95,8 @@
       <DependentUpon>MainUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\OptionsPanelViewModel.cs" />
-    <Compile Include="ErrorReports\ErrorReports.cs" />
     <Compile Include="GUI\GuiSupport\EventArgs.cs" />
     <Compile Include="GUI\GuiSupport\EventRaiser.cs" />
-    <Compile Include="GUI\OpeningWindowViewModel.cs" />
     <Compile Include="GUI\MainWindowViewModel.cs" />
     <Compile Include="GUI\GuiSupport\Basic Command.cs" />
     <Compile Include="GUI\BasicDataView.xaml.cs">
@@ -95,28 +110,29 @@
       <DependentUpon>ReportingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\ReportingWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SectorEditWindow.xaml.cs">
+    <Compile Include="GUI\DataEditWindows\SectorEditWindow\SectorEditWindow.xaml.cs">
       <DependentUpon>SectorEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\SectorEditWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow.xaml.cs">
+    <Compile Include="GUI\DataEditWindows\SectorEditWindow\SectorEditWindowViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityEditWindow.xaml.cs">
       <DependentUpon>SecurityEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\StatsCreatorWindow.xaml.cs">
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityEditWindowViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsCreatorWindow.xaml.cs">
       <DependentUpon>StatsCreatorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\StatsCreatorWindowViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsCreatorWindowViewModel.cs" />
     <Compile Include="GUI\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\OptionsPanel.xaml.cs">
       <DependentUpon>OptionsPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\OpeningWindow.xaml.cs">
-      <DependentUpon>OpeningWindow.xaml</DependentUpon>
-    </Compile>
-    <Page Include="GUI\DataEditWindows\BankAccEditWindow.xaml">
+    <Page Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -140,32 +156,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BankAccounts\CashAccount.cs" />
-    <Compile Include="BankAccounts\CashAccountEditFns.cs" />
-    <Compile Include="DataStructures\GeneralFinancialFunctions.cs" />
-    <Compile Include="DataStructures\Timelist.Rates.cs" />
-    <Compile Include="GlobalEditors\BankAccountHelperFunctions.cs" />
-    <Compile Include="GlobalEditors\SecurityCompanyStatsHelper.cs" />
-    <Compile Include="GlobalEditors\SecurityStatsHelper.cs" />
-    <Compile Include="GlobalEditors\SecurityEditor.cs" />
-    <Compile Include="DataStructures\DailyValuation.cs" />
-    <Compile Include="GUI\GuiSupport\GUIDataStructs.cs" />
-    <Compile Include="Portfolio\Portfolio.StatisticsPageCreator.cs" />
-    <Compile Include="Portfolio\PortfolioBankAccountCompany.cs" />
-    <Compile Include="Portfolio\PortfolioSecurityCompany.cs" />
-    <Compile Include="Portfolio\PortfolioSecurityRates.cs" />
-    <Compile Include="Portfolio\PortfolioBankAccAccessors.cs" />
-    <Compile Include="Portfolio\PortfolioValues.cs" />
-    <Compile Include="Sector\Sector.cs" />
-    <Compile Include="Portfolio\PortfolioSecurityAccessors.cs" />
-    <Compile Include="GlobalEditors\GlobalData.cs" />
-    <Compile Include="Sector\SectorEditFunctions.cs" />
-    <Compile Include="Security\Security.Rates.cs" />
-    <Compile Include="Security\SecurityEditFns.cs" />
-    <Compile Include="DataStructures\TimeList.cs" />
-    <Compile Include="GlobalEditors\DatabaseAccessor.cs" />
-    <Compile Include="Portfolio\Portfolio.cs" />
-    <Compile Include="Security\Security.cs" />
     <Compile Include="GUI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -182,15 +172,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\DataEditWindows\SectorEditWindow.xaml">
+    <Page Include="GUI\DataEditWindows\SectorEditWindow\SectorEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow.xaml">
+    <Page Include="GUI\DataEditWindows\SecurityEditWindow\SecurityEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\DataEditWindows\StatsCreatorWindow.xaml">
+    <Page Include="GUI\DataEditWindows\StatsWindow\StatsCreatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,10 +189,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\OptionsPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\OpeningWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,7 +220,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="GUI\DataEditWindows\SecurityEditWindow\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +229,29 @@
     <Content Include="GUI\GuiSupport\help.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="PAD.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj">
+      <Project>{0738a1ca-623a-4f3e-96fa-8a9439f74446}</Project>
+      <Name>FinancialStructures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PADGlobals\PADGlobals.csproj">
+      <Project>{9ac5bde6-a6af-4806-8f84-f6a1688d93c5}</Project>
+      <Name>PADGlobals</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

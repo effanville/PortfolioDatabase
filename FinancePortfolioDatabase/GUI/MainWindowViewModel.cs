@@ -1,4 +1,5 @@
 ﻿using System;
+using FinancialStructures.ReportingStructures;
 using GUISupport;
 
 namespace FinanceWindowsViewModels
@@ -41,11 +42,17 @@ namespace FinanceWindowsViewModels
 
         public MainWindowViewModel()
         {
-            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow, displayWindowChoice);
+            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow,UpdateSubWindow, displayWindowChoice, UpdateReports);
             DataView = new BasicDataViewModel(UpdateWindow);
             ReportsViewModel = new ReportingWindowViewModel();
             DataWindowVisibility = true;
             SecurityEditWindowVisibility = false;
+        }
+        Action<ErrorReports> UpdateReports => (val) => AddReports(val);
+
+        public void AddReports(ErrorReports reports)
+        {
+            ReportsViewModel.UpdateReports(reports);
         }
 
         Action<bool> UpdateWindow => (val) => UpdateData(val);
@@ -59,7 +66,29 @@ namespace FinanceWindowsViewModels
                     DataView.DataUpdate();
                 }
 
-                ReportsViewModel.Update();
+                UpdateSubWindowData(false);
+            }
+        }
+
+        Action<bool> UpdateSubWindow => (val) => UpdateSubWindowData(val);
+
+        public void UpdateSubWindowData(object obj)
+        {
+            if (SecurityEditViewModel != null)
+            {
+                SecurityEditViewModel.UpdateFundListBox();
+            }
+            if (BankAccEditViewModel != null)
+            {
+                BankAccEditViewModel.UpdateAccountListBox();
+            }
+            if (SectorEditViewModel != null)
+            {
+                SectorEditViewModel.UpdateSectorListBox();
+            }
+            if (StatsEditViewModel != null)
+            {
+                StatsEditViewModel.GenerateStatistics();
             }
         }
 
@@ -103,7 +132,7 @@ namespace FinanceWindowsViewModels
 
         private void OpenSecurityEditWindow()
         {
-            SecurityEditViewModel = new SecurityEditWindowViewModel(UpdateWindow, displayWindowChoice);
+            SecurityEditViewModel = new SecurityEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
             DataWindowVisibility = false;
             SectorEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;
@@ -113,7 +142,7 @@ namespace FinanceWindowsViewModels
 
         private void OpenBankAccEditWindow()
         {
-            BankAccEditViewModel = new BankAccEditWindowViewModel(UpdateWindow, displayWindowChoice);
+            BankAccEditViewModel = new BankAccEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
             DataWindowVisibility = false;
             SectorEditWindowVisibility = false;
             SecurityEditWindowVisibility = false;
@@ -122,7 +151,7 @@ namespace FinanceWindowsViewModels
         }
         private void OpenSectorEditWindow()
         {
-            SectorEditViewModel = new SectorEditWindowViewModel(UpdateWindow, displayWindowChoice);
+            SectorEditViewModel = new SectorEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
             DataWindowVisibility = false;
             SecurityEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;
@@ -132,7 +161,7 @@ namespace FinanceWindowsViewModels
 
         private void OpenStatsCreatorWindow()
         {
-            StatsEditViewModel = new StatsCreatorWindowViewModel(UpdateWindow, displayWindowChoice);
+            StatsEditViewModel = new StatsCreatorWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
             DataWindowVisibility = false;
             SecurityEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;

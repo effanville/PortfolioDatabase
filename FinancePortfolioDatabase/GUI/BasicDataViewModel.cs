@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using GUIAccessorFunctions;
-using GUIFinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using GUISupport;
 using System;
 
@@ -8,8 +8,8 @@ namespace FinanceWindowsViewModels
 {
     public class BasicDataViewModel : PropertyChangedBase
     {
-        private List<NameComp> fFundNames;
-        public List<NameComp> FundNames
+        private List<NameCompDate> fFundNames;
+        public List<NameCompDate> FundNames
         {
             get { return fFundNames; }
             set { fFundNames = value; OnPropertyChanged(); }
@@ -22,8 +22,8 @@ namespace FinanceWindowsViewModels
             set { fAccountNames = value; OnPropertyChanged(); }
         }
 
-        private List<string> fSectorNames;
-        public List<string> SectorNames
+        private List<NameComp> fSectorNames;
+        public List<NameComp> SectorNames
         {
             get { return fSectorNames; }
             set { fSectorNames = value; OnPropertyChanged(); }
@@ -32,8 +32,11 @@ namespace FinanceWindowsViewModels
         public void DataUpdate()
         {
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
+            FundNames.Sort();
             AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
+            AccountNames.Sort();
             SectorNames = DatabaseAccessor.GetSectorNames();
+            SectorNames.Sort();
         }
 
         Action<bool> UpdateMainWindow;
@@ -42,8 +45,11 @@ namespace FinanceWindowsViewModels
         {
             UpdateMainWindow = updateWindow;
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
-
+            FundNames.Sort();
             AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
+            AccountNames.Sort();
+            SectorNames = DatabaseAccessor.GetSectorNames();
+            SectorNames.Sort();
         }
     }
 }

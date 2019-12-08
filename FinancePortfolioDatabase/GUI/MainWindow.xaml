@@ -4,27 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanceWindows"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="{Binding TitleValue}"
-        Height="Auto" 
-        MinHeight="650"
-        Width="Auto"
-        MinWidth="500"
-        Background="LightPink">
-    <StackPanel Height="Auto"
+        MinHeight="400"
+        MinWidth="400"
+        Background="LightPink"
+        Closing="Window_Closing">
+    <Grid Height="Auto"
                 Width="Auto">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
         <Border Background="#F98866"
-                Height="50">
+                Height="40"
+                VerticalAlignment="Top"
+                Grid.Row="0">
             <StackPanel Orientation="Horizontal"
                         Width="Auto">
-                <TextBlock FontSize="14"
+                <TextBlock FontSize="13"
                            Margin="12 12 12 12"
                            Text="Select the option on the left hand side "/>
-                <Button Width="30"
-                        Height="30" 
+                <Button Width="25"
+                        Height="25" 
                         HorizontalAlignment="Right"
-                        Margin="12 12 12 12"
                         Click="OpenHelpDocsCommand" 
                         ClickMode="Press">
                     <StackPanel Orientation="Horizontal">
@@ -35,9 +39,8 @@
             </StackPanel>
         </Border>
 
-        <local:MainUserControl Width="Auto"
-                               Height="Auto"/>
+        <local:MainUserControl Grid.Row="1"/>
 
-    </StackPanel>
+    </Grid>
 
 </Window>

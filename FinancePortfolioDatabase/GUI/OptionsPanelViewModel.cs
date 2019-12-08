@@ -2,9 +2,9 @@
 using System;
 using System.Windows.Forms;
 using System.Windows.Input;
-using FinanceWindows;
 using GUISupport;
-using ReportingStructures;
+using FinancialStructures.ReportingStructures;
+using PADGlobals;
 
 namespace FinanceWindowsViewModels
 {
@@ -21,6 +21,7 @@ namespace FinanceWindowsViewModels
         public ICommand SaveDatabaseCommand { get; }
 
         public ICommand LoadDatabaseCommand { get; }
+        public ICommand UpdateDataCommand { get; }
 
         public void ExecuteSecurityEditWindow(Object obj)
         {
@@ -46,6 +47,7 @@ namespace FinanceWindowsViewModels
 
         public void ExecuteSaveDatabase(Object obj)
         {
+            var reports = new ErrorReports();
             SaveFileDialog saving = new SaveFileDialog();
             if (saving.ShowDialog() == DialogResult.OK)
             {
@@ -55,39 +57,65 @@ namespace FinanceWindowsViewModels
                 }
             }
 
-            DatabaseAccessor.SavePortfolio();
+            DatabaseAccessor.SavePortfolio(reports);
             saving.Dispose();
             UpdateMainWindow(true);
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
 
         public void ExecuteLoadDatabase(Object obj)
         {
+            var reports = new ErrorReports();
             OpenFileDialog openFile = new OpenFileDialog();
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 DatabaseAccessor.SetFilePath(openFile.FileName);
                 DatabaseAccessor.ClearPortfolio();
-                DatabaseAccessor.LoadPortfolio();
-                ErrorReports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
+                DatabaseAccessor.LoadPortfolio(reports);
+                reports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
             }
             openFile.Dispose();
+
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateMainWindow(false);
+            UpdateSubWindows(false);
+        }
+
+        public async void ExecuteUpdateData(Object obj)
+        {
+            var reports = new ErrorReports();
+            await DataUpdater.Downloader(reports).ConfigureAwait(false);
+
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
 
         Action<bool> UpdateMainWindow;
+        Action<bool> UpdateSubWindows;
         Action<string> windowToView;
+        Action<ErrorReports> UpdateReports;
 
-        public OptionsPanelViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
+        public OptionsPanelViewModel(Action<bool> updateWindow, Action<bool> updateSubWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
             UpdateMainWindow = updateWindow;
+            UpdateSubWindows = updateSubWindow;
             windowToView = pageViewChoice;
-
+            UpdateReports = updateReports;
             OpenSecurityEditWindowCommand = new BasicCommand(ExecuteSecurityEditWindow);
             OpenBankAccountEditWindowCommand = new BasicCommand(ExecuteBankAccEditWindow);
             OpenSectorEditWindowCommand = new BasicCommand(ExecuteSectorEditWindow);
             OpenStatsCreatorWindowCommand = new BasicCommand(ExecuteStatsCreatorWindow);
             SaveDatabaseCommand = new BasicCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new BasicCommand(ExecuteLoadDatabase);
+            UpdateDataCommand = new BasicCommand(ExecuteUpdateData);
         }
     }
 }
