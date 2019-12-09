@@ -52,7 +52,7 @@
                       CanUserAddRows="True"
                       CanUserDeleteRows="False"
                       AutoGenerateColumns="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible"
                       ItemsSource="{Binding Path=SectorNames, Mode=TwoWay}"
                       SelectedItem="{Binding Path=SelectedName, Mode=TwoWay}">
                 <i:Interaction.Triggers>
@@ -82,7 +82,7 @@
                       CanUserAddRows="True"
                       CanUserDeleteRows="False"
                       AutoGenerateColumns="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible"
                       ItemsSource="{Binding Path=SelectedSectorData, Mode=TwoWay}"
                       SelectedItem="{Binding Path=SelectedDataPoint, Mode=TwoWay}">
                 <i:Interaction.Triggers>
