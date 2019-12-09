@@ -1,4 +1,5 @@
 ﻿using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 
@@ -69,21 +70,21 @@ namespace FinancialStructures.FinanceStructures
             return fValues.TryAddValue(date, value);
         }
 
-        public bool TryEditData(DateTime date, double value)
+        public bool TryEditData(DateTime date, double value, ErrorReports reports)
         {
             if (DoesDataExist(date, out int i))
             {
-                return fValues.TryEditData(date, value);
+                return fValues.TryEditData(date, value, reports);
             }
 
             return false;
         }
 
-        public bool TryDeleteData(DateTime date, double value)
+        public bool TryDeleteData(DateTime date, double value, ErrorReports reports)
         {
             if (value > 0)
             {
-                return fValues.TryDeleteValue(date);
+                return fValues.TryDeleteValue(date, reports);
             }
             return false;
         }

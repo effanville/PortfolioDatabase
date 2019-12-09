@@ -220,7 +220,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="GlobalEditors\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>

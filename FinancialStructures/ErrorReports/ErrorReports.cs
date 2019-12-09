@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 
@@ -8,24 +7,41 @@ namespace FinancialStructures.ReportingStructures
     /// <summary>
     /// Structure of reports to tell the user what is happening
     /// </summary>
-    public static class ErrorReports
+    public class ErrorReports
     {
+        public ErrorReports()
+        {
+            fReports = new List<ErrorReport>();
+        }
+        public int Count()
+        {
+            return fReports.Count();
+        }
+
+        public bool Any()
+        {
+            return fReports.Any();
+        }
         /// <summary>
         /// Instantiates the 
         /// </summary>
-        /// <returns></returns>
-        public static bool Configure()
+        public bool Configure()
         {
             fReports = new List<ErrorReport>();
             return true;
         }
 
-        private static List<ErrorReport> fReports;
+        private List<ErrorReport> fReports;
+
+        public void AddReports(ErrorReports reports)
+        {
+            fReports.AddRange(reports.GetReports());
+        }
 
         /// <summary>
         /// Adds a report of any type to the existing list 
         /// </summary>
-        public static void AddGeneralReport(ReportType type, string newReport)
+        public void AddGeneralReport(ReportType type, string newReport)
         {
             fReports.Add(new ErrorReport(type,newReport));
         }
@@ -33,7 +49,7 @@ namespace FinancialStructures.ReportingStructures
         /// <summary>
         /// Adds a report to the existing list 
         /// </summary>
-        public static void AddReport(string newReport)
+        public void AddReport(string newReport)
         {
             AddGeneralReport(ReportType.Report, newReport);
         }
@@ -41,7 +57,7 @@ namespace FinancialStructures.ReportingStructures
         /// <summary>
         /// Adds an Error report to the existing list 
         /// </summary>
-        public static void AddError(string newReport)
+        public void AddError(string newReport)
         {
             AddGeneralReport(ReportType.Error, newReport);
         }
@@ -49,7 +65,7 @@ namespace FinancialStructures.ReportingStructures
         /// <summary>
         /// Adds a Warning report to the existing list 
         /// </summary>
-        public static void AddWarning(string newReport)
+        public void AddWarning(string newReport)
         {
             AddGeneralReport(ReportType.Warning, newReport);
         }
@@ -58,7 +74,7 @@ namespace FinancialStructures.ReportingStructures
         /// Function to obtain 
         /// </summary>
         /// <returns>Currently held reports</returns>
-        public static List<ErrorReport> GetReports()
+        public List<ErrorReport> GetReports()
         {
             return fReports;
         }
@@ -66,7 +82,7 @@ namespace FinancialStructures.ReportingStructures
         /// <summary>
         /// Removes element at index <param name="i"/>
         /// </summary>
-        public static void RemoveReport(int i)
+        public void RemoveReport(int i)
         {
             if (i >= 0 && i < fReports.Count())
             {
@@ -74,7 +90,7 @@ namespace FinancialStructures.ReportingStructures
             }
         }
 
-        public static void Clear()
+        public void Clear()
         {
             fReports.Clear();
         }

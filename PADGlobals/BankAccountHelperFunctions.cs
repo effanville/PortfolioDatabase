@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FinancialStructures.FinanceStructures;
 using GlobalHeldData;
 using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
 
 namespace BankAccountHelperFunctions
 {
@@ -14,9 +15,9 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Tries to add a CashAccount to the underlying global database
         /// </summary>
-        public static bool TryAddBankAccount(string name, string company)
+        public static bool TryAddBankAccount(string name, string company, ErrorReports reports)
         {
-            return GlobalData.Finances.TryAddBankAccountFromName(name, company);
+            return GlobalData.Finances.TryAddBankAccountFromName(name, company, reports);
         }
 
         /// <summary>
@@ -46,17 +47,17 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Edits data in the bankaccount, if possible.
         /// </summary>
-        public static bool TryEditBankAccount(string name, string company, DateTime date, double value)
+        public static bool TryEditBankAccount(string name, string company, DateTime date, double value, ErrorReports reports)
         {
-            return GlobalData.Finances.TryEditBankAccount(name, company, date, value);
+            return GlobalData.Finances.TryEditBankAccount(name, company, date, value, reports);
         }
 
         /// <summary>
         /// Renames the BankAccount if this exists.
         /// </summary>
-        public static bool TryEditBankAccountName(string name, string company, string newName, string newCompany)
+        public static bool TryEditBankAccountName(string name, string company, string newName, string newCompany, ErrorReports reports)
         {
-            return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany);
+            return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany, reports);
         }
 
         public static bool TryAddDataToBankAccount(string name, string company, DateTime date, double value)
@@ -67,17 +68,17 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Deletes BankAccount if it exists. Does nothing otherwise.
         /// </summary>
-        public static bool TryDeleteBankAccount(string name, string company)
+        public static bool TryDeleteBankAccount(string name, string company, ErrorReports reports)
         {
-            return GlobalData.Finances.TryRemoveBankAccount(name, company);
+            return GlobalData.Finances.TryRemoveBankAccount(name, company, reports);
         }
 
         /// <summary>
         /// Deletes the data from the date specified if it exists.
         /// </summary>
-        public static bool TryDeleteBankAccountData(string name, string company, DateTime date)
+        public static bool TryDeleteBankAccountData(string name, string company, DateTime date, ErrorReports reports)
         {
-            return GlobalData.Finances.TryDeleteBankAccountData(name, company, date);
+            return GlobalData.Finances.TryDeleteBankAccountData(name, company, date, reports);
         }
 
         public static double AllBankAccountValue(DateTime date)

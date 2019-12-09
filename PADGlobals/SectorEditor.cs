@@ -15,18 +15,18 @@ namespace SectorHelperFunctions
         /// <summary>
         /// Tries to add a sector to the underlying global database
         /// </summary>
-        public static bool TryAddSector(string name, string url)
+        public static bool TryAddSector(string name, string url, ErrorReports reports)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
                 if (name == sector.GetName())
                 {
-                    ErrorReports.AddError($"Sector with name {name} already exists.");
+                    reports.AddError($"Sector with name {name} already exists.");
                     return false;
                 }
             }
             Sector newSector = new Sector(name, url);
-            ErrorReports.AddReport($"Added sector with name {name}.");
+            reports.AddReport($"Added sector with name {name}.");
             GlobalData.BenchMarks.Add(newSector);
             return true;
         }
@@ -78,45 +78,45 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryEditSector(string name, DateTime date, double value)
+        public static bool TryEditSector(string name, DateTime date, double value, ErrorReports reports)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
                 if (name == sector.GetName())
                 {
-                    return sector.TryEditData(date, value);
+                    return sector.TryEditData(date, value, reports);
                 }
             }
 
             return false;
         }
 
-        public static bool TryDeleteSectorData(string name, DateTime date, double value)
+        public static bool TryDeleteSectorData(string name, DateTime date, double value, ErrorReports reports)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
                 if (name == sector.GetName())
                 {
-                    return sector.TryDeleteData(date, value);
+                    return sector.TryDeleteData(date, value, reports);
                 }
             }
 
             return false;
         }
 
-        public static bool TryEditSectorName(string oldName, string newName, string url)
+        public static bool TryEditSectorName(string oldName, string newName, string url, ErrorReports reports)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
                 if (sector.GetName() == oldName)
                 {
                     sector.TryEditNameUrl(newName, url);
-                    ErrorReports.AddReport($"Renamed sector {oldName} with new name {newName}.");
+                    reports.AddReport($"Renamed sector {oldName} with new name {newName}.");
                     return true;
                 }
             }
 
-            ErrorReports.AddError($"Could not rename sector {oldName} with new name {newName}.");
+            reports.AddError($"Could not rename sector {oldName} with new name {newName}.");
             return false;
         }
 

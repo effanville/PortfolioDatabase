@@ -2,6 +2,7 @@
 using GlobalHeldData;
 using System.Windows;
 using Microsoft.Win32;
+using FinancialStructures.ReportingStructures;
 
 namespace FinanceWindows
 {
@@ -12,7 +13,7 @@ namespace FinanceWindows
     {
         public MainWindow()
         {
-            DatabaseAccessor.LoadPortfolio();
+            DatabaseAccessor.LoadPortfolio(new ErrorReports());
             InitializeComponent();
 
             Title = "Financial Database v" + AssemblyCreationDate.Value.ToString("yyyy.MM.dd.HHmmss");
@@ -44,7 +45,7 @@ namespace FinanceWindows
                     }
                 }
 
-                DatabaseAccessor.SavePortfolio();
+                DatabaseAccessor.SavePortfolio(new ErrorReports());
                 // saving.Dispose();
             }
             if (result == MessageBoxResult.Cancel)
