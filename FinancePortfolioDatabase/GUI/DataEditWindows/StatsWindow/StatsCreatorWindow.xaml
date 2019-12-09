@@ -139,7 +139,8 @@
             <ListView Grid.Row="1"
                       Name="SecInvBox"
                       ItemsSource="{Binding SecuritiesInvestments}"
-                      Margin="10,10,10,10">
+                      Margin="10,10,10,10"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Date" 
@@ -169,7 +170,8 @@
             <ListView Grid.Row="1"
                       Name="BankAccBox"
                       ItemsSource="{Binding BankAccountStats}"
-                      Margin="10,10,10,10">
+                      Margin="10,10,10,10"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Company" 
@@ -197,7 +199,8 @@
             <ListView Grid.Row="1"
                       Name="StatsBox"
                       ItemsSource="{Binding BankAccountStats}"
-                      Margin="10,10,10,10">
+                      Margin="10,10,10,10"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Company" 

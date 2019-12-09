@@ -51,7 +51,7 @@
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding Path=AccountNames, Mode=TwoWay}"
                       SelectedItem="{Binding Path=selectedName, Mode=TwoWay}"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="RowEditEnding">
                         <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateAccountCommand}"/>
@@ -80,7 +80,7 @@
                       CanUserAddRows="True"
                       CanUserDeleteRows="False"
                       AutoGenerateColumns="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible"
                       ItemsSource="{Binding Path=SelectedAccountData, Mode=TwoWay}"
                       SelectedItem="{Binding Path=selectedValues, Mode=TwoWay}">
                 <i:Interaction.Triggers>
