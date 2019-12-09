@@ -266,27 +266,26 @@ namespace GUIAccessorFunctions
             GlobalData.ClearDatabase();
         }
 
-        public static void LoadPortfolio()
-        {
-            ErrorReports.Configure();
-            
+        public static void LoadPortfolio(ErrorReports reports)
+        {            
             if (File.Exists(GlobalData.fDatabaseFilePath))
             {
                 var database = ReadFromXmlFile<AllData>(GlobalData.fDatabaseFilePath);
                 GlobalData.LoadDatabase(database.MyFunds, database.myBenchMarks);
                 return;
             }
-            ErrorReports.AddReport("Loaded Empty New Database.");
+
+            reports.AddReport("Loaded Empty New Database.");
             GlobalData.LoadDatabase(null, null);
         }
 
-        public static void SavePortfolio()
+        public static void SavePortfolio(ErrorReports reports)
         {
             var toSave = new AllData(GetPortfolio(), GetBenchMarks());
             if (GlobalData.fDatabaseFilePath != null)
             {
                 WriteToXmlFile(GlobalData.fDatabaseFilePath, toSave);
-                ErrorReports.AddReport("Saved Database.");
+                reports.AddReport("Saved Database.");
             }
         }
 

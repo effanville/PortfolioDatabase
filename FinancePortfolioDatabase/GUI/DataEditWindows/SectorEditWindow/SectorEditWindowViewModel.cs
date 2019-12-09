@@ -113,6 +113,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCreateSector(Object obj)
         {
+            var reports = new ErrorReports();
             if (DatabaseAccessor.GetBenchMarks().Count != SectorNames.Count)
             {
                 bool edited = false;
@@ -121,13 +122,13 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        SectorEditor.TryAddSector(name.Name, name.Url);
+                        SectorEditor.TryAddSector(name.Name, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
                 if (!edited)
                 { 
-                    ErrorReports.AddError("No Name provided to create a sector.");
+                    reports.AddError("No Name provided to create a sector.");
                 }
             }
             else
@@ -141,16 +142,19 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        SectorEditor.TryEditSectorName(fPreEditSectorNames[i].Name, name.Name, name.Url);
+                        SectorEditor.TryEditSectorName(fPreEditSectorNames[i].Name, name.Name, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
                 if (!edited)
                 {
-                    ErrorReports.AddError("Was not able to edit desired sector.");
+                    reports.AddError("Was not able to edit desired sector.");
                 }
             }
-
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateSectorListBox();
             UpdateMainWindow(true);
         }
@@ -158,6 +162,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteEditSectorData(Object obj)
         {
+            var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
                 if (DatabaseAccessor.GetSectorFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
@@ -175,36 +180,46 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            SectorEditor.TryEditSector(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
+                            SectorEditor.TryEditSector(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
                             name.NewValue = false;
                         }
                     }
                     if (!edited)
                     {
-                        ErrorReports.AddError("Was not able to edit sector data.");
+                        reports.AddError("Was not able to edit sector data.");
                     }
                 }
             }
 
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateSelectedSectorListBox();
         }
 
         private void ExecuteDeleteSectorData(Object obj)
         {
+            var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
-                if (SectorEditor.TryDeleteSectorData(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount))
+                if (SectorEditor.TryDeleteSectorData(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports))
                 {
                     UpdateSectorListBox();
                 }
             }
 
-            //UpdateSelectedSectorListBox();
+            if (reports.Any())
+            { 
+                UpdateReports(reports); 
+            }
+
             UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteSector(Object obj)
         {
+            var reports = new ErrorReports();
             if (SelectedName != null)
             {
                 SectorEditor.TryDeleteSector(SelectedName.Name);
@@ -215,9 +230,13 @@ namespace FinanceWindowsViewModels
             }
             else 
             {
-                ErrorReports.AddError("Something went wrong when trying to delete sector");
+                reports.AddError("Something went wrong when trying to delete sector");
             }
 
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateSectorListBox();
             UpdateMainWindow(true);
         }
@@ -230,12 +249,12 @@ namespace FinanceWindowsViewModels
 
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
-
-        public SectorEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
+        Action<ErrorReports> UpdateReports;
+        public SectorEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
             windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;
-
+            UpdateReports = updateReports;
             SectorNames = new List<NameComp>();
             fPreEditSectorNames = new List<NameComp>();
             SelectedSectorData = new List<AccountDayDataView>();

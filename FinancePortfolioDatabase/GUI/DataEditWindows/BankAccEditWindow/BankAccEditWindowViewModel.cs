@@ -112,6 +112,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCreateBankAccount(Object obj)
         {
+            var reports = new ErrorReports();
             if (DatabaseAccessor.GetPortfolio().BankAccounts.Count != AccountNames.Count)
             {
                 bool edited = false;
@@ -120,13 +121,13 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company);
+                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company, reports);
                         name.NewValue = false;
                     }
                 }
                 if (!edited)
                 {
-                    ErrorReports.AddError("No Name provided to create a sector.");
+                    reports.AddError("No Name provided to create a sector.");
                 }
             }
             else
@@ -140,22 +141,26 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company);
+                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, reports);
                         name.NewValue = false;
                     }
                 }
                 if (!edited)
                 {
-                    ErrorReports.AddError("Was not able to edit desired sector.");
+                    reports.AddError("Was not able to edit desired sector.");
                 }
             }
-
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateAccountListBox();
             UpdateMainWindow(true);
         }
 
         private void ExecuteEditDataCommand(Object obj)
         {
+            var reports = new ErrorReports();
             if (fSelectedName != null && selectedAccount != null)
             {
                 if (DatabaseAccessor.GetBankAccountFromName(fSelectedName.Name, fSelectedName.Company).Count() !=  SelectedAccountData.Count)
@@ -173,45 +178,57 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            BankAccountEditor.TryEditBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount);
+                            BankAccountEditor.TryEditBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount, reports);
                             name.NewValue = false;
                         }
                     }
                     if (!edited)
                     {
-                        ErrorReports.AddError("Was not able to edit sector data.");
+                        reports.AddError("Was not able to edit sector data.");
                     }
                 }
+            }
+            if (reports.Any())
+            {
+                UpdateReports(reports);
             }
             UpdateSelectedAccountListBox();
         }
 
         private void ExecuteDeleteBankAccount(Object obj)
         {
+            var reports = new ErrorReports();
             if (selectedName.Name != null)
             {
-                BankAccountEditor.TryDeleteBankAccount(selectedName.Name, selectedName.Company);
+                BankAccountEditor.TryDeleteBankAccount(selectedName.Name, selectedName.Company, reports);
             }
             else 
             {
-                ErrorReports.AddError("No Bank Account was selected when trying to delete.");
+                reports.AddError("No Bank Account was selected when trying to delete.");
             }
-
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateAccountListBox();
             UpdateMainWindow(true);
         }
 
         private void ExecuteDeleteValuation(Object obj)
         {
+            var reports = new ErrorReports();
             if (selectedName != null)
             {
-                BankAccountEditor.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date);
+                BankAccountEditor.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date, reports);
             }
             else 
             {
-                ErrorReports.AddError("No Bank Account was selected when trying to delete data.");
+                reports.AddError("No Bank Account was selected when trying to delete data.");
             }
-
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateSelectedAccountListBox();
             UpdateMainWindow(true);
         }
@@ -223,11 +240,13 @@ namespace FinanceWindowsViewModels
         }
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
+        Action<ErrorReports> UpdateReports;
 
-        public BankAccEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
+        public BankAccEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
             UpdateMainWindow = updateWindow;
             windowToView = pageViewChoice;
+            UpdateReports = updateReports;
             fAccountNames = new List<NameComp>();
             fPreEditAccountNames = new List<NameComp>();
             fSelectedAccountData = new List<AccountDayDataView>();

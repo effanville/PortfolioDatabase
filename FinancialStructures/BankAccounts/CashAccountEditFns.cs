@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -72,9 +73,9 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits value if value exists. Does nothing if it doesn't exist.
         /// </summary>
-        internal bool TryEditValue(DateTime date, double value)
+        internal bool TryEditValue(DateTime date, double value, ErrorReports reports)
         {
-            return fAmounts.TryEditData(date, value);
+            return fAmounts.TryEditData(date, value, reports);
         }
 
         /// <summary>
@@ -97,9 +98,9 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Removes data on <paramref name="date"/> if it exists.
         /// </summary>
-        internal bool TryDeleteData(DateTime date)
+        internal bool TryDeleteData(DateTime date, ErrorReports reports)
         {
-            return fAmounts.TryDeleteValue(date);
+            return fAmounts.TryDeleteValue(date, reports);
         }
 
         /// <summary>

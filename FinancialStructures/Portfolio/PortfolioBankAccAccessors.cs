@@ -102,11 +102,11 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddBankAccountFromName(string name, string company)
+        public bool TryAddBankAccountFromName(string name, string company, ErrorReports reports)
         {
             if (name == null || company == null)
             {
-                ErrorReports.AddError("Name or Company provided were null.");
+                reports.AddError("Name or Company provided were null.");
                 return false;
             }
             if (DoesBankAccountExistFromName(name, company))
@@ -119,18 +119,18 @@ namespace FinancialStructures.FinanceStructures
             return true;
         }
 
-        public bool TryRemoveBankAccount(string name, string company)
+        public bool TryRemoveBankAccount(string name, string company, ErrorReports reports)
         {
             foreach (CashAccount acc in BankAccounts)
             {
                 if (acc.GetCompany() == company && acc.GetName() == name)
                 {
                     BankAccounts.Remove(acc);
-                    ErrorReports.AddWarning($"Deleting Bank Account: Deleted `{company}'-`{name}'.");
+                    reports.AddWarning($"Deleting Bank Account: Deleted `{company}'-`{name}'.");
                     return true;
                 }
             }
-            ErrorReports.AddError($"Deleting Bank Account: Could not find account `{company}'-`{name}'.");
+            reports.AddError($"Deleting Bank Account: Could not find account `{company}'-`{name}'.");
             return false;
         }
 
@@ -148,22 +148,22 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditBankAccount(string name, string company, DateTime date, double value)
+        public bool TryEditBankAccount(string name, string company, DateTime date, double value, ErrorReports reports)
         {
             for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
             {
                 if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].TryEditValue(date, value);
+                    return BankAccounts[AccountIndex].TryEditValue(date, value, reports);
                 }
             }
 
-            ErrorReports.AddError($"Editing BankAccount Data: Could not find bank account `{company}'-`{name}'.");
+            reports.AddError($"Editing BankAccount Data: Could not find bank account `{company}'-`{name}'.");
             return false;
         }
 
-        public bool TryEditCashAcountNameCompany(string name, string company, string newName, string newCompany)
+        public bool TryEditCashAcountNameCompany(string name, string company, string newName, string newCompany, ErrorReports reports)
         {
             for (int AccountIndex = 0; AccountIndex < Funds.Count; AccountIndex++)
             {
@@ -173,22 +173,22 @@ namespace FinancialStructures.FinanceStructures
                     return BankAccounts[AccountIndex].EditNameCompany(newName, newCompany);
                 }
             }
-            ErrorReports.AddError($"Renaming BankAccount: Could not find bank account `{company}'-`{name}'.");
+            reports.AddError($"Renaming BankAccount: Could not find bank account `{company}'-`{name}'.");
             return false;
         }
 
-        public bool TryDeleteBankAccountData(string name, string company, DateTime date)
+        public bool TryDeleteBankAccountData(string name, string company, DateTime date, ErrorReports reports)
         {
             for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
             {
                 if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].TryDeleteData(date);
+                    return BankAccounts[AccountIndex].TryDeleteData(date, reports);
                 }
             }
 
-            ErrorReports.AddError($"Deleting Bank Account Data: Could not find bank account `{company}'-`{name}'.");
+            reports.AddError($"Deleting Bank Account Data: Could not find bank account `{company}'-`{name}'.");
             return false;
         }
     }

@@ -4,7 +4,6 @@ using FinancialStructures.ReportingStructures;
 using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;
-using FinancialStructures.FinanceStructures;
 using PADGlobals;
 
 namespace FinanceWindowsViewModels.SecurityEdit
@@ -19,25 +18,35 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
         private void ExecuteDownloadCommand(Object obj)
         {
+            var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name);
+                DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name, reports);
             }
             UpdateMainWindow(true);
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
         public ICommand DeleteSecurityCommand { get; }
 
         private void ExecuteDeleteSecurity(Object obj)
         {
+            var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                SecurityEditor.TryDeleteSecurity(fSelectedName.Name, fSelectedName.Company);
+                SecurityEditor.TryDeleteSecurity(fSelectedName.Name, fSelectedName.Company, reports);
             }
             else
             {
-                ErrorReports.AddError("Something went wrong when trying to delete security.");
+                reports.AddError("Something went wrong when trying to delete security.");
             }
 
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateMainWindow(true);
         }
 
@@ -51,9 +60,15 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
         private void ExecuteDeleteValuation(Object obj)
         {
+            var reports = new ErrorReports();
             if (fSelectedName != null && fSelectedValues != null)
             {
-                SecurityEditor.TryDeleteSecurityData(fSelectedName.Name, fSelectedName.Company, fSelectedValues.Date, fSelectedValues.ShareNo, fSelectedValues.UnitPrice, fSelectedValues.Investment);
+                SecurityEditor.TryDeleteSecurityData(reports, fSelectedName.Name, fSelectedName.Company, fSelectedValues.Date, fSelectedValues.ShareNo, fSelectedValues.UnitPrice, fSelectedValues.Investment);
+            }
+
+            if (reports.Any())
+            {
+                UpdateReports(reports);
             }
 
             UpdateMainWindow(true);
@@ -69,10 +84,12 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
-        public UserButtonsViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, NameComp newName, BasicDayDataView newData)
+        Action<ErrorReports> UpdateReports;
+        public UserButtonsViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports, NameComp newName, BasicDayDataView newData)
         {
             UpdateMainWindow = updateWindow;
             windowToView = pageViewChoice;
+            UpdateReports = updateReports;
             DownloadCommand = new BasicCommand(ExecuteDownloadCommand);
             DeleteSecurityCommand = new BasicCommand(ExecuteDeleteSecurity);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);

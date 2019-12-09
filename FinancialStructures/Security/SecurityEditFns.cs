@@ -127,27 +127,27 @@ namespace FinancialStructures.FinanceStructures
         /// Attempts to add data for the date specified.
         /// If cannot add any value that one wants to, then doesn't add all the values chosen.
         /// </summary>
-        internal bool TryAddData(DateTime date, double unitPrice, double shares = 0, double investment = 0)
+        internal bool TryAddData(ErrorReports reports, DateTime date, double unitPrice, double shares = 0, double investment = 0)
         {
             // here we don't care about investments
             if (investment == 0)
             {
                 if (DoesDateSharesDataExist(date, out int _)  || DoesDateUnitPriceDataExist(date, out int _))
                 {
-                    ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has NumShares or UnitPrice data on {date.ToString("d")}.");
+                    reports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has NumShares or UnitPrice data on {date.ToString("d")}.");
                     return false;
                 }
 
-                return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice) && ComputeInvestments();
+                return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice) && ComputeInvestments(reports);
             }
 
             if (DoesDateSharesDataExist(date, out int _) || DoesDateInvestmentDataExist(date, out int _) || DoesDateUnitPriceDataExist(date, out int _))
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has NumShares or UnitPrice or Investment data on {date.ToString("d")}.");
+                reports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has NumShares or UnitPrice or Investment data on {date.ToString("d")}.");
                 return false;
             }
 
-            return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice) & fInvestments.TryAddValue(date, investment) && ComputeInvestments();
+            return fShares.TryAddValue(date, shares) & fUnitPrice.TryAddValue(date, unitPrice) & fInvestments.TryAddValue(date, investment) && ComputeInvestments(reports);
         }
 
 
@@ -156,67 +156,67 @@ namespace FinancialStructures.FinanceStructures
         /// If do have relevant values, then edit that value
         /// If investment value doesnt exist, then add that value.
         /// </summary>
-        internal bool TryEditData(DateTime date, double shares, double unitPrice, double Investment = 0)
+        internal bool TryEditData(ErrorReports reports, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
             bool editShares = false;
             bool editUnitPrice = false;
             if (DoesDateSharesDataExist(date, out int _))
             {
-                editShares = fShares.TryEditData(date, shares);
+                editShares = fShares.TryEditData(date, shares, reports);
             }
 
             if (DoesDateUnitPriceDataExist(date, out int _))
             {
-                editUnitPrice = fUnitPrice.TryEditData(date, unitPrice);
+                editUnitPrice = fUnitPrice.TryEditData(date, unitPrice, reports);
             }
             
             fInvestments.TryEditDataOtherwiseAdd(date, Investment);
 
-            return editShares & editUnitPrice && ComputeInvestments();
+            return editShares & editUnitPrice && ComputeInvestments(reports);
         }
 
         /// <summary>
         /// Edits shares data only.
         /// </summary>
-        internal bool TryEditSharesData(DateTime date, double shares)
+        internal bool TryEditSharesData(DateTime date, double shares, ErrorReports reports)
         {
-            return fShares.TryEditData(date, shares) && ComputeInvestments();
+            return fShares.TryEditData(date, shares, reports) && ComputeInvestments(reports);
         }
 
         /// <summary>
         /// Edits unit price data only.
         /// </summary>
-        internal bool TryEditUnitPriceData(DateTime date, double investment)
+        internal bool TryEditUnitPriceData(DateTime date, double investment, ErrorReports reports)
         {
-            return fUnitPrice.TryEditData(date, investment) && ComputeInvestments();
+            return fUnitPrice.TryEditData(date, investment, reports) && ComputeInvestments(reports);
         }
 
         /// <summary>
         /// Edits investment data only.
         /// </summary>
-        internal bool TryEditInvestmentData(DateTime date, double unitPrice)
+        internal bool TryEditInvestmentData(DateTime date, double unitPrice, ErrorReports reports)
         {
-            return fInvestments.TryEditData(date, unitPrice) && ComputeInvestments();
+            return fInvestments.TryEditData(date, unitPrice, reports) && ComputeInvestments(reports);
         }
 
         /// <summary>
         /// Edits name and company data of security.
         /// </summary>
-        internal bool TryEditNameCompany(string name, string company, string url)
+        internal bool TryEditNameCompany(string name, string company, string url, ErrorReports reports)
         {
             if (name != fName)
             {
-                ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has name `{fName}' edited to `{name}'.");
+                reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has name `{fName}' edited to `{name}'.");
                 fName = name;
             }
             if (company != fCompany)
             {
-                ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has company `{fCompany}' edited to `{company}'.");
+                reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has company `{fCompany}' edited to `{company}'.");
                 fCompany = company;
             }
             if (url != fUrl)
             {
-                ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has url `{fUrl}' edited to `{url}'.");
+                reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has url `{fUrl}' edited to `{url}'.");
                 fUrl = url;
             }
 
@@ -242,20 +242,20 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Tries to delete the data. If it can, it deletes all data specified, then returns true only if all data has been successfully deleted.
         /// </summary>
-        public bool TryDeleteData(DateTime date, double shares, double unitPrice, double Investment = 0)
+        public bool TryDeleteData(ErrorReports reports, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
             bool units = false;
             bool sharetrue = false;
             if (shares > 0  )
             {
-                sharetrue = fShares.TryDeleteValue(date);
+                sharetrue = fShares.TryDeleteValue(date, reports);
             }
             if (unitPrice > 0)
             {
-                units = fUnitPrice.TryDeleteValue(date);
+                units = fUnitPrice.TryDeleteValue(date, reports);
             }
 
-            return units & sharetrue & fInvestments.TryDeleteValue(date) && ComputeInvestments();
+            return units & sharetrue & fInvestments.TryDeleteValue(date, reports) && ComputeInvestments(reports);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace FinancialStructures.FinanceStructures
         /// <remarks>
         /// This should be called throughout, whenever one updates the data stored in the Security.
         /// </remarks>
-        private bool ComputeInvestments()
+        private bool ComputeInvestments(ErrorReports reports)
         {
                 // return true;
             for (int index = 0; index < fInvestments.Count(); index++)
@@ -278,7 +278,7 @@ namespace FinancialStructures.FinanceStructures
                     DailyValuation sharesPreviousValue = fShares.GetLastEarlierValue(investmentValue.Day) ?? new DailyValuation(DateTime.Today, 0);
                     if (sharesCurrentValue != null)
                     {
-                        fInvestments.TryEditData(investmentValue.Day, (sharesCurrentValue.Value - sharesPreviousValue.Value) * fUnitPrice.GetNearestEarlierValue(investmentValue.Day).Value);
+                        fInvestments.TryEditData(investmentValue.Day, (sharesCurrentValue.Value - sharesPreviousValue.Value) * fUnitPrice.GetNearestEarlierValue(investmentValue.Day).Value, reports);
                     }
                 }
             }

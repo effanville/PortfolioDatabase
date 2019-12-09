@@ -43,7 +43,7 @@ namespace FinancialStructures.FinanceStructures
             return address.Contains("trustnet");
         }
 
-        private static async Task<string> DownloadFromURL(string url)
+        private static async Task<string> DownloadFromURL(string url, ErrorReports reports)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -71,7 +71,7 @@ namespace FinancialStructures.FinanceStructures
                 }
                 catch (Exception ex)
                 {
-                    ErrorReports.AddError($"Failed to download from url {url}. Reason : {ex.Message}");
+                    reports.AddError($"Failed to download from url {url}. Reason : {ex.Message}");
                     return output;
                 }
             }
@@ -79,7 +79,7 @@ namespace FinancialStructures.FinanceStructures
             return output;
         }
 
-        private static bool ProcessDownloadString(string url, string data, out double value)
+        private static bool ProcessDownloadString(string url, string data, ErrorReports reports, out double value)
         {
             value = double.NaN;
 
@@ -88,7 +88,7 @@ namespace FinancialStructures.FinanceStructures
                 value = ProcessFromMorningstar(data);
                 if (double.IsNaN(value))
                 {
-                    ErrorReports.AddError($"Could not download data from morningstar url: {url}");
+                    reports.AddError($"Could not download data from morningstar url: {url}");
                     return false;
                 }
                 return true;
@@ -98,7 +98,7 @@ namespace FinancialStructures.FinanceStructures
                 value = ProcessFromYahoo(data);
                 if (double.IsNaN(value))
                 {
-                    ErrorReports.AddError($"Could not download data from Yahoo url: {url}");
+                    reports.AddError($"Could not download data from Yahoo url: {url}");
                     return false;
                 }
                 return true;
@@ -108,7 +108,7 @@ namespace FinancialStructures.FinanceStructures
                 value = ProcessFromGoogle(data);
                 if (double.IsNaN(value))
                 {
-                    ErrorReports.AddError($"Could not download data from google url: {url}");
+                    reports.AddError($"Could not download data from google url: {url}");
                     return false;
                 }
                 return true;
@@ -118,13 +118,13 @@ namespace FinancialStructures.FinanceStructures
                 value = ProcessFromTrustNet(data);
                 if (double.IsNaN(value))
                 {
-                    ErrorReports.AddError($"Could not download data from Trustnet url: {url}");
+                    reports.AddError($"Could not download data from Trustnet url: {url}");
                     return false;
                 }
                 return true;
             }
 
-            ErrorReports.AddError($"Url not of a currently implemented downloadable type: {url}");
+            reports.AddError($"Url not of a currently implemented downloadable type: {url}");
             return false;
         }
 
@@ -273,27 +273,27 @@ namespace FinancialStructures.FinanceStructures
             return double.NaN;
         }
 
-        public static void DownloadPortfolioLatest(Portfolio portfo)
+        public static void DownloadPortfolioLatest(Portfolio portfo, ErrorReports reports)
         {
             foreach (var sec in portfo.GetSecurities())
             {
-                DownloadSecurityLatest(sec);
+                DownloadSecurityLatest(sec, reports);
             }
             foreach (var acc in portfo.GetBankAccounts())
             {
-                DownloadBankAccountLatest(acc);
+                DownloadBankAccountLatest(acc, reports);
             }
         }
 
-        public static void DownloadSecurityLatest(Security sec)
+        public static void DownloadSecurityLatest(Security sec, ErrorReports reports)
         {
-            string data = DownloadFromURL(sec.GetUrl()).Result;
+            string data = DownloadFromURL(sec.GetUrl(), reports).Result;
             if (string.IsNullOrEmpty(data))
             {
-                ErrorReports.AddError($"{sec.GetCompany()}-{sec.GetName()}: could not download data from {sec.GetUrl()}");
+                reports.AddError($"{sec.GetCompany()}-{sec.GetName()}: could not download data from {sec.GetUrl()}");
                 return;
             }
-            if (!ProcessDownloadString(sec.GetUrl(), data, out double value))
+            if (!ProcessDownloadString(sec.GetUrl(), data, reports, out double value))
             {
                 return;
             }
@@ -305,41 +305,41 @@ namespace FinancialStructures.FinanceStructures
                 units = new DailyValuation(DateTime.Today, 0);
             }
 
-            sec.TryAddData(DateTime.Today, value, units.Value);
+            sec.TryAddData(reports, DateTime.Today, value, units.Value);
         }
 
-        public static void DownloadBankAccountLatest(CashAccount acc)
+        public static void DownloadBankAccountLatest(CashAccount acc, ErrorReports reports)
         {
-            string data = DownloadFromURL(acc.GetUrl()).Result;
+            string data = DownloadFromURL(acc.GetUrl(), reports).Result;
             if (string.IsNullOrEmpty(data))
             {
-                ErrorReports.AddError($"{acc.GetCompany()}-{acc.GetName()}: could not download data from {acc.GetUrl()}");
+                reports.AddError($"{acc.GetCompany()}-{acc.GetName()}: could not download data from {acc.GetUrl()}");
                 return;
             }
-            if (!ProcessDownloadString(acc.GetUrl(), data, out double value))
+            if (!ProcessDownloadString(acc.GetUrl(), data, reports, out double value))
             {
                 return;
             }
             acc.TryAddValue(DateTime.Today, value);
         }
 
-        public static void DownloadBenchMarksLatest(List<Sector> sectors)
+        public static void DownloadBenchMarksLatest(List<Sector> sectors, ErrorReports reports)
         {
             foreach (var sector in sectors)
             {
-                DownloadSectorLatest(sector);
+                DownloadSectorLatest(sector, reports);
             }
         }
 
-        public static void DownloadSectorLatest(Sector sector)
+        public static void DownloadSectorLatest(Sector sector, ErrorReports reports)
         {
-            string data = DownloadFromURL(sector.GetUrl()).Result;
+            string data = DownloadFromURL(sector.GetUrl(), reports).Result;
             if (string.IsNullOrEmpty(data))
             {
-                ErrorReports.AddError($"{sector.GetName()}: could not download data from {sector.GetUrl()}");
+                reports.AddError($"{sector.GetName()}: could not download data from {sector.GetUrl()}");
                 return;
             }
-            if (!ProcessDownloadString(sector.GetUrl(), data, out double value))
+            if (!ProcessDownloadString(sector.GetUrl(), data, reports, out double value))
             {
                 return;
             }

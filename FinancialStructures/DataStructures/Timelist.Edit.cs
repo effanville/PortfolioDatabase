@@ -69,7 +69,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Edits data on <paramref name="date"/> and replaces existing value with <paramref name="value"/>.
         /// </summary>
-        internal bool TryEditData(DateTime date, double value)
+        internal bool TryEditData(DateTime date, double value, ErrorReports reports)
         {
             if (fValues != null && fValues.Any())
             {
@@ -77,7 +77,7 @@ namespace FinancialStructures.DataStructures
                 {
                     if (fValues[i].Day == date)
                     {
-                        ErrorReports.AddReport($"Editing Data: {date} value changed from {fValues[i].Value} to {value}");
+                        reports.AddReport($"Editing Data: {date} value changed from {fValues[i].Value} to {value}");
                         fValues[i].Value = value;
 
                         return true;
@@ -117,7 +117,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Deletes data if exists. If deletes, returns true.
         /// </summary>
-        internal bool TryDeleteValue(DateTime date)
+        internal bool TryDeleteValue(DateTime date, ErrorReports reports)
         {
             if (fValues != null && fValues.Any())
             {
@@ -125,14 +125,14 @@ namespace FinancialStructures.DataStructures
                 {
                     if (fValues[i].Day == date)
                     {
-                        ErrorReports.AddReport($"Deleted value: date - {date} and value - {fValues[i].Value}");
+                        reports.AddReport($"Deleted value: date - {date} and value - {fValues[i].Value}");
                         fValues.RemoveAt(i);
                         return true;
                     }
                 }
             }
 
-            ErrorReports.AddError($"Deleting Value: Could not find data on date {date}.");
+            reports.AddError($"Deleting Value: Could not find data on date {date}.");
             return false;
         }
 

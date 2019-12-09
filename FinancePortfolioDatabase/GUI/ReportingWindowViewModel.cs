@@ -13,11 +13,19 @@ namespace FinanceWindowsViewModels
         public ICommand ClearSingleReportCommand { get; }
 
         private List<ErrorReport> fReportsToView;
-        
+
         public List<ErrorReport> ReportsToView
-        { 
+        {
             get { return fReportsToView; }
             set { fReportsToView = value; OnPropertyChanged(); }
+        }
+
+        private ErrorReports fReports;
+        
+        public ErrorReports Reports
+        { 
+            get { return fReports; }
+            set { fReports = value; OnPropertyChanged(); }
         }
 
         private int fIndexToDelete;
@@ -28,29 +36,37 @@ namespace FinanceWindowsViewModels
             set { fIndexToDelete = value; OnPropertyChanged(); }
         }
 
+        private void SyncReports()
+        {
+            ReportsToView = Reports.GetReports();
+        }
+
         void ExecuteClearReports(Object obj)
-        { 
-            ErrorReports.Clear();
-            Update();
+        {
+            Reports = new ErrorReports();
+            SyncReports();
         }
 
         void ExecuteClearSelectedReport(Object obj)
         {
-            ErrorReports.RemoveReport(IndexToDelete);
-            Update();
+            Reports.RemoveReport(IndexToDelete);
+            SyncReports();
+        }
+
+        public void UpdateReports(ErrorReports reports)
+        {
+            Reports.AddReports(reports);
+            SyncReports();
         }
 
         public ReportingWindowViewModel()
         {
+            Reports = new ErrorReports();
+            ReportsToView = new List<ErrorReport>();
             ClearReportsCommand = new BasicCommand(ExecuteClearReports);
             ClearSingleReportCommand = new BasicCommand(ExecuteClearSelectedReport);
-            Update();
+            SyncReports();
         }
 
-        public void Update()
-        {
-            ReportsToView = null;
-            ReportsToView = ErrorReports.GetReports();
-        }
     }
 }

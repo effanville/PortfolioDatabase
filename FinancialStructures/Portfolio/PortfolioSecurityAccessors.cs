@@ -137,92 +137,91 @@ namespace FinancialStructures.FinanceStructures
             return true;
         }
 
-        public bool TryAddSecurityFromName(string name, string company, string url)
+        public bool TryAddSecurityFromName(string name, string company, string url, ErrorReports reports)
         {
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(company))
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, $"Company `{company}' or name `{name}' is not suitable.");
+                reports.AddGeneralReport(ReportType.Error, $"Company `{company}' or name `{name}' is not suitable.");
                 return false;
             }
 
             if (DoesSecurityExistFromName(name, company))
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' already exists.");
+                reports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' already exists.");
                 return false;
             }
             
             var NewFund = new Security(name, company, url);
             Funds.Add(NewFund);
-            ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' added to database.");
-            var reps = ErrorReports.GetReports();
+            reports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' added to database.");
             return true;
         }
 
-        public bool TryRemoveSecurity(string name, string company)
+        public bool TryRemoveSecurity(string name, string company, ErrorReports reports)
         {
             foreach (Security sec in Funds)
             {
                 if (sec.GetCompany() == company && sec.GetName() == name)
                 {
                     Funds.Remove(sec);
-                    ErrorReports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' removed from the database.");
+                    reports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' removed from the database.");
                     return true;
                 }
             }
-            ErrorReports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' could not be found in the database.");
+            reports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' could not be found in the database.");
             return false;
         }
 
-        public bool TryAddDataToSecurity(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        public bool TryAddDataToSecurity(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryAddData(date, unitPrice, shares, Investment);
+                    return Funds[fundIndex].TryAddData(reports, date, unitPrice, shares, Investment);
                 }
             }
-            ErrorReports.AddError($"Security `{company}'-`{name}' could not be found in the database.");
+            reports.AddError($"Security `{company}'-`{name}' could not be found in the database.");
             return false;
         }
 
-        public bool TryEditSecurity(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        public bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditData(date, shares, unitPrice, Investment);
-                }
-            }
-
-            return false;
-        }
-
-        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string url)
-        {
-            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
-            {
-                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
-                {
-                    // now edit data
-                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, url);
+                    return Funds[fundIndex].TryEditData(reports, date, shares, unitPrice, Investment);
                 }
             }
 
             return false;
         }
 
-        public bool TryRemoveSecurityData(string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string url, ErrorReports reports)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryDeleteData( date, shares,  unitPrice, Investment);
+                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, url, reports);
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryRemoveSecurityData(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        {
+            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            {
+                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                {
+                    // now edit data
+                    return Funds[fundIndex].TryDeleteData(reports, date, shares,  unitPrice, Investment);
                 }
             }
 

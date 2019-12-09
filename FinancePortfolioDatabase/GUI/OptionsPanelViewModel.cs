@@ -2,7 +2,6 @@
 using System;
 using System.Windows.Forms;
 using System.Windows.Input;
-using FinanceWindows;
 using GUISupport;
 using FinancialStructures.ReportingStructures;
 using PADGlobals;
@@ -48,6 +47,7 @@ namespace FinanceWindowsViewModels
 
         public void ExecuteSaveDatabase(Object obj)
         {
+            var reports = new ErrorReports();
             SaveFileDialog saving = new SaveFileDialog();
             if (saving.ShowDialog() == DialogResult.OK)
             {
@@ -57,41 +57,55 @@ namespace FinanceWindowsViewModels
                 }
             }
 
-            DatabaseAccessor.SavePortfolio();
+            DatabaseAccessor.SavePortfolio(reports);
             saving.Dispose();
             UpdateMainWindow(true);
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
 
         public void ExecuteLoadDatabase(Object obj)
         {
+            var reports = new ErrorReports();
             OpenFileDialog openFile = new OpenFileDialog();
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 DatabaseAccessor.SetFilePath(openFile.FileName);
                 DatabaseAccessor.ClearPortfolio();
-                DatabaseAccessor.LoadPortfolio();
-                ErrorReports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
+                DatabaseAccessor.LoadPortfolio(reports);
+                reports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
             }
             openFile.Dispose();
+
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateMainWindow(false);
             UpdateSubWindows(false);
         }
 
         public void ExecuteUpdateData(Object obj)
         {
-            DataUpdater.Downloader();
+            var reports = new ErrorReports();
+            DataUpdater.Downloader(reports);
+            if (reports.Any())
+            { }
         }
 
         Action<bool> UpdateMainWindow;
         Action<bool> UpdateSubWindows;
         Action<string> windowToView;
+        Action<ErrorReports> UpdateReports;
 
-        public OptionsPanelViewModel(Action<bool> updateWindow, Action<bool> updateSubWindow, Action<string> pageViewChoice)
+        public OptionsPanelViewModel(Action<bool> updateWindow, Action<bool> updateSubWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
             UpdateMainWindow = updateWindow;
             UpdateSubWindows = updateSubWindow;
             windowToView = pageViewChoice;
-
+            UpdateReports = updateReports;
             OpenSecurityEditWindowCommand = new BasicCommand(ExecuteSecurityEditWindow);
             OpenBankAccountEditWindowCommand = new BasicCommand(ExecuteBankAccEditWindow);
             OpenSectorEditWindowCommand = new BasicCommand(ExecuteSectorEditWindow);

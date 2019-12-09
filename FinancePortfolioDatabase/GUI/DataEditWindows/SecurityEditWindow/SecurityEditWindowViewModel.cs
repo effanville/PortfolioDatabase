@@ -133,6 +133,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCreateEditCommand(Object obj)
         {
+            var reports = new ErrorReports();
             if (DatabaseAccessor.GetPortfolio().Funds.Count != FundNames.Count)
             {
                 bool edited = false;
@@ -141,13 +142,13 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Url);
+                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
                 if (!edited)
                 {
-                    ErrorReports.AddError("No Name provided to create a sector.");
+                    reports.AddError("No Name provided to create a sector.");
                 }
             }
             else
@@ -161,16 +162,20 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Url);
+                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
                 if (!edited)
                 {
-                    ErrorReports.AddError("Was not able to edit desired security.");
+                    reports.AddError("Was not able to edit desired security.");
                 }
             }
 
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateFundListBox();
             ClearSelection();
             UpdateMainWindow(true);
@@ -178,11 +183,12 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteAddEditSecData(Object obj)
         {
+            var reports = new ErrorReports();
             if (selectedName != null && selectedSecurity != null)
             {
                 if (DatabaseAccessor.GetSecurityFromName(selectedName.Name, selectedName.Company).Count() != SelectedSecurityData.Count)
                 {
-                    SecurityEditor.TryAddDataToSecurity(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                    SecurityEditor.TryAddDataToSecurity(reports, selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                     selectedName.NewValue = false;
                 }
                 else
@@ -195,26 +201,31 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            SecurityEditor.TryEditSecurity(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                            SecurityEditor.TryEditSecurity(reports, selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                             name.NewValue = false;
                         }
                     }
                     if (!edited)
                     {
-                        ErrorReports.AddError("Was not able to edit security data.");
+                        reports.AddError("Was not able to edit security data.");
                     }
                 }
             }
-
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
             UpdateSelectedSecurityListBox();
         }
 
         Action<bool> UpdateMainWindow;
+        Action<ErrorReports> UpdateReports;
 
-        public SecurityEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
+        public SecurityEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
             UpdateMainWindow = updateWindow;
-            UserClickingVM = new UserButtonsViewModel(updateWindow, pageViewChoice, selectedName, selectedValues);
+            UpdateReports = updateReports;
+            UserClickingVM = new UserButtonsViewModel(updateWindow, pageViewChoice, updateReports, selectedName, selectedValues);
 
             fFundNames = new List<NameCompDate>();
             fPreEditFundNames = new List<NameCompDate>();

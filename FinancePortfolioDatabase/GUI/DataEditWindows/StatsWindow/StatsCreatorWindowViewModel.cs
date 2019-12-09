@@ -59,6 +59,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteExportToCSVCommand(Object obj)
         {
+            var reports = new ErrorReports();
             SaveFileDialog saving = new SaveFileDialog();
             saving.DefaultExt = ".csv";
             if (saving.ShowDialog() == DialogResult.OK)
@@ -88,19 +89,24 @@ namespace FinanceWindowsViewModels
                     statsWriter.WriteLine(BankAccData);
                 }
 
-                ErrorReports.AddReport($"Created csv statistics at ${saving.FileName}");
+                reports.AddReport($"Created csv statistics at ${saving.FileName}");
                 statsWriter.Close();
 
             }
             else 
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, $"Was not able to create csv file at {saving.FileName}");
+                reports.AddGeneralReport(ReportType.Error, $"Was not able to create csv file at {saving.FileName}");
             }
             saving.Dispose();
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
 
         private void ExecuteInvestmentListCommand(Object obj)
         {
+            var reports = new ErrorReports();
             SaveFileDialog saving = new SaveFileDialog();
             if (saving.ShowDialog() == DialogResult.OK)
             {
@@ -117,29 +123,38 @@ namespace FinanceWindowsViewModels
                     string securitiesData = stats.Day.ToShortDateString() + ", " + stats.Company + ", " + stats.Name + ", " + stats.Value.ToString();
                     statsWriter.WriteLine(securitiesData);
                 }
-                ErrorReports.AddReport($"Created Investment list page at {saving.FileName}.");
+                reports.AddReport($"Created Investment list page at {saving.FileName}.");
                 statsWriter.Close();
             }
             else
             {
-                ErrorReports.AddGeneralReport(ReportType.Error, $"Was not able to create Investment list page at {saving.FileName}");
+                reports.AddGeneralReport(ReportType.Error, $"Was not able to create Investment list page at {saving.FileName}");
             }
             saving.Dispose();
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
 
         private void ExecuteCreateHTMLCommand(Object obj)
         {
+            var reports = new ErrorReports();
             SaveFileDialog saving = new SaveFileDialog();
             if (saving.ShowDialog() == DialogResult.OK)
             {
                 PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName, DisplayValueFunds);
-                ErrorReports.AddGeneralReport(ReportType.Report, "Created statistics page");
+                reports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
             else 
             { 
-                ErrorReports.AddGeneralReport(ReportType.Error, "Was not able to create HTML page in place specified."); 
+                reports.AddGeneralReport(ReportType.Error, "Was not able to create HTML page in place specified."); 
             }
             saving.Dispose();
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
         }
 
         private void ExecuteCloseCommand(Object obj)
@@ -179,6 +194,7 @@ namespace FinanceWindowsViewModels
 
         Action<bool> UpdateMainWindow;
         Action<string> windowToView;
+        Action<ErrorReports> UpdateReports;
 
         public void GenerateStatistics()
         {
@@ -189,7 +205,7 @@ namespace FinanceWindowsViewModels
         }
 
 
-        public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice)
+        public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
             SecStatsVisibility = true;
             SecInvestsVisibility = false;
@@ -198,6 +214,7 @@ namespace FinanceWindowsViewModels
             GenerateStatistics();
             windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;
+            UpdateReports = updateReports;
             CreateCSVStatsCommand = new BasicCommand(ExecuteExportToCSVCommand);
             CreateInvestmentListCommand = new BasicCommand(ExecuteInvestmentListCommand);
             CreateHTMLCommand = new BasicCommand(ExecuteCreateHTMLCommand);
