@@ -2,21 +2,22 @@
 using FinancialStructures.FinanceStructures;
 using GUIAccessorFunctions;
 using FinancialStructures.ReportingStructures;
+using System.Threading.Tasks;
 
 namespace PADGlobals
 {
     public static class DataUpdater
     {
-        public static void Downloader(ErrorReports reports)
+        public async static Task Downloader(ErrorReports reports)
         {
-            Download.DownloadPortfolioLatest(GlobalData.Finances, reports);
-            Download.DownloadBenchMarksLatest(GlobalData.BenchMarks, reports);
+            await Download.DownloadPortfolioLatest(GlobalData.Finances, reports).ConfigureAwait(false);
+            await Download.DownloadBenchMarksLatest(GlobalData.BenchMarks, reports).ConfigureAwait(false);
         }
 
-        public static void DownloadSecurity(string company, string name, ErrorReports reports)
+        public async static Task DownloadSecurity(string company, string name, ErrorReports reports)
         {
             var sec = DatabaseAccessor.GetSecurityFromName(name, company);
-            Download.DownloadSecurityLatest(sec, reports);
+            await Download.DownloadSecurityLatest(sec, reports).ConfigureAwait(false);
         }
     }
 }

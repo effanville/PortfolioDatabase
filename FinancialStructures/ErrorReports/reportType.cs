@@ -3,8 +3,8 @@ namespace FinancialStructures.ReportingStructures
 {
     public enum ReportType
     {
-        Report = 0,
+        Error = 0,
         Warning = 1,
-        Error = 2,
+        Report = 2
     }
 }

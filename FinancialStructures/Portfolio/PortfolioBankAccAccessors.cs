@@ -18,17 +18,6 @@ namespace FinancialStructures.FinanceStructures
             return names;
         }
 
-        public List<BankAccountStatsHolder> GenerateBankAccountStatistics()
-        {
-            var names = new List<BankAccountStatsHolder>();
-            foreach (var bankAcc in BankAccounts)
-            {
-                names.Add(new BankAccountStatsHolder(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.LatestValue().Value));
-            }
-
-            return names;
-        }
-
         public List<string> GetBankAccountCompanyNames()
         {
             var companies = new List<string>();

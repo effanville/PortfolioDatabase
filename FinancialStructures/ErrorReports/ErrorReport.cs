@@ -1,8 +1,27 @@
-﻿
+﻿using System;
+
 namespace FinancialStructures.ReportingStructures
 {
-    public class ErrorReport
+    public class ErrorReport : IComparable
     {
+        /// <summary>
+        /// Method of comparison
+        /// </summary>
+        public int CompareTo(object obj)
+        {
+            if (obj is ErrorReport value)
+            {
+                if (value.ErrorType == ErrorType)
+                {
+                    return Message.CompareTo(value.Message);
+                }
+
+                return ErrorType.CompareTo(value.ErrorType);
+            }
+
+            return 0;
+        }
+
         private ReportType fErrorType;
         
         public ReportType ErrorType

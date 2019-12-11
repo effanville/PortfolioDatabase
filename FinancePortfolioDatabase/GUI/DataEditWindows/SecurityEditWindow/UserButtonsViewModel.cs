@@ -16,12 +16,12 @@ namespace FinanceWindowsViewModels.SecurityEdit
         private BasicDayDataView fSelectedValues;
         public ICommand DownloadCommand { get; }
 
-        private void ExecuteDownloadCommand(Object obj)
+        private async void ExecuteDownloadCommand(Object obj)
         {
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name, reports);
+                await DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name, reports).ConfigureAwait(false);
             }
             UpdateMainWindow(true);
             if (reports.Any())

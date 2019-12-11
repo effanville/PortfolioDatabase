@@ -130,11 +130,11 @@ namespace FinancialStructures.FinanceStructures
             var names = new List<DatabaseStatistics>();
             foreach (var sec in Funds)
             {
-                names.Add(new DatabaseStatistics(sec.GetCompany(), sec.GetName(), sec.LatestValue().Day, sec.Count() ));
+                names.Add(new DatabaseStatistics(sec.GetCompany(), sec.GetName(), sec.FirstValue().Day, sec.LatestValue().Day, sec.Count(), (sec.LatestValue().Day - sec.FirstValue().Day).Days / (365* (double)sec.Count())));
             }
             foreach (var bankAcc in BankAccounts)
             {
-                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.LatestValue().Day, bankAcc.Count()));
+                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.FirstValue().Day,  bankAcc.LatestValue().Day, bankAcc.Count(), (bankAcc.LatestValue().Day - bankAcc.FirstValue().Day).Days / (365 * (double)bankAcc.Count())));
             }
 
             return names;

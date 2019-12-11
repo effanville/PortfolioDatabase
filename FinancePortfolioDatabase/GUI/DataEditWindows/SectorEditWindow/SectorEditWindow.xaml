@@ -61,8 +61,8 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn Header="Url" Binding="{Binding Path=Url, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Url" Binding="{Binding Path=Url, UpdateSourceTrigger=LostFocus}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -92,9 +92,9 @@
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" 
-                                        Binding="{Binding Path=Date, StringFormat=\{0:MM.dd.yyyy\}, UpdateSourceTrigger=PropertyChanged}" />
+                                        Binding="{Binding Path=Date, StringFormat=\{0:dd.MM.yyyy\}, UpdateSourceTrigger=LostFocus}" />
                     <DataGridTextColumn Header="Value" 
-                                        Binding="{Binding Path=Amount, UpdateSourceTrigger=PropertyChanged}"/>
+                                        Binding="{Binding Path=Amount, UpdateSourceTrigger=LostFocus}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

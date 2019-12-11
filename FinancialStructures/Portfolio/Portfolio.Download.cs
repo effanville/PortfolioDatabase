@@ -273,21 +273,21 @@ namespace FinancialStructures.FinanceStructures
             return double.NaN;
         }
 
-        public static void DownloadPortfolioLatest(Portfolio portfo, ErrorReports reports)
+        public async static Task DownloadPortfolioLatest(Portfolio portfo, ErrorReports reports)
         {
             foreach (var sec in portfo.GetSecurities())
             {
-                DownloadSecurityLatest(sec, reports);
+                await DownloadSecurityLatest(sec, reports).ConfigureAwait(false);
             }
             foreach (var acc in portfo.GetBankAccounts())
             {
-                DownloadBankAccountLatest(acc, reports);
+                await DownloadBankAccountLatest(acc, reports).ConfigureAwait(false);
             }
         }
 
-        public static void DownloadSecurityLatest(Security sec, ErrorReports reports)
+        public async static Task DownloadSecurityLatest(Security sec, ErrorReports reports)
         {
-            string data = DownloadFromURL(sec.GetUrl(), reports).Result;
+            string data = await DownloadFromURL(sec.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
             {
                 reports.AddError($"{sec.GetCompany()}-{sec.GetName()}: could not download data from {sec.GetUrl()}");
@@ -308,9 +308,9 @@ namespace FinancialStructures.FinanceStructures
             sec.TryAddData(reports, DateTime.Today, value, units.Value);
         }
 
-        public static void DownloadBankAccountLatest(CashAccount acc, ErrorReports reports)
+        public async static Task DownloadBankAccountLatest(CashAccount acc, ErrorReports reports)
         {
-            string data = DownloadFromURL(acc.GetUrl(), reports).Result;
+            string data = await DownloadFromURL(acc.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
             {
                 reports.AddError($"{acc.GetCompany()}-{acc.GetName()}: could not download data from {acc.GetUrl()}");
@@ -320,20 +320,22 @@ namespace FinancialStructures.FinanceStructures
             {
                 return;
             }
+
             acc.TryAddValue(DateTime.Today, value);
+            return;
         }
 
-        public static void DownloadBenchMarksLatest(List<Sector> sectors, ErrorReports reports)
+        public async static Task DownloadBenchMarksLatest(List<Sector> sectors, ErrorReports reports)
         {
             foreach (var sector in sectors)
             {
-                DownloadSectorLatest(sector, reports);
+                await DownloadSectorLatest(sector, reports).ConfigureAwait(false);
             }
         }
 
-        public static void DownloadSectorLatest(Sector sector, ErrorReports reports)
+        public async static Task DownloadSectorLatest(Sector sector, ErrorReports reports)
         {
-            string data = DownloadFromURL(sector.GetUrl(), reports).Result;
+            string data = await DownloadFromURL(sector.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
             {
                 reports.AddError($"{sector.GetName()}: could not download data from {sector.GetUrl()}");
