@@ -5,7 +5,7 @@ using GlobalHeldData;
 namespace BankAccountStatisticsFunctions
 {
     /// <summary>
-    /// Helper class to get statistics for 
+    /// Helper class to get statistics for bank accounts
     /// </summary>
     public static class BankAccountStatistics
     {
@@ -17,6 +17,22 @@ namespace BankAccountStatisticsFunctions
             }
 
             return desired.LatestValue().Value;
+        }
+
+        public static double BankAccountTotal()
+        {
+            if (GlobalData.Finances != null )
+            {
+                double sum = 0;
+                foreach (var acc in GlobalData.Finances.GetBankAccounts())
+                {
+                    sum += acc.LatestValue().Value;
+                }
+
+                return sum;
+            }
+
+            return double.NaN;
         }
     }
 }

@@ -7,6 +7,7 @@ using SavingDummyClasses;
 using FinancialStructures.ReportingStructures;
 using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
+using BankAccountStatisticsFunctions;
 using System;
 
 namespace GUIAccessorFunctions
@@ -202,6 +203,7 @@ namespace GUIAccessorFunctions
         {
             if (GlobalData.Finances != null)
             {
+                
                 return GlobalData.Finances.GenerateBankAccountStatistics(company);
             }
             return new List<DailyValuation_Named>();
@@ -232,8 +234,21 @@ namespace GUIAccessorFunctions
         {
             if (GlobalData.Finances != null)
             {
-                return GlobalData.Finances.GenerateBankAccountStatistics();
+                var accs = GlobalData.Finances.GetBankAccounts();
+                var namesAndCompanies = new List<BankAccountStatsHolder>();
+
+                foreach (var acc in accs)
+                {
+                        var latest = new BankAccountStatsHolder(acc.GetName(), acc.GetCompany(), acc.LatestValue().Value);
+                        namesAndCompanies.Add(latest);
+                }
+
+                namesAndCompanies.Sort();
+                var totals = new BankAccountStatsHolder("Totals", "", BankAccountStatistics.BankAccountTotal());
+                namesAndCompanies.Add(totals);
+                return namesAndCompanies;
             }
+
             return new List<BankAccountStatsHolder>();
         }
 

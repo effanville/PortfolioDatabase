@@ -3,6 +3,7 @@ using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace FinanceWindowsViewModels
 {
@@ -12,9 +13,9 @@ namespace FinanceWindowsViewModels
 
         public ICommand ClearSingleReportCommand { get; }
 
-        private List<ErrorReport> fReportsToView;
+        private ObservableCollection<ErrorReport> fReportsToView;
 
-        public List<ErrorReport> ReportsToView
+        public ObservableCollection<ErrorReport> ReportsToView
         {
             get { return fReportsToView; }
             set { fReportsToView = value; OnPropertyChanged(); }
@@ -38,7 +39,9 @@ namespace FinanceWindowsViewModels
 
         private void SyncReports()
         {
-            ReportsToView = Reports.GetReports();
+            ReportsToView = null;
+            ReportsToView = new ObservableCollection<ErrorReport>(Reports.GetReports());
+            OnPropertyChanged(nameof(ReportsToView));
         }
 
         void ExecuteClearReports(Object obj)
@@ -62,7 +65,7 @@ namespace FinanceWindowsViewModels
         public ReportingWindowViewModel()
         {
             Reports = new ErrorReports();
-            ReportsToView = new List<ErrorReport>();
+            ReportsToView = new ObservableCollection<ErrorReport>();
             ClearReportsCommand = new BasicCommand(ExecuteClearReports);
             ClearSingleReportCommand = new BasicCommand(ExecuteClearSelectedReport);
             SyncReports();

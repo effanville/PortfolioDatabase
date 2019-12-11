@@ -87,12 +87,15 @@ namespace FinanceWindowsViewModels
             UpdateSubWindows(false);
         }
 
-        public void ExecuteUpdateData(Object obj)
+        public async void ExecuteUpdateData(Object obj)
         {
             var reports = new ErrorReports();
-            DataUpdater.Downloader(reports);
+            await DataUpdater.Downloader(reports).ConfigureAwait(false);
+
             if (reports.Any())
-            { }
+            {
+                UpdateReports(reports);
+            }
         }
 
         Action<bool> UpdateMainWindow;

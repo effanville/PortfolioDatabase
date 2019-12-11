@@ -95,7 +95,33 @@ namespace FinancialStructures.FinanceStructures
                     output.Add(thisday);
                 }
             }
+            if (fShares.Any())
+            {
+                foreach (var datevalue in fShares.GetValuesBetween(fShares.GetFirstDate(), fShares.GetLatestDate()))
+                {
+                    if (!fUnitPrice.TryGetValue(datevalue.Day, out double _))
+                    {
+                        fShares.TryGetValue(datevalue.Day, out double shares);
+                        fInvestments.TryGetValue(datevalue.Day, out double invest);
+                        var thisday = new BasicDayDataView(datevalue.Day, double.NaN, shares, invest);
+                        output.Add(thisday);
+                    }
+                }
+            }
+            if (fInvestments.Any())
+            {
+                foreach (var datevalue in fInvestments.GetValuesBetween(fInvestments.GetFirstDate(), fInvestments.GetLatestDate()))
+                {
+                    if (!fUnitPrice.TryGetValue(datevalue.Day, out double _) && !fShares.TryGetValue(datevalue.Day, out double _))
+                    {
+                        fInvestments.TryGetValue(datevalue.Day, out double invest);
+                        var thisday = new BasicDayDataView(datevalue.Day, double.NaN, double.NaN, invest);
 
+                        output.Add(thisday);
+                    }
+                }
+            }
+            output.Sort();
             return output;
         }
 
@@ -272,7 +298,7 @@ namespace FinancialStructures.FinanceStructures
             for (int index = 0; index < fInvestments.Count(); index++)
             {
                 var investmentValue = fInvestments[index];
-                if (investmentValue.Value > 0)
+                if (investmentValue.Value != 0)
                 {
                     DailyValuation sharesCurrentValue = fShares.GetNearestEarlierValue(investmentValue.Day);
                     DailyValuation sharesPreviousValue = fShares.GetLastEarlierValue(investmentValue.Day) ?? new DailyValuation(DateTime.Today, 0);

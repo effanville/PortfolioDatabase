@@ -42,7 +42,7 @@ namespace FinanceWindowsViewModels
         public bool DatabaseStatsVisibility
         {
             get { return fDatabaseStatsVisibility; }
-            set { fDatabaseStatsVisibility = value; }
+            set { fDatabaseStatsVisibility = value; OnPropertyChanged(); }
         }
 
         private bool fDisplayValueFunds = true;

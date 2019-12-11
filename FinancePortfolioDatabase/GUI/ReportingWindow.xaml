@@ -28,16 +28,16 @@
         </StackPanel>
         </Grid>
         <ListView Name="SecBox"
-                  ItemsSource="{Binding ReportsToView, Mode=TwoWay}"
+                  ItemsSource="{Binding ReportsToView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Grid.Column="1"
                   Margin="10 10 10 10"
                   ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type" 
-                                    DisplayMemberBinding="{Binding ErrorType}"/>
+                                    DisplayMemberBinding="{Binding ErrorType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <GridViewColumn Header="Message" 
-                                    DisplayMemberBinding="{Binding Message}"/>
+                                    DisplayMemberBinding="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </GridView>
             </ListView.View>
         </ListView>

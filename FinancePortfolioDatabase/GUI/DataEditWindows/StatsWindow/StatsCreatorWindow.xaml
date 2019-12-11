@@ -198,7 +198,7 @@
 
             <ListView Grid.Row="1"
                       Name="StatsBox"
-                      ItemsSource="{Binding BankAccountStats}"
+                      ItemsSource="{Binding DatabaseStats}"
                       Margin="10,10,10,10"
                       ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.View>
@@ -207,10 +207,14 @@
                                         DisplayMemberBinding="{Binding Company}"/>
                         <GridViewColumn Header="Name" 
                                         DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="First Date" 
+                                        DisplayMemberBinding="{Binding FirstDate, StringFormat=\{0:dd.MM.yyyy\}}" />
                         <GridViewColumn Header="Latest Date" 
-                                        DisplayMemberBinding="{Binding Date}" />
+                                        DisplayMemberBinding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" />
                         <GridViewColumn Header="Number Entries" 
                                         DisplayMemberBinding="{Binding NumEntries}" />
+                        <GridViewColumn Header="Entries Per Year" 
+                                        DisplayMemberBinding="{Binding EntryYearDensity}" />
                     </GridView>
                 </ListView.View>
             </ListView>
