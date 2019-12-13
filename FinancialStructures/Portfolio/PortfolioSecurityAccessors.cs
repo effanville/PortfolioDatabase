@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.GUIFinanceStructures;
+﻿using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -28,8 +28,31 @@ namespace FinancialStructures.FinanceStructures
             foreach (var security in Funds)
             {
                 if (companies.IndexOf(security.GetCompany()) == -1)
-                { 
-                    companies.Add(security.GetCompany()); 
+                {
+                    companies.Add(security.GetCompany());
+                }
+            }
+            companies.Sort();
+
+            return companies;
+        }
+
+        /// <summary>
+        /// Return alphabetically ordered list of all companies without repetition.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSecuritiesSectors()
+        {
+            var companies = new List<string>();
+            foreach (var security in Funds)
+            {
+                var sectors = security.GetSectors();
+                foreach (var sector in sectors)
+                {
+                    if (companies.IndexOf(sector) == -1)
+                    {
+                        companies.Add(sector);
+                    }
                 }
             }
             companies.Sort();
@@ -49,7 +72,7 @@ namespace FinancialStructures.FinanceStructures
                     date = security.LatestValue().Day;
                 }
 
-                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), security.GetUrl(), date, false));
+                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), security.GetUrl(), security.GetSectors(), date, false));
             }
 
             return namesAndCompanies;
@@ -126,18 +149,7 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddSecurity(Security NewFund)
-        {
-            if (DoesSecurityExist(NewFund))
-            {
-                return false;
-            }
-
-            Funds.Add(NewFund);
-            return true;
-        }
-
-        public bool TryAddSecurityFromName(string name, string company, string url, ErrorReports reports)
+        public bool TryAddSecurityFromName(string name, string company, string url, List<string> sectors, ErrorReports reports)
         {
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(company))
             {
@@ -150,8 +162,12 @@ namespace FinancialStructures.FinanceStructures
                 reports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' already exists.");
                 return false;
             }
-            
+
             var NewFund = new Security(name, company, url);
+            foreach (var sector in sectors)
+            {
+                NewFund.TryAddSector(sector);
+            }
             Funds.Add(NewFund);
             reports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' added to database.");
             return true;
@@ -200,14 +216,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string url, ErrorReports reports)
+        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string url, List<string> sectors, ErrorReports reports)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, url, reports);
+                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, url, sectors, reports);
                 }
             }
 
@@ -221,7 +237,7 @@ namespace FinancialStructures.FinanceStructures
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryDeleteData(reports, date, shares,  unitPrice, Investment);
+                    return Funds[fundIndex].TryDeleteData(reports, date, shares, unitPrice, Investment);
                 }
             }
 

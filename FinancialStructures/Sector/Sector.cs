@@ -1,5 +1,4 @@
 ﻿using FinancialStructures.DataStructures;
-using System;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -88,6 +87,11 @@ namespace FinancialStructures.FinanceStructures
         public Sector Copy()
         {
             return new Sector(fName, fValues);
+        }
+
+        public bool Any()
+        {
+            return fValues.Any();
         }
     }
 }

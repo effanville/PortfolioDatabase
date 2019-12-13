@@ -1,6 +1,6 @@
-﻿using System;
-using FinancialStructures.ReportingStructures;
+﻿using FinancialStructures.ReportingStructures;
 using GUISupport;
+using System;
 
 namespace FinanceWindowsViewModels
 {
@@ -42,7 +42,7 @@ namespace FinanceWindowsViewModels
 
         public MainWindowViewModel()
         {
-            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow,UpdateSubWindow, displayWindowChoice, UpdateReports);
+            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow, UpdateSubWindow, displayWindowChoice, UpdateReports);
             DataView = new BasicDataViewModel(UpdateWindow);
             ReportsViewModel = new ReportingWindowViewModel();
             DataWindowVisibility = true;
@@ -217,9 +217,9 @@ namespace FinanceWindowsViewModels
 
         private ReportingWindowViewModel fReports;
         public ReportingWindowViewModel ReportsViewModel
-        { 
+        {
             get { return fReports; }
-            set { fReports = value; OnPropertyChanged();} 
+            set { fReports = value; OnPropertyChanged(); }
         }
     }
 }

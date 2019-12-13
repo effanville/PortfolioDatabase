@@ -1,10 +1,10 @@
-﻿using GUIAccessorFunctions;
+﻿using FinancialStructures.ReportingStructures;
+using GUIAccessorFunctions;
+using GUISupport;
+using PADGlobals;
 using System;
 using System.Windows.Forms;
 using System.Windows.Input;
-using GUISupport;
-using FinancialStructures.ReportingStructures;
-using PADGlobals;
 
 namespace FinanceWindowsViewModels
 {

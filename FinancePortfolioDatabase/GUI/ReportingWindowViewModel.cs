@@ -1,9 +1,8 @@
-﻿using GUISupport;
-using FinancialStructures.ReportingStructures;
+﻿using FinancialStructures.ReportingStructures;
+using GUISupport;
 using System;
-using System.Collections.Generic;
-using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace FinanceWindowsViewModels
 {
@@ -22,9 +21,9 @@ namespace FinanceWindowsViewModels
         }
 
         private ErrorReports fReports;
-        
+
         public ErrorReports Reports
-        { 
+        {
             get { return fReports; }
             set { fReports = value; OnPropertyChanged(); }
         }

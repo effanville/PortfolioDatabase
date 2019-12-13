@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.GUIFinanceStructures
 {
@@ -14,7 +15,7 @@ namespace FinancialStructures.GUIFinanceStructures
         {
         }
 
-        public NameCompDate(string name, string company, string url, DateTime date, bool newValue) : base(name, company,url, newValue)
+        public NameCompDate(string name, string company, string url, List<string> sectors, DateTime date, bool newValue) : base(name, company, url, sectors, newValue)
         {
             fDateToRecord = date;
         }

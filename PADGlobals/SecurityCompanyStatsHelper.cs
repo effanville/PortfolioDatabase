@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using GlobalHeldData;
+using System;
+using System.Collections.Generic;
 
 namespace CompanyStatisticsFunctions
 {
@@ -48,7 +48,7 @@ namespace CompanyStatisticsFunctions
 
         public static double IRRCompanyTotal(string company)
         {
-            DateTime earlierTime = DateTime.Today; 
+            DateTime earlierTime = DateTime.Today;
             DateTime laterTime = DateTime.Today;
             var securities = CompanySecurities(company);
             if (securities.Count == 0)
@@ -76,7 +76,7 @@ namespace CompanyStatisticsFunctions
 
         public static double IRRFunds(DateTime earlierTime, DateTime laterTime)
         {
-            return GlobalData.Finances.IRRPortfolio( earlierTime, laterTime);
+            return GlobalData.Finances.IRRPortfolio(earlierTime, laterTime);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
+using GUIAccessorFunctions;
+using GUISupport;
+using SectorHelperFunctions;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using GUIAccessorFunctions;
-using SectorHelperFunctions;
-using GUISupport;
-using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
@@ -62,7 +62,7 @@ namespace FinanceWindowsViewModels
             get { return fSelectedDataPoint; }
             set { fSelectedDataPoint = value; OnPropertyChanged(); }
         }
-        
+
         public ICommand CreateSectorCommand { get; set; }
 
         public ICommand DeleteSectorCommand { get; set; }
@@ -78,7 +78,7 @@ namespace FinanceWindowsViewModels
             var currentSelectedName = SelectedName;
             SectorNames = DatabaseAccessor.GetSectorNames();
             SectorNames.Sort();
-            fPreEditSectorNames= DatabaseAccessor.GetSectorNames();
+            fPreEditSectorNames = DatabaseAccessor.GetSectorNames();
             fPreEditSectorNames.Sort();
 
             for (int i = 0; i < SectorNames.Count; i++)
@@ -127,7 +127,7 @@ namespace FinanceWindowsViewModels
                     }
                 }
                 if (!edited)
-                { 
+                {
                     reports.AddError("No Name provided to create a sector.");
                 }
             }
@@ -135,7 +135,7 @@ namespace FinanceWindowsViewModels
             {
                 // maybe fired from editing stuff. Try that
                 bool edited = false;
-                for(int i = 0; i < SectorNames.Count; i++)
+                for (int i = 0; i < SectorNames.Count; i++)
                 {
                     var name = SectorNames[i];
 
@@ -210,8 +210,8 @@ namespace FinanceWindowsViewModels
             }
 
             if (reports.Any())
-            { 
-                UpdateReports(reports); 
+            {
+                UpdateReports(reports);
             }
 
             UpdateMainWindow(true);
@@ -228,7 +228,7 @@ namespace FinanceWindowsViewModels
             {
 
             }
-            else 
+            else
             {
                 reports.AddError("Something went wrong when trying to delete sector");
             }

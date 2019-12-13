@@ -44,7 +44,7 @@ namespace FinancialStructures.ReportingStructures
         /// </summary>
         public void AddGeneralReport(ReportType type, string newReport)
         {
-            fReports.Add(new ErrorReport(type,newReport));
+            fReports.Add(new ErrorReport(type, newReport));
         }
 
         /// <summary>

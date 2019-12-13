@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.GUIFinanceStructures
 {
@@ -27,11 +28,20 @@ namespace FinancialStructures.GUIFinanceStructures
             return 0;
         }
 
-        public bool NewValue {get; set; }
+        public bool NewValue { get; set; }
 
         public NameComp()
-        { 
+        {
             NewValue = true;
+        }
+
+        public NameComp(string n, string c, string u, List<string> s, bool newValue = true)
+        {
+            Name = n;
+            Company = c;
+            Url = u;
+            Sectors = $"{string.Join(", ", s)}";
+            NewValue = newValue;
         }
 
         public NameComp(string n, string c, string u, bool newValue = true)
@@ -59,7 +69,7 @@ namespace FinancialStructures.GUIFinanceStructures
 
         private string fName;
 
-        public string Name 
+        public string Name
         {
             get { return fName; }
             set { fName = value; NewValue = true; }
@@ -67,10 +77,18 @@ namespace FinancialStructures.GUIFinanceStructures
 
         private string fCompany;
 
-        public string Company 
+        public string Company
         {
             get { return fCompany; }
-            set { fCompany = value; NewValue = true; } 
+            set { fCompany = value; NewValue = true; }
+        }
+
+        private string fSectors;
+
+        public string Sectors 
+        { 
+            get { return fSectors; }
+            set { fSectors = value; NewValue = true; }
         }
     }
 }

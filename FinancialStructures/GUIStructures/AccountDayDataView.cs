@@ -14,12 +14,12 @@ namespace FinancialStructures.GUIFinanceStructures
         {
             fDate = date;
             fAmount = unitPrice;
-            NewValue=newValue;
+            NewValue = newValue;
         }
 
         public bool NewValue { get; set; }
         private DateTime fDate;
-        public DateTime Date 
+        public DateTime Date
         {
             get { return fDate; }
             set { fDate = value; }
@@ -27,10 +27,10 @@ namespace FinancialStructures.GUIFinanceStructures
 
         private double fAmount;
 
-        public double Amount 
+        public double Amount
         {
             get { return fAmount; }
-            set { fAmount = value; NewValue = true; } 
+            set { fAmount = value; NewValue = true; }
         }
     }
 }

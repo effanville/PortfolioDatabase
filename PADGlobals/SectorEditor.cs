@@ -1,9 +1,9 @@
 ﻿using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
 using System;
 using System.Collections.Generic;
-using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.ReportingStructures;
 
 namespace SectorHelperFunctions
 {
@@ -37,11 +37,11 @@ namespace SectorHelperFunctions
         public static bool TryGetSector(string name, out Sector Desired)
         {
             foreach (var sector in GlobalData.BenchMarks)
-            { 
+            {
                 if (name == sector.GetName())
                 {
                     Desired = sector.Copy();
-                } 
+                }
             }
             Desired = null;
             return false;
@@ -149,7 +149,7 @@ namespace SectorHelperFunctions
                     return true;
                 }
             }
-            
+
             return false;
         }
     }

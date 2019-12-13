@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls;
-using FinanceWindowsViewModels;
+﻿using FinanceWindowsViewModels;
+using System.Windows.Controls;
 
 namespace FinanceWindows
 {

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -81,7 +81,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits the name and company of the CashAccount.
         /// </summary>
-        internal bool EditNameCompany(string name, string company)
+        internal bool EditNameCompany(string name, string company, List<string> sectors)
         {
             if (fCompany != company)
             {
@@ -92,6 +92,8 @@ namespace FinancialStructures.FinanceStructures
                 fName = name;
             }
 
+            fSectors = sectors;
+
             return true;
         }
 
@@ -101,6 +103,44 @@ namespace FinancialStructures.FinanceStructures
         internal bool TryDeleteData(DateTime date, ErrorReports reports)
         {
             return fAmounts.TryDeleteValue(date, reports);
+        }
+
+        public bool TryRemoveSector(string sectorName)
+        {
+            if (IsSectorLinked(sectorName))
+            {
+                fSectors.Remove(sectorName);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryAddSector(string sectorName)
+        {
+            if (!IsSectorLinked(sectorName))
+            {
+                fSectors.Add(sectorName);
+                return true;
+            }
+
+            return false;
+        }
+
+        internal bool IsSectorLinked(string sectorName)
+        {
+            if (fSectors != null && fSectors.Count > 0)
+            {
+                foreach (var name in fSectors)
+                {
+                    if (name == sectorName)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -133,6 +173,15 @@ namespace FinancialStructures.FinanceStructures
         public string GetUrl()
         {
             return fUrl;
+        }
+
+        /// <summary>
+        /// Returns the sectors associated to this CashAccount.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSectors()
+        {
+            return fSectors;
         }
     }
 }

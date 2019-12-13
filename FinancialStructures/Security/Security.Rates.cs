@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceFunctionsList;
-using FinancialStructures.DataStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -11,6 +11,7 @@ namespace FinancialStructures.FinanceStructures
         {
             return fInvestments.Sum();
         }
+
         /// <summary>
         /// The date and latest value of the security
         /// </summary>
@@ -79,18 +80,9 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         internal List<DailyValuation> GetInvestmentsBetween(DateTime earlierDate, DateTime laterDate)
         {
-            List<DailyValuation> values = fInvestments.GetValuesBetween(earlierDate,laterDate);
+            List<DailyValuation> values = fInvestments.GetValuesBetween(earlierDate, laterDate);
 
             return values;
-        }
-
-        /// <summary>
-        /// returns all investments in the given security.
-        /// </summary>
-        /// <returns></returns>
-        internal List<DailyValuation> GetAllInvestments()
-        {
-            return GetInvestmentsBetween(fInvestments.GetFirstDate(), fInvestments.GetLatestDate());
         }
 
         /// <summary>

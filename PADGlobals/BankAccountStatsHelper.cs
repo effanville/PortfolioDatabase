@@ -1,5 +1,4 @@
-﻿using System;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
 using GlobalHeldData;
 
 namespace BankAccountStatisticsFunctions
@@ -21,7 +20,7 @@ namespace BankAccountStatisticsFunctions
 
         public static double BankAccountTotal()
         {
-            if (GlobalData.Finances != null )
+            if (GlobalData.Finances != null)
             {
                 double sum = 0;
                 foreach (var acc in GlobalData.Finances.GetBankAccounts())

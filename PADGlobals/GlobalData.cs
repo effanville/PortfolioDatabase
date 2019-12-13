@@ -1,7 +1,7 @@
-﻿using System;
+﻿using FinancialStructures.FinanceStructures;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FinancialStructures.FinanceStructures;
 
 namespace GlobalHeldData
 {
@@ -12,7 +12,7 @@ namespace GlobalHeldData
         static AssemblyCreationDate()
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            Value = new DateTime(2000, 1, 2,12,24,30).AddDays(version.Build).AddSeconds(version.MinorRevision * 2);
+            Value = new DateTime(2000, 1, 2, 12, 24, 30).AddDays(version.Build).AddSeconds(version.MinorRevision * 2);
         }
     }
     public static class GlobalData

@@ -5,14 +5,14 @@ namespace FinancialStructures.DataStructures
     public class DailyValuation_Named : DailyValuation
     {
         /// <summary>
-        /// Added name of the daily valuation.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// Added company of the Daily valuation
         /// </summary>
         public string Company { get; set; }
+
+        /// <summary>
+        /// Added name of the daily valuation.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Empty constructor.

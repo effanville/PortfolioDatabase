@@ -1,16 +1,12 @@
 ﻿using FinancialStructures.FinanceStructures;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SavingDummyClasses
 {
     public class AllData
     {
         public Portfolio MyFunds
-            { get; set; }
+        { get; set; }
 
         public List<Sector> myBenchMarks
         { get; set; }
