@@ -172,7 +172,7 @@ namespace FinancialStructures.FinanceStructures
 
                 return i;
             }
-            
+
             return double.NaN;
         }
 
@@ -191,7 +191,7 @@ namespace FinancialStructures.FinanceStructures
             int poundsValue = data.IndexOf(searchString);
             if (poundsValue != -1)
             {
-                string containsNewValue = data.Substring(poundsValue+searchString.Length, 20);
+                string containsNewValue = data.Substring(poundsValue + searchString.Length, 20);
 
                 var digits = containsNewValue.SkipWhile(c => !char.IsDigit(c)).TakeWhile(continuer).ToArray();
 
@@ -299,7 +299,7 @@ namespace FinancialStructures.FinanceStructures
             }
 
             // best approximation for number of units is last known number of units.
-            sec.TryGetEarlierData(DateTime.Today,out DailyValuation _, out DailyValuation units, out DailyValuation _);
+            sec.TryGetEarlierData(DateTime.Today, out DailyValuation _, out DailyValuation units, out DailyValuation _);
             if (units == null)
             {
                 units = new DailyValuation(DateTime.Today, 0);

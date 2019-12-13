@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using GlobalHeldData;
+using System;
+using System.Collections.Generic;
 
 namespace SecurityStatisticsFunctions
 {
@@ -17,7 +17,7 @@ namespace SecurityStatisticsFunctions
             {
                 return double.NaN;
             }
-                
+
             return desired.LatestValue().Value;
         }
 
@@ -32,17 +32,17 @@ namespace SecurityStatisticsFunctions
 
         public static double SecurityCAR(string name, string company, DateTime earlierTime, DateTime laterTime)
         {
-            return GlobalData.Finances.CAR( name, company, earlierTime, laterTime);
+            return GlobalData.Finances.CAR(name, company, earlierTime, laterTime);
         }
 
         public static double SecurityIRR(string name, string company)
         {
-            return GlobalData.Finances.IRR( name, company);
+            return GlobalData.Finances.IRR(name, company);
         }
 
         public static double SecurityIRRTime(string name, string company, DateTime earlierTime, DateTime laterTime)
         {
-            return GlobalData.Finances.IRRTime( name, company, earlierTime, laterTime);
+            return GlobalData.Finances.IRR(name, company, earlierTime, laterTime);
         }
 
         public static double Profit(string name, string company)

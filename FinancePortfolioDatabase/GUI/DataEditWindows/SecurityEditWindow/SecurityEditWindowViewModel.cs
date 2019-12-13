@@ -1,13 +1,13 @@
-﻿using GUIAccessorFunctions;
-using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-using SecurityHelperFunctions;
-using GUISupport;
+﻿using FinanceWindowsViewModels.SecurityEdit;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using FinanceWindowsViewModels.SecurityEdit;
+using GUIAccessorFunctions;
+using GUISupport;
+using SecurityHelperFunctions;
+using System;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace FinanceWindowsViewModels
 {
@@ -26,7 +26,7 @@ namespace FinanceWindowsViewModels
         }
 
         private NameComp fSelectedName;
-        
+
         /// <summary>
         /// Name and Company data of the selected security in the list <see cref="FundNames"/>
         /// </summary>
@@ -40,7 +40,7 @@ namespace FinanceWindowsViewModels
         /// <summary>
         /// The Complete data on the security selected
         /// </summary>
-        public Security selectedSecurity 
+        public Security selectedSecurity
         {
             get { return fSelectedSecurity; }
             set { fSelectedSecurity = value; OnPropertyChanged(); }
@@ -86,7 +86,7 @@ namespace FinanceWindowsViewModels
 
             for (int i = 0; i < FundNames.Count; i++)
             {
-                if (FundNames[i].CompareTo(currentSelectedName)==0)
+                if (FundNames[i].CompareTo(currentSelectedName) == 0)
                 {
                     selectedName = FundNames[i];
                 }
@@ -116,7 +116,7 @@ namespace FinanceWindowsViewModels
 
         private void SelectLatestValue()
         {
-            if (SelectedSecurityData != null  && SelectedSecurityData.Count > 0)
+            if (SelectedSecurityData != null && SelectedSecurityData.Count > 0)
             {
                 selectedValues = SelectedSecurityData[SelectedSecurityData.Count - 1];
             }
@@ -142,7 +142,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Url, reports);
+                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Url, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -162,7 +162,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Url, reports);
+                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Url, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -176,7 +176,7 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
-            UpdateFundListBox();
+            //UpdateFundListBox();
             ClearSelection();
             UpdateMainWindow(true);
         }

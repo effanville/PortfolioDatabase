@@ -1,14 +1,14 @@
-﻿using System;
+﻿using FinancialStructures.DataStructures;
+using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
+using GUIAccessorFunctions;
+using GUISupport;
+using PortfolioStatsCreatorHelper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
-using FinancialStructures.DataStructures;
-using GUIAccessorFunctions;
-using FinancialStructures.GUIFinanceStructures;
-using GUISupport;
-using PortfolioStatsCreatorHelper;
-using FinancialStructures.ReportingStructures;
 
 namespace FinanceWindowsViewModels
 {
@@ -17,7 +17,7 @@ namespace FinanceWindowsViewModels
         private bool fSecStatsVisibility;
 
         public bool SecStatsVisibility
-        { 
+        {
             get { return fSecStatsVisibility; }
             set { fSecStatsVisibility = value; OnPropertyChanged(); }
         }
@@ -93,7 +93,7 @@ namespace FinanceWindowsViewModels
                 statsWriter.Close();
 
             }
-            else 
+            else
             {
                 reports.AddGeneralReport(ReportType.Error, $"Was not able to create csv file at {saving.FileName}");
             }
@@ -146,9 +146,9 @@ namespace FinanceWindowsViewModels
                 PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName, DisplayValueFunds);
                 reports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
-            else 
-            { 
-                reports.AddGeneralReport(ReportType.Error, "Was not able to create HTML page in place specified."); 
+            else
+            {
+                reports.AddGeneralReport(ReportType.Error, "Was not able to create HTML page in place specified.");
             }
             saving.Dispose();
             if (reports.Any())
@@ -165,7 +165,7 @@ namespace FinanceWindowsViewModels
         private List<SecurityStatsHolder> fSecuritiesStats;
 
         public List<SecurityStatsHolder> SecuritiesStats
-        { 
+        {
             get { return fSecuritiesStats; }
             set { fSecuritiesStats = value; OnPropertyChanged(); }
         }

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.GUIFinanceStructures;
+﻿using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -39,7 +39,7 @@ namespace FinancialStructures.FinanceStructures
 
             foreach (var bankAcc in BankAccounts)
             {
-                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany(), false));
+                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany(), string.Empty, bankAcc.GetSectors(), false));
             }
 
             return namesAndCompanies;
@@ -91,7 +91,7 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddBankAccountFromName(string name, string company, ErrorReports reports)
+        public bool TryAddBankAccountFromName(string name, string company, List<string> sectors, ErrorReports reports)
         {
             if (name == null || company == null)
             {
@@ -104,6 +104,11 @@ namespace FinancialStructures.FinanceStructures
             }
 
             var NewAccount = new CashAccount(name, company);
+            foreach (var sector in sectors)
+            {
+                NewAccount.TryAddSector(sector);
+            }
+
             BankAccounts.Add(NewAccount);
             return true;
         }
@@ -152,16 +157,17 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditCashAcountNameCompany(string name, string company, string newName, string newCompany, ErrorReports reports)
+        public bool TryEditCashAcountNameCompany(string name, string company, string newName, string newCompany, List<string> newSectors, ErrorReports reports)
         {
             for (int AccountIndex = 0; AccountIndex < Funds.Count; AccountIndex++)
             {
                 if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].EditNameCompany(newName, newCompany);
+                    return BankAccounts[AccountIndex].EditNameCompany(newName, newCompany, newSectors);
                 }
             }
+
             reports.AddError($"Renaming BankAccount: Could not find bank account `{company}'-`{name}'.");
             return false;
         }

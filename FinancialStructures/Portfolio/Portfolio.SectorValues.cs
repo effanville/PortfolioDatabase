@@ -2,31 +2,35 @@
 using FinancialStructures.FinanceFunctionsList;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace FinancialStructures.FinanceStructures
 {
     public partial class Portfolio
     {
-        public bool DoesCompanyExist(string company)
+        public double SectorValue(string sectorName, DateTime date)
         {
-            foreach (Security sec in Funds)
+            double sum = 0;
+            if (fFunds != null)
             {
-                if (sec.GetCompany() == company)
+                foreach (var fund in fFunds)
                 {
-                    return true;
+                    if (fund.IsSectorLinked(sectorName))
+                    {
+                        sum += fund.GetNearestEarlierValuation(date).Value;
+                    }
                 }
             }
 
-            return false;
+            return sum;
         }
 
-        public List<Security> CompanySecurities(string company)
+        public List<Security> SectorSecurities(string sectorName)
         {
             var securities = new List<Security>();
             foreach (var sec in Funds)
             {
-                if (sec.GetCompany() == company)
+                if (sec.IsSectorLinked(sectorName))
                 {
                     securities.Add(sec);
                 }
@@ -35,10 +39,10 @@ namespace FinancialStructures.FinanceStructures
             return securities;
         }
 
-        public List<DailyValuation_Named> GetCompanyInvestments(string company)
+        public List<DailyValuation_Named> GetSectorInvestments(string company)
         {
             var output = new List<DailyValuation_Named>();
-            foreach (var sec in CompanySecurities(company))
+            foreach (var sec in SectorSecurities(company))
             {
                 output.AddRange(sec.GetAllInvestmentsNamed());
             }
@@ -46,24 +50,9 @@ namespace FinancialStructures.FinanceStructures
             return output;
         }
 
-        public double CompanyValue(string company, DateTime date)
+        public double SectorProfit(string sectorName)
         {
-            var securities = CompanySecurities(company);
-            double value = 0;
-            foreach (var security in securities)
-            {
-                if (security.Any())
-                {
-                    value += security.GetNearestEarlierValuation(date).Value;
-                }
-            }
-
-            return value;
-        }
-
-        public double CompanyProfit(string company)
-        {
-            var securities = CompanySecurities(company);
+            var securities = SectorSecurities(sectorName);
             double value = 0;
             foreach (var security in securities)
             {
@@ -76,17 +65,17 @@ namespace FinancialStructures.FinanceStructures
             return value;
         }
 
-        public double FundsCompanyFraction(string company, DateTime date)
+        public double SectorFraction(string sectorName, DateTime date)
         {
-            return CompanyValue(company, date) / AllSecuritiesValue(date);
+            return SectorValue(sectorName, date) / Value(date);
         }
 
         /// <summary>
-        /// If possible, returns the IRR of all securities in the company specified over the time period.
+        /// If possible, returns the IRR of all securities in the sector specified over the time period.
         /// </summary>
-        public double IRRCompany(string company, DateTime earlierTime, DateTime laterTime)
+        public double IRRSector(string sectorName, DateTime earlierTime, DateTime laterTime)
         {
-            var securities = CompanySecurities(company);
+            var securities = SectorSecurities(sectorName);
             if (securities.Count == 0)
             {
                 return double.NaN;

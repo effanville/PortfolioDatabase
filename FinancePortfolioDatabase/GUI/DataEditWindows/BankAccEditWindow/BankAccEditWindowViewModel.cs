@@ -1,12 +1,12 @@
-﻿using System;
-using GUISupport;
+﻿using BankAccountHelperFunctions;
 using FinancialStructures.FinanceStructures;
-using FinancialStructures.ReportingStructures;
 using FinancialStructures.GUIFinanceStructures;
-using BankAccountHelperFunctions;
+using FinancialStructures.ReportingStructures;
+using GUIAccessorFunctions;
+using GUISupport;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using GUIAccessorFunctions;
 
 namespace FinanceWindowsViewModels
 {
@@ -121,7 +121,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company, reports);
+                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -141,7 +141,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, reports);
+                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -163,7 +163,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (fSelectedName != null && selectedAccount != null)
             {
-                if (DatabaseAccessor.GetBankAccountFromName(fSelectedName.Name, fSelectedName.Company).Count() !=  SelectedAccountData.Count)
+                if (DatabaseAccessor.GetBankAccountFromName(fSelectedName.Name, fSelectedName.Company).Count() != SelectedAccountData.Count)
                 {
                     BankAccountEditor.TryAddDataToBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount);
                     selectedName.NewValue = false;
@@ -202,7 +202,7 @@ namespace FinanceWindowsViewModels
             {
                 BankAccountEditor.TryDeleteBankAccount(selectedName.Name, selectedName.Company, reports);
             }
-            else 
+            else
             {
                 reports.AddError("No Bank Account was selected when trying to delete.");
             }
@@ -221,7 +221,7 @@ namespace FinanceWindowsViewModels
             {
                 BankAccountEditor.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date, reports);
             }
-            else 
+            else
             {
                 reports.AddError("No Bank Account was selected when trying to delete data.");
             }

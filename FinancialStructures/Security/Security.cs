@@ -1,5 +1,6 @@
-﻿using System;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -19,7 +20,7 @@ namespace FinancialStructures.FinanceStructures
         public string Name
         {
             get { return fName; }
-            set { fName= value; }
+            set { fName = value; }
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace FinancialStructures.FinanceStructures
         /// This should only be used for serialisation.
         /// </summary>
         public string Company
-        { 
+        {
             get { return fCompany; }
             set { fCompany = value; }
         }
@@ -47,7 +48,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// The number of shares held in this security.
         /// </summary>
-        private TimeList fShares;
+        private TimeList fShares = new TimeList();
 
         /// <summary>
         /// This should only be used for serialisation.
@@ -61,7 +62,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// The data of the price per unit/share of this security.
         /// </summary>
-        private TimeList fUnitPrice;
+        private TimeList fUnitPrice = new TimeList();
 
         /// <summary>
         /// This should only be used for serialisation.
@@ -75,7 +76,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// A list of investments made in this security.
         /// </summary>
-        private TimeList fInvestments;
+        private TimeList fInvestments = new TimeList();
 
         /// <summary>
         /// This should only be used for serialisation.
@@ -87,50 +88,35 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
+        /// The collection of sectors that this security is part of.
+        /// </summary>
+        private List<string> fSectors = new List<string>();
+
+        /// <summary>
+        /// For serialisation only.
+        /// </summary>
+        public List<string> Sectors
+        {
+            get { return fSectors; }
+            set { fSectors = value; }
+        }
+
+        /// <summary>
         /// An empty constructor.
         /// </summary>
         private Security()
         {
-            fShares = new TimeList();
-            fUnitPrice = new TimeList();
-            fInvestments = new TimeList();
         }
+
 
         /// <summary>
         /// Constructor creating a new security.
         /// </summary>
-        public Security(string name, string company)
-        {
-            fName = name;
-            fCompany = company;
-            fShares = new TimeList();
-            fUnitPrice = new TimeList();
-            fInvestments = new TimeList();
-        }
-
-        /// <summary>
-        /// Constructor creating a new security.
-        /// </summary>
-        public Security(string name, string company, string url)
+        public Security(string name, string company, string url = null)
         {
             fName = name;
             fCompany = company;
             fUrl = url;
-            fShares = new TimeList();
-            fUnitPrice = new TimeList();
-            fInvestments = new TimeList();
-        }
-
-        /// <summary>
-        /// Constructor to make a new security from known data.
-        /// </summary>
-        private Security(string name, string company, TimeList shares, TimeList prices, TimeList investments)
-        {
-            fName = name;
-            fCompany = company;
-            fShares = shares;
-            fUnitPrice = prices;
-            fInvestments = investments;
         }
 
         /// <summary>

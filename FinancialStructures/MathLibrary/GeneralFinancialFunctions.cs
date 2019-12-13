@@ -1,7 +1,7 @@
-﻿using System;
+﻿using FinancialStructures.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using FinancialStructures.DataStructures;
 
 namespace FinancialStructures.FinanceFunctionsList
 {
@@ -122,7 +122,7 @@ namespace FinancialStructures.FinanceFunctionsList
                 return double.NaN;
             }
             // easy case to get rid of
-            if ((investments == null || investments.Count() == 0) &&latestValue.Value == startValue.Value)
+            if ((investments == null || investments.Count() == 0) && latestValue.Value == startValue.Value)
             {
                 return 0.0;
             }

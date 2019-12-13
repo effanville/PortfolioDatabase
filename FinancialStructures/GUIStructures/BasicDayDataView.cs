@@ -14,7 +14,7 @@ namespace FinancialStructures.GUIFinanceStructures
         }
 
         public BasicDayDataView()
-        { 
+        {
             NewValue = true;
             Date = DateTime.Today;
         }

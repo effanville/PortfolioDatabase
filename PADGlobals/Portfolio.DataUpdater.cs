@@ -1,7 +1,7 @@
-﻿using GlobalHeldData;
-using FinancialStructures.FinanceStructures;
-using GUIAccessorFunctions;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.ReportingStructures;
+using GlobalHeldData;
+using GUIAccessorFunctions;
 using System.Threading.Tasks;
 
 namespace PADGlobals

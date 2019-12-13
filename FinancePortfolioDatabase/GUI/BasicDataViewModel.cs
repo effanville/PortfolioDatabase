@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FinancialStructures.GUIFinanceStructures;
 using GUIAccessorFunctions;
-using FinancialStructures.GUIFinanceStructures;
 using GUISupport;
 using System;
+using System.Collections.Generic;
 
 namespace FinanceWindowsViewModels
 {

@@ -23,7 +23,7 @@ namespace FinancialStructures.ReportingStructures
         }
 
         private ReportType fErrorType;
-        
+
         public ReportType ErrorType
         {
             get { return fErrorType; }
@@ -32,7 +32,7 @@ namespace FinancialStructures.ReportingStructures
 
         private string fMessage;
         public string Message
-        { 
+        {
             get { return fMessage; }
             set { fMessage = value; }
         }

@@ -25,7 +25,7 @@ namespace FinancialStructures.GUIFinanceStructures
         {
             Name = n;
             Company = c;
-            LatestVal = latestValue; 
+            LatestVal = latestValue;
         }
         public string Name { get; set; }
         public string Company { get; set; }

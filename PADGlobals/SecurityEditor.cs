@@ -1,9 +1,9 @@
-﻿using GlobalHeldData;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.ReportingStructures;
+using GlobalHeldData;
 using System;
 using System.Collections.Generic;
-using FinancialStructures.ReportingStructures;
 
 namespace SecurityHelperFunctions
 {
@@ -15,9 +15,21 @@ namespace SecurityHelperFunctions
         /// <summary>
         /// Tries to add a security to the underlying global database
         /// </summary>
-        public static bool TryAddSecurity(string name, string company, string url, ErrorReports reports)
+        public static bool TryAddSecurity(string name, string company, string url, string sectors, ErrorReports reports)
         {
-            return GlobalData.Finances.TryAddSecurityFromName(name, company, url, reports);
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(sectors))
+            {
+                var sectorsSplit = sectors.Split(',');
+
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+
+            return GlobalData.Finances.TryAddSecurityFromName(name, company, url, sectorList, reports);
         }
 
         /// <summary>
@@ -53,15 +65,25 @@ namespace SecurityHelperFunctions
         /// </summary>
         public static bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double investment = 0)
         {
-            return GlobalData.Finances.TryEditSecurity(reports, name, company,date, shares, unitPrice, investment);
+            return GlobalData.Finances.TryEditSecurity(reports, name, company, date, shares, unitPrice, investment);
         }
 
         /// <summary>
         /// Renames the security if this exists.
         /// </summary>
-        public static bool TryEditSecurityName(string name, string company, string newName, string newCompany, string url, ErrorReports reports)
+        public static bool TryEditSecurityName(string name, string company, string newName, string newCompany, string url, string sectors, ErrorReports reports)
         {
-            return GlobalData.Finances.TryEditSecurityNameCompany(name, company, newName, newCompany, url, reports);
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(sectors))
+            {
+                var sectorsSplit = sectors.Split(',');
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+            return GlobalData.Finances.TryEditSecurityNameCompany(name, company, newName, newCompany, url, sectorList, reports);
         }
 
         /// <summary>

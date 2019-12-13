@@ -1,5 +1,4 @@
 ﻿using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,8 +34,10 @@ namespace FinancialStructures.FinanceStructures
             }
 
             namesAndCompanies.Sort();
-
-            namesAndCompanies.Add(new DailyValuation_Named("Totals", company, DateTime.Today, BankAccountCompanyValue(company, DateTime.Today)));
+            if (namesAndCompanies.Count > 1)
+            {
+                namesAndCompanies.Add(new DailyValuation_Named("Totals", company, DateTime.Today, BankAccountCompanyValue(company, DateTime.Today)));
+            }
             return namesAndCompanies;
         }
 
@@ -50,7 +51,7 @@ namespace FinancialStructures.FinanceStructures
             double value = 0;
             foreach (var account in bankAccounts)
             {
-                if (account !=null && account.Any())
+                if (account != null && account.Any())
                 {
                     value += account.GetNearestEarlierValuation(date).Value;
                 }

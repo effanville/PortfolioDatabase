@@ -1,14 +1,14 @@
 ﻿using FinancialStructures.GUIFinanceStructures;
-using GUISupport;
 using FinancialStructures.ReportingStructures;
+using GUISupport;
+using PADGlobals;
 using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;
-using PADGlobals;
 
 namespace FinanceWindowsViewModels.SecurityEdit
 {
-    public class UserButtonsViewModel :PropertyChangedBase
+    public class UserButtonsViewModel : PropertyChangedBase
     {
         private NameComp fSelectedName;
 

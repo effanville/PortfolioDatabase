@@ -1,5 +1,4 @@
 ﻿using System;
-using FinancialStructures.Mathematics;
 
 namespace FinancialStructures.GUIFinanceStructures
 {

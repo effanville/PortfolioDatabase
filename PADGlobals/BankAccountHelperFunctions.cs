@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.FinanceStructures;
-using GlobalHeldData;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using GlobalHeldData;
+using System;
+using System.Collections.Generic;
 
 namespace BankAccountHelperFunctions
 {
@@ -15,9 +15,20 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Tries to add a CashAccount to the underlying global database
         /// </summary>
-        public static bool TryAddBankAccount(string name, string company, ErrorReports reports)
+        public static bool TryAddBankAccount(string name, string company, string sectors, ErrorReports reports)
         {
-            return GlobalData.Finances.TryAddBankAccountFromName(name, company, reports);
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(sectors))
+            {
+                var sectorsSplit = sectors.Split(',');
+
+                sectorList.AddRange(sectorsSplit);
+                for(int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+            return GlobalData.Finances.TryAddBankAccountFromName(name, company, sectorList, reports);
         }
 
         /// <summary>
@@ -55,9 +66,21 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Renames the BankAccount if this exists.
         /// </summary>
-        public static bool TryEditBankAccountName(string name, string company, string newName, string newCompany, ErrorReports reports)
+        public static bool TryEditBankAccountName(string name, string company, string newName, string newCompany, string newSectors, ErrorReports reports)
         {
-            return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany, reports);
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(newSectors))
+            {
+                var sectorsSplit = newSectors.Split(',');
+
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+
+            return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany, sectorList, reports);
         }
 
         public static bool TryAddDataToBankAccount(string name, string company, DateTime date, double value)

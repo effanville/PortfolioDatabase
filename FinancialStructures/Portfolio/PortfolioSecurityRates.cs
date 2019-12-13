@@ -1,7 +1,6 @@
-﻿using System;
+﻿using FinancialStructures.DataStructures;
+using System;
 using System.Collections.Generic;
-using FinancialStructures.FinanceFunctionsList;
-using FinancialStructures.DataStructures;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -32,7 +31,8 @@ namespace FinancialStructures.FinanceStructures
 
             return double.NaN;
         }
-        public List<DailyValuation_Named> GetSecurityInvestments(string name, string company)
+
+        private List<DailyValuation_Named> GetSecurityInvestments(string name, string company)
         {
             if (TryGetSecurity(name, company, out Security desired))
             {
@@ -80,7 +80,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// If possible, returns the IRR of the security specified over the time period.
         /// </summary>
-        public double IRRTime(string name, string company, DateTime earlierTime, DateTime laterTime)
+        public double IRR(string name, string company, DateTime earlierTime, DateTime laterTime)
         {
             if (TryGetSecurity(name, company, out Security desired))
             {

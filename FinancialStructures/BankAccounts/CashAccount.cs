@@ -1,5 +1,6 @@
 ﻿using FinancialStructures.DataStructures;
 using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -76,7 +77,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// The time indexed data for the Cash Account.
         /// </summary>
-        private TimeList fAmounts;
+        private TimeList fAmounts = new TimeList();
 
         /// <summary>
         /// This should only be used for serialisation.
@@ -87,14 +88,21 @@ namespace FinancialStructures.FinanceStructures
             set { fAmounts = value; }
         }
 
+        private List<string> fSectors = new List<string>();
+
+        public List<string> Sectors
+        {
+            get { return fSectors; }
+            set { fSectors = value; }
+        }
+
         /// <summary>
         /// Default constructor where no data is known.
         /// </summary>
         internal CashAccount(string name, string company)
         {
-            fName =name;
-            fCompany =company;
-            fAmounts = new TimeList();
+            fName = name;
+            fCompany = company;
         }
 
         /// <summary>
@@ -112,7 +120,6 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         private CashAccount()
         {
-            fAmounts = new TimeList();
         }
 
         /// <summary>

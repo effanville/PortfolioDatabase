@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
-using GlobalHeldData;
-using FinancialStructures.FinanceStructures;
-using SavingDummyClasses;
-using FinancialStructures.ReportingStructures;
+﻿using BankAccountStatisticsFunctions;
 using FinancialStructures.DataStructures;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
-using BankAccountStatisticsFunctions;
+using FinancialStructures.ReportingStructures;
+using GlobalHeldData;
+using SavingDummyClasses;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace GUIAccessorFunctions
 {
@@ -44,7 +45,7 @@ namespace GUIAccessorFunctions
         {
             var output = new List<Sector>();
             foreach (var sector in GlobalData.BenchMarks)
-            { 
+            {
                 output.Add(sector);
             }
             return output;
@@ -179,13 +180,47 @@ namespace GUIAccessorFunctions
                 }
 
                 namesAndCompanies.Sort();
-                var totals = new SecurityStatsHolder("Totals", company);
-                SecurityStatsHolderHelper.AddSecurityStats(totals);
-                namesAndCompanies.Add(totals);
+                if (namesAndCompanies.Count > 1)
+                {
+                    var totals = new SecurityStatsHolder("Totals", company);
+                    SecurityStatsHolderHelper.AddSecurityStats(totals);
+                    namesAndCompanies.Add(totals);
+                }
+                
                 return namesAndCompanies;
             }
 
             return new List<SecurityStatsHolder>();
+        }
+
+        /// <summary>
+        /// returns the securities under the company name.
+        /// </summary>
+        public static SecurityStatsHolder GenerateSectorFundsStatistics(string sectorName)
+        {
+            if (GlobalData.Finances != null)
+            {
+                var totals = new SecurityStatsHolder( sectorName, "Totals");
+                SecurityStatsHolderHelper.AddSectorStats(totals);
+                return totals;
+            }
+
+            return new SecurityStatsHolder();
+        }
+
+        /// <summary>
+        /// returns the securities under the company name.
+        /// </summary>
+        public static SecurityStatsHolder GenerateBenchMarkStatistics(string sectorName)
+        {
+            if (GlobalData.Finances != null)
+            {
+                var totals = new SecurityStatsHolder(sectorName, "BenchMark");
+                SecurityStatsHolderHelper.AddSectorStats(totals);
+                return totals;
+            }
+
+            return new SecurityStatsHolder();
         }
 
         public static SecurityStatsHolder GenerateCompanyStatistics(string company)
@@ -203,7 +238,7 @@ namespace GUIAccessorFunctions
         {
             if (GlobalData.Finances != null)
             {
-                
+
                 return GlobalData.Finances.GenerateBankAccountStatistics(company);
             }
             return new List<DailyValuation_Named>();
@@ -219,6 +254,17 @@ namespace GUIAccessorFunctions
             }
 
             return new SecurityStatsHolder();
+        }
+
+        public static int LongestName()
+        {
+            return GlobalData.Finances.GetSecurityNames().Max().Length;
+        }
+
+        public static int LongestCompany()
+        {
+            var companies = GlobalData.Finances.GetSecuritiesCompanyNames();
+            return companies.Select(c => c.Length).Max();
         }
 
         public static List<string> GetBankAccountNames()
@@ -239,8 +285,8 @@ namespace GUIAccessorFunctions
 
                 foreach (var acc in accs)
                 {
-                        var latest = new BankAccountStatsHolder(acc.GetName(), acc.GetCompany(), acc.LatestValue().Value);
-                        namesAndCompanies.Add(latest);
+                    var latest = new BankAccountStatsHolder(acc.GetName(), acc.GetCompany(), acc.LatestValue().Value);
+                    namesAndCompanies.Add(latest);
                 }
 
                 namesAndCompanies.Sort();
@@ -282,7 +328,7 @@ namespace GUIAccessorFunctions
         }
 
         public static void LoadPortfolio(ErrorReports reports)
-        {            
+        {
             if (File.Exists(GlobalData.fDatabaseFilePath))
             {
                 var database = ReadFromXmlFile<AllData>(GlobalData.fDatabaseFilePath);

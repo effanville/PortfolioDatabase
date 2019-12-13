@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.DataStructures;
 using FinancialStructures.ReportingStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -76,6 +76,15 @@ namespace FinancialStructures.FinanceStructures
         public string GetUrl()
         {
             return fUrl;
+        }
+
+        /// <summary>
+        /// Returns the sectors associated to this security.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSectors()
+        {
+            return fSectors;
         }
 
         /// <summary>
@@ -158,7 +167,7 @@ namespace FinancialStructures.FinanceStructures
             // here we don't care about investments
             if (investment == 0)
             {
-                if (DoesDateSharesDataExist(date, out int _)  || DoesDateUnitPriceDataExist(date, out int _))
+                if (DoesDateSharesDataExist(date, out int _) || DoesDateUnitPriceDataExist(date, out int _))
                 {
                     reports.AddGeneralReport(ReportType.Error, $"Security `{fCompany}'-`{fName}' already has NumShares or UnitPrice data on {date.ToString("d")}.");
                     return false;
@@ -195,7 +204,7 @@ namespace FinancialStructures.FinanceStructures
             {
                 editUnitPrice = fUnitPrice.TryEditData(date, unitPrice, reports);
             }
-            
+
             fInvestments.TryEditDataOtherwiseAdd(date, Investment);
 
             return editShares & editUnitPrice && ComputeInvestments(reports);
@@ -228,7 +237,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits name and company data of security.
         /// </summary>
-        internal bool TryEditNameCompany(string name, string company, string url, ErrorReports reports)
+        internal bool TryEditNameCompany(string name, string company, string url, List<string> sectors, ErrorReports reports)
         {
             if (name != fName)
             {
@@ -245,8 +254,51 @@ namespace FinancialStructures.FinanceStructures
                 reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has url `{fUrl}' edited to `{url}'.");
                 fUrl = url;
             }
+            if (sectors != fSectors)
+            {
+                reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has sectors `{string.Join(", ", fSectors)}' edited to `{string.Join(", ", sectors)}'.");
+                fSectors = sectors;
+            }
 
             return true;
+        }
+
+        public bool TryRemoveSector(string sectorName)
+        {
+            if (IsSectorLinked(sectorName))
+            {
+                fSectors.Remove(sectorName);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryAddSector(string sectorName)
+        {
+            if (!IsSectorLinked(sectorName))
+            {
+                fSectors.Add(sectorName);
+                return true;
+            }
+
+            return false;
+        }
+
+        internal bool IsSectorLinked(string sectorName)
+        {
+            if (fSectors != null && fSectors.Count > 0)
+            {
+                foreach (var name in fSectors)
+                {
+                    if (name == sectorName)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -272,7 +324,7 @@ namespace FinancialStructures.FinanceStructures
         {
             bool units = false;
             bool sharetrue = false;
-            if (shares > 0  )
+            if (shares > 0)
             {
                 sharetrue = fShares.TryDeleteValue(date, reports);
             }
@@ -294,7 +346,7 @@ namespace FinancialStructures.FinanceStructures
         /// </remarks>
         private bool ComputeInvestments(ErrorReports reports)
         {
-                // return true;
+            // return true;
             for (int index = 0; index < fInvestments.Count(); index++)
             {
                 var investmentValue = fInvestments[index];

@@ -60,6 +60,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Company" Binding="{Binding Path=Company, UpdateSourceTrigger=LostFocus}"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Sectors" Binding="{Binding Path=Sectors, UpdateSourceTrigger=LostFocus}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
