@@ -60,8 +60,8 @@ namespace FinanceWindowsViewModels
         private void ExecuteExportToCSVCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog();
-            saving.DefaultExt = ".csv";
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName +"-CSVStats.csv",  InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            saving.Filter = "CSV file|*.csv|All files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
                 if (!saving.FileName.EndsWith(".csv"))
@@ -107,7 +107,8 @@ namespace FinanceWindowsViewModels
         private void ExecuteInvestmentListCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog();
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName + "-CSVStats.csv", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            saving.Filter = "CSV file|*.csv|All files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
                 if (!saving.FileName.EndsWith(".csv"))
@@ -140,7 +141,8 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateHTMLCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog();
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = GlobalHeldData.GlobalData.DatabaseName + "-HTMLStats.html", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            saving.Filter = "Html file|*.html|All files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
                 PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName, DisplayValueFunds);

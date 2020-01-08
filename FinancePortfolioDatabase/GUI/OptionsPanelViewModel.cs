@@ -2,7 +2,9 @@
 using GUIAccessorFunctions;
 using GUISupport;
 using PADGlobals;
+using GlobalHeldData;
 using System;
+using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -48,13 +50,11 @@ namespace FinanceWindowsViewModels
         public void ExecuteSaveDatabase(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog();
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = "xml", FileName = GlobalData.DatabaseName + Path.GetExtension(GlobalData.fDatabaseFilePath), InitialDirectory= Path.GetDirectoryName(GlobalData.fDatabaseFilePath) };
+            saving.Filter = "XML Files|*.xml|All Files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
-                //if (!File.Exists(saving.FileName))
-                {
-                    DatabaseAccessor.SetFilePath(saving.FileName);
-                }
+                DatabaseAccessor.SetFilePath(saving.FileName);
             }
 
             DatabaseAccessor.SavePortfolio(reports);
@@ -69,7 +69,8 @@ namespace FinanceWindowsViewModels
         public void ExecuteLoadDatabase(Object obj)
         {
             var reports = new ErrorReports();
-            OpenFileDialog openFile = new OpenFileDialog();
+            OpenFileDialog openFile = new OpenFileDialog() { DefaultExt = "xml" };
+            openFile.Filter = "XML Files|*.xml|All Files|*.*";
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 DatabaseAccessor.SetFilePath(openFile.FileName);

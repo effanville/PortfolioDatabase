@@ -14,8 +14,20 @@
 
 2. Allow user to select statistics for export
 	2.1 Modify this so it is also for display in the GUI
-3. Include sectors within securities, and implement comparisons with the sector.
 4. More in depth portfolio analytics.
+5. Graphs of current status of portfolio, and displaying history. e.g 
+
+using System.Windows.Forms.DataVisualization.Charting;
+
+private void CreateChart()
+{
+    var series = new Series("Finance");
+    series.ChartType = SeriesChartType.Line;
+    // Frist parameter is X-Axis and Second is Collection of Y- Axis
+    series.Points.DataBindXY(new[] { 2001, 2002, 2003, 2004 }, new[] { 100, 200, 90, 150 });
+    chart1.Series.Add(series);
+
+}
 
 # Fixed issues/Completed Tasks
 
@@ -26,3 +38,4 @@
 3.In statistics pages add a total valuation.
 1. Add in download data from internet
 5. On closing, prompt user to save database.
+3. Include sectors within securities, and implement comparisons with the sector.

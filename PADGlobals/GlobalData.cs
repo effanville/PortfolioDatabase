@@ -1,6 +1,7 @@
 ﻿using FinancialStructures.FinanceStructures;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace GlobalHeldData
@@ -19,6 +20,13 @@ namespace GlobalHeldData
     {
         public static string versionNumber = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
         public static string fDatabaseFilePath;
+
+        /// <summary>
+        /// filepath where statistics are saved. is the same as the database path unless saved elsewhere.
+        /// </summary>
+        public static string fStatsDirectory = Path.GetDirectoryName(fDatabaseFilePath);
+
+        public static string DatabaseName { get { return Path.GetFileNameWithoutExtension(fDatabaseFilePath); } }
 
         public static DateTime fToday = DateTime.Today;
 
