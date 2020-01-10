@@ -202,14 +202,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        public bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime oldDate, DateTime newDate, double shares, double unitPrice, double Investment = 0)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditData(reports, date, shares, unitPrice, Investment);
+                    return Funds[fundIndex].TryEditData(reports, oldDate, newDate, shares, unitPrice, Investment);
                 }
             }
 

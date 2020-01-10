@@ -30,6 +30,7 @@ namespace FinancialStructures.GUIFinanceStructures
         public string Company { get; set; }
         public string Name { get; set; }
         public double LatestVal { get; set; }
+        public double RecentChange { get; set; }
         public double FundsFraction { get; set; }
         public double Profit { get; set; }
         public double CAR3M { get; set; }

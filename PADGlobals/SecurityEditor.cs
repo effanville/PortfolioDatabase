@@ -63,9 +63,9 @@ namespace SecurityHelperFunctions
         /// <summary>
         /// Edits data in the security, if possible.
         /// </summary>
-        public static bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double investment = 0)
+        public static bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime oldDate, DateTime newDate, double shares, double unitPrice, double investment = 0)
         {
-            return GlobalData.Finances.TryEditSecurity(reports, name, company, date, shares, unitPrice, investment);
+            return GlobalData.Finances.TryEditSecurity(reports, name, company, oldDate, newDate, shares, unitPrice, investment);
         }
 
         /// <summary>

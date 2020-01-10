@@ -45,7 +45,22 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
-        /// Returns most recent valuation before the date specified. 
+        /// Returns most recent valuation on or before the date specified. 
+        /// </summary>
+        internal DailyValuation GetLastEarlierValuation(DateTime date)
+        {
+            DailyValuation val = fUnitPrice.GetLastEarlierValue(date);
+            if (val == null)
+            {
+                return new DailyValuation(date, 0.0);
+            }
+
+            double latestValue = fShares.GetLastEarlierValue(date).Value * val.Value;
+            return new DailyValuation(date, latestValue);
+        }
+
+        /// <summary>
+        /// Returns most recent valuation on or before the date specified. 
         /// </summary>
         internal DailyValuation GetNearestEarlierValuation(DateTime date)
         {

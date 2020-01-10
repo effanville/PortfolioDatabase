@@ -15,6 +15,7 @@ namespace FinancialStructures.GUIFinanceStructures
             if (a.Name == "Totals" && string.IsNullOrEmpty(a.Company))
             {
                 a.LatestVal = MathSupport.Truncate(GlobalData.Finances.AllSecuritiesValue(DateTime.Today));
+                a.RecentChange = 0;
                 a.FundsFraction = 1.0;
                 a.Profit = MathSupport.Truncate(GlobalData.Finances.TotalProfit());
                 a.CAR3M = MathSupport.Truncate(100 * GlobalData.Finances.IRRPortfolio(DateTime.Today.AddMonths(-3), DateTime.Today));
@@ -27,6 +28,7 @@ namespace FinancialStructures.GUIFinanceStructures
             {
                 var c = a.Company;
                 a.LatestVal = MathSupport.Truncate(CompanyStatistics.CompanyLatestValue(c));
+                a.RecentChange = 0;
                 a.FundsFraction = MathSupport.Truncate(CompanyStatistics.FundsCompanyFraction(c, DateTime.Today), 4);
                 a.Profit = MathSupport.Truncate(CompanyStatistics.CompanyProfit(c));
                 a.CAR3M = MathSupport.Truncate(100 * CompanyStatistics.IRRCompany(c, DateTime.Today.AddMonths(-3), DateTime.Today));
@@ -40,6 +42,7 @@ namespace FinancialStructures.GUIFinanceStructures
                 var c = a.Company;
                 var n = a.Name;
                 a.LatestVal = MathSupport.Truncate(SecurityStatistics.SecurityLatestValue(n, c));
+                a.RecentChange = MathSupport.Truncate(SecurityStatistics.RecentChange(n, c));
                 a.FundsFraction = MathSupport.Truncate(SecurityStatistics.FundsFraction(n, c), 4);
                 a.Profit = MathSupport.Truncate(SecurityStatistics.Profit(n, c));
                 a.CAR3M = MathSupport.Truncate(100 * SecurityStatistics.SecurityIRRTime(n, c, DateTime.Today.AddMonths(-3), DateTime.Today));

@@ -191,47 +191,23 @@ namespace FinancialStructures.FinanceStructures
         /// If do have relevant values, then edit that value
         /// If investment value doesnt exist, then add that value.
         /// </summary>
-        internal bool TryEditData(ErrorReports reports, DateTime date, double shares, double unitPrice, double Investment = 0)
+        internal bool TryEditData(ErrorReports reports, DateTime oldDate, DateTime newDate, double shares, double unitPrice, double Investment)
         {
             bool editShares = false;
             bool editUnitPrice = false;
-            if (DoesDateSharesDataExist(date, out int _))
+            if (DoesDateSharesDataExist(oldDate, out int _))
             {
-                editShares = fShares.TryEditData(date, shares, reports);
+                editShares = fShares.TryEditData(oldDate, newDate, shares, reports);
             }
 
-            if (DoesDateUnitPriceDataExist(date, out int _))
+            if (DoesDateUnitPriceDataExist(oldDate, out int _))
             {
-                editUnitPrice = fUnitPrice.TryEditData(date, unitPrice, reports);
+                editUnitPrice = fUnitPrice.TryEditData(oldDate, newDate, unitPrice, reports);
             }
 
-            fInvestments.TryEditDataOtherwiseAdd(date, Investment);
+            fInvestments.TryEditDataOtherwiseAdd(oldDate, newDate, Investment, reports);
 
             return editShares & editUnitPrice && ComputeInvestments(reports);
-        }
-
-        /// <summary>
-        /// Edits shares data only.
-        /// </summary>
-        internal bool TryEditSharesData(DateTime date, double shares, ErrorReports reports)
-        {
-            return fShares.TryEditData(date, shares, reports) && ComputeInvestments(reports);
-        }
-
-        /// <summary>
-        /// Edits unit price data only.
-        /// </summary>
-        internal bool TryEditUnitPriceData(DateTime date, double investment, ErrorReports reports)
-        {
-            return fUnitPrice.TryEditData(date, investment, reports) && ComputeInvestments(reports);
-        }
-
-        /// <summary>
-        /// Edits investment data only.
-        /// </summary>
-        internal bool TryEditInvestmentData(DateTime date, double unitPrice, ErrorReports reports)
-        {
-            return fInvestments.TryEditData(date, unitPrice, reports) && ComputeInvestments(reports);
         }
 
         /// <summary>

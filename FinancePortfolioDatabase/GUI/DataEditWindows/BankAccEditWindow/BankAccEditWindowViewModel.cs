@@ -53,10 +53,25 @@ namespace FinanceWindowsViewModels
         }
 
         private AccountDayDataView fSelectedValues;
+        private AccountDayDataView fOldSelectedValue;
+        private int selectedIndex;
         public AccountDayDataView selectedValues
         {
-            get { return fSelectedValues; }
-            set { fSelectedValues = value; OnPropertyChanged(); }
+            get 
+            {
+                return fSelectedValues; 
+            }
+            set 
+            { 
+                fSelectedValues = value;
+                int index = SelectedAccountData.IndexOf(value);
+                if (selectedIndex != index)
+                {
+                    selectedIndex = index;
+                    fOldSelectedValue = fSelectedValues?.Copy();
+                }
+                OnPropertyChanged(); 
+            }
         }
 
         public ICommand CreateAccountCommand { get; set; }
@@ -154,7 +169,7 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
-            UpdateAccountListBox();
+
             UpdateMainWindow(true);
         }
 
@@ -178,7 +193,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            BankAccountEditor.TryEditBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount, reports);
+                            BankAccountEditor.TryEditBankAccount(selectedName.Name, selectedName.Company, fOldSelectedValue.Date, selectedValues.Date, selectedValues.Amount, reports);
                             name.NewValue = false;
                         }
                     }

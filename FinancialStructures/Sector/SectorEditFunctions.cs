@@ -70,11 +70,11 @@ namespace FinancialStructures.FinanceStructures
             return fValues.TryAddValue(date, value);
         }
 
-        public bool TryEditData(DateTime date, double value, ErrorReports reports)
+        public bool TryEditData(DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
-            if (DoesDataExist(date, out int i))
+            if (DoesDataExist(oldDate, out int i))
             {
-                return fValues.TryEditData(date, value, reports);
+                return fValues.TryEditData(oldDate, date, value, reports);
             }
 
             return false;

@@ -78,13 +78,13 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryEditSector(string name, DateTime date, double value, ErrorReports reports)
+        public static bool TryEditSector(string name, DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
             foreach (var sector in GlobalData.BenchMarks)
             {
                 if (name == sector.GetName())
                 {
-                    return sector.TryEditData(date, value, reports);
+                    return sector.TryEditData(oldDate, date, value, reports);
                 }
             }
 

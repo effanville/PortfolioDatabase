@@ -58,9 +58,9 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Edits data in the bankaccount, if possible.
         /// </summary>
-        public static bool TryEditBankAccount(string name, string company, DateTime date, double value, ErrorReports reports)
+        public static bool TryEditBankAccount(string name, string company, DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
-            return GlobalData.Finances.TryEditBankAccount(name, company, date, value, reports);
+            return GlobalData.Finances.TryEditBankAccount(name, company, oldDate, date, value, reports);
         }
 
         /// <summary>

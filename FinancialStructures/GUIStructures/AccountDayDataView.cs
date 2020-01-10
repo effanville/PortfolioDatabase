@@ -17,12 +17,18 @@ namespace FinancialStructures.GUIFinanceStructures
             NewValue = newValue;
         }
 
+        public AccountDayDataView Copy()
+        {
+            return new AccountDayDataView(Date, Amount, NewValue);
+        }
+
+
         public bool NewValue { get; set; }
         private DateTime fDate;
         public DateTime Date
         {
             get { return fDate; }
-            set { fDate = value; }
+            set { fDate = value; NewValue = true; }
         }
 
         private double fAmount;

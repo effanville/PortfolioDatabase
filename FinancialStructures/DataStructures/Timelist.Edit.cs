@@ -10,10 +10,11 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Adds value to the data.
         /// </summary>
-        private void AddData(DateTime date, double value)
+        private void AddData(DateTime date, double value, ErrorReports reports)
         {
             var valuation = new DailyValuation(date, value);
             fValues.Add(valuation);
+            reports.AddReport($"Added value {value}");
             Sort();
         }
 
@@ -62,7 +63,7 @@ namespace FinancialStructures.DataStructures
                 }
             }
 
-            AddData(date, value);
+            AddData(date, value, new ErrorReports());
             return true;
         }
 
@@ -88,29 +89,34 @@ namespace FinancialStructures.DataStructures
             return false;
         }
 
-        /// <summary>
-        /// Edits the data on date specified. If data doesn't exist then adds the data.
-        /// </summary>
-        internal void TryEditDataOtherwiseAdd(DateTime date, double value)
+        internal bool TryEditData(DateTime oldDate, DateTime newDate, double value, ErrorReports reports)
         {
             if (fValues != null && fValues.Any())
             {
                 for (int i = 0; i < fValues.Count; i++)
                 {
-                    if (fValues[i].Day == date)
+                    if (fValues[i].Day == oldDate)
                     {
-                        if (value == 0)
-                        {
-                            fValues.RemoveAt(i);
-                            return;
-                        }
-
+                        reports.AddReport($"Editing Data: {oldDate} value changed from {fValues[i].Value} to {newDate} - {value}");
+                        fValues[i].Day = newDate;
                         fValues[i].Value = value;
-                        return;
+
+                        return true;
                     }
                 }
+            }
 
-                AddData(date, value);
+            return false;
+        }
+
+        /// <summary>
+        /// Edits the data on date specified. If data doesn't exist then adds the data.
+        /// </summary>
+        internal void TryEditDataOtherwiseAdd(DateTime oldDate, DateTime date, double value, ErrorReports reports)
+        {
+            if (!TryEditData(oldDate, date, value, reports))
+            {
+                AddData(date, value, reports);
             }
         }
 
