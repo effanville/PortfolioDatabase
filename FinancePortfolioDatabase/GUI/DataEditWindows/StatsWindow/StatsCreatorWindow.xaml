@@ -105,6 +105,8 @@
                                         DisplayMemberBinding="{Binding Name}" />
                         <GridViewColumn Header="Latest Value" 
                                         DisplayMemberBinding="{Binding LatestVal}" />
+                        <GridViewColumn Header="Latest Change" 
+                                        DisplayMemberBinding="{Binding RecentChange}" />
                         <GridViewColumn Header="Fraction" 
                                         DisplayMemberBinding="{Binding FundsFraction}" />
                         <GridViewColumn Header="Profit" 

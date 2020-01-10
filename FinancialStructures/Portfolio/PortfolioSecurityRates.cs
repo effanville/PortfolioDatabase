@@ -6,6 +6,19 @@ namespace FinancialStructures.FinanceStructures
 {
     public partial class Portfolio
     {
+        public double RecentChange(string name, string company)
+        {
+            if (TryGetSecurity(name, company, out Security desired))
+            {
+                if (desired.Any())
+                {
+                    var needed = desired.LatestValue();
+                    return needed.Value - desired.GetLastEarlierValuation(needed.Day).Value;
+                }
+            }
+
+            return double.NaN;
+        }
         public double Profit(string name, string company)
         {
             if (TryGetSecurity(name, company, out Security desired))

@@ -13,6 +13,11 @@ namespace FinancialStructures.GUIFinanceStructures
             return 0;
         }
 
+        public BasicDayDataView Copy()
+        {
+            return new BasicDayDataView(Date, UnitPrice, ShareNo, Investment, NewValue);
+        }
+
         public BasicDayDataView()
         {
             NewValue = true;

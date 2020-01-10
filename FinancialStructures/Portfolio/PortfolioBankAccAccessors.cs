@@ -142,14 +142,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditBankAccount(string name, string company, DateTime date, double value, ErrorReports reports)
+        public bool TryEditBankAccount(string name, string company, DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
             for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
             {
                 if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].TryEditValue(date, value, reports);
+                    return BankAccounts[AccountIndex].TryEditValue(oldDate, date, value, reports);
                 }
             }
 

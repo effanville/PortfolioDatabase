@@ -57,10 +57,25 @@ namespace FinanceWindowsViewModels
         }
 
         private AccountDayDataView fSelectedDataPoint;
+        private AccountDayDataView fOldSelectedData;
+        private int selectedIndex;
         public AccountDayDataView SelectedDataPoint
         {
-            get { return fSelectedDataPoint; }
-            set { fSelectedDataPoint = value; OnPropertyChanged(); }
+            get 
+            { 
+                return fSelectedDataPoint;
+            }
+            set 
+            { 
+                fSelectedDataPoint = value;
+                int index = SelectedSectorData.IndexOf(value);
+                if (selectedIndex != index)
+                {
+                    selectedIndex = index;
+                    fOldSelectedData = fSelectedDataPoint?.Copy();
+                }
+                OnPropertyChanged(); 
+            }
         }
 
         public ICommand CreateSectorCommand { get; set; }
@@ -155,7 +170,7 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
-            UpdateSectorListBox();
+            // UpdateSectorListBox();
             UpdateMainWindow(true);
         }
 
@@ -180,7 +195,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            SectorEditor.TryEditSector(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
+                            SectorEditor.TryEditSector(SelectedName.Name, fOldSelectedData.Date, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
                             name.NewValue = false;
                         }
                     }
@@ -243,7 +258,7 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCloseCommand(Object obj)
         {
-            UpdateMainWindow(true);
+            UpdateMainWindow(false);
             windowToView("dataview");
         }
 

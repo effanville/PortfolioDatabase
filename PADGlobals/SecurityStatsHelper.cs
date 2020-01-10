@@ -45,6 +45,11 @@ namespace SecurityStatisticsFunctions
             return GlobalData.Finances.IRR(name, company, earlierTime, laterTime);
         }
 
+        public static double RecentChange(string name, string company)
+        {
+            return GlobalData.Finances.RecentChange(name,company);
+        }
+
         public static double Profit(string name, string company)
         {
             return GlobalData.Finances.Profit(name, company);

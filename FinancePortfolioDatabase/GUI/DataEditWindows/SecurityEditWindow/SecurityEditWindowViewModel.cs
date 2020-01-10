@@ -36,6 +36,7 @@ namespace FinanceWindowsViewModels
             set { fSelectedName = value; OnPropertyChanged(); UpdateSelectedSecurityListBox(); }
         }
 
+
         private Security fSelectedSecurity;
         /// <summary>
         /// The Complete data on the security selected
@@ -57,11 +58,27 @@ namespace FinanceWindowsViewModels
         }
 
         private BasicDayDataView fSelectedValues;
-
+        private BasicDayDataView fOldSelectedValues;
+        private int selectedIndex;
         public BasicDayDataView selectedValues
         {
-            get { return fSelectedValues; }
-            set { fSelectedValues = value; OnPropertyChanged(); UpdateSubWindows(); }
+            get 
+            {
+                return fSelectedValues; 
+            }
+            set 
+            {
+                fSelectedValues = value;
+                int index = SelectedSecurityData.IndexOf(value);
+                if (selectedIndex != index)
+                {
+                    selectedIndex = index;
+                    fOldSelectedValues = fSelectedValues?.Copy();
+                }
+
+                OnPropertyChanged(); 
+                UpdateSubWindows(); 
+            }
         }
 
         private UserButtonsViewModel fUserClickingVM;
@@ -201,7 +218,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            SecurityEditor.TryEditSecurity(reports, selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                            SecurityEditor.TryEditSecurity(reports, selectedName.Name, selectedName.Company, fOldSelectedValues.Date, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                             name.NewValue = false;
                         }
                     }

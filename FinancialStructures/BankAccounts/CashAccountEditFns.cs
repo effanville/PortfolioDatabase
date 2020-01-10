@@ -73,9 +73,9 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits value if value exists. Does nothing if it doesn't exist.
         /// </summary>
-        internal bool TryEditValue(DateTime date, double value, ErrorReports reports)
+        internal bool TryEditValue(DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
-            return fAmounts.TryEditData(date, value, reports);
+            return fAmounts.TryEditData(oldDate, date, value, reports);
         }
 
         /// <summary>
