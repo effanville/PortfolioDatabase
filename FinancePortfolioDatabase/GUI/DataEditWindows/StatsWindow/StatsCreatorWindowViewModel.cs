@@ -3,7 +3,7 @@ using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GUIAccessorFunctions;
 using GUISupport;
-using PortfolioStatsCreatorHelper;
+using FinanceWindows;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,37 +14,6 @@ namespace FinanceWindowsViewModels
 {
     public class StatsCreatorWindowViewModel : PropertyChangedBase
     {
-        private bool fSecStatsVisibility;
-
-        public bool SecStatsVisibility
-        {
-            get { return fSecStatsVisibility; }
-            set { fSecStatsVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fSecInvestsVisibility;
-
-        public bool SecInvestsVisibility
-        {
-            get { return fSecInvestsVisibility; }
-            set { fSecInvestsVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fBankAccStatsVisibility;
-
-        public bool BankAccStatsVisibility
-        {
-            get { return fBankAccStatsVisibility; }
-            set { fBankAccStatsVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fDatabaseStatsVisibility;
-        public bool DatabaseStatsVisibility
-        {
-            get { return fDatabaseStatsVisibility; }
-            set { fDatabaseStatsVisibility = value; OnPropertyChanged(); }
-        }
-
         private bool fDisplayValueFunds = true;
         public bool DisplayValueFunds
         {
@@ -140,23 +109,10 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteCreateHTMLCommand(Object obj)
         {
-            var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = GlobalHeldData.GlobalData.DatabaseName + "-HTMLStats.html", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
-            saving.Filter = "Html file|*.html|All files|*.*";
-            if (saving.ShowDialog() == DialogResult.OK)
-            {
-                PortfolioStatsCreators.CreateHTMLPage(GlobalHeldData.GlobalData.Finances, new List<string>(), saving.FileName, DisplayValueFunds);
-                reports.AddGeneralReport(ReportType.Report, "Created statistics page");
-            }
-            else
-            {
-                reports.AddGeneralReport(ReportType.Error, "Was not able to create HTML page in place specified.");
-            }
-            saving.Dispose();
-            if (reports.Any())
-            {
-                UpdateReports(reports);
-            }
+            var optionWindow = new StatsOptionsWindow();
+            var context = new StatsOptionsViewModel(UpdateReports);
+            optionWindow.DataContext = context;
+            optionWindow.ShowDialog();
         }
 
         private void ExecuteCloseCommand(Object obj)
@@ -206,13 +162,8 @@ namespace FinanceWindowsViewModels
             DatabaseStats = DatabaseAccessor.GenerateDatabaseStatistics();
         }
 
-
         public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
         {
-            SecStatsVisibility = true;
-            SecInvestsVisibility = false;
-            BankAccStatsVisibility = false;
-            DatabaseStatsVisibility = false;
             GenerateStatistics();
             windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;

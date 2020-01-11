@@ -44,184 +44,113 @@
             <Button Content="Close StatsCreator"
                     Margin="10 10 10 10 "
                     Command="{Binding CloseCommand}"/>
-            
+
             <CheckBox IsChecked="{Binding DisplayValueFunds}"
                       Margin="10,10,10,10">
-                <TextBlock Text="Display Funds with no current value?" 
-                           TextWrapping="Wrap"/>
-            </CheckBox>
-            <Label>
-                <TextBlock Text="Choose Statistics to view." 
-                           TextWrapping="Wrap"/>
-            </Label>
-            
-            <CheckBox IsChecked="{Binding SecStatsVisibility}"
-                      Margin="10,10,10,10">
-                <TextBlock Text="Show Securities Rates" 
-                           TextWrapping="Wrap"/>
-            </CheckBox>
-            
-            <CheckBox IsChecked="{Binding SecInvestsVisibility}"
-                      Margin="10,10,10,10">
-                <TextBlock Text="Show Investments in Securities" 
-                           TextWrapping="Wrap"/>
-            </CheckBox>
-            
-            <CheckBox IsChecked="{Binding BankAccStatsVisibility}"
-                      Margin="10,10,10,10">
-                <TextBlock Text="Show Bank Accounts Values" 
-                           TextWrapping="Wrap"/>
-            </CheckBox>
-
-            <CheckBox IsChecked="{Binding DatabaseStatsVisibility}"
-                      Margin="10,10,10,10">
-                <TextBlock Text="Show database statistics" 
+                <TextBlock Text="Only Display Funds with current value" 
                            TextWrapping="Wrap"/>
             </CheckBox>
         </StackPanel>
-
-        <Grid Visibility="{Binding SecStatsVisibility, Converter={StaticResource BoolToVis}}"
-              Grid.Row="1"
-              Grid.Column="1">
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="0"
-                   Content="Statistics of Securities in Database"/>
-
-            <ListView Name="SecStatsBox"
-                      ItemsSource="{Binding SecuritiesStats}"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible"
-                      Grid.Row="1"
-                      Margin="10,10,10,10">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Company" 
-                                        DisplayMemberBinding="{Binding Company}"/>
-                        <GridViewColumn Header="Name" 
-                                        DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="Latest Value" 
-                                        DisplayMemberBinding="{Binding LatestVal}" />
-                        <GridViewColumn Header="Latest Change" 
-                                        DisplayMemberBinding="{Binding RecentChange}" />
-                        <GridViewColumn Header="Fraction" 
-                                        DisplayMemberBinding="{Binding FundsFraction}" />
-                        <GridViewColumn Header="Profit" 
-                                        DisplayMemberBinding="{Binding Profit}" />
-                        <GridViewColumn Header="CAR 3M"
-                                        DisplayMemberBinding="{Binding CAR3M}" />
-                        <GridViewColumn Header="CAR 6M" 
-                                        DisplayMemberBinding="{Binding CAR6M}" />
-                        <GridViewColumn Header="CAR 1Y" 
-                                        DisplayMemberBinding="{Binding CAR1Y}" />
-                        <GridViewColumn Header="CAR 5Y" 
-                                        DisplayMemberBinding="{Binding CAR5Y}" />
-                        <GridViewColumn Header="CAR total" 
-                                        DisplayMemberBinding="{Binding CARTotal}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
-        
-        <Grid Visibility="{Binding SecInvestsVisibility, Converter={StaticResource BoolToVis}}"
-              Grid.Row="1"
-              Grid.Column="2">
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <Label Grid.Row="0"
-                   Content="All Investments in Securities in Database"/>
-                    
-            <ListView Grid.Row="1"
-                      Name="SecInvBox"
-                      ItemsSource="{Binding SecuritiesInvestments}"
-                      Margin="10,10,10,10"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Date" 
-                                        DisplayMemberBinding="{Binding Day, StringFormat='{}{0:dd/MM/yyyy}'}" />
-                        <GridViewColumn Header="Company" 
-                                        DisplayMemberBinding="{Binding Company}"/>
-                        <GridViewColumn Header="Name" 
-                                        DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="Investment Amount" 
-                                        DisplayMemberBinding="{Binding Value}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
-            
-        <Grid Visibility="{Binding BankAccStatsVisibility, Converter={StaticResource BoolToVis}}"
-              Grid.Row="1"
-              Grid.Column="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-           
-            <Label Grid.Row="0" 
-                   Content="BankAccounts in Database"/>
-               
-            <ListView Grid.Row="1"
-                      Name="BankAccBox"
-                      ItemsSource="{Binding BankAccountStats}"
-                      Margin="10,10,10,10"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Company" 
-                                        DisplayMemberBinding="{Binding Company}"/>
-                        <GridViewColumn Header="Name" 
-                                        DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="Latest Value" 
-                                        DisplayMemberBinding="{Binding LatestVal}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
-
-        <Grid Visibility="{Binding DatabaseStatsVisibility, Converter={StaticResource BoolToVis}}"
-              Grid.Row="1"
-              Grid.Column="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="0" 
-                   Content="Fund Statistics"/>
-
-            <ListView Grid.Row="1"
-                      Name="StatsBox"
-                      ItemsSource="{Binding DatabaseStats}"
-                      Margin="10,10,10,10"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Company" 
-                                        DisplayMemberBinding="{Binding Company}"/>
-                        <GridViewColumn Header="Name" 
-                                        DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="First Date" 
-                                        DisplayMemberBinding="{Binding FirstDate, StringFormat=\{0:dd.MM.yyyy\}}" />
-                        <GridViewColumn Header="Latest Date" 
-                                        DisplayMemberBinding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" />
-                        <GridViewColumn Header="Number Entries" 
-                                        DisplayMemberBinding="{Binding NumEntries}" />
-                        <GridViewColumn Header="Entries Per Year" 
-                                        DisplayMemberBinding="{Binding EntryYearDensity}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
-
+        <TabControl Grid.Row="1"
+                    Grid.Column="1">
+            <TabItem Header="Security Statistics">
+                <Grid>
+                    <DataGrid Grid.Row="1"
+                              Margin="10 10 10 10 "
+                              SelectionUnit="FullRow"
+                              CanUserAddRows="False"
+                              IsReadOnly="True"
+                              CanUserDeleteRows="False"
+                              AutoGenerateColumns="True"
+                              AutoGeneratingColumn="OnAutoGeneratingColumn"
+                              GridLinesVisibility="None"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              Name="SecStatsBox"
+                              ItemsSource="{Binding SecuritiesStats}">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Dad's Statistics">
+                <Grid>
+                    <DataGrid Name="DadStatsBox"
+                              Margin="10 10 10 10 "
+                              SelectionUnit="FullRow"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="None"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              AutoGenerateColumns="False"
+                              ItemsSource="{Binding SecuritiesStats}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Company" MaxWidth="200" Binding="{Binding Path=Company}"/>
+                            <DataGridTextColumn Header="Name" MaxWidth="200" Binding="{Binding Path=Name}"/>
+                            <DataGridTextColumn Header="Latest Value" MaxWidth="200" Binding="{Binding Path=LatestVal}"/>
+                            <DataGridTextColumn Header="Latest Change" MaxWidth="200" Binding="{Binding Path=RecentChange}"/>
+                            <DataGridTextColumn Header="Profit" MaxWidth="200" Binding="{Binding Path=Profit}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Security Investments">
+                <Grid>
+                    <DataGrid Grid.Row="1"
+                              Margin="10 10 10 10 "
+                              SelectionUnit="FullRow"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              AutoGenerateColumns="True"
+                              AutoGeneratingColumn="OnAutoGeneratingColumn"
+                              GridLinesVisibility="None"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              Name="SecInvBox"
+                              ItemsSource="{Binding SecuritiesInvestments}">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Bank Account Statistics">
+                <Grid>
+                    <DataGrid Grid.Row="1"
+                              Name="BankAccBox"
+                              Margin="10 10 10 10 "
+                              SelectionUnit="FullRow"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              AutoGenerateColumns="True"
+                              AutoGeneratingColumn="OnAutoGeneratingColumn"
+                              GridLinesVisibility="None"
+                              ItemsSource="{Binding BankAccountStats}"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Database Statistics">
+                <Grid Background="LightPink">
+                    <DataGrid Grid.Row="1"
+                              Name="DatabaseStatsBox"
+                              Margin="10 10 10 10 "
+                              SelectionUnit="FullRow"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              AutoGenerateColumns="False"
+                              GridLinesVisibility="None"
+                              ItemsSource="{Binding DatabaseStats}"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Company" MaxWidth="200" Binding="{Binding Path=Company}"/>
+                            <DataGridTextColumn Header="Name" MaxWidth="200" Binding="{Binding Path=Name}"/>
+                            <DataGridTextColumn Header="First Date" MaxWidth="200" Binding="{Binding Path=FirstDate, StringFormat=dd/MM/yyyy}"/>
+                            <DataGridTextColumn Header="Latest Date" MaxWidth="200" Binding="{Binding Path=Date, StringFormat=dd/MM/yyyy}"/>
+                            <DataGridTextColumn Header="Number Entries" MaxWidth="200" Binding="{Binding Path=NumEntries}"/>
+                            <DataGridTextColumn Header="Entry Year Density" MaxWidth="200" Binding="{Binding Path=EntryYearDensity}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
     
 </Grid>
