@@ -133,7 +133,7 @@ namespace FinancialStructures.FinanceStructures
             }
             foreach (var bankAcc in BankAccounts)
             {
-                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.FirstValue().Day, bankAcc.LatestValue().Day, bankAcc.Count(), (bankAcc.LatestValue().Day - bankAcc.FirstValue().Day).Days / (365 * (double)bankAcc.Count())));
+                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.FirstValue().Day, bankAcc.LatestValue().Day, bankAcc.Count(), 365 * (double)bankAcc.Count()/(bankAcc.LatestValue().Day - bankAcc.FirstValue().Day).Days ) );
             }
 
             return names;

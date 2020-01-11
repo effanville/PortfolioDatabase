@@ -25,11 +25,19 @@ namespace PortfolioStatsCreatorHelper
 
     public static class PortfolioStatsCreators
     {
-        public static void WriteSectorAnalysis(StreamWriter writer, Portfolio funds, System.Reflection.PropertyInfo[] info, bool DisplayValueFunds, int maxNameLength, int maxCompanyLength, int maxNumLength)
+
+        public static void WriteSpacing(StreamWriter writer, bool spacing)
+        {
+            if (spacing)
+            {
+                writer.WriteLine("");
+            }
+        }
+        public static void WriteSectorAnalysis(StreamWriter writer, Portfolio funds, System.Reflection.PropertyInfo[] info, UserOptions options, int maxNameLength, int maxCompanyLength, int maxNumLength)
         {
             writer.WriteLine("<h2>Analysis By Sector</h2>");
 
-            WriteHeader(writer, info, maxNameLength, maxCompanyLength, maxNumLength);
+            WriteHeader(writer, info, options.SecurityDataToExport, maxNameLength, maxCompanyLength, maxNumLength);
 
             List<string> sectors = funds.GetSecuritiesSectors();
             foreach (string sectorName in sectors)
@@ -40,24 +48,27 @@ namespace PortfolioStatsCreatorHelper
                 int linesWritten = 0;
                 foreach (var value in valuesToWrite)
                 {
-                    if ((DisplayValueFunds && value.LatestVal > 0) || !DisplayValueFunds)
+                    if ((options.DisplayValueFunds && value.LatestVal > 0) || !options.DisplayValueFunds)
                     {
                         string line = string.Empty;
                         foreach (var props in info)
                         {
-                            if (Double.TryParse(props.GetValue(value).ToString(), out double result))
+                            if (options.SecurityDataToExport.Contains(props.Name))
                             {
-                                line += result.ToString().PadLeft(maxNumLength);
-                            }
-                            else
-                            {
-                                if (props.Name == "Name")
+                                if (Double.TryParse(props.GetValue(value).ToString(), out double result))
                                 {
-                                    line += props.GetValue(value).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                                    line += result.ToString().PadLeft(maxNumLength);
                                 }
                                 else
                                 {
-                                    line += props.GetValue(value).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                    if (props.Name == "Name")
+                                    {
+                                        line += props.GetValue(value).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                                    }
+                                    else
+                                    {
+                                        line += props.GetValue(value).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                    }
                                 }
                             }
                         }
@@ -68,12 +79,17 @@ namespace PortfolioStatsCreatorHelper
 
                 if (linesWritten > 0)
                 {
-                    writer.WriteLine("");
+                    WriteSpacing(writer, options.Spacing);
                 }
             }
         }
 
-        public static bool CreateHTMLPage(Portfolio funds, List<string> toExport, string filepath, bool DisplayValueFunds)
+        public static bool CreateHTMLPageCustom(Portfolio funds, string filepath, UserOptions options)
+        {
+            return CreateHTMLPage(funds, filepath, options);
+        }
+
+        private static bool CreateHTMLPage(Portfolio funds, string filepath, UserOptions options)
         {
             int maxNameLength = Math.Min(25, DatabaseAccessor.LongestName()+2);
             int maxCompanyLength = Math.Min(25, DatabaseAccessor.LongestCompany() + 2);
@@ -87,7 +103,7 @@ namespace PortfolioStatsCreatorHelper
             var totals = DatabaseAccessor.GeneratePortfolioStatistics();
             var properties = totals.GetType().GetProperties();
 
-            WriteHeader(htmlWriter, properties, maxNameLength, maxCompanyLength, maxNumLength);
+            WriteHeader(htmlWriter, properties,options.SecurityDataToExport, maxNameLength, maxCompanyLength, maxNumLength);
 
             List<string> companies = funds.GetSecuritiesCompanyNames();
             foreach (string compName in companies)
@@ -96,24 +112,27 @@ namespace PortfolioStatsCreatorHelper
                 int linesWritten = 0;
                 foreach (var sec in securities)
                 {
-                    if ((DisplayValueFunds && sec.LatestVal > 0) || !DisplayValueFunds)
+                    if ((options.DisplayValueFunds && sec.LatestVal > 0) || !options.DisplayValueFunds)
                     {
                         string line = string.Empty;
                         foreach (var props in properties)
                         {
-                            if (Double.TryParse(props.GetValue(sec).ToString(), out double result))
+                            if (options.SecurityDataToExport.Contains(props.Name))
                             {
-                                line += result.ToString().PadLeft(maxNumLength);
-                            }
-                            else
-                            {
-                                if (props.Name == "Name")
+                                if (Double.TryParse(props.GetValue(sec).ToString(), out double result))
                                 {
-                                    line += props.GetValue(sec).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                                    line += result.ToString().PadLeft(maxNumLength);
                                 }
                                 else
                                 {
-                                    line += props.GetValue(sec).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                    if (props.Name == "Name")
+                                    {
+                                        line += props.GetValue(sec).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                                    }
+                                    else
+                                    {
+                                        line += props.GetValue(sec).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                    }
                                 }
                             }
                         }
@@ -125,35 +144,38 @@ namespace PortfolioStatsCreatorHelper
 
                 if (linesWritten > 0)
                 {
-                    htmlWriter.WriteLine("");
+                    WriteSpacing(htmlWriter, options.Spacing);
                 }
             }
 
-            if ((DisplayValueFunds && totals.LatestVal > 0) || !DisplayValueFunds)
+            if ((options.DisplayValueFunds && totals.LatestVal > 0) || !options.DisplayValueFunds)
             {
                 htmlWriter.WriteLine("");
                 string fundTotalLine = string.Empty;
                 foreach (var props in properties)
                 {
-                    if (Double.TryParse(props.GetValue(totals).ToString(), out double result))
+                    if (options.SecurityDataToExport.Contains(props.Name))
                     {
-                        fundTotalLine += result.ToString().PadLeft(maxNumLength);
-                    }
-                    else
-                    {
-                        if (props.Name == "Name")
+                        if (Double.TryParse(props.GetValue(totals).ToString(), out double result))
                         {
-                            fundTotalLine += props.GetValue(totals).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                            fundTotalLine += result.ToString().PadLeft(maxNumLength);
                         }
                         else
                         {
-                            fundTotalLine += props.GetValue(totals).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                            if (props.Name == "Name")
+                            {
+                                fundTotalLine += props.GetValue(totals).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                            }
+                            else
+                            {
+                                fundTotalLine += props.GetValue(totals).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                            }
                         }
                     }
                 }
 
                 htmlWriter.WriteLine(fundTotalLine);
-                htmlWriter.WriteLine("");
+                WriteSpacing(htmlWriter, options.Spacing);
             }
 
             WriteSeparatorLine(htmlWriter, length);
@@ -163,7 +185,7 @@ namespace PortfolioStatsCreatorHelper
             DailyValuation_Named bankTotals = new DailyValuation_Named("Totals", string.Empty, DateTime.Today, BankAccountEditor.AllBankAccountValue(DateTime.Today));
             var bankProperties = bankTotals.GetType().GetProperties();
 
-            WriteHeader(htmlWriter, bankProperties, maxNameLength, maxCompanyLength, maxNumLength);
+            WriteHeader(htmlWriter, bankProperties, options.BankAccDataToExport, maxNameLength, maxCompanyLength, maxNumLength);
 
             List<string> BankCompanies = funds.GetBankAccountCompanyNames();
             foreach (string compName in BankCompanies)
@@ -172,26 +194,29 @@ namespace PortfolioStatsCreatorHelper
                 int linesWritten = 0;
                 foreach (var acc in bankAccounts)
                 {
-                    if ((DisplayValueFunds && acc.Value > 0) || !DisplayValueFunds)
+                    if ((options.DisplayValueFunds && acc.Value > 0) || !options.DisplayValueFunds)
                     {
                         string line = string.Empty;
                         foreach (var prop in bankProperties)
                         {
-                            if (Double.TryParse(prop.GetValue(acc).ToString(), out double result))
+                            if (options.BankAccDataToExport.Contains(prop.Name))
                             {
-                                line += result.ToString().PadLeft(maxNumLength);
-                            }
-                            else
-                            {
-                                if (prop.PropertyType == typeof(string))
+                                if (Double.TryParse(prop.GetValue(acc).ToString(), out double result))
                                 {
-                                    if (prop.Name == "Name")
+                                    line += result.ToString().PadLeft(maxNumLength);
+                                }
+                                else
+                                {
+                                    if (prop.PropertyType == typeof(string))
                                     {
-                                        line += prop.GetValue(acc).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
-                                    }
-                                    else
-                                    {
-                                        line += prop.GetValue(acc).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                        if (prop.Name == "Name")
+                                        {
+                                            line += prop.GetValue(acc).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                                        }
+                                        else
+                                        {
+                                            line += prop.GetValue(acc).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                        }
                                     }
                                 }
                             }
@@ -203,43 +228,46 @@ namespace PortfolioStatsCreatorHelper
 
                 if (linesWritten > 0)
                 {
-                    htmlWriter.WriteLine("");
+                    WriteSpacing(htmlWriter, options.Spacing);
                 }
             }
 
             WriteSeparatorLine(htmlWriter, length);
 
-            if ((DisplayValueFunds && bankTotals.Value > 0) || !DisplayValueFunds)
+            if ((options.DisplayValueFunds && bankTotals.Value > 0) || !options.DisplayValueFunds)
             {
                 string totalAccountsLine = string.Empty;
                 foreach (var prop in bankProperties)
                 {
-                    if (Double.TryParse(prop.GetValue(bankTotals).ToString(), out double result))
+                    if (options.BankAccDataToExport.Contains(prop.Name))
                     {
-                        totalAccountsLine += result.ToString().PadLeft(maxNumLength);
-                    }
-                    else
-                    {
-                        if (prop.PropertyType == typeof(string))
+                        if (Double.TryParse(prop.GetValue(bankTotals).ToString(), out double result))
                         {
-                            if (prop.Name == "Name")
+                            totalAccountsLine += result.ToString().PadLeft(maxNumLength);
+                        }
+                        else
+                        {
+                            if (prop.PropertyType == typeof(string))
                             {
-                                totalAccountsLine += prop.GetValue(bankTotals).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
-                            }
-                            else
-                            {
-                                totalAccountsLine += prop.GetValue(bankTotals).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                if (prop.Name == "Name")
+                                {
+                                    totalAccountsLine += prop.GetValue(bankTotals).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                                }
+                                else
+                                {
+                                    totalAccountsLine += prop.GetValue(bankTotals).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                                }
                             }
                         }
                     }
                 }
 
                 htmlWriter.WriteLine(totalAccountsLine);
-                htmlWriter.WriteLine("");
+                WriteSpacing(htmlWriter, options.Spacing);
                 WriteSeparatorLine(htmlWriter, length);
             }
 
-            htmlWriter.WriteLine(" ");
+            WriteSpacing(htmlWriter, options.Spacing);
 
             DailyValuation_Named portfolioTotals = new DailyValuation_Named("Total", "Portfolio", DateTime.Today, SecurityStatistics.TotalValue(DateTime.Today));
             var portfolioProperties = bankTotals.GetType().GetProperties();
@@ -247,32 +275,32 @@ namespace PortfolioStatsCreatorHelper
             string totalLine = string.Empty;
             foreach (var prop in portfolioProperties)
             {
-                if (Double.TryParse(prop.GetValue(portfolioTotals).ToString(), out double result))
-                {
-                    totalLine += result.ToString().PadLeft(maxNumLength);
-                }
-                else
-                {
-                    if (prop.PropertyType == typeof(string))
+                    if (Double.TryParse(prop.GetValue(portfolioTotals).ToString(), out double result))
                     {
-                        if (prop.Name == "Name")
+                        totalLine += result.ToString().PadLeft(maxNumLength);
+                    }
+                    else
+                    {
+                        if (prop.PropertyType == typeof(string))
                         {
-                            totalLine += prop.GetValue(portfolioTotals).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
-                        }
-                        else
-                        {
-                            totalLine += prop.GetValue(portfolioTotals).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                            if (prop.Name == "Name")
+                            {
+                                totalLine += prop.GetValue(portfolioTotals).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                            }
+                            else
+                            {
+                                totalLine += prop.GetValue(portfolioTotals).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                            }
                         }
                     }
-                }
             }
 
             htmlWriter.WriteLine(totalLine);
 
-            htmlWriter.WriteLine("");
+            WriteSpacing(htmlWriter, options.Spacing);
             WriteSeparatorLine(htmlWriter, length);
 
-            WriteSectorAnalysis(htmlWriter, funds, properties, DisplayValueFunds, maxNameLength, maxCompanyLength, maxNumLength);
+            WriteSectorAnalysis(htmlWriter, funds, properties, options, maxNameLength, maxCompanyLength, maxNumLength);
 
             CreateHTMLFooter(htmlWriter, length);
             htmlWriter.Close();
@@ -291,28 +319,31 @@ namespace PortfolioStatsCreatorHelper
             writer.WriteLine(toWrite);
         }
 
-        private static void WriteHeader(StreamWriter writer, System.Reflection.PropertyInfo[] info, int maxNameLength, int maxCompanyLength, int maxNumLength)
+        private static void WriteHeader(StreamWriter writer, System.Reflection.PropertyInfo[] info, List<string> names, int maxNameLength, int maxCompanyLength, int maxNumLength)
         {
             string header = string.Empty;
 
             foreach (var props in info)
             {
-                if (props.PropertyType == typeof(string))
+                if (names.Contains(props.Name))
                 {
-                    if (props.Name == "Name")
+                    if (props.PropertyType == typeof(string))
                     {
-                        header += "<b>" + props.Name.WithMaxLength(maxNameLength - 2).PadRight(maxNameLength) + "</b>";
-                    }
-                    else
-                    {
-                        header += "<b>" + props.Name.WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength) + "</b>";
-                    }
-                    
-                }
+                        if (props.Name == "Name")
+                        {
+                            header += "<b>" + props.Name.WithMaxLength(maxNameLength - 2).PadRight(maxNameLength) + "</b>";
+                        }
+                        else
+                        {
+                            header += "<b>" + props.Name.WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength) + "</b>";
+                        }
 
-                if (props.PropertyType == typeof(double))
-                {
-                    header += "<b>" + props.Name.WithMaxLength(maxNumLength - 2).PadLeft(maxNumLength) + "</b>";
+                    }
+
+                    if (props.PropertyType == typeof(double))
+                    {
+                        header += "<b>" + props.Name.WithMaxLength(maxNumLength - 2).PadLeft(maxNumLength) + "</b>";
+                    }
                 }
             }
 

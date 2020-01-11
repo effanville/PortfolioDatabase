@@ -86,6 +86,10 @@
       <DependentUpon>UserButtons.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtonsViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml.cs">
+      <DependentUpon>StatsOptionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\GuiSupport\OutputHelper.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
     <Compile Include="GUI\HelpWindow.xaml.cs">
@@ -133,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
