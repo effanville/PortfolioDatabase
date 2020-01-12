@@ -35,19 +35,21 @@ namespace FinancialStructures.GUIFinanceStructures
             NewValue = true;
         }
 
-        public NameComp(string n, string c, string u, List<string> s, bool newValue = true)
+        public NameComp(string n, string c, string currency, string u, List<string> s, bool newValue = true)
         {
             Name = n;
             Company = c;
+            Currency = currency;
             Url = u;
             Sectors = $"{string.Join(", ", s)}";
             NewValue = newValue;
         }
 
-        public NameComp(string n, string c, string u, bool newValue = true)
+        public NameComp(string n, string c, string currency, string u, bool newValue = true)
         {
             Name = n;
             Company = c;
+            Currency = currency;
             Url = u;
             NewValue = newValue;
         }
@@ -81,6 +83,14 @@ namespace FinancialStructures.GUIFinanceStructures
         {
             get { return fCompany; }
             set { fCompany = value; NewValue = true; }
+        }
+
+        private string fCurrency;
+
+        public string Currency
+        {
+            get { return fCurrency; }
+            set { fCurrency = value; NewValue = true; }
         }
 
         private string fSectors;

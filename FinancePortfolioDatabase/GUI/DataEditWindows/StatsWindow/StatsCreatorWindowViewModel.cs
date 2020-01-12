@@ -110,7 +110,8 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateHTMLCommand(Object obj)
         {
             var optionWindow = new StatsOptionsWindow();
-            var context = new StatsOptionsViewModel(UpdateReports);
+            Action closeWindow = new Action(optionWindow.Close);
+            var context = new StatsOptionsViewModel(UpdateReports, closeWindow);
             optionWindow.DataContext = context;
             optionWindow.ShowDialog();
         }

@@ -18,6 +18,8 @@ namespace FinanceWindowsViewModels
 
         public ICommand OpenSectorEditWindowCommand { get; }
 
+        public ICommand OpenCurrencyEditWindowCommand { get; }
+
         public ICommand OpenStatsCreatorWindowCommand { get; }
 
         public ICommand SaveDatabaseCommand { get; }
@@ -40,6 +42,12 @@ namespace FinanceWindowsViewModels
         {
             UpdateMainWindow(true);
             windowToView("SectorEditWindow");
+        }
+
+        public void ExecuteCurrencyEditWindow(Object obj)
+        {
+            UpdateMainWindow(true);
+            windowToView("CurrencyEditWindow");
         }
         public void ExecuteStatsCreatorWindow(Object obj)
         {
@@ -113,6 +121,7 @@ namespace FinanceWindowsViewModels
             OpenSecurityEditWindowCommand = new BasicCommand(ExecuteSecurityEditWindow);
             OpenBankAccountEditWindowCommand = new BasicCommand(ExecuteBankAccEditWindow);
             OpenSectorEditWindowCommand = new BasicCommand(ExecuteSectorEditWindow);
+            OpenCurrencyEditWindowCommand = new BasicCommand(ExecuteCurrencyEditWindow);
             OpenStatsCreatorWindowCommand = new BasicCommand(ExecuteStatsCreatorWindow);
             SaveDatabaseCommand = new BasicCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new BasicCommand(ExecuteLoadDatabase);

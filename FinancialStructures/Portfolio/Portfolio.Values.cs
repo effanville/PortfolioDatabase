@@ -18,7 +18,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (sec.Any())
                 {
-                    var securityEarliest = sec.FirstValue().Day;
+                    var currencyName = sec.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    var securityEarliest = sec.FirstValue(currency).Day;
                     if (securityEarliest < output)
                     {
                         output = securityEarliest;
@@ -49,6 +51,8 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (sec.Any())
                 {
+                    var currencyName = sec.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
                     total += Profit(sec.GetName(), sec.GetCompany());
                 }
             }
@@ -73,9 +77,11 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (security.Any())
                 {
-                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                    var currencyName = security.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    earlierValue += security.GetNearestEarlierValuation(earlierTime, currency).Value;
+                    laterValue += security.GetNearestEarlierValuation(laterTime, currency).Value;
+                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime, currency));
                 }
             }
 
@@ -92,7 +98,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (sec.Any())
                 {
-                    total += sec.GetNearestEarlierValuation(date).Value;
+                    var currencyName = sec.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    total += sec.GetNearestEarlierValuation(date, currency).Value;
                 }
             }
 
@@ -109,7 +117,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (acc.Any())
                 {
-                    total += acc.GetNearestEarlierValuation(date).Value;
+                    var currencyName = acc.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    total += acc.GetNearestEarlierValuation(date, currency).Value;
                 }
             }
 

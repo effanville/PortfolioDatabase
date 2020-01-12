@@ -15,7 +15,7 @@ namespace SecurityHelperFunctions
         /// <summary>
         /// Tries to add a security to the underlying global database
         /// </summary>
-        public static bool TryAddSecurity(string name, string company, string url, string sectors, ErrorReports reports)
+        public static bool TryAddSecurity(string name, string company, string currency, string url, string sectors, ErrorReports reports)
         {
             List<string> sectorList = new List<string>();
             if (!string.IsNullOrEmpty(sectors))
@@ -29,7 +29,7 @@ namespace SecurityHelperFunctions
                 }
             }
 
-            return GlobalData.Finances.TryAddSecurityFromName(name, company, url, sectorList, reports);
+            return GlobalData.Finances.TryAddSecurityFromName(name, company, currency, url, sectorList, reports);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SecurityHelperFunctions
         /// <summary>
         /// Renames the security if this exists.
         /// </summary>
-        public static bool TryEditSecurityName(string name, string company, string newName, string newCompany, string url, string sectors, ErrorReports reports)
+        public static bool TryEditSecurityName(string name, string company, string newName, string newCompany, string currency, string url, string sectors, ErrorReports reports)
         {
             List<string> sectorList = new List<string>();
             if (!string.IsNullOrEmpty(sectors))
@@ -83,7 +83,7 @@ namespace SecurityHelperFunctions
                     sectorList[i] = sectorList[i].Trim(' ');
                 }
             }
-            return GlobalData.Finances.TryEditSecurityNameCompany(name, company, newName, newCompany, url, sectorList, reports);
+            return GlobalData.Finances.TryEditSecurityNameCompany(name, company, newName, newCompany, currency, url, sectorList, reports);
         }
 
         /// <summary>

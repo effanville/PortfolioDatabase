@@ -45,6 +45,14 @@ namespace FinancialStructures.FinanceStructures
             set { fUrl = value; }
         }
 
+        private string fCurrency;
+
+        public string Currency
+        {
+            get { return fCurrency; }
+            set { fCurrency = value; }
+        }
+
         /// <summary>
         /// The number of shares held in this security.
         /// </summary>
@@ -112,20 +120,22 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Constructor creating a new security.
         /// </summary>
-        public Security(string name, string company, string url = null)
+        public Security(string name, string company, string currency = "GBP", string url = null)
         {
             fName = name;
             fCompany = company;
+            fCurrency = currency;
             fUrl = url;
         }
 
         /// <summary>
         /// Constructor to make a new security from known data.
         /// </summary>
-        private Security(string name, string company, string url, TimeList shares, TimeList prices, TimeList investments)
+        private Security(string name, string company,string currency, string url, TimeList shares, TimeList prices, TimeList investments)
         {
             fName = name;
             fCompany = company;
+            fCurrency = currency;
             fUrl = url;
             fShares = shares;
             fUnitPrice = prices;

@@ -15,7 +15,7 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Tries to add a CashAccount to the underlying global database
         /// </summary>
-        public static bool TryAddBankAccount(string name, string company, string sectors, ErrorReports reports)
+        public static bool TryAddBankAccount(string name, string company, string currency, string sectors, ErrorReports reports)
         {
             List<string> sectorList = new List<string>();
             if (!string.IsNullOrEmpty(sectors))
@@ -28,7 +28,7 @@ namespace BankAccountHelperFunctions
                     sectorList[i] = sectorList[i].Trim(' ');
                 }
             }
-            return GlobalData.Finances.TryAddBankAccountFromName(name, company, sectorList, reports);
+            return GlobalData.Finances.TryAddBankAccountFromName(name, company, currency, sectorList, reports);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace BankAccountHelperFunctions
         /// <summary>
         /// Renames the BankAccount if this exists.
         /// </summary>
-        public static bool TryEditBankAccountName(string name, string company, string newName, string newCompany, string newSectors, ErrorReports reports)
+        public static bool TryEditBankAccountName(string name, string company, string newName, string newCompany, string currency, string newSectors, ErrorReports reports)
         {
             List<string> sectorList = new List<string>();
             if (!string.IsNullOrEmpty(newSectors))
@@ -80,7 +80,7 @@ namespace BankAccountHelperFunctions
                 }
             }
 
-            return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany, sectorList, reports);
+            return GlobalData.Finances.TryEditCashAcountNameCompany(name, company, newName, newCompany, currency, sectorList, reports);
         }
 
         public static bool TryAddDataToBankAccount(string name, string company, DateTime date, double value)

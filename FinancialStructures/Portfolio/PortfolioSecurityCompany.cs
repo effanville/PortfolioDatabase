@@ -2,7 +2,6 @@
 using FinancialStructures.FinanceFunctionsList;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FinancialStructures.FinanceStructures
 {
@@ -40,7 +39,9 @@ namespace FinancialStructures.FinanceStructures
             var output = new List<DailyValuation_Named>();
             foreach (var sec in CompanySecurities(company))
             {
-                output.AddRange(sec.GetAllInvestmentsNamed());
+                var currencyName = sec.GetCurrency();
+                var currency = Currencies.Find(cur => cur.Name == currencyName);
+                output.AddRange(sec.GetAllInvestmentsNamed(currency));
             }
 
             return output;
@@ -54,7 +55,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (security.Any())
                 {
-                    value += security.GetNearestEarlierValuation(date).Value;
+                    var currencyName = security.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    value += security.GetNearestEarlierValuation(date, currency).Value;
                 }
             }
 
@@ -69,7 +72,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (security.Any())
                 {
-                    value += security.LatestValue().Value - security.TotalInvestment();
+                    var currencyName = security.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    value += security.LatestValue(currency).Value - security.TotalInvestment(currency);
                 }
             }
 
@@ -99,9 +104,11 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (security.Any())
                 {
-                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                    var currencyName = security.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    earlierValue += security.GetNearestEarlierValuation(earlierTime, currency).Value;
+                    laterValue += security.GetNearestEarlierValuation(laterTime, currency).Value;
+                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime, currency));
                 }
             }
 

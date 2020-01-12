@@ -29,7 +29,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (account.GetCompany() == company)
                 {
-                    namesAndCompanies.Add(new DailyValuation_Named(account.GetName(), account.GetCompany(), account.LatestValue().Day, account.LatestValue().Value));
+                    var currencyName = account.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    namesAndCompanies.Add(new DailyValuation_Named(account.GetName(), account.GetCompany(), account.LatestValue(currency).Day, account.LatestValue(currency).Value));
                 }
             }
 
@@ -53,7 +55,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (account != null && account.Any())
                 {
-                    value += account.GetNearestEarlierValuation(date).Value;
+                    var currencyName = account.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    value += account.GetNearestEarlierValuation(date, currency).Value;
                 }
             }
 
@@ -70,7 +74,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (account != null && account.Any())
                 {
-                    value += account.GetNearestEarlierValuation(date).Value;
+                    var currencyName = account.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    value += account.GetNearestEarlierValuation(date, currency).Value;
                 }
             }
 

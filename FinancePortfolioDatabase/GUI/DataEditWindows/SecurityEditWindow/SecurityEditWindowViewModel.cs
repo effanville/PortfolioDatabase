@@ -7,6 +7,7 @@ using GUISupport;
 using SecurityHelperFunctions;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace FinanceWindowsViewModels
@@ -93,6 +94,8 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddEditSecurityDataCommand { get; set; }
 
+        public ICommand AddCsvData { get; }
+
         public void UpdateFundListBox()
         {
             var currentSelectedName = selectedName;
@@ -159,7 +162,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Url, name.Sectors, reports);
+                        SecurityEditor.TryAddSecurity(name.Name, name.Company, name.Currency, name.Url, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -179,7 +182,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Url, name.Sectors, reports);
+                        SecurityEditor.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Currency, name.Url, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -193,7 +196,7 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
-            //UpdateFundListBox();
+
             ClearSelection();
             UpdateMainWindow(true);
         }
@@ -235,6 +238,37 @@ namespace FinanceWindowsViewModels
             UpdateSelectedSecurityListBox();
         }
 
+        private void ExecuteAddCsvData(Object obj)
+        {
+            var reports = new ErrorReports();
+            OpenFileDialog openFile = new OpenFileDialog() { DefaultExt = "xml" };
+            openFile.Filter = "Csv Files|*.csv|All Files|*.*";
+            List<object> outputs = null;
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                outputs = CsvDataRead.ReadFromCsv(openFile.FileName, ElementType.Security, reports);
+            }
+
+            foreach (var objec in outputs)
+            {
+                if (objec is BasicDayDataView view)
+                {
+                    SecurityEditor.TryAddDataToSecurity(reports, selectedName.Name, selectedName.Company,  view.Date, view.ShareNo, view.UnitPrice, view.Investment);
+                }
+                else
+                {
+                    reports.AddError("Have the wrong type of thing");
+                }
+            }
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
+
+            UpdateMainWindow(false);
+            UpdateSelectedSecurityListBox();
+        }
+
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
@@ -252,6 +286,7 @@ namespace FinanceWindowsViewModels
 
             CreateSecurityCommand = new BasicCommand(ExecuteCreateEditCommand);
             AddEditSecurityDataCommand = new BasicCommand(ExecuteAddEditSecData);
+            AddCsvData = new BasicCommand(ExecuteAddCsvData);
         }
     }
 }

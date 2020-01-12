@@ -12,20 +12,25 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (desired.Any())
                 {
-                    var needed = desired.LatestValue();
-                    return needed.Value - desired.GetLastEarlierValuation(needed.Day).Value;
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    var needed = desired.LatestValue(currency);
+                    return needed.Value - desired.GetLastEarlierValuation(needed.Day, currency).Value;
                 }
             }
 
             return double.NaN;
         }
+
         public double Profit(string name, string company)
         {
             if (TryGetSecurity(name, company, out Security desired))
             {
                 if (desired.Any())
                 {
-                    return desired.LatestValue().Value - desired.TotalInvestment();
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    return desired.LatestValue(currency).Value - desired.TotalInvestment(currency);
                 }
             }
 
@@ -38,7 +43,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (desired.Any())
                 {
-                    return desired.LatestValue().Value / AllSecuritiesValue(DateTime.Today);
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    return desired.LatestValue(currency).Value / AllSecuritiesValue(DateTime.Today);
                 }
             }
 
@@ -51,7 +58,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (desired.Any())
                 {
-                    return desired.GetAllInvestmentsNamed();
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    return desired.GetAllInvestmentsNamed(currency);
                 }
             }
 
@@ -67,7 +76,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (desired.Any())
                 {
-                    return desired.CAR(earlierTime, laterTime);
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    return desired.CAR(earlierTime, laterTime, currency);
                 }
             }
 
@@ -83,7 +94,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (desired.Any())
                 {
-                    return desired.IRR();
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    return desired.IRR(currency);
                 }
             }
 
@@ -99,7 +112,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (desired.Any())
                 {
-                    return desired.IRRTime(earlierTime, laterTime);
+                    var currencyName = desired.GetCurrency();
+                    var currency = Currencies.Find(cur => cur.Name == currencyName);
+                    return desired.IRRTime(earlierTime, laterTime, currency);
                 }
             }
 

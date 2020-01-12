@@ -81,7 +81,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits the name and company of the CashAccount.
         /// </summary>
-        internal bool EditNameCompany(string name, string company, List<string> sectors)
+        internal bool EditNameCompany(string name, string company, string currency, List<string> sectors)
         {
             if (fCompany != company)
             {
@@ -90,6 +90,10 @@ namespace FinancialStructures.FinanceStructures
             if (fName != name)
             {
                 fName = name;
+            }
+            if (fCurrency != currency)
+            {
+                fCurrency = currency;
             }
 
             fSectors = sectors;
@@ -148,7 +152,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public CashAccount Copy()
         {
-            return new CashAccount(fName, fCompany, fAmounts);
+            return new CashAccount(fName, fCompany, fCurrency, fAmounts);
         }
 
         /// <summary>
@@ -173,6 +177,14 @@ namespace FinancialStructures.FinanceStructures
         public string GetUrl()
         {
             return fUrl;
+        }
+
+        /// <summary>
+        /// Returns the currency of the CashAccount.
+        /// </summary>
+        public string GetCurrency()
+        {
+            return fCurrency;
         }
 
         /// <summary>

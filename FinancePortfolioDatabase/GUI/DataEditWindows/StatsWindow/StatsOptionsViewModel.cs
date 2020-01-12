@@ -87,14 +87,18 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
+
+            CloseWindowAction();
         }
 
 
         Action<ErrorReports> UpdateReports;
+        private Action CloseWindowAction;
 
-        public StatsOptionsViewModel(Action<ErrorReports> updateReports)
+        public StatsOptionsViewModel(Action<ErrorReports> updateReports, Action CloseWindow)
         {
             UpdateReports = updateReports;
+            CloseWindowAction = CloseWindow;
             ExportHTMLCommand = new BasicCommand(ExecuteExportHTMLCommand);
             var totals = new SecurityStatsHolder();
             var properties = totals.GetType().GetProperties();

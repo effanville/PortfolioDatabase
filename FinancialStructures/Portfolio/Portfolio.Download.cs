@@ -43,6 +43,11 @@ namespace FinancialStructures.FinanceStructures
             return address.Contains("trustnet");
         }
 
+        private static bool IsBloomBergAddress(string address)
+        {
+            return address.Contains("bloomberg.com");
+        }
+
         private static async Task<string> DownloadFromURL(string url, ErrorReports reports)
         {
             if (string.IsNullOrEmpty(url))
@@ -119,6 +124,16 @@ namespace FinancialStructures.FinanceStructures
                 if (double.IsNaN(value))
                 {
                     reports.AddError($"Could not download data from Trustnet url: {url}");
+                    return false;
+                }
+                return true;
+            }
+            if (IsBloomBergAddress(url))
+            {
+                value = ProcessFromBloomBerg(data);
+                if (double.IsNaN(value))
+                {
+                    reports.AddError($"Could not download data from BloomBerg url: {url}");
                     return false;
                 }
                 return true;
@@ -273,6 +288,39 @@ namespace FinancialStructures.FinanceStructures
             return double.NaN;
         }
 
+        
+
+        private static double ProcessFromBloomBerg(string data)
+        {
+            bool continuer(char c)
+            {
+                if (char.IsDigit(c) || c == '.')
+                {
+                    return true;
+                }
+
+                return false;
+            };
+            string searchName = "<span class=\"priceText__1853e8a5\">";
+            int penceValue = data.IndexOf(searchName);
+            if (penceValue != -1)
+            {
+                string containsNewValue = data.Substring(searchName.Length + penceValue, 20);
+
+                var digits = containsNewValue.SkipWhile(c => !char.IsDigit(c)).TakeWhile(continuer).ToArray();
+
+                var str = new string(digits);
+                if (string.IsNullOrEmpty(str))
+                {
+                    return double.NaN;
+                }
+                double i = double.Parse(str);
+                return i;
+            }
+
+            return double.NaN;
+        }
+
         public async static Task DownloadPortfolioLatest(Portfolio portfo, ErrorReports reports)
         {
             foreach (var sec in portfo.GetSecurities())
@@ -282,6 +330,10 @@ namespace FinancialStructures.FinanceStructures
             foreach (var acc in portfo.GetBankAccounts())
             {
                 await DownloadBankAccountLatest(acc, reports).ConfigureAwait(false);
+            }
+            foreach (var currency in portfo.GetCurrencies())
+            {
+                await DownloadCurrencyLatest(currency, reports).ConfigureAwait(false);
             }
         }
 
@@ -322,6 +374,23 @@ namespace FinancialStructures.FinanceStructures
             }
 
             acc.TryAddValue(DateTime.Today, value);
+            return;
+        }
+
+        public async static Task DownloadCurrencyLatest(Currency currency, ErrorReports reports)
+        {
+            string data = await DownloadFromURL(currency.GetUrl(), reports).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(data))
+            {
+                reports.AddError($"{currency.GetName()}: could not download data from {currency.GetUrl()}");
+                return;
+            }
+            if (!ProcessDownloadString(currency.GetUrl(), data, reports, out double value))
+            {
+                return;
+            }
+
+            currency.TryAddData(DateTime.Today, value);
             return;
         }
 

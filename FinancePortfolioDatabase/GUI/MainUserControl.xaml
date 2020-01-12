@@ -58,6 +58,13 @@
 
         <Grid Grid.Row="0"
               Grid.Column="1"
+              VerticalAlignment="Stretch"
+              Visibility="{Binding CurrencyEditWindowVisibility, Converter={StaticResource BoolToVis}}">
+            <local:CurrencyEditWindow  DataContext="{Binding CurrencyEditViewModel}"/>
+        </Grid>
+
+        <Grid Grid.Row="0"
+              Grid.Column="1"
               Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
             <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
         </Grid>

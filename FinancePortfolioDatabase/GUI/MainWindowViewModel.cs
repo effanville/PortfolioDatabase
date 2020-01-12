@@ -33,6 +33,12 @@ namespace FinanceWindowsViewModels
             get { return fSectorEditWindowVisibility; }
             set { fSectorEditWindowVisibility = value; OnPropertyChanged(); }
         }
+        private bool fCurrencyEditWindowVisibility;
+        public bool CurrencyEditWindowVisibility
+        {
+            get { return fCurrencyEditWindowVisibility; }
+            set { fCurrencyEditWindowVisibility = value; OnPropertyChanged(); }
+        }
         private bool fStatsEditWindowVisibility;
         public bool StatsEditWindowVisibility
         {
@@ -107,6 +113,9 @@ namespace FinanceWindowsViewModels
                 case "SectorEditWindow":
                     OpenSectorEditWindow();
                     break;
+                case "CurrencyEditWindow":
+                    OpenCurrencyEditWindow();
+                    break;
                 case "StatsCreatorWindow":
                     OpenStatsCreatorWindow();
                     break;
@@ -127,6 +136,7 @@ namespace FinanceWindowsViewModels
             SecurityEditWindowVisibility = false;
             SectorEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;
+            CurrencyEditWindowVisibility = false;
             StatsEditWindowVisibility = false;
         }
 
@@ -137,6 +147,7 @@ namespace FinanceWindowsViewModels
             SectorEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;
             StatsEditWindowVisibility = false;
+            CurrencyEditWindowVisibility = false;
             SecurityEditWindowVisibility = true;
         }
 
@@ -147,6 +158,7 @@ namespace FinanceWindowsViewModels
             SectorEditWindowVisibility = false;
             SecurityEditWindowVisibility = false;
             StatsEditWindowVisibility = false;
+            CurrencyEditWindowVisibility = false;
             BankAccEditWindowVisibility = true;
         }
         private void OpenSectorEditWindow()
@@ -156,7 +168,19 @@ namespace FinanceWindowsViewModels
             SecurityEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;
             StatsEditWindowVisibility = false;
+            CurrencyEditWindowVisibility = false;
             SectorEditWindowVisibility = true;
+        }
+
+        private void OpenCurrencyEditWindow()
+        {
+            CurrencyEditViewModel = new CurrencyEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
+            DataWindowVisibility = false;
+            SecurityEditWindowVisibility = false;
+            BankAccEditWindowVisibility = false;
+            StatsEditWindowVisibility = false;
+            SectorEditWindowVisibility = false;
+            CurrencyEditWindowVisibility = true;
         }
 
         private void OpenStatsCreatorWindow()
@@ -166,6 +190,7 @@ namespace FinanceWindowsViewModels
             SecurityEditWindowVisibility = false;
             BankAccEditWindowVisibility = false;
             SectorEditWindowVisibility = false;
+            CurrencyEditWindowVisibility = false ;
             StatsEditWindowVisibility = true;
         }
 
@@ -197,6 +222,13 @@ namespace FinanceWindowsViewModels
         {
             get { return fSectorEditViewModel; }
             set { fSectorEditViewModel = value; OnPropertyChanged(); }
+        }
+
+        private CurrencyEditWindowViewModel fCurrencyEditViewModel;
+        public CurrencyEditWindowViewModel CurrencyEditViewModel
+        {
+            get { return fCurrencyEditViewModel; }
+            set { fCurrencyEditViewModel = value; OnPropertyChanged(); }
         }
 
         private BankAccEditWindowViewModel fBankAccEditViewModel;
