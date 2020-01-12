@@ -86,5 +86,22 @@
                 </ListView>
             </Grid>
         </TabItem>
+        <TabItem Header="Currencies">
+            <Grid Background="LightPink">
+                <ListView Name="Currencies"
+                         ItemsSource="{Binding CurrencyNames}"
+                         MinHeight="300"
+                         MinWidth="100"
+                         Margin="10,10,10,10">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="100" 
+                                            Header="Name" 
+                                            DisplayMemberBinding="{Binding Name}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </TabItem>
     </TabControl>
 </Grid>

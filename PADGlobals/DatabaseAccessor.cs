@@ -34,6 +34,10 @@ namespace GUIAccessorFunctions
             {
                 PortfoCopy.BankAccounts.Add(bankAcc);
             }
+            foreach (var currency in GlobalData.Finances.Currencies)
+            {
+                PortfoCopy.Currencies.Add(currency);
+            }
 
             return PortfoCopy;
         }
@@ -59,6 +63,33 @@ namespace GUIAccessorFunctions
                 if (sector.GetName() == name)
                 {
                     return sector.Copy();
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// returns a copy of the 
+        /// </summary>
+        public static List<Currency> GetCurrencies()
+        {
+            var output = new List<Currency>();
+            foreach (var sector in GlobalData.Finances.Currencies)
+            {
+                output.Add(sector);
+            }
+            return output;
+        }
+
+        public static Currency GetCurrencyFromName(string name)
+        {
+            var benchmarks = GetCurrencies();
+            foreach (var currency in benchmarks)
+            {
+                if (currency.GetName() == name)
+                {
+                    return currency.Copy();
                 }
             }
 
@@ -105,7 +136,20 @@ namespace GUIAccessorFunctions
             {
                 foreach (Sector thing in GlobalData.BenchMarks)
                 {
-                    outputs.Add(new NameComp(thing.GetName(), string.Empty, thing.GetUrl(), false));
+                    outputs.Add(new NameComp(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
+                }
+            }
+            return outputs;
+        }
+
+        public static List<NameComp> GetCurrencyNames()
+        {
+            var outputs = new List<NameComp>();
+            if (GlobalData.Finances.Currencies != null)
+            {
+                foreach (Currency thing in GlobalData.Finances.Currencies)
+                {
+                    outputs.Add(new NameComp(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
                 }
             }
             return outputs;

@@ -29,6 +29,13 @@ namespace FinanceWindowsViewModels
             set { fSectorNames = value; OnPropertyChanged(); }
         }
 
+        private List<NameComp> fCurrencyNames;
+        public List<NameComp> CurrencyNames
+        {
+            get { return fCurrencyNames; }
+            set { fCurrencyNames = value; OnPropertyChanged(); }
+        }
+
         public void DataUpdate()
         {
             FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
@@ -37,6 +44,8 @@ namespace FinanceWindowsViewModels
             AccountNames.Sort();
             SectorNames = DatabaseAccessor.GetSectorNames();
             SectorNames.Sort();
+            CurrencyNames = DatabaseAccessor.GetCurrencyNames();
+            CurrencyNames.Sort();
         }
 
         Action<bool> UpdateMainWindow;
@@ -44,12 +53,7 @@ namespace FinanceWindowsViewModels
         public BasicDataViewModel(Action<bool> updateWindow)
         {
             UpdateMainWindow = updateWindow;
-            FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
-            FundNames.Sort();
-            AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
-            AccountNames.Sort();
-            SectorNames = DatabaseAccessor.GetSectorNames();
-            SectorNames.Sort();
+            DataUpdate();
         }
     }
 }

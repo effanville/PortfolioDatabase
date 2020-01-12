@@ -16,6 +16,9 @@
         <Button Content="Sector Edit"
                 Command="{Binding OpenSectorEditWindowCommand}"
                 Margin="10 10 10 10"/>
+        <Button Content="Currency Edit"
+                Command="{Binding OpenCurrencyEditWindowCommand}"
+                Margin="10 10 10 10"/>
         <Button Content="Stats Creator"
                 Command="{Binding OpenStatsCreatorWindowCommand}"
                 Margin="10 10 10 10"/>

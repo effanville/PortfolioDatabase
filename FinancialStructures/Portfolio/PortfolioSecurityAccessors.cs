@@ -72,7 +72,7 @@ namespace FinancialStructures.FinanceStructures
                     date = security.LatestValue().Day;
                 }
 
-                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), security.GetUrl(), security.GetSectors(), date, false));
+                namesAndCompanies.Add(new NameCompDate(security.GetName(), security.GetCompany(), security.GetCurrency(), security.GetUrl(), security.GetSectors(), date, false));
             }
 
             return namesAndCompanies;
@@ -102,6 +102,11 @@ namespace FinancialStructures.FinanceStructures
         public List<CashAccount> GetBankAccounts()
         {
             return BankAccounts;
+        }
+
+        public List<Currency> GetCurrencies()
+        {
+            return Currencies;
         }
 
         /// <summary>
@@ -149,7 +154,7 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddSecurityFromName(string name, string company, string url, List<string> sectors, ErrorReports reports)
+        public bool TryAddSecurityFromName(string name, string company, string currency, string url, List<string> sectors, ErrorReports reports)
         {
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(company))
             {
@@ -163,7 +168,7 @@ namespace FinancialStructures.FinanceStructures
                 return false;
             }
 
-            var NewFund = new Security(name, company, url);
+            var NewFund = new Security(name, company, currency, url);
             foreach (var sector in sectors)
             {
                 NewFund.TryAddSector(sector);
@@ -216,14 +221,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string url, List<string> sectors, ErrorReports reports)
+        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string currency, string url, List<string> sectors, ErrorReports reports)
         {
             for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
             {
                 if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, url, sectors, reports);
+                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, currency, url, sectors, reports);
                 }
             }
 

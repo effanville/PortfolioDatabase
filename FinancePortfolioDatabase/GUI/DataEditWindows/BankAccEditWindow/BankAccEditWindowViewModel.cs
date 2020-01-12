@@ -136,7 +136,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company, name.Sectors, reports);
+                        BankAccountEditor.TryAddBankAccount(name.Name, name.Company, name.Currency, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -156,7 +156,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, name.Sectors, reports);
+                        BankAccountEditor.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, name.Currency, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }

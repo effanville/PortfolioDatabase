@@ -21,10 +21,19 @@ namespace FinancialStructures.FinanceStructures
             private set { fBankAccounts = value; }
         }
 
+        private List<Currency> fCurrencies;
+
+        public List<Currency> Currencies
+        {
+            get { return fCurrencies; }
+            private set { fCurrencies = value; }
+        }
+
         public Portfolio()
         {
             fFunds = new List<Security>();
             fBankAccounts = new List<CashAccount>();
+            fCurrencies = new List<Currency>();
         }
     }
 }

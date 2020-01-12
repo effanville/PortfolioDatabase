@@ -51,7 +51,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public Security Copy()
         {
-            return new Security(fName, fCompany, fUrl, fShares, fUnitPrice, fInvestments);
+            return new Security(fName, fCompany, fCurrency, fUrl, fShares, fUnitPrice, fInvestments);
         }
 
         /// <summary>
@@ -68,6 +68,14 @@ namespace FinancialStructures.FinanceStructures
         public string GetCompany()
         {
             return fCompany;
+        }
+
+        /// <summary>
+        /// Returns the currency field of the security
+        /// </summary>
+        public string GetCurrency()
+        {
+            return fCurrency;
         }
 
         /// <summary>
@@ -88,7 +96,7 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
-        /// Produces a list of data for visual display purposes.
+        /// Produces a list of data for visual display purposes. Display in the base currency of the fund ( so this does not modify values due to currency)
         /// </summary>
         internal List<BasicDayDataView> GetDataForDisplay()
         {
@@ -213,7 +221,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Edits name and company data of security.
         /// </summary>
-        internal bool TryEditNameCompany(string name, string company, string url, List<string> sectors, ErrorReports reports)
+        internal bool TryEditNameCompany(string name, string company, string currency, string url, List<string> sectors, ErrorReports reports)
         {
             if (name != fName)
             {
@@ -229,6 +237,11 @@ namespace FinancialStructures.FinanceStructures
             {
                 reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has url `{fUrl}' edited to `{url}'.");
                 fUrl = url;
+            }
+            if (currency != fCurrency)
+            {
+                reports.AddGeneralReport(ReportType.Report, $"Security `{fCompany}'-`{fName}' has url `{fCurrency}' edited to `{currency}'.");
+                fCurrency = currency;
             }
             if (sectors != fSectors)
             {

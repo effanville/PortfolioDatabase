@@ -61,6 +61,20 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
+        /// The company name associated to the account.
+        /// </summary>
+        private string fCurrency;
+
+        /// <summary>
+        /// This should only be used for serialisation.
+        /// </summary>
+        public string Currency
+        {
+            get { return fCurrency; }
+            set { fCurrency = value; }
+        }
+
+        /// <summary>
         /// The url associated to the account.
         /// </summary>
         private string fUrl;
@@ -99,19 +113,21 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Default constructor where no data is known.
         /// </summary>
-        internal CashAccount(string name, string company)
+        internal CashAccount(string name, string company, string currency)
         {
             fName = name;
             fCompany = company;
+            fCurrency = currency;
         }
 
         /// <summary>
         /// Constructor used when data is known.
         /// </summary>
-        private CashAccount(string name, string company, TimeList amounts)
+        private CashAccount(string name, string company, string currency, TimeList amounts)
         {
             fName = name;
             fCompany = company;
+            fCurrency = currency;
             fAmounts = amounts;
         }
 

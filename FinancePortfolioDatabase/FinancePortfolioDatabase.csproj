@@ -82,6 +82,11 @@
     </Compile>
     <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindowViewModel.cs" />
     <Compile Include="GUI\BasicDataViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\CsvDataRead.cs" />
+    <Compile Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindow.xaml.cs">
+      <DependentUpon>CurrencyEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindowViewModel.cs" />
     <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml.cs">
       <DependentUpon>UserButtons.xaml</DependentUpon>
     </Compile>
@@ -135,6 +140,10 @@
     <Page Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml">
       <SubType>Designer</SubType>

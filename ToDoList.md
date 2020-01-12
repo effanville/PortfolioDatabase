@@ -14,10 +14,10 @@
 
 ## Major Features
 
-2. Allow user to select statistics for export
-	2.1 Modify this so it is also for display in the GUI
 4. More in depth portfolio analytics.
 5. Graphs of current status of portfolio, and displaying history. e.g 
+6. Use of display in different currencies
+7. Read data from a csv file.
 
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -46,3 +46,4 @@ private void CreateChart()
 5. On closing, prompt user to save database.
 3. Include sectors within securities, and implement comparisons with the sector.
 2. Update deleting and editing data to be more flexible (enable date data to be changed)
+2. Allow user to select statistics for export

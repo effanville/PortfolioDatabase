@@ -17,8 +17,9 @@ namespace SecurityStatisticsFunctions
             {
                 return double.NaN;
             }
-
-            return desired.LatestValue().Value;
+            var currencyName = desired.GetCurrency();
+            var currency = GlobalData.Finances.Currencies.Find(cur => cur.Name == currencyName);
+            return desired.LatestValue(currency).Value;
         }
 
         public static List<DailyValuation_Named> GetSecurityInvestments(string name, string company)
@@ -27,7 +28,9 @@ namespace SecurityStatisticsFunctions
             {
                 return new List<DailyValuation_Named>();
             }
-            return desired.GetAllInvestmentsNamed();
+            var currencyName = desired.GetCurrency();
+            var currency = GlobalData.Finances.Currencies.Find(cur => cur.Name == currencyName);
+            return desired.GetAllInvestmentsNamed(currency);
         }
 
         public static double SecurityCAR(string name, string company, DateTime earlierTime, DateTime laterTime)

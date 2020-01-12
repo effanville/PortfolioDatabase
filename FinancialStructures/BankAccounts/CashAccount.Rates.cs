@@ -11,39 +11,57 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the latest valuation of the CashAccount.
         /// </summary>
-        public DailyValuation LatestValue()
+        public DailyValuation LatestValue(Currency currency = null)
         {
-            DateTime latestDate = fAmounts.GetLatestDate();
-            double latestValue = fAmounts.GetLatestValue();
+            DailyValuation latestDate = fAmounts.GetLatestValuation();
+            if (latestDate == null)
+            {
+                return new DailyValuation(DateTime.Today, 0.0); ;
+            }
 
-            return new DailyValuation(latestDate, latestValue);
+            double currencyValue = currency == null ? 1.0 : currency.GetNearestEarlierValuation(latestDate.Day).Value;
+            double latestValue = latestDate.Value * currencyValue;
+
+            return new DailyValuation(latestDate.Day, latestValue);
         }
 
         /// <summary>
         /// Returns the first valuation of the CashAccount.
         /// </summary>
-        internal DailyValuation FirstValue()
+        internal DailyValuation FirstValue(Currency currency = null)
         {
-            DateTime firstDate = fAmounts.GetFirstDate();
-            double latestValue = fAmounts.GetFirstValue();
+            DailyValuation firstDate = fAmounts.GetFirstValuation();
+            if (firstDate == null)
+            {
+                return new DailyValuation(DateTime.Today, 0.0); ;
+            }
 
-            return new DailyValuation(firstDate, latestValue);
+            double currencyValue = currency == null ? 1.0 : currency.GetNearestEarlierValuation(firstDate.Day).Value;
+            double latestValue = firstDate.Value * currencyValue;
+
+            return new DailyValuation(firstDate.Day, latestValue);
         }
 
         /// <summary>
         /// Returns the latest earlier valuation of the CashAccount to <paramref name="date"/>.
         /// </summary>
-        internal DailyValuation GetNearestEarlierValuation(DateTime date)
+        internal DailyValuation GetNearestEarlierValuation(DateTime date, Currency currency = null)
         {
-            return fAmounts.GetNearestEarlierValue(date);
+            var value = fAmounts.GetNearestEarlierValue(date);
+            double currencyValue = currency == null ? 1.0 : currency.GetNearestEarlierValuation(value.Day).Value;
+            value.Value *= currencyValue;
+            return value;
         }
 
         /// <summary>
         /// Returns earliest valuation after the date specified. 
         /// </summary>
-        internal DailyValuation GetNearestLaterValuation(DateTime date)
+        internal DailyValuation GetNearestLaterValuation(DateTime date, Currency currency = null)
         {
-            return fAmounts.GetNearestLaterValue(date);
+            var value = fAmounts.GetNearestLaterValue(date);
+            double currencyValue = currency == null ? 1.0 : currency.GetNearestEarlierValuation(value.Day).Value;
+            value.Value *= currencyValue;
+            return value;
         }
     }
 }
