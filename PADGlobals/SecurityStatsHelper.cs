@@ -30,7 +30,7 @@ namespace SecurityStatisticsFunctions
             }
             var currencyName = desired.GetCurrency();
             var currency = GlobalData.Finances.Currencies.Find(cur => cur.Name == currencyName);
-            return desired.GetAllInvestmentsNamed(currency);
+            return desired.AllInvestmentsNamed(currency);
         }
 
         public static double SecurityCAR(string name, string company, DateTime earlierTime, DateTime laterTime)

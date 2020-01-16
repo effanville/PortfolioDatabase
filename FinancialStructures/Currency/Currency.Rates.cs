@@ -10,10 +10,10 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the latest valuation of the CashAccount.
         /// </summary>
-        public DailyValuation LatestValue()
+        internal DailyValuation LatestValue()
         {
-            DateTime latestDate = fValues.GetLatestDate();
-            double latestValue = fValues.GetLatestValue();
+            DateTime latestDate = fValues.LatestDate();
+            double latestValue = fValues.LatestValue();
 
             return new DailyValuation(latestDate, latestValue);
         }
@@ -23,8 +23,8 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         internal DailyValuation FirstValue()
         {
-            DateTime firstDate = fValues.GetFirstDate();
-            double latestValue = fValues.GetFirstValue();
+            DateTime firstDate = fValues.FirstDate();
+            double latestValue = fValues.FirstValue();
 
             return new DailyValuation(firstDate, latestValue);
         }
@@ -32,25 +32,18 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the latest earlier valuation of the CashAccount to <paramref name="date"/>.
         /// </summary>
-        public DailyValuation GetNearestEarlierValuation(DateTime date)
+        public DailyValuation Value(DateTime date)
         {
-            return fValues.GetNearestEarlierValue(date);
+            return fValues.Value(date);
         }
 
-        /// <summary>
-        /// Returns earliest valuation after the date specified. 
-        /// </summary>
-        internal DailyValuation GetNearestLaterValuation(DateTime date)
-        {
-            return fValues.GetNearestLaterValue(date);
-        }
 
         /// <summary>
         /// returns compound annual rate of security between the two times specified
         /// </summary>
         public double CAR(DateTime earlierTime, DateTime laterTime)
         {
-            return FinancialFunctions.CAR(GetNearestEarlierValuation(earlierTime), GetNearestEarlierValuation(laterTime));
+            return FinancialFunctions.CAR(Value(earlierTime), Value(laterTime));
         }
     }
 }

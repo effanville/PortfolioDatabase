@@ -28,8 +28,8 @@ namespace FinancialStructures.DataStructures
         /// </summary>
         public double CAR(DateTime earlierTime, DateTime laterTime)
         {
-            var earlierValue = GetNearestEarlierValue(earlierTime);
-            var laterValue = GetNearestEarlierValue(laterTime);
+            var earlierValue = NearestEarlierValue(earlierTime);
+            var laterValue = NearestEarlierValue(laterTime);
             if (earlierValue == null || laterValue == null)
             {
                 return double.NaN;
@@ -45,7 +45,7 @@ namespace FinancialStructures.DataStructures
             // if have only one investment easy to return the CAR.
             if (Count() == 1)
             {
-                return FinancialFunctions.CAR(latestValue, GetFirstValuation());
+                return FinancialFunctions.CAR(latestValue, FirstValuation());
             }
 
             return FinancialFunctions.IRR(fValues, latestValue);

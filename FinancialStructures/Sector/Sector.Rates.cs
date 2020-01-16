@@ -12,8 +12,8 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public DailyValuation LatestValue()
         {
-            DateTime latestDate = fValues.GetLatestDate();
-            double latestValue = fValues.GetLatestValue();
+            DateTime latestDate = fValues.LatestDate();
+            double latestValue = fValues.LatestValue();
 
             return new DailyValuation(latestDate, latestValue);
         }
@@ -23,8 +23,8 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         internal DailyValuation FirstValue()
         {
-            DateTime firstDate = fValues.GetFirstDate();
-            double latestValue = fValues.GetFirstValue();
+            DateTime firstDate = fValues.FirstDate();
+            double latestValue = fValues.FirstValue();
 
             return new DailyValuation(firstDate, latestValue);
         }
@@ -34,7 +34,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         internal DailyValuation GetNearestEarlierValuation(DateTime date)
         {
-            return fValues.GetNearestEarlierValue(date);
+            return fValues.NearestEarlierValue(date);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         internal DailyValuation GetNearestLaterValuation(DateTime date)
         {
-            return fValues.GetNearestLaterValue(date);
+            return fValues.NearestLaterValue(date);
         }
 
         /// <summary>

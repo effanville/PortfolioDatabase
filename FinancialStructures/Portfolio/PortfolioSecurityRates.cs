@@ -15,7 +15,7 @@ namespace FinancialStructures.FinanceStructures
                     var currencyName = desired.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
                     var needed = desired.LatestValue(currency);
-                    return needed.Value - desired.GetLastEarlierValuation(needed.Day, currency).Value;
+                    return needed.Value - desired.LastEarlierValuation(needed.Day, currency).Value;
                 }
             }
 
@@ -60,7 +60,7 @@ namespace FinancialStructures.FinanceStructures
                 {
                     var currencyName = desired.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
-                    return desired.GetAllInvestmentsNamed(currency);
+                    return desired.AllInvestmentsNamed(currency);
                 }
             }
 

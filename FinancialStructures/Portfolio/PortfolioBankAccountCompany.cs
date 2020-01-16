@@ -57,7 +57,7 @@ namespace FinancialStructures.FinanceStructures
                 {
                     var currencyName = account.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
-                    value += account.GetNearestEarlierValuation(date, currency).Value;
+                    value += account.NearestEarlierValuation(date, currency).Value;
                 }
             }
 
@@ -76,7 +76,7 @@ namespace FinancialStructures.FinanceStructures
                 {
                     var currencyName = account.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
-                    value += account.GetNearestEarlierValuation(date, currency).Value;
+                    value += account.NearestEarlierValuation(date, currency).Value;
                 }
             }
 

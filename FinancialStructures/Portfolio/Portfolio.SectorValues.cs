@@ -17,7 +17,7 @@ namespace FinancialStructures.FinanceStructures
                 {
                     if (fund.IsSectorLinked(sectorName))
                     {
-                        sum += fund.GetNearestEarlierValuation(date).Value;
+                        sum += fund.NearestEarlierValuation(date).Value;
                     }
                 }
             }
@@ -44,7 +44,7 @@ namespace FinancialStructures.FinanceStructures
             var output = new List<DailyValuation_Named>();
             foreach (var sec in SectorSecurities(company))
             {
-                output.AddRange(sec.GetAllInvestmentsNamed());
+                output.AddRange(sec.AllInvestmentsNamed());
             }
 
             return output;
@@ -88,9 +88,9 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (security.Any())
                 {
-                    earlierValue += security.GetNearestEarlierValuation(earlierTime).Value;
-                    laterValue += security.GetNearestEarlierValuation(laterTime).Value;
-                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime));
+                    earlierValue += security.NearestEarlierValuation(earlierTime).Value;
+                    laterValue += security.NearestEarlierValuation(laterTime).Value;
+                    Investments.AddRange(security.InvestmentsBetween(earlierTime, laterTime));
                 }
             }
 
