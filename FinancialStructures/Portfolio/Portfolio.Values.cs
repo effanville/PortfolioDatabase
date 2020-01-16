@@ -79,9 +79,9 @@ namespace FinancialStructures.FinanceStructures
                 {
                     var currencyName = security.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
-                    earlierValue += security.GetNearestEarlierValuation(earlierTime, currency).Value;
-                    laterValue += security.GetNearestEarlierValuation(laterTime, currency).Value;
-                    Investments.AddRange(security.GetInvestmentsBetween(earlierTime, laterTime, currency));
+                    earlierValue += security.NearestEarlierValuation(earlierTime, currency).Value;
+                    laterValue += security.NearestEarlierValuation(laterTime, currency).Value;
+                    Investments.AddRange(security.InvestmentsBetween(earlierTime, laterTime, currency));
                 }
             }
 
@@ -100,7 +100,7 @@ namespace FinancialStructures.FinanceStructures
                 {
                     var currencyName = sec.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
-                    total += sec.GetNearestEarlierValuation(date, currency).Value;
+                    total += sec.NearestEarlierValuation(date, currency).Value;
                 }
             }
 
@@ -119,7 +119,7 @@ namespace FinancialStructures.FinanceStructures
                 {
                     var currencyName = acc.GetCurrency();
                     var currency = Currencies.Find(cur => cur.Name == currencyName);
-                    total += acc.GetNearestEarlierValuation(date, currency).Value;
+                    total += acc.NearestEarlierValuation(date, currency).Value;
                 }
             }
 

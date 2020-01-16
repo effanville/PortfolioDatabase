@@ -12,7 +12,7 @@ namespace FinancialStructures.FinanceStructures
             {
                 if (currency.GetName() == currencyName)
                 {
-                    return currency.GetNearestEarlierValuation(date).Value;
+                    return currency.Value(date).Value;
                 }
             }
 

@@ -14,7 +14,7 @@ namespace PADGlobals
             {
                 if (currency.GetName() == sectorName)
                 {
-                    return currency.GetNearestEarlierValuation(date).Value;
+                    return currency.Value(date).Value;
                 }
             }
 

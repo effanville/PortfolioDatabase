@@ -163,13 +163,42 @@ namespace FinancialStructures.DataStructures
         }
 
         /// <summary>
+        /// Returns linearly interpolated value of the List on the date provided.
+        /// </summary>
+        internal DailyValuation Value(DateTime date)
+        {
+            if (fValues == null)
+            {
+                return new DailyValuation(DateTime.Today, 1.0);
+            }
+            if (Count() == 1)
+            {
+                return fValues[0];
+            }
+            if (date < FirstDate())
+            {
+                return FirstValuation();
+            }
+            if (date >= LatestDate())
+            {
+                return LatestValuation();
+            }
+
+            var earlier = NearestEarlierValue(date);
+            var later = NearestLaterValue(date);
+
+            double value =earlier.Value +(later.Value - earlier.Value)/(later.Day - earlier.Day).Days * (date - earlier.Day).Days;
+            return new DailyValuation(date, value);
+        }
+
+        /// <summary>
         /// Returns the DailyValuation on or before the date specified.
         /// </summary>
-        internal DailyValuation GetNearestEarlierValue(DateTime date)
+        internal DailyValuation NearestEarlierValue(DateTime date)
         {
             if (fValues != null && fValues.Any())
             {
-                if (date < GetFirstDate())
+                if (date < FirstDate())
                 {
                     return null;
                 }
@@ -179,9 +208,9 @@ namespace FinancialStructures.DataStructures
                     return fValues[0];
                 }
 
-                if (date > GetLatestDate())
+                if (date > LatestDate())
                 {
-                    return GetLatestValuation();
+                    return LatestValuation();
                 }
 
                 // list sorted with earliest at start. First occurence greater than value means 
@@ -206,19 +235,19 @@ namespace FinancialStructures.DataStructures
         /// Returns DailyValuation closest to the date but earlier to it. 
         /// If a strictly earlier one cannot be found then return null.
         /// </summary>
-        internal DailyValuation GetLastEarlierValue(DateTime date)
+        internal DailyValuation RecentPreviousValue(DateTime date)
         {
             if (fValues != null && fValues.Any())
             {
                 // Some cases can return early.
-                if (Count() == 1 || date <= GetFirstDate())
+                if (Count() == 1 || date <= FirstDate())
                 {
                     return null;
                 }
 
-                if (date > GetLatestDate())
+                if (date > LatestDate())
                 {
-                    return GetLatestValuation();
+                    return LatestValuation();
                 }
 
                 // go back in time until find a valuation that is after the date we want
@@ -244,7 +273,7 @@ namespace FinancialStructures.DataStructures
         /// </summary>
         internal bool TryGetNearestEarlierValue(DateTime date, out DailyValuation value)
         {
-            value = GetNearestEarlierValue(date);
+            value = NearestEarlierValue(date);
             if (value == null)
             {
                 return false;
@@ -256,7 +285,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// returns nearest valuation in the timelist to the date provided.
         /// </summary>
-        internal DailyValuation GetNearestLaterValue(DateTime date)
+        internal DailyValuation NearestLaterValue(DateTime date)
         {
             if (fValues != null && fValues.Any())
             {
@@ -265,21 +294,21 @@ namespace FinancialStructures.DataStructures
                     return fValues[0];
                 }
 
-                if (date > GetLatestDate())
+                if (date > LatestDate())
                 {
                     return null;
                 }
 
-                if (date < GetFirstDate())
+                if (date < FirstDate())
                 {
-                    return GetFirstValuation();
+                    return FirstValuation();
                 }
 
                 // list sorted with earliest at start. First occurence greater than value means 
                 // the first value later.
                 for (int i = 0; i < Count(); i++)
                 {
-                    if (date > fValues[i].Day)
+                    if (date < fValues[i].Day)
                     {
                         return fValues[i];
                     }
@@ -292,7 +321,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// returns nearest valuation in the timelist to the date provided.
         /// </summary>
-        internal DailyValuation GetNearestValue(DateTime date)
+        internal DailyValuation NearestValue(DateTime date)
         {
             if (fValues != null && fValues.Any())
             {
@@ -301,14 +330,14 @@ namespace FinancialStructures.DataStructures
                     return fValues[0];
                 }
 
-                if (date > GetLatestDate())
+                if (date > LatestDate())
                 {
-                    return GetLatestValuation();
+                    return LatestValuation();
                 }
 
-                if (date < GetFirstDate())
+                if (date < FirstDate())
                 {
-                    return GetFirstValuation();
+                    return FirstValuation();
                 }
 
                 // list sorted with earliest at start. First occurence greater than value means 
@@ -333,7 +362,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Returns the first date held in the vector, or default if cannot find any data
         /// </summary>
-        internal DateTime GetFirstDate()
+        internal DateTime FirstDate()
         {
             if (fValues != null && fValues.Any())
             {
@@ -346,7 +375,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Returns first value held, or 0 if no data.
         /// </summary>
-        internal double GetFirstValue()
+        internal double FirstValue()
         {
             if (fValues != null && fValues.Any())
             {
@@ -359,7 +388,7 @@ namespace FinancialStructures.DataStructures
         /// Returns first pair of date and value, or null if this doesn't exist.
         /// </summary>
         /// <returns></returns>
-        internal DailyValuation GetFirstValuation()
+        internal DailyValuation FirstValuation()
         {
             if (fValues != null && fValues.Any())
             {
@@ -372,7 +401,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Returns latest date held, or default if no data.
         /// </summary>
-        internal DateTime GetLatestDate()
+        internal DateTime LatestDate()
         {
             if (fValues != null && fValues.Any())
             {
@@ -384,7 +413,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Returns latest value, or 0 if no data held.
         /// </summary>
-        internal double GetLatestValue()
+        internal double LatestValue()
         {
             if (fValues != null && fValues.Any())
             {
@@ -397,7 +426,7 @@ namespace FinancialStructures.DataStructures
         /// <summary>
         /// Returns a pair of date and value of the most recently held data, or null if no data held.
         /// </summary>
-        internal DailyValuation GetLatestValuation()
+        internal DailyValuation LatestValuation()
         {
             if (fValues != null && fValues.Any())
             {

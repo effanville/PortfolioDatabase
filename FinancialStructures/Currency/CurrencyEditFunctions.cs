@@ -30,7 +30,7 @@ namespace FinancialStructures.FinanceStructures
             var output = new List<AccountDayDataView>();
             if (fValues.Any())
             {
-                foreach (var datevalue in fValues.GetValuesBetween(fValues.GetFirstDate(), fValues.GetLatestDate()))
+                foreach (var datevalue in fValues.GetValuesBetween(fValues.FirstDate(), fValues.LatestDate()))
                 {
                     fValues.TryGetValue(datevalue.Day, out double UnitPrice);
                     var thisday = new AccountDayDataView(datevalue.Day, UnitPrice, false);

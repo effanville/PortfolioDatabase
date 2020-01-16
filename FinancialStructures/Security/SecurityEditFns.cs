@@ -103,7 +103,7 @@ namespace FinancialStructures.FinanceStructures
             var output = new List<BasicDayDataView>();
             if (fUnitPrice.Any())
             {
-                foreach (var datevalue in fUnitPrice.GetValuesBetween(fUnitPrice.GetFirstDate(), fUnitPrice.GetLatestDate()))
+                foreach (var datevalue in fUnitPrice.GetValuesBetween(fUnitPrice.FirstDate(), fUnitPrice.LatestDate()))
                 {
                     fUnitPrice.TryGetValue(datevalue.Day, out double UnitPrice);
                     fShares.TryGetValue(datevalue.Day, out double shares);
@@ -114,7 +114,7 @@ namespace FinancialStructures.FinanceStructures
             }
             if (fShares.Any())
             {
-                foreach (var datevalue in fShares.GetValuesBetween(fShares.GetFirstDate(), fShares.GetLatestDate()))
+                foreach (var datevalue in fShares.GetValuesBetween(fShares.FirstDate(), fShares.LatestDate()))
                 {
                     if (!fUnitPrice.TryGetValue(datevalue.Day, out double _))
                     {
@@ -127,7 +127,7 @@ namespace FinancialStructures.FinanceStructures
             }
             if (fInvestments.Any())
             {
-                foreach (var datevalue in fInvestments.GetValuesBetween(fInvestments.GetFirstDate(), fInvestments.GetLatestDate()))
+                foreach (var datevalue in fInvestments.GetValuesBetween(fInvestments.FirstDate(), fInvestments.LatestDate()))
                 {
                     if (!fUnitPrice.TryGetValue(datevalue.Day, out double _) && !fShares.TryGetValue(datevalue.Day, out double _))
                     {
@@ -341,11 +341,11 @@ namespace FinancialStructures.FinanceStructures
                 var investmentValue = fInvestments[index];
                 if (investmentValue.Value != 0)
                 {
-                    DailyValuation sharesCurrentValue = fShares.GetNearestEarlierValue(investmentValue.Day);
-                    DailyValuation sharesPreviousValue = fShares.GetLastEarlierValue(investmentValue.Day) ?? new DailyValuation(DateTime.Today, 0);
+                    DailyValuation sharesCurrentValue = fShares.NearestEarlierValue(investmentValue.Day);
+                    DailyValuation sharesPreviousValue = fShares.RecentPreviousValue(investmentValue.Day) ?? new DailyValuation(DateTime.Today, 0);
                     if (sharesCurrentValue != null)
                     {
-                        fInvestments.TryEditData(investmentValue.Day, (sharesCurrentValue.Value - sharesPreviousValue.Value) * fUnitPrice.GetNearestEarlierValue(investmentValue.Day).Value, reports);
+                        fInvestments.TryEditData(investmentValue.Day, (sharesCurrentValue.Value - sharesPreviousValue.Value) * fUnitPrice.NearestEarlierValue(investmentValue.Day).Value, reports);
                     }
                 }
             }

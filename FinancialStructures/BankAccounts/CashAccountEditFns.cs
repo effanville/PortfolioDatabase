@@ -60,7 +60,7 @@ namespace FinancialStructures.FinanceStructures
         internal List<AccountDayDataView> GetDataForDisplay()
         {
             var output = new List<AccountDayDataView>();
-            foreach (var datevalue in fAmounts.GetValuesBetween(fAmounts.GetFirstDate(), fAmounts.GetLatestDate()))
+            foreach (var datevalue in fAmounts.GetValuesBetween(fAmounts.FirstDate(), fAmounts.LatestDate()))
             {
                 fAmounts.TryGetValue(datevalue.Day, out double UnitPrice);
                 var thisday = new AccountDayDataView(datevalue.Day, UnitPrice, false);
