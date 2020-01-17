@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancePortfolioDatabase", "FinancePortfolioDatabase\FinancePortfolioDatabase.csproj", "{7531F889-34E2-4D3D-994D-38EBF4FA9249}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PAD_UnitTests", "PAD_UnitTests\PAD_UnitTests.csproj", "{709294DA-0BBE-4ACD-9C5E-29773FD18735}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures_UnitTests", "PAD_UnitTests\FinancialStructures_UnitTests.csproj", "{709294DA-0BBE-4ACD-9C5E-29773FD18735}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PADGlobals", "PADGlobals\PADGlobals.csproj", "{9AC5BDE6-A6AF-4806-8F84-F6A1688D93C5}"
 EndProject
