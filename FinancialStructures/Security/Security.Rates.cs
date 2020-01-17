@@ -116,10 +116,10 @@ namespace FinancialStructures.FinanceStructures
         internal List<DailyValuation> InvestmentsBetween(DateTime earlierDate, DateTime laterDate, Currency currency = null)
         {
             List<DailyValuation> values = fInvestments.GetValuesBetween(earlierDate, laterDate);
-            foreach (var val in values)
+            foreach (var value in values)
             {
-                double currencyValue = currency == null ? 1.0 : currency.Value(val.Day).Value;
-                val.Value *= currencyValue;
+                double currencyValue = currency == null ? 1.0 : currency.Value(value.Day).Value;
+                value.SetValue(value.Value * currencyValue);
             }
 
             return values;
@@ -132,13 +132,13 @@ namespace FinancialStructures.FinanceStructures
         {
             List<DailyValuation> values = fInvestments.GetValuesBetween(fInvestments.FirstDate(), fInvestments.LatestDate());
             List<DailyValuation_Named> namedValues = new List<DailyValuation_Named>();
-            foreach (var val in values)
+            foreach (var value in values)
             {
-                if (val != null && val.Value != 0)
+                if (value != null && value.Value != 0)
                 {
-                    double currencyValue = currency == null ? 1.0 : currency.Value(val.Day).Value;
-                    val.Value *= currencyValue;
-                    namedValues.Add(new DailyValuation_Named(this.fName, this.fCompany, val));
+                    double currencyValue = currency == null ? 1.0 : currency.Value(value.Day).Value;
+                    value.SetValue(value.Value * currencyValue);
+                    namedValues.Add(new DailyValuation_Named(this.fName, this.fCompany, value));
                 }
             }
             return namedValues;

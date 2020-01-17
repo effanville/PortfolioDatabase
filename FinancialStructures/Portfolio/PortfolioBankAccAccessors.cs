@@ -39,7 +39,7 @@ namespace FinancialStructures.FinanceStructures
 
             foreach (var bankAcc in BankAccounts)
             {
-                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany(), string.Empty, string.Empty, bankAcc.GetSectors(), false));
+                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.GetCurrency(), string.Empty, bankAcc.GetSectors(), false));
             }
 
             return namesAndCompanies;

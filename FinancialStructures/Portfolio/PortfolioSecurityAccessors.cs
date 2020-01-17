@@ -96,7 +96,12 @@ namespace FinancialStructures.FinanceStructures
         /// </summary>
         public List<Security> GetSecurities()
         {
-            return Funds;
+            var listOfFunds = new List<Security>();
+            foreach (Security sec in Funds)
+            {
+                listOfFunds.Add(sec.Copy());
+            }
+            return listOfFunds;
         }
 
         public List<CashAccount> GetBankAccounts()

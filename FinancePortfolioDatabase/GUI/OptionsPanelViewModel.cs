@@ -105,6 +105,8 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
+
+            UpdateMainWindow(false);
         }
 
         Action<bool> UpdateMainWindow;

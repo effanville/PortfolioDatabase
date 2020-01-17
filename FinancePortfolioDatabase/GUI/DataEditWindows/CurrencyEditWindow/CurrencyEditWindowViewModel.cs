@@ -129,7 +129,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateSector(Object obj)
         {
             var reports = new ErrorReports();
-            if (DatabaseAccessor.GetBenchMarks().Count != SectorNames.Count)
+            if (DatabaseAccessor.GetCurrencies().Count != SectorNames.Count)
             {
                 bool edited = false;
                 foreach (var name in SectorNames)
