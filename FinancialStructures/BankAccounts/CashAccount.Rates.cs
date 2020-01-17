@@ -49,7 +49,7 @@ namespace FinancialStructures.FinanceStructures
         {
             var value = fAmounts.NearestEarlierValue(date);
             double currencyValue = currency == null ? 1.0 : currency.Value(value.Day).Value;
-            value.Value *= currencyValue;
+            value.SetValue(value.Value * currencyValue);
             return value;
         }
 
@@ -60,7 +60,7 @@ namespace FinancialStructures.FinanceStructures
         {
             var value = fAmounts.NearestLaterValue(date);
             double currencyValue = currency == null ? 1.0 : currency.Value(value.Day).Value;
-            value.Value *= currencyValue;
+            value.SetValue(value.Value * currencyValue);
             return value;
         }
     }

@@ -23,6 +23,7 @@ namespace FinancialStructures.DataStructures
 
             return double.NaN;
         }
+
         /// <summary>
         /// returns the CAR of the timelist between the dates provided.
         /// </summary>

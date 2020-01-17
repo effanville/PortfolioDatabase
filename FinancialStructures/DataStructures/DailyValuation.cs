@@ -17,6 +17,31 @@ namespace FinancialStructures.DataStructures
         }
 
         /// <summary>
+        /// Returns a copy of the specified valuation
+        /// </summary>
+        /// <returns></returns>
+        public DailyValuation Copy()
+        {
+            return new DailyValuation(Day, Value);
+        }
+
+        public void SetData(DateTime date, double value)
+        {
+            Day = date;
+            Value = value;
+        }
+
+        public void SetDay(DateTime date)
+        {
+            Day = date;
+        }
+
+        public void SetValue(double value)
+        {
+            Value = value;
+        }
+
+        /// <summary>
         /// The date for the valuation
         /// </summary>
         public DateTime Day { get; set; }
