@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace PAD_UnitTests
+namespace MathLibrary.FinancialFunctions_UnitTests
 {
     public class RatesTests
     {

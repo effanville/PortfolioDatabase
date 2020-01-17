@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace PAD_UnitTests
+namespace DataStructures.TimeList_UnitTests
 {
     public class TimeList_RatesTests
     {
