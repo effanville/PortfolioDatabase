@@ -95,6 +95,8 @@
     <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml.cs">
       <DependentUpon>StatsOptionsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\DataEditWindows\StatsWindow\WebBrowserBehaviour.cs" />
+    <Compile Include="GUI\GuiSupport\Colours.cs" />
     <Compile Include="GUI\GuiSupport\OutputHelper.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
     <Compile Include="GUI\HelpWindow.xaml.cs">
@@ -103,7 +105,6 @@
     <Compile Include="GUI\MainUserControl.xaml.cs">
       <DependentUpon>MainUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\OptionsPanelViewModel.cs" />
     <Compile Include="GUI\GuiSupport\EventArgs.cs" />
     <Compile Include="GUI\GuiSupport\EventRaiser.cs" />
     <Compile Include="GUI\MainWindowViewModel.cs" />
@@ -115,6 +116,10 @@
     <Compile Include="GUI\GuiSupport\DefaultButton.xaml.cs">
       <DependentUpon>DefaultButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\OptionsToolbar.xaml.cs">
+      <DependentUpon>OptionsToolbar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\OptionsToolbarViewModel.cs" />
     <Compile Include="GUI\ReportingWindow.xaml.cs">
       <DependentUpon>ReportingWindow.xaml</DependentUpon>
     </Compile>
@@ -134,9 +139,6 @@
     <Compile Include="GUI\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\OptionsPanel.xaml.cs">
-      <DependentUpon>OptionsPanel.xaml</DependentUpon>
-    </Compile>
     <Page Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -150,10 +152,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\GuiSupport\Colours.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -185,6 +183,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GUI\OptionsToolbar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\ReportingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -205,10 +207,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\OptionsPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -225,7 +223,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">

@@ -11,18 +11,21 @@
     
     <Grid >
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1"
+        <StackPanel Grid.Row="0"
                     Grid.Column="0"
-                    Width="130">
+                    Grid.ColumnSpan="3"
+                    Orientation="Horizontal"
+                    Height="40">
             <Button Content="Delete Currency"
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteSectorCommand}"
@@ -31,22 +34,10 @@
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteSectorDataCommand}"
                         ToolTip="Deletes the Currency data highlighted."/>
-            <Button Content="Close Currency Edit"
-                        Margin="10 10 10 10 "
-                        Command="{Binding CloseCommand}"
-                        ToolTip="Press here to close Add/Edit Currency"/>
         </StackPanel>
 
-        <Grid ToolTip="Lists all Currencies currently in the database. Select one to edit data."
-              Grid.Row="1"
-              Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Label Grid.Row="0" 
-                   Content="Currency in Database"/>
-            <DataGrid Grid.Row="1"
+        <DataGrid Grid.Row="1"
+              Grid.Column="0"
                       Margin="10 10 10 10"
                       SelectionUnit="FullRow"
                       CanUserAddRows="True"
@@ -55,20 +46,23 @@
                       ScrollViewer.VerticalScrollBarVisibility="Visible"
                       ItemsSource="{Binding Path=SectorNames, Mode=TwoWay}"
                       SelectedItem="{Binding Path=SelectedName, Mode=TwoWay}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="RowEditEnding">
-                        <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateSectorCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
-                    <DataGridTextColumn Header="Url" Binding="{Binding Path=Url, UpdateSourceTrigger=LostFocus}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="RowEditEnding">
+                    <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateSectorCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"
+                                    MinWidth="70"
+                                    Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
+                <DataGridTextColumn Header="Url"
+                                    MinWidth="70"
+                                    Binding="{Binding Path=Url, UpdateSourceTrigger=LostFocus}"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <Grid Grid.Row="1"
-              Grid.Column="2"
+              Grid.Column="1"
               ToolTip="Shows the data held on the Currency selected.">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
@@ -92,8 +86,10 @@
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" 
+                                        MinWidth="50"
                                         Binding="{Binding Path=Date, StringFormat=\{0:dd.MM.yyyy\}, UpdateSourceTrigger=LostFocus}" />
                     <DataGridTextColumn Header="Value" 
+                                        MinWidth="50"
                                         Binding="{Binding Path=Amount, UpdateSourceTrigger=LostFocus}"/>
                 </DataGrid.Columns>
             </DataGrid>

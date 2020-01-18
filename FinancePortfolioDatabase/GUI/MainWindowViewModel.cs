@@ -1,4 +1,5 @@
 ﻿using FinancialStructures.ReportingStructures;
+using GUIAccessorFunctions;
 using GUISupport;
 using System;
 
@@ -6,53 +7,17 @@ namespace FinanceWindowsViewModels
 {
     public class MainWindowViewModel : PropertyChangedBase
     {
-        private bool fDataWindowVisibility;
-        public bool DataWindowVisibility
-        {
-            get { return fDataWindowVisibility; }
-            set { fDataWindowVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fSecurityEditWindowVisibility;
-        public bool SecurityEditWindowVisibility
-        {
-            get { return fSecurityEditWindowVisibility; }
-            set { fSecurityEditWindowVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fBankAccEditWindowVisibility;
-        public bool BankAccEditWindowVisibility
-        {
-            get { return fBankAccEditWindowVisibility; }
-            set { fBankAccEditWindowVisibility = value; OnPropertyChanged(); }
-        }
-
-        private bool fSectorEditWindowVisibility;
-        public bool SectorEditWindowVisibility
-        {
-            get { return fSectorEditWindowVisibility; }
-            set { fSectorEditWindowVisibility = value; OnPropertyChanged(); }
-        }
-        private bool fCurrencyEditWindowVisibility;
-        public bool CurrencyEditWindowVisibility
-        {
-            get { return fCurrencyEditWindowVisibility; }
-            set { fCurrencyEditWindowVisibility = value; OnPropertyChanged(); }
-        }
-        private bool fStatsEditWindowVisibility;
-        public bool StatsEditWindowVisibility
-        {
-            get { return fStatsEditWindowVisibility; }
-            set { fStatsEditWindowVisibility = value; OnPropertyChanged(); }
-        }
-
         public MainWindowViewModel()
         {
-            OptionsPanelCommands = new OptionsPanelViewModel(UpdateWindow, UpdateSubWindow, displayWindowChoice, UpdateReports);
+            DatabaseAccessor.LoadPortfolio(new ErrorReports()); 
+            OptionsToolbarCommands = new OptionsToolbarViewModel(UpdateWindow, UpdateSubWindow, UpdateReports);
             DataView = new BasicDataViewModel(UpdateWindow);
+            SecurityEditViewModel = new SecurityEditWindowViewModel(UpdateWindow, UpdateReports);
+            BankAccEditViewModel = new BankAccEditWindowViewModel(UpdateWindow, UpdateReports);
+            SectorEditViewModel = new SectorEditWindowViewModel(UpdateWindow, UpdateReports);
+            CurrencyEditViewModel = new CurrencyEditWindowViewModel(UpdateWindow, UpdateReports);
+            StatsEditViewModel = new StatsCreatorWindowViewModel(UpdateWindow, UpdateReports);
             ReportsViewModel = new ReportingWindowViewModel();
-            DataWindowVisibility = true;
-            SecurityEditWindowVisibility = false;
         }
         Action<ErrorReports> UpdateReports => (val) => AddReports(val);
 
@@ -98,109 +63,14 @@ namespace FinanceWindowsViewModels
             }
         }
 
-        Action<string> displayWindowChoice => (name) => WindowDisplayChoice(name);
+        private OptionsToolbarViewModel fOptionsToolbarCommands;
 
-        private void WindowDisplayChoice(string windowName)
+        public OptionsToolbarViewModel OptionsToolbarCommands
         {
-            switch (windowName)
-            {
-                case "SecurityEditWindow":
-                    OpenSecurityEditWindow();
-                    break;
-                case "BankAccEditWindow":
-                    OpenBankAccEditWindow();
-                    break;
-                case "SectorEditWindow":
-                    OpenSectorEditWindow();
-                    break;
-                case "CurrencyEditWindow":
-                    OpenCurrencyEditWindow();
-                    break;
-                case "StatsCreatorWindow":
-                    OpenStatsCreatorWindow();
-                    break;
-                default:
-                    ShowDataView();
-                    break;
-            }
+            get { return fOptionsToolbarCommands; }
+            set { fOptionsToolbarCommands = value; OnPropertyChanged(); }
         }
 
-        private void ShowDataView()
-        {
-            UpdateData(true);
-            SecurityEditViewModel = null;
-            SectorEditViewModel = null;
-            BankAccEditViewModel = null;
-            StatsEditViewModel = null;
-            DataWindowVisibility = true;
-            SecurityEditWindowVisibility = false;
-            SectorEditWindowVisibility = false;
-            BankAccEditWindowVisibility = false;
-            CurrencyEditWindowVisibility = false;
-            StatsEditWindowVisibility = false;
-        }
-
-        private void OpenSecurityEditWindow()
-        {
-            SecurityEditViewModel = new SecurityEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
-            DataWindowVisibility = false;
-            SectorEditWindowVisibility = false;
-            BankAccEditWindowVisibility = false;
-            StatsEditWindowVisibility = false;
-            CurrencyEditWindowVisibility = false;
-            SecurityEditWindowVisibility = true;
-        }
-
-        private void OpenBankAccEditWindow()
-        {
-            BankAccEditViewModel = new BankAccEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
-            DataWindowVisibility = false;
-            SectorEditWindowVisibility = false;
-            SecurityEditWindowVisibility = false;
-            StatsEditWindowVisibility = false;
-            CurrencyEditWindowVisibility = false;
-            BankAccEditWindowVisibility = true;
-        }
-        private void OpenSectorEditWindow()
-        {
-            SectorEditViewModel = new SectorEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
-            DataWindowVisibility = false;
-            SecurityEditWindowVisibility = false;
-            BankAccEditWindowVisibility = false;
-            StatsEditWindowVisibility = false;
-            CurrencyEditWindowVisibility = false;
-            SectorEditWindowVisibility = true;
-        }
-
-        private void OpenCurrencyEditWindow()
-        {
-            CurrencyEditViewModel = new CurrencyEditWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
-            DataWindowVisibility = false;
-            SecurityEditWindowVisibility = false;
-            BankAccEditWindowVisibility = false;
-            StatsEditWindowVisibility = false;
-            SectorEditWindowVisibility = false;
-            CurrencyEditWindowVisibility = true;
-        }
-
-        private void OpenStatsCreatorWindow()
-        {
-            StatsEditViewModel = new StatsCreatorWindowViewModel(UpdateWindow, displayWindowChoice, UpdateReports);
-            DataWindowVisibility = false;
-            SecurityEditWindowVisibility = false;
-            BankAccEditWindowVisibility = false;
-            SectorEditWindowVisibility = false;
-            CurrencyEditWindowVisibility = false ;
-            StatsEditWindowVisibility = true;
-        }
-
-        private OptionsPanelViewModel fOptionsPanelCommands;
-
-        public OptionsPanelViewModel OptionsPanelCommands
-        {
-            get { return fOptionsPanelCommands; }
-            set { fOptionsPanelCommands = value; OnPropertyChanged(); }
-        }
         private BasicDataViewModel fDataView;
 
         public BasicDataViewModel DataView

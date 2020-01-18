@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:cl="clr-namespace:GuiSupport"
       mc:Ignorable="d"
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch">
@@ -11,10 +12,10 @@
           VerticalAlignment="Stretch">
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="110"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Background="#F98866"
+        <Grid Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
               Grid.Column="0">
         <StackPanel 
                     VerticalAlignment="Top">

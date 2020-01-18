@@ -82,8 +82,6 @@ namespace FinanceWindowsViewModels
 
         public ICommand DeleteValuationCommand { get; }
 
-        public ICommand CloseCommand { get; }
-
         public void UpdateAccountListBox()
         {
             var currentSelectionName = selectedName;
@@ -248,19 +246,12 @@ namespace FinanceWindowsViewModels
             UpdateMainWindow(true);
         }
 
-        private void ExecuteCloseCommand(Object obj)
-        {
-            UpdateMainWindow(false);
-            windowToView("dataview");
-        }
         Action<bool> UpdateMainWindow;
-        Action<string> windowToView;
         Action<ErrorReports> UpdateReports;
 
-        public BankAccEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
+        public BankAccEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
             UpdateMainWindow = updateWindow;
-            windowToView = pageViewChoice;
             UpdateReports = updateReports;
             fAccountNames = new List<NameComp>();
             fPreEditAccountNames = new List<NameComp>();
@@ -271,7 +262,6 @@ namespace FinanceWindowsViewModels
             EditAccountDataCommand = new BasicCommand(ExecuteEditDataCommand);
             DeleteAccountCommand = new BasicCommand(ExecuteDeleteBankAccount);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);
-            CloseCommand = new BasicCommand(ExecuteCloseCommand);
         }
     }
 }

@@ -5,6 +5,7 @@ using GUISupport;
 using PortfolioStatsCreatorHelper;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -56,8 +57,10 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = GlobalHeldData.GlobalData.DatabaseName + "-HTMLStats.html", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
             saving.Filter = "Html file|*.html|All files|*.*";
+            string path = null;
             if (saving.ShowDialog() == DialogResult.OK)
             {
+                path = saving.FileName;
                 var selected = new List<string>();
                 foreach (var column in ColumnNames)
                 {
@@ -88,14 +91,14 @@ namespace FinanceWindowsViewModels
                 UpdateReports(reports);
             }
 
-            CloseWindowAction();
+            CloseWindowAction(path);
         }
 
 
         Action<ErrorReports> UpdateReports;
-        private Action CloseWindowAction;
+        private Action<string> CloseWindowAction;
 
-        public StatsOptionsViewModel(Action<ErrorReports> updateReports, Action CloseWindow)
+        public StatsOptionsViewModel(Action<ErrorReports> updateReports, Action<string> CloseWindow)
         {
             UpdateReports = updateReports;
             CloseWindowAction = CloseWindow;

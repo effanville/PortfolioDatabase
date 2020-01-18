@@ -1,5 +1,4 @@
-﻿using FinanceWindowsViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace FinanceWindows
 {
@@ -10,9 +9,7 @@ namespace FinanceWindows
     {
         public MainUserControl()
         {
-            var viewModel = new MainWindowViewModel();
             InitializeComponent();
-            DataContext = viewModel;
         }
     }
 }

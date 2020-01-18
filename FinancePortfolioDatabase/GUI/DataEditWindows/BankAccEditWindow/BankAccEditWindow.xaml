@@ -11,14 +11,21 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Width="130"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" 
+                    Height="40"
                     Grid.Row="0"
-                    Grid.Column="0">
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3">
 
             <Button Content="Delete BankAccount"
                         Margin="10 10 10 10 "
@@ -28,23 +35,11 @@
                         Margin="10 10 10 10 "
                         Command="{Binding DeleteValuationCommand}"
                         ToolTip="Deletes the BankAccount data highlighted."/>
-            <Button Content="Close BankAccount Edit"
-                        Margin="10 10 10 10 "
-                        Command="{Binding CloseCommand}"
-                        ToolTip="Press here to close Add/Edit BankAccount"/>
         </StackPanel>
 
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              ToolTip="Lists all BankAccount currently in the database. Select one to edit data.">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <Label Grid.Row="0" Content="BankAccount in Database"/>
-            <DataGrid Grid.Row="1"
-                      Margin="10 10 10 10"
+        <DataGrid Grid.Row="1"
+              Grid.Column="0"
+              ToolTip="Lists all BankAccount currently in the database. Select one to edit data."
                       SelectionUnit="FullRow"
                       CanUserAddRows="True"
                       CanUserDeleteRows="False"
@@ -58,15 +53,15 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Company" Binding="{Binding Path=Company, UpdateSourceTrigger=LostFocus}"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
-                    <DataGridTextColumn Header="Currency" Binding="{Binding Path=Currency, UpdateSourceTrigger=LostFocus}"/>
-                    <DataGridTextColumn Header="Sectors" Binding="{Binding Path=Sectors, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Company" MinWidth="70" Binding="{Binding Path=Company, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Name" MinWidth="70" Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Currency" MinWidth="30" Binding="{Binding Path=Currency, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Sectors" MinWidth="70" Binding="{Binding Path=Sectors, UpdateSourceTrigger=LostFocus}"/>
                 </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+        </DataGrid>
 
-        <Grid Grid.Column="2" 
+        <Grid Grid.Row="1" 
+              Grid.Column="1" 
               ToolTip="Shows the data held on the BankAccount selected in the BankAccount in Database list.">
 
             <Grid.RowDefinitions>
@@ -92,8 +87,10 @@
                 </i:Interaction.Triggers>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" 
+                                        MinWidth="50"
                                         Binding="{Binding Path=Date,StringFormat=\{0:dd.MM.yyyy\}, UpdateSourceTrigger=LostFocus}" />
-                    <DataGridTextColumn Header="Value" 
+                    <DataGridTextColumn Header="Value"
+                                        MinWidth="50"
                                         Binding="{Binding Path=Amount, UpdateSourceTrigger=LostFocus}"/>
                 </DataGrid.Columns>
             </DataGrid>

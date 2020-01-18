@@ -4,75 +4,90 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FinanceWindows"
-             mc:Ignorable="d">
+             xmlns:cl="clr-namespace:GuiSupport"
+             mc:Ignorable="d"
+             Margin="0"
+             Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
-    <Grid VerticalAlignment="Stretch">
+    <Grid VerticalAlignment="Stretch"
+          Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="150"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <Grid Grid.Column="0" 
-              Grid.Row="0" 
-              Grid.RowSpan="2" 
-              Background="#F98866"></Grid>
-        
-        <local:OptionsPanel DataContext="{Binding OptionsPanelCommands}"
-                            Grid.Row="0"
-                            Grid.Column="0"/>
-        
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              VerticalAlignment="Stretch"
-              Visibility="{Binding DataWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:BasicDataView DataContext="{Binding DataView}"/>
-        </Grid>
-        
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              VerticalAlignment="Stretch"
-              Visibility="{Binding SecurityEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"/>
-        </Grid>
 
         <Grid Grid.Row="0"
-              Grid.Column="1"
-              VerticalAlignment="Stretch"
-              Visibility="{Binding BankAccEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"/>
-        </Grid>
-
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              VerticalAlignment="Stretch"
-              Visibility="{Binding SectorEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"/>
-        </Grid>
-
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              VerticalAlignment="Stretch"
-              Visibility="{Binding CurrencyEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:CurrencyEditWindow  DataContext="{Binding CurrencyEditViewModel}"/>
-        </Grid>
-
-        <Grid Grid.Row="0"
-              Grid.Column="1"
-              Visibility="{Binding StatsEditWindowVisibility, Converter={StaticResource BoolToVis}}">
-            <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"/>
-        </Grid>
+              Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"></Grid>
         
+        <TabControl Grid.Row="0"
+                    TabStripPlacement="Left"
+                    Margin="0">
+            <TabItem Header="Database Overview" 
+                     VerticalAlignment="Stretch"
+                     Height="50"
+                     Width="107"
+                     Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
+                <local:BasicDataView DataContext="{Binding DataView}"
+                                     Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
+                                     Margin="-2"/>
+            </TabItem>
+
+            <TabItem Header="Security Edit"
+                     Height="50"
+                     Width="107"
+                     VerticalAlignment="Stretch"
+                     Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
+                <local:SecurityEditWindow  DataContext="{Binding SecurityEditViewModel}"
+                                           Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
+                                           Margin="-2"/>
+            </TabItem>
+
+            <TabItem Header="Bank Account Edit"
+                     Height="50"
+                     Width="107"
+                     VerticalAlignment="Stretch"
+                     Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
+                <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"
+                                          Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
+                                          Margin="-2"/>
+            </TabItem>
+
+            <TabItem Header="Sector Edit"
+                     Height="50"
+                     Width="107"
+                     VerticalAlignment="Stretch"
+                     Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
+                <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"
+                                         Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
+                                         Margin="-2"/>
+            </TabItem>
+
+            <TabItem Header="Currency Edit"
+                     Height="50"
+                     Width="107"
+                     VerticalAlignment="Stretch"
+                     Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
+                <local:CurrencyEditWindow  DataContext="{Binding CurrencyEditViewModel}"
+                                           Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
+                                           Margin="-2"/>
+            </TabItem>
+
+            <TabItem Header="Stats Creator"
+                     Height="50"
+                     Width="107"
+                     VerticalAlignment="Stretch"
+                     Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
+                <local:StatsCreatorWindow  DataContext="{Binding StatsEditViewModel}"
+                                           Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
+                                           Margin="-2"/>
+            </TabItem>
+        </TabControl>
+
         <local:ReportingWindow VerticalAlignment="Stretch" 
                                DataContext="{Binding ReportsViewModel}"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="2"
                                Grid.Row="1"/>
     </Grid>
 </UserControl>

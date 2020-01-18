@@ -94,8 +94,6 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddEditSecurityDataCommand { get; set; }
 
-        public ICommand AddCsvData { get; }
-
         public void UpdateFundListBox()
         {
             var currentSelectedName = selectedName;
@@ -238,45 +236,14 @@ namespace FinanceWindowsViewModels
             UpdateSelectedSecurityListBox();
         }
 
-        private void ExecuteAddCsvData(Object obj)
-        {
-            var reports = new ErrorReports();
-            OpenFileDialog openFile = new OpenFileDialog() { DefaultExt = "xml" };
-            openFile.Filter = "Csv Files|*.csv|All Files|*.*";
-            List<object> outputs = null;
-            if (openFile.ShowDialog() == DialogResult.OK)
-            {
-                outputs = CsvDataRead.ReadFromCsv(openFile.FileName, ElementType.Security, reports);
-            }
-
-            foreach (var objec in outputs)
-            {
-                if (objec is BasicDayDataView view)
-                {
-                    SecurityEditor.TryAddDataToSecurity(reports, selectedName.Name, selectedName.Company,  view.Date, view.ShareNo, view.UnitPrice, view.Investment);
-                }
-                else
-                {
-                    reports.AddError("Have the wrong type of thing");
-                }
-            }
-            if (reports.Any())
-            {
-                UpdateReports(reports);
-            }
-
-            UpdateMainWindow(false);
-            UpdateSelectedSecurityListBox();
-        }
-
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
-        public SecurityEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
+        public SecurityEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
-            UserClickingVM = new UserButtonsViewModel(updateWindow, pageViewChoice, updateReports, selectedName, selectedValues);
+            UserClickingVM = new UserButtonsViewModel(updateWindow, updateReports, selectedName, selectedValues);
 
             fFundNames = new List<NameCompDate>();
             fPreEditFundNames = new List<NameCompDate>();
@@ -286,7 +253,6 @@ namespace FinanceWindowsViewModels
 
             CreateSecurityCommand = new BasicCommand(ExecuteCreateEditCommand);
             AddEditSecurityDataCommand = new BasicCommand(ExecuteAddEditSecData);
-            AddCsvData = new BasicCommand(ExecuteAddCsvData);
         }
     }
 }
