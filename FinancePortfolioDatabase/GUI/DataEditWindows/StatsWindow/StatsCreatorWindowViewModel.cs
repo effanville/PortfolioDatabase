@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows;
 
 namespace FinanceWindowsViewModels
 {
@@ -20,11 +21,37 @@ namespace FinanceWindowsViewModels
             get { return fDisplayValueFunds; }
             set { fDisplayValueFunds = value; OnPropertyChanged(); GenerateStatistics(); }
         }
+
+        private Uri fDisplayStats;
+
+        public Uri DisplayStats
+        {
+            get { return fDisplayStats; }
+            set { fDisplayStats = value; OnPropertyChanged(); }
+        }
+
+        private string fStatsFilepath;
+
+        public string StatsFilepath
+        {
+            get { return fStatsFilepath; }
+            set { fStatsFilepath = value; OnPropertyChanged(); DisplayStats = new Uri(fStatsFilepath);  }
+        }
+
+        private int fSelectedIndex;
+
+        public int SelectedIndex
+        {
+            get { return fSelectedIndex; }
+            set { fSelectedIndex = value; OnPropertyChanged(); }
+        }
+
         public ICommand CreateCSVStatsCommand { get; }
 
         public ICommand CreateInvestmentListCommand { get; }
-        public ICommand CloseCommand { get; }
         public ICommand CreateHTMLCommand { get; }
+
+        public ICommand FileSelect { get; }
 
         private void ExecuteExportToCSVCommand(Object obj)
         {
@@ -110,17 +137,28 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateHTMLCommand(Object obj)
         {
             var optionWindow = new StatsOptionsWindow();
-            Action closeWindow = new Action(optionWindow.Close);
-            var context = new StatsOptionsViewModel(UpdateReports, closeWindow);
+            Action<string> StatsOptionFeedback = (filePath) => StatsFeedback(optionWindow, filePath);
+            var context = new StatsOptionsViewModel(UpdateReports, StatsOptionFeedback);
             optionWindow.DataContext = context;
             optionWindow.ShowDialog();
         }
-
-        private void ExecuteCloseCommand(Object obj)
+        private void StatsFeedback(StatsOptionsWindow window, string filePath)
         {
-            UpdateMainWindow(false);
-            windowToView("dataview");
+            StatsFilepath = filePath;
+            window.Close();
+            SelectedIndex = 5;
         }
+
+        private void ExecuteFileSelect(Object obj)
+        {
+            OpenFileDialog fileSelect = new OpenFileDialog();
+            fileSelect.Filter = "HTML file|*.html;*.htm|All files|*.*";
+            if (fileSelect.ShowDialog() == DialogResult.OK)
+            {
+                StatsFilepath = fileSelect.FileName;
+            }
+        }
+
         private List<SecurityStatsHolder> fSecuritiesStats;
 
         public List<SecurityStatsHolder> SecuritiesStats
@@ -152,7 +190,6 @@ namespace FinanceWindowsViewModels
         }
 
         Action<bool> UpdateMainWindow;
-        Action<string> windowToView;
         Action<ErrorReports> UpdateReports;
 
         public void GenerateStatistics()
@@ -163,16 +200,16 @@ namespace FinanceWindowsViewModels
             DatabaseStats = DatabaseAccessor.GenerateDatabaseStatistics();
         }
 
-        public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
+        public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
             GenerateStatistics();
-            windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             CreateCSVStatsCommand = new BasicCommand(ExecuteExportToCSVCommand);
             CreateInvestmentListCommand = new BasicCommand(ExecuteInvestmentListCommand);
             CreateHTMLCommand = new BasicCommand(ExecuteCreateHTMLCommand);
-            CloseCommand = new BasicCommand(ExecuteCloseCommand);
+            FileSelect = new BasicCommand(ExecuteFileSelect);
+            SelectedIndex = 0;
         }
     }
 }

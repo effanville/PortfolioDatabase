@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading;
 
-namespace FinancePortfolioDatabase.GUI.GuiSupport
+namespace GuiSupport
 {
     public static class OutputHelper
     {

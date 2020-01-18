@@ -3,22 +3,24 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:cl="clr-namespace:GuiSupport"
       mc:Ignorable="d" 
       d:DesignHeight="450" 
       d:DesignWidth="800"
       HorizontalAlignment="Stretch"
       ScrollViewer.VerticalScrollBarVisibility="Visible"
-      Background="LightPink">
+      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
     
-    <TabControl x:Name="fDataView" 
-                Margin="10 5 5 5"
+    <TabControl x:Name="fDataView"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                VerticalAlignment="Stretch"
+                Margin="0"
+                Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
         <TabItem Header="Securities">
-            <Grid Background="LightPink">
+            <Grid Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
                 <ListView Name="SecBox"
                           ItemsSource="{Binding FundNames}"
-                          Margin="10,10,10,10"
+                          Margin="2,2,2,2"
                           Height="Auto"
                           MinWidth="200"
                           Width="Auto"
@@ -33,7 +35,7 @@
                     </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="Auto" 
+                            <GridViewColumn Width="Auto"
                                             Header="Company" 
                                             DisplayMemberBinding="{Binding Company}"/>
                             <GridViewColumn Width="Auto" 
@@ -49,12 +51,10 @@
         </TabItem>
         
         <TabItem Header="Bank Accounts">
-            <Grid Background="LightPink">
+            <Grid Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
                 <ListView Name="BankAccounts"
                           ItemsSource="{Binding AccountNames}"
-                          MinHeight="300"
-                          MinWidth="200"
-                          Margin="10,10,10,10"
+                          Margin="2,2,2,2"
                           ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <ListView.View>
                         <GridView>
@@ -70,12 +70,10 @@
             </Grid>
         </TabItem>
         <TabItem Header="Sectors">
-            <Grid Background="LightPink">
+            <Grid Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
                 <ListView Name="Sectors"
                          ItemsSource="{Binding SectorNames}"
-                         MinHeight="300"
-                         MinWidth="100"
-                         Margin="10,10,10,10">
+                         Margin="2,2,2,2">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="100" 
@@ -87,15 +85,13 @@
             </Grid>
         </TabItem>
         <TabItem Header="Currencies">
-            <Grid Background="LightPink">
+            <Grid Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
                 <ListView Name="Currencies"
                          ItemsSource="{Binding CurrencyNames}"
-                         MinHeight="300"
-                         MinWidth="100"
-                         Margin="10,10,10,10">
+                         Margin="2,2,2,2">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="100" 
+                            <GridViewColumn Width="Auto" 
                                             Header="Name" 
                                             DisplayMemberBinding="{Binding Name}" />
                         </GridView>

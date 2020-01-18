@@ -86,8 +86,6 @@ namespace FinanceWindowsViewModels
 
         public ICommand EditSectorDataCommand { get; set; }
 
-        public ICommand CloseCommand { get; }
-
         public void UpdateSectorListBox()
         {
             var currentSelectedName = SelectedName;
@@ -256,18 +254,11 @@ namespace FinanceWindowsViewModels
             UpdateMainWindow(true);
         }
 
-        private void ExecuteCloseCommand(Object obj)
-        {
-            UpdateMainWindow(false);
-            windowToView("dataview");
-        }
 
         Action<bool> UpdateMainWindow;
-        Action<string> windowToView;
         Action<ErrorReports> UpdateReports;
-        public CurrencyEditWindowViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports)
+        public CurrencyEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
-            windowToView = pageViewChoice;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             SectorNames = new List<NameComp>();
@@ -279,7 +270,6 @@ namespace FinanceWindowsViewModels
             EditSectorDataCommand = new BasicCommand(ExecuteEditSectorData);
             DeleteSectorCommand = new BasicCommand(ExecuteDeleteSector);
             DeleteSectorDataCommand = new BasicCommand(ExecuteDeleteSectorData);
-            CloseCommand = new BasicCommand(ExecuteCloseCommand);
         }
     }
 }

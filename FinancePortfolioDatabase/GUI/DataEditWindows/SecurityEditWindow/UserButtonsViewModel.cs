@@ -5,6 +5,8 @@ using PADGlobals;
 using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;
+using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace FinanceWindowsViewModels.SecurityEdit
 {
@@ -74,26 +76,52 @@ namespace FinanceWindowsViewModels.SecurityEdit
             UpdateMainWindow(true);
         }
 
-        public ICommand CloseCommand { get; }
+        public ICommand AddCsvData { get; }
 
-        private void ExecuteCloseCommand(Object obj)
+        private void ExecuteAddCsvData(Object obj)
         {
-            UpdateMainWindow(false);
-            windowToView("dataview");
+            if (fSelectedName != null)
+            {
+                var reports = new ErrorReports();
+                OpenFileDialog openFile = new OpenFileDialog() { DefaultExt = "xml" };
+                openFile.Filter = "Csv Files|*.csv|All Files|*.*";
+                List<object> outputs = null;
+                if (openFile.ShowDialog() == DialogResult.OK)
+                {
+                    outputs = CsvDataRead.ReadFromCsv(openFile.FileName, ElementType.Security, reports);
+                }
+
+                foreach (var objec in outputs)
+                {
+                    if (objec is BasicDayDataView view)
+                    {
+                        SecurityEditor.TryAddDataToSecurity(reports, fSelectedName.Name, fSelectedName.Company, view.Date, view.ShareNo, view.UnitPrice, view.Investment);
+                    }
+                    else
+                    {
+                        reports.AddError("Have the wrong type of thing");
+                    }
+                }
+                if (reports.Any())
+                {
+                    UpdateReports(reports);
+                }
+
+                UpdateMainWindow(false);
+                //UpdateSelectedSecurityListBox();
+            }
         }
 
         Action<bool> UpdateMainWindow;
-        Action<string> windowToView;
         Action<ErrorReports> UpdateReports;
-        public UserButtonsViewModel(Action<bool> updateWindow, Action<string> pageViewChoice, Action<ErrorReports> updateReports, NameComp newName, BasicDayDataView newData)
+        public UserButtonsViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports, NameComp newName, BasicDayDataView newData)
         {
             UpdateMainWindow = updateWindow;
-            windowToView = pageViewChoice;
             UpdateReports = updateReports;
             DownloadCommand = new BasicCommand(ExecuteDownloadCommand);
             DeleteSecurityCommand = new BasicCommand(ExecuteDeleteSecurity);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);
-            CloseCommand = new BasicCommand(ExecuteCloseCommand);
+            AddCsvData = new BasicCommand(ExecuteAddCsvData);
             fSelectedName = newName;
             fSelectedValues = newData;
         }

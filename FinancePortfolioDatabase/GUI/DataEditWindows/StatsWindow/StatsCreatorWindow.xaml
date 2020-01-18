@@ -3,35 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:wb="clr-namespace:WebBrowserWindow"
+      xmlns:cl="clr-namespace:GuiSupport"
         mc:Ignorable="d"
-      VerticalAlignment="Top">
+      VerticalAlignment="Top"
+      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Grid.Resources>
 
-    <Grid>
+    <Grid Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="140" MaxWidth="140"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="5"
-                   Margin="2 2 2 2"
-                   Text="Select how you want to create Statistics"/>
-
-        <StackPanel Grid.Row="1"
-                    Grid.Column="0"
-                    Width="140">
+        <StackPanel Grid.Row="0"
+                    Height="40"
+                    Orientation="Horizontal">
             <Button Content="Create CSV stats"
                     Margin="10 10 10 10 "
                     Command="{Binding CreateCSVStatsCommand}"/>
@@ -41,9 +31,6 @@
             <Button Content="Investment list"
                     Margin="10 10 10 10 "
                     Command="{Binding  CreateInvestmentListCommand}"/>
-            <Button Content="Close StatsCreator"
-                    Margin="10 10 10 10 "
-                    Command="{Binding CloseCommand}"/>
 
             <CheckBox IsChecked="{Binding DisplayValueFunds}"
                       Margin="10,10,10,10">
@@ -52,13 +39,18 @@
             </CheckBox>
         </StackPanel>
         <TabControl Grid.Row="1"
-                    Grid.Column="1">
-            <TabItem Header="Security Statistics">
-                <Grid>
-                    <DataGrid Grid.Row="1"
-                              Margin="10 10 10 10 "
+                    SelectedIndex="{Binding SelectedIndex}"
+                    Height="Auto"
+                    Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+            <TabItem Header="Security Statistics"
+                     Height="Auto"
+                     >
+                <Grid VerticalAlignment="Stretch"
+                      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+                    <DataGrid Margin="5"
                               SelectionUnit="FullRow"
                               CanUserAddRows="False"
+                              Height="Auto"
                               IsReadOnly="True"
                               CanUserDeleteRows="False"
                               AutoGenerateColumns="True"
@@ -71,9 +63,11 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Dad's Statistics">
-                <Grid>
+                <Grid VerticalAlignment="Stretch"
+                      MinHeight="400"
+                      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
                     <DataGrid Name="DadStatsBox"
-                              Margin="10 10 10 10 "
+                              Margin="5"
                               SelectionUnit="FullRow"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
@@ -83,19 +77,19 @@
                               AutoGenerateColumns="False"
                               ItemsSource="{Binding SecuritiesStats}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Company" MaxWidth="200" Binding="{Binding Path=Company}"/>
-                            <DataGridTextColumn Header="Name" MaxWidth="200" Binding="{Binding Path=Name}"/>
-                            <DataGridTextColumn Header="Latest Value" MaxWidth="200" Binding="{Binding Path=LatestVal}"/>
-                            <DataGridTextColumn Header="Latest Change" MaxWidth="200" Binding="{Binding Path=RecentChange}"/>
-                            <DataGridTextColumn Header="Profit" MaxWidth="200" Binding="{Binding Path=Profit}"/>
+                            <DataGridTextColumn Header="Company" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Company}"/>
+                            <DataGridTextColumn Header="Name" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Name}"/>
+                            <DataGridTextColumn Header="Latest Value" MaxWidth="200" MinWidth="70" Binding="{Binding Path=LatestVal}"/>
+                            <DataGridTextColumn Header="Latest Change" MaxWidth="200" MinWidth="70" Binding="{Binding Path=RecentChange}"/>
+                            <DataGridTextColumn Header="Profit" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Profit}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Security Investments">
-                <Grid>
-                    <DataGrid Grid.Row="1"
-                              Margin="10 10 10 10 "
+                <Grid VerticalAlignment="Stretch"
+                      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+                    <DataGrid Margin="5"
                               SelectionUnit="FullRow"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
@@ -110,10 +104,11 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Bank Account Statistics">
-                <Grid>
-                    <DataGrid Grid.Row="1"
-                              Name="BankAccBox"
-                              Margin="10 10 10 10 "
+                <Grid VerticalAlignment="Stretch"
+                      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+                    <DataGrid Name="BankAccBox"
+                              Margin="5"
+                              VerticalAlignment="Stretch"
                               SelectionUnit="FullRow"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
@@ -126,11 +121,12 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Database Statistics">
-                <Grid Background="LightPink">
-                    <DataGrid Grid.Row="1"
-                              Name="DatabaseStatsBox"
-                              Margin="10 10 10 10 "
+            <TabItem Header="Database Statistics"
+                     VerticalAlignment="Stretch">
+                <Grid VerticalAlignment="Stretch"
+                      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+                    <DataGrid Name="DatabaseStatsBox"
+                              Margin="5"
                               SelectionUnit="FullRow"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
@@ -140,14 +136,51 @@
                               ItemsSource="{Binding DatabaseStats}"
                               ScrollViewer.VerticalScrollBarVisibility="Visible">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Company" MaxWidth="200" Binding="{Binding Path=Company}"/>
-                            <DataGridTextColumn Header="Name" MaxWidth="200" Binding="{Binding Path=Name}"/>
-                            <DataGridTextColumn Header="First Date" MaxWidth="200" Binding="{Binding Path=FirstDate, StringFormat=dd/MM/yyyy}"/>
-                            <DataGridTextColumn Header="Latest Date" MaxWidth="200" Binding="{Binding Path=Date, StringFormat=dd/MM/yyyy}"/>
-                            <DataGridTextColumn Header="Number Entries" MaxWidth="200" Binding="{Binding Path=NumEntries}"/>
-                            <DataGridTextColumn Header="Entry Year Density" MaxWidth="200" Binding="{Binding Path=EntryYearDensity}"/>
+                            <DataGridTextColumn Header="Company" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Company}"/>
+                            <DataGridTextColumn Header="Name" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Name}"/>
+                            <DataGridTextColumn Header="First Date" MaxWidth="200" MinWidth="70" Binding="{Binding Path=FirstDate, StringFormat=dd/MM/yyyy}"/>
+                            <DataGridTextColumn Header="Latest Date" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Date, StringFormat=dd/MM/yyyy}"/>
+                            <DataGridTextColumn Header="Number Entries" MaxWidth="200" MinWidth="70" Binding="{Binding Path=NumEntries}"/>
+                            <DataGridTextColumn Header="Entry Year Density" MaxWidth="200" MinWidth="70" Binding="{Binding Path=EntryYearDensity}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Exported Stats">
+                <Grid Width="Auto"
+                      Height="Auto"
+                      MinHeight="400"
+                      VerticalAlignment="Stretch"
+                      Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"
+                            Grid.Row="0"
+                            Margin="5 5 5 5"
+                            Content="HTML Stats to Display"
+                            Command="{Binding FileSelect}"></Button>
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Margin="5 5 5 5"
+                             TextAlignment="Left"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding StatsFilepath}"></TextBox>
+                <WebBrowser Grid.Row="1"
+                            Grid.Column="0"
+                            Width="Auto"
+                            Height="Auto"
+                            Grid.ColumnSpan="2"
+                            x:Name="webBrowser"
+                            wb:WebBrowserBehaviours.BindableSource="{Binding DisplayStats}"/>
                 </Grid>
             </TabItem>
         </TabControl>

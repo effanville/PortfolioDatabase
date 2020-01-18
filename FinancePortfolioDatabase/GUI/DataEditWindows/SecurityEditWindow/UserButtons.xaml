@@ -6,7 +6,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
 
-    <StackPanel Width="130">
+    <StackPanel Orientation="Horizontal"
+                Height="40">
         <Button Content="Download selected Data"
                     Margin="10 10 10 10 "
                     Command="{Binding DownloadCommand}"
@@ -19,9 +20,9 @@
                     Margin="10 10 10 10 "
                     Command="{Binding DeleteValuationCommand}"
                     ToolTip="Deletes the security data highlighted."/>
-        <Button Content="Close Security Edit"
-                    Margin="10 10 10 10 "
-                    Command="{Binding CloseCommand}"
-                    ToolTip="Press here to close Add/Edit Securities"/>
+        <Button Content="Add Data From Csv file"
+                Margin="10 10 10 10 "
+                Command="{Binding AddCsvData}"
+                ToolTip="Adds data to the selected security."/>
     </StackPanel>
 </StackPanel>

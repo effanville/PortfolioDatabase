@@ -1,4 +1,5 @@
-﻿using FinancialStructures.ReportingStructures;
+﻿using FinanceWindowsViewModels;
+using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
 using GUIAccessorFunctions;
 using Microsoft.Win32;
@@ -14,16 +15,12 @@ namespace FinanceWindows
     {
         public MainWindow()
         {
-            DatabaseAccessor.LoadPortfolio(new ErrorReports());
+            var viewModel = new MainWindowViewModel();
             InitializeComponent();
 
             Title = "Financial Database v" + AssemblyCreationDate.Value.ToString("yyyy.MM.dd.HHmmss");
-        }
 
-        private void OpenHelpDocsCommand(object sender, RoutedEventArgs e)
-        {
-            var helpwindow = new HelpWindow();
-            helpwindow.Show();
+            DataContext = viewModel;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
