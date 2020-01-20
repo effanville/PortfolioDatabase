@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FinancialStructures.GUIFinanceStructures
 {
-    public class NameCompDate : NameComp
+    public class NameCompDate : NameData
     {
         private DateTime fDateToRecord;
         public DateTime DateToRecord

@@ -21,7 +21,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// The date and latest value of the security
         /// </summary>
-        public DailyValuation LatestValue(Currency currency = null)
+        internal DailyValuation LatestValue(Currency currency = null)
         {
             DailyValuation latestDate = fUnitPrice.LatestValuation();
             if (latestDate == null)
@@ -38,7 +38,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// The date and first value of the security
         /// </summary>
-        public DailyValuation FirstValue(Currency currency = null)
+        internal DailyValuation FirstValue(Currency currency = null)
         {
             DailyValuation firstDate = fUnitPrice.FirstValuation();
             if (firstDate == null)
@@ -54,7 +54,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the interpolated value of the security on the date provided.
         /// </summary>
-        public DailyValuation Value(DateTime date, Currency currency = null)
+        internal DailyValuation Value(DateTime date, Currency currency = null)
         {
             DailyValuation perSharePrice = fUnitPrice.Value(date);
             double currencyValue = currency == null ? 1.0 : currency.Value(date).Value;
@@ -128,7 +128,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// returns a list of all investments with the name of the security.
         /// </summary>
-        public List<DailyValuation_Named> AllInvestmentsNamed(Currency currency = null)
+        internal List<DailyValuation_Named> AllInvestmentsNamed(Currency currency = null)
         {
             List<DailyValuation> values = fInvestments.GetValuesBetween(fInvestments.FirstDate(), fInvestments.LatestDate());
             List<DailyValuation_Named> namedValues = new List<DailyValuation_Named>();

@@ -2,29 +2,29 @@
 
 namespace FinancialStructures.GUIFinanceStructures
 {
-    public class BasicDayDataView : IComparable
+    public class DayDataView : IComparable
     {
         public int CompareTo(Object obj)
         {
-            if (obj is BasicDayDataView dailyView)
+            if (obj is DayDataView dailyView)
             {
                 return DateTime.Compare(Date, dailyView.Date);
             }
             return 0;
         }
 
-        public BasicDayDataView Copy()
+        public DayDataView Copy()
         {
-            return new BasicDayDataView(Date, UnitPrice, ShareNo, Investment, NewValue);
+            return new DayDataView(Date, UnitPrice, ShareNo, Investment, NewValue);
         }
 
-        public BasicDayDataView()
+        public DayDataView()
         {
             NewValue = true;
             Date = DateTime.Today;
         }
 
-        public BasicDayDataView(DateTime date, double unitPrice, double shareNo, double investment, bool newValue = true)
+        public DayDataView(DateTime date, double unitPrice, double shareNo, double investment, bool newValue = true)
         {
             Date = date;
             UnitPrice = unitPrice;

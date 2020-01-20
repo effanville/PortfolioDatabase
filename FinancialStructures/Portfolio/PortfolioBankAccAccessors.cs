@@ -1,16 +1,17 @@
-﻿using FinancialStructures.GUIFinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 
-namespace FinancialStructures.FinanceStructures
+namespace FinancialStructures.Database
 {
-    public partial class Portfolio
+    public static partial class PortfolioBankAccounts
     {
-        public List<string> GetBankAccountNames()
+        public static List<string> GetBankAccountNames(this Portfolio portfolio)
         {
             var names = new List<string>();
-            foreach (var bankAcc in BankAccounts)
+            foreach (var bankAcc in portfolio.BankAccounts)
             {
                 names.Add(bankAcc.GetName());
             }
@@ -18,10 +19,10 @@ namespace FinancialStructures.FinanceStructures
             return names;
         }
 
-        public List<string> GetBankAccountCompanyNames()
+        public static List<string> GetBankAccountCompanyNames(this Portfolio portfolio)
         {
             var companies = new List<string>();
-            foreach (var bankAcc in BankAccounts)
+            foreach (var bankAcc in portfolio.BankAccounts)
             {
                 if (companies.IndexOf(bankAcc.GetCompany()) == -1)
                 {
@@ -33,21 +34,21 @@ namespace FinancialStructures.FinanceStructures
             return companies;
         }
 
-        public List<NameComp> GetBankAccountNamesAndCompanies()
+        public static List<NameData> GetBankAccountNamesAndCompanies(this Portfolio portfolio)
         {
-            var namesAndCompanies = new List<NameComp>();
+            var namesAndCompanies = new List<NameData>();
 
-            foreach (var bankAcc in BankAccounts)
+            foreach (var bankAcc in portfolio.BankAccounts)
             {
-                namesAndCompanies.Add(new NameComp(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.GetCurrency(), string.Empty, bankAcc.GetSectors(), false));
+                namesAndCompanies.Add(new NameData(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.GetCurrency(), string.Empty, bankAcc.GetSectors(), false));
             }
 
             return namesAndCompanies;
         }
 
-        public bool DoesBankAccountExistFromName(string name, string company)
+        public static bool DoesBankAccountExistFromName(this Portfolio portfolio, string name, string company)
         {
-            foreach (CashAccount acc in BankAccounts)
+            foreach (CashAccount acc in portfolio.BankAccounts)
             {
                 if (acc.GetName() == name && acc.GetCompany() == company)
                 {
@@ -58,10 +59,10 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryGetAccountData(string name, string company, out List<AccountDayDataView> data)
+        public static bool TryGetAccountData(this Portfolio portfolio, string name, string company, out List<AccountDayDataView> data)
         {
             data = new List<AccountDayDataView>();
-            foreach (CashAccount acc in BankAccounts)
+            foreach (CashAccount acc in portfolio.BankAccounts)
             {
                 if (acc.GetName() == name && acc.GetCompany() == company)
                 {
@@ -76,9 +77,9 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Outputs a copy of the BankAccount if it exists.
         /// </summary>
-        public bool TryGetBankAccount(string name, string company, out CashAccount desired)
+        public static bool TryGetBankAccount(this Portfolio portfolio, string name, string company, out CashAccount desired)
         {
-            foreach (CashAccount sec in BankAccounts)
+            foreach (CashAccount sec in portfolio.BankAccounts)
             {
                 if (sec.GetName() == name && sec.GetCompany() == company)
                 {
@@ -91,14 +92,54 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddBankAccountFromName(string name, string company, string currency, List<string> sectors, ErrorReports reports)
+
+        /// <summary>
+        /// Tries to add a CashAccount to the underlying global database
+        /// </summary>
+        public static bool TryAddBankAccount(this Portfolio portfolio, string name, string company, string currency, string sectors, ErrorReports reports)
+        {
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(sectors))
+            {
+                var sectorsSplit = sectors.Split(',');
+
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+            return portfolio.TryAddBankAccountFromName(name, company, currency, sectorList, reports);
+        }
+
+        /// <summary>
+        /// Renames the BankAccount if this exists.
+        /// </summary>
+        public static bool TryEditBankAccountName(this Portfolio portfolio, string name, string company, string newName, string newCompany, string currency, string newSectors, ErrorReports reports)
+        {
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(newSectors))
+            {
+                var sectorsSplit = newSectors.Split(',');
+
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+
+            return portfolio.TryEditCashAcountNameCompany(name, company, newName, newCompany, currency, sectorList, reports);
+        }
+
+        public static bool TryAddBankAccountFromName(this Portfolio portfolio, string name, string company, string currency, List<string> sectors, ErrorReports reports)
         {
             if (name == null || company == null)
             {
                 reports.AddError("Name or Company provided were null.");
                 return false;
             }
-            if (DoesBankAccountExistFromName(name, company))
+            if (portfolio.DoesBankAccountExistFromName(name, company))
             {
                 return false;
             }
@@ -109,17 +150,17 @@ namespace FinancialStructures.FinanceStructures
                 NewAccount.TryAddSector(sector);
             }
 
-            BankAccounts.Add(NewAccount);
+            portfolio.BankAccounts.Add(NewAccount);
             return true;
         }
 
-        public bool TryRemoveBankAccount(string name, string company, ErrorReports reports)
+        public static bool TryRemoveBankAccount(this Portfolio portfolio, string name, string company, ErrorReports reports)
         {
-            foreach (CashAccount acc in BankAccounts)
+            foreach (CashAccount acc in portfolio.BankAccounts)
             {
                 if (acc.GetCompany() == company && acc.GetName() == name)
                 {
-                    BankAccounts.Remove(acc);
+                    portfolio.BankAccounts.Remove(acc);
                     reports.AddWarning($"Deleting Bank Account: Deleted `{company}'-`{name}'.");
                     return true;
                 }
@@ -128,28 +169,28 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddDataToBankAccount(string name, string company, DateTime date, double value)
+        public static bool TryAddDataToBankAccount(this Portfolio portfolio, string name, string company, DateTime date, double value)
         {
-            for (int accountIndex = 0; accountIndex < BankAccounts.Count; accountIndex++)
+            for (int accountIndex = 0; accountIndex < portfolio.BankAccounts.Count; accountIndex++)
             {
-                if (BankAccounts[accountIndex].GetCompany() == company && BankAccounts[accountIndex].GetName() == name)
+                if (portfolio.BankAccounts[accountIndex].GetCompany() == company && portfolio.BankAccounts[accountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[accountIndex].TryAddValue(date, value);
+                    return portfolio.BankAccounts[accountIndex].TryAddValue(date, value);
                 }
             }
 
             return false;
         }
 
-        public bool TryEditBankAccount(string name, string company, DateTime oldDate, DateTime date, double value, ErrorReports reports)
+        public static bool TryEditBankAccount(this Portfolio portfolio, string name, string company, DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
-            for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
+            for (int AccountIndex = 0; AccountIndex < portfolio.BankAccounts.Count; AccountIndex++)
             {
-                if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
+                if (portfolio.BankAccounts[AccountIndex].GetCompany() == company && portfolio.BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].TryEditValue(oldDate, date, value, reports);
+                    return portfolio.BankAccounts[AccountIndex].TryEditValue(oldDate, date, value, reports);
                 }
             }
 
@@ -157,14 +198,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryEditCashAcountNameCompany(string name, string company, string newName, string newCompany, string currency, List<string> newSectors, ErrorReports reports)
+        public static bool TryEditCashAcountNameCompany(this Portfolio portfolio, string name, string company, string newName, string newCompany, string currency, List<string> newSectors, ErrorReports reports)
         {
-            for (int AccountIndex = 0; AccountIndex < Funds.Count; AccountIndex++)
+            for (int AccountIndex = 0; AccountIndex < portfolio.Funds.Count; AccountIndex++)
             {
-                if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
+                if (portfolio.BankAccounts[AccountIndex].GetCompany() == company && portfolio.BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].EditNameCompany(newName, newCompany, currency, newSectors);
+                    return portfolio.BankAccounts[AccountIndex].EditNameCompany(newName, newCompany, currency, newSectors);
                 }
             }
 
@@ -172,14 +213,14 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryDeleteBankAccountData(string name, string company, DateTime date, ErrorReports reports)
+        public static bool TryDeleteBankAccountData(this Portfolio portfolio, string name, string company, DateTime date, ErrorReports reports)
         {
-            for (int AccountIndex = 0; AccountIndex < BankAccounts.Count; AccountIndex++)
+            for (int AccountIndex = 0; AccountIndex < portfolio.BankAccounts.Count; AccountIndex++)
             {
-                if (BankAccounts[AccountIndex].GetCompany() == company && BankAccounts[AccountIndex].GetName() == name)
+                if (portfolio.BankAccounts[AccountIndex].GetCompany() == company && portfolio.BankAccounts[AccountIndex].GetName() == name)
                 {
                     // now edit data
-                    return BankAccounts[AccountIndex].TryDeleteData(date, reports);
+                    return portfolio.BankAccounts[AccountIndex].TryDeleteData(date, reports);
                 }
             }
 

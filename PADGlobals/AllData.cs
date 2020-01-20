@@ -1,4 +1,5 @@
 ﻿using FinancialStructures.FinanceStructures;
+using FinancialStructures.Database;
 using System.Collections.Generic;
 
 namespace SavingDummyClasses

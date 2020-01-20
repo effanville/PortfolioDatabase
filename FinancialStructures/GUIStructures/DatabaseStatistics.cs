@@ -2,7 +2,7 @@
 
 namespace FinancialStructures.GUIFinanceStructures
 {
-    public class DatabaseStatistics : NameComp
+    public class DatabaseStatistics : NameData
     {
         private DateTime fFirstDate;
         public DateTime FirstDate

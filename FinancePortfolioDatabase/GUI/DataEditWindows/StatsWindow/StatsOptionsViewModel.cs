@@ -3,9 +3,9 @@ using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GUISupport;
 using PortfolioStatsCreatorHelper;
+using GlobalHeldData;
 using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -50,7 +50,7 @@ namespace FinanceWindowsViewModels
             set { fBankColumnNames = value; OnPropertyChanged(); }
         }
 
-        public ICommand ExportHTMLCommand { get; }
+        public ICommand ExportCommand { get; }
 
         private void ExecuteExportHTMLCommand(Object obj)
         {
@@ -78,7 +78,49 @@ namespace FinanceWindowsViewModels
                     }
                 }
                 var options = new UserOptions() { DisplayValueFunds = displayValueFunds, Spacing = spacing, Colours = colours, SecurityDataToExport = selected, BankAccDataToExport = BankSelected};
-                PortfolioStatsCreators.CreateHTMLPageCustom(GlobalHeldData.GlobalData.Finances, saving.FileName, options);
+                PortfolioStatsCreators.CreateHTMLPageCustom(GlobalData.Finances, GlobalData.BenchMarks, saving.FileName, options);
+                reports.AddGeneralReport(ReportType.Report, "Created statistics page");
+            }
+            else
+            {
+                reports.AddGeneralReport(ReportType.Error, "Was not able to create HTML page in place specified.");
+            }
+            saving.Dispose();
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
+
+            CloseWindowAction(path);
+        }
+
+        private void ExecuteExportCSVCommand(Object obj)
+        {
+            var reports = new ErrorReports();
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName + "-CSVStats.csv", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            saving.Filter = "Csv file|*.csv|All files|*.*";
+            string path = null;
+            if (saving.ShowDialog() == DialogResult.OK)
+            {
+                path = saving.FileName;
+                var selected = new List<string>();
+                foreach (var column in ColumnNames)
+                {
+                    if (column.Visible || column.Name == "Name" || column.Name == "Company")
+                    {
+                        selected.Add(column.Name);
+                    }
+                }
+                var BankSelected = new List<string>();
+                foreach (var column in BankColumnNames)
+                {
+                    if (column.Visible || column.Name == "Name" || column.Name == "Company")
+                    {
+                        BankSelected.Add(column.Name);
+                    }
+                }
+                var options = new UserOptions() { DisplayValueFunds = displayValueFunds, Spacing = spacing, Colours = colours, SecurityDataToExport = selected, BankAccDataToExport = BankSelected };
+                CSVStatsCreator.CreateCSVPageCustom(GlobalData.Finances, GlobalData.BenchMarks, saving.FileName, options);
                 reports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
             else
@@ -98,11 +140,19 @@ namespace FinanceWindowsViewModels
         Action<ErrorReports> UpdateReports;
         private Action<string> CloseWindowAction;
 
-        public StatsOptionsViewModel(Action<ErrorReports> updateReports, Action<string> CloseWindow)
+        public StatsOptionsViewModel(ExportType exportType, Action<ErrorReports> updateReports, Action<string> CloseWindow)
         {
             UpdateReports = updateReports;
             CloseWindowAction = CloseWindow;
-            ExportHTMLCommand = new BasicCommand(ExecuteExportHTMLCommand);
+            if (exportType == ExportType.HTML)
+            {
+                ExportCommand = new BasicCommand(ExecuteExportHTMLCommand);
+            }
+            if (exportType == ExportType.CSV)
+            {
+                ExportCommand = new BasicCommand(ExecuteExportCSVCommand);
+            }
+            
             var totals = new SecurityStatsHolder();
             var properties = totals.GetType().GetProperties();
             ColumnNames = new List<VisibleName>();

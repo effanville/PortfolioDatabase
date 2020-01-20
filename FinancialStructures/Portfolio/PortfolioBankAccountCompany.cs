@@ -1,9 +1,10 @@
 ﻿using FinancialStructures.DataStructures;
+using FinancialStructures.FinanceStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FinancialStructures.FinanceStructures
+namespace FinancialStructures.Database
 {
     public partial class Portfolio
     {

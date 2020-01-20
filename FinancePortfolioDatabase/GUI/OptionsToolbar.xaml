@@ -24,12 +24,15 @@
                         </ToolBar>
                     </ToolBarTray>
                     <Button Content="Save Database"
+                            Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                     Command="{Binding SaveDatabaseCommand}"
                     Margin="10 10 10 10"/>
                     <Button Content="Load Database"
+                            Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                     Command="{Binding LoadDatabaseCommand}"
                     Margin="10 10 10 10"/>
                     <Button Content="Update Data"
+                            Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                     Command="{Binding UpdateDataCommand}"
                     Margin="10 10 10 10"/>
                 </StackPanel>

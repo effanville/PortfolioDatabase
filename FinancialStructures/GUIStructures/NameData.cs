@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace FinancialStructures.GUIFinanceStructures
 {
-    public class NameComp : IComparable
+    public class NameData : IComparable
     {
         public int CompareTo(object obj)
         {
-            if (obj is NameComp value)
+            if (obj is NameData value)
             {
                 if (Company == value.Company)
                 {
@@ -30,12 +30,12 @@ namespace FinancialStructures.GUIFinanceStructures
 
         public bool NewValue { get; set; }
 
-        public NameComp()
+        public NameData()
         {
             NewValue = true;
         }
 
-        public NameComp(string n, string c, string currency, string u, List<string> s, bool newValue = true)
+        public NameData(string n, string c, string currency, string u, List<string> s, bool newValue = true)
         {
             Name = n;
             Company = c;
@@ -45,7 +45,7 @@ namespace FinancialStructures.GUIFinanceStructures
             NewValue = newValue;
         }
 
-        public NameComp(string n, string c, string currency, string u, bool newValue = true)
+        public NameData(string n, string c, string currency, string u, bool newValue = true)
         {
             Name = n;
             Company = c;
@@ -54,7 +54,7 @@ namespace FinancialStructures.GUIFinanceStructures
             NewValue = newValue;
         }
 
-        public NameComp(string n, string c, bool newValue = true)
+        public NameData(string n, string c, bool newValue = true)
         {
             Name = n;
             Company = c;

@@ -1,7 +1,7 @@
-﻿using BankAccountStatisticsFunctions;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.Database;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
 using SavingDummyClasses;
@@ -18,30 +18,6 @@ namespace GUIAccessorFunctions
     /// </summary>
     public static class DatabaseAccessor
     {
-        /// <summary>
-        /// Returns a copy of the currently held portfolio. 
-        /// Note one cannot use this portfolio to edit as it makes a copy.
-        /// </summary>
-        public static Portfolio GetPortfolio()
-        {
-            var PortfoCopy = new Portfolio();
-
-            foreach (var security in GlobalData.Finances.Funds)
-            {
-                PortfoCopy.Funds.Add(security);
-            }
-            foreach (var bankAcc in GlobalData.Finances.BankAccounts)
-            {
-                PortfoCopy.BankAccounts.Add(bankAcc);
-            }
-            foreach (var currency in GlobalData.Finances.Currencies)
-            {
-                PortfoCopy.Currencies.Add(currency);
-            }
-
-            return PortfoCopy;
-        }
-
         /// <summary>
         /// returns a copy of the 
         /// </summary>
@@ -68,88 +44,15 @@ namespace GUIAccessorFunctions
 
             return null;
         }
-
-        /// <summary>
-        /// returns a copy of the 
-        /// </summary>
-        public static List<Currency> GetCurrencies()
+        
+        public static List<NameData> GetSectorNames()
         {
-            var output = new List<Currency>();
-            foreach (var sector in GlobalData.Finances.Currencies)
-            {
-                output.Add(sector);
-            }
-            return output;
-        }
-
-        public static Currency GetCurrencyFromName(string name)
-        {
-            var benchmarks = GetCurrencies();
-            foreach (var currency in benchmarks)
-            {
-                if (currency.GetName() == name)
-                {
-                    return currency.Copy();
-                }
-            }
-
-            return null;
-        }
-
-        public static Security GetSecurityFromName(string name, string company)
-        {
-            foreach (var security in GlobalData.Finances.Funds)
-            {
-                if (security.GetName() == name && security.GetCompany() == company)
-                {
-                    return security.Copy();
-                }
-            }
-
-            return null;
-        }
-        public static CashAccount GetBankAccountFromName(string name, string company)
-        {
-            foreach (var account in GlobalData.Finances.BankAccounts)
-            {
-                if (account.GetName() == name && account.GetCompany() == company)
-                {
-                    return account.Copy();
-                }
-            }
-
-            return null;
-        }
-
-        public static List<string> GetSecurityNames()
-        {
-            if (GlobalData.Finances != null)
-            {
-                return GlobalData.Finances.GetSecurityNames();
-            }
-            return new List<string>();
-        }
-        public static List<NameComp> GetSectorNames()
-        {
-            var outputs = new List<NameComp>();
+            var outputs = new List<NameData>();
             if (GlobalData.BenchMarks != null)
             {
                 foreach (Sector thing in GlobalData.BenchMarks)
                 {
-                    outputs.Add(new NameComp(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
-                }
-            }
-            return outputs;
-        }
-
-        public static List<NameComp> GetCurrencyNames()
-        {
-            var outputs = new List<NameComp>();
-            if (GlobalData.Finances.Currencies != null)
-            {
-                foreach (Currency thing in GlobalData.Finances.Currencies)
-                {
-                    outputs.Add(new NameComp(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
+                    outputs.Add(new NameData(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
                 }
             }
             return outputs;
@@ -158,212 +61,6 @@ namespace GUIAccessorFunctions
         public static void SetFilePath(string path)
         {
             GlobalData.fDatabaseFilePath = path;
-        }
-
-        public static List<NameCompDate> GetSecurityNamesAndCompanies()
-        {
-            if (GlobalData.Finances != null)
-            {
-                return GlobalData.Finances.GetSecurityNamesAndCompanies();
-            }
-            return new List<NameCompDate>();
-        }
-
-        /// <summary>
-        /// returns a sorted list of all funds in portfolio, ordering by company then by fund name.
-        /// </summary>
-        /// <returns></returns>
-        public static List<SecurityStatsHolder> GenerateSecurityStatistics(bool DisplayValueFunds)
-        {
-            if (GlobalData.Finances != null)
-            {
-                var funds = GlobalData.Finances.GetSecurities();
-                var namesAndCompanies = new List<SecurityStatsHolder>();
-
-                foreach (var security in funds)
-                {
-                    var latest = new SecurityStatsHolder(security.GetName(), security.GetCompany());
-                    SecurityStatsHolderHelper.AddSecurityStats(latest);
-                    if ((DisplayValueFunds && latest.LatestVal > 0) || !DisplayValueFunds)
-                    {
-                        namesAndCompanies.Add(latest);
-                    }
-                }
-                namesAndCompanies.Sort();
-
-                var totals = new SecurityStatsHolder("Totals", "");
-                SecurityStatsHolderHelper.AddSecurityStats(totals);
-                if ((DisplayValueFunds && totals.LatestVal > 0) || !DisplayValueFunds)
-                {
-                    namesAndCompanies.Add(totals);
-                }
-                return namesAndCompanies;
-            }
-
-            return new List<SecurityStatsHolder>();
-        }
-
-        /// <summary>
-        /// returns the securities under the company name.
-        /// </summary>
-        public static List<SecurityStatsHolder> GenerateCompanyFundsStatistics(string company)
-        {
-            if (GlobalData.Finances != null)
-            {
-                var funds = GlobalData.Finances.GetSecurities();
-                var namesAndCompanies = new List<SecurityStatsHolder>();
-
-                foreach (var security in funds)
-                {
-                    if (security.GetCompany() == company)
-                    {
-                        var latest = new SecurityStatsHolder(security.GetName(), security.GetCompany());
-                        SecurityStatsHolderHelper.AddSecurityStats(latest);
-                        namesAndCompanies.Add(latest);
-                    }
-                }
-
-                namesAndCompanies.Sort();
-                if (namesAndCompanies.Count > 1)
-                {
-                    var totals = new SecurityStatsHolder("Totals", company);
-                    SecurityStatsHolderHelper.AddSecurityStats(totals);
-                    namesAndCompanies.Add(totals);
-                }
-                
-                return namesAndCompanies;
-            }
-
-            return new List<SecurityStatsHolder>();
-        }
-
-        /// <summary>
-        /// returns the securities under the company name.
-        /// </summary>
-        public static SecurityStatsHolder GenerateSectorFundsStatistics(string sectorName)
-        {
-            if (GlobalData.Finances != null)
-            {
-                var totals = new SecurityStatsHolder( sectorName, "Totals");
-                SecurityStatsHolderHelper.AddSectorStats(totals);
-                return totals;
-            }
-
-            return new SecurityStatsHolder();
-        }
-
-        /// <summary>
-        /// returns the securities under the company name.
-        /// </summary>
-        public static SecurityStatsHolder GenerateBenchMarkStatistics(string sectorName)
-        {
-            if (GlobalData.Finances != null)
-            {
-                var totals = new SecurityStatsHolder(sectorName, "BenchMark");
-                SecurityStatsHolderHelper.AddSectorStats(totals);
-                return totals;
-            }
-
-            return new SecurityStatsHolder();
-        }
-
-        public static SecurityStatsHolder GenerateCompanyStatistics(string company)
-        {
-            if (GlobalData.Finances != null)
-            {
-                var totals = new SecurityStatsHolder("Totals", company);
-                SecurityStatsHolderHelper.AddSecurityStats(totals);
-                return totals;
-            }
-            return new SecurityStatsHolder();
-        }
-
-        public static List<DailyValuation_Named> GenerateBankAccountStatistics(string company)
-        {
-            if (GlobalData.Finances != null)
-            {
-
-                return GlobalData.Finances.GenerateBankAccountStatistics(company);
-            }
-            return new List<DailyValuation_Named>();
-        }
-
-        public static SecurityStatsHolder GeneratePortfolioStatistics()
-        {
-            if (GlobalData.Finances != null)
-            {
-                var totals = new SecurityStatsHolder("Totals", string.Empty);
-                SecurityStatsHolderHelper.AddSecurityStats(totals);
-                return totals;
-            }
-
-            return new SecurityStatsHolder();
-        }
-
-        public static int LongestName()
-        {
-            return GlobalData.Finances.GetSecurityNames().Max().Length;
-        }
-
-        public static int LongestCompany()
-        {
-            var companies = GlobalData.Finances.GetSecuritiesCompanyNames();
-            return companies.Select(c => c.Length).Max();
-        }
-
-        public static List<string> GetBankAccountNames()
-        {
-            if (GlobalData.Finances != null)
-            {
-                return GlobalData.Finances.GetBankAccountNames();
-            }
-            return new List<string>();
-        }
-
-        public static List<BankAccountStatsHolder> GenerateBankAccountStatistics(bool DisplayValueFunds)
-        {
-            if (GlobalData.Finances != null)
-            {
-                var accs = GlobalData.Finances.GetBankAccounts();
-                var namesAndCompanies = new List<BankAccountStatsHolder>();
-
-                foreach (var acc in accs)
-                {
-                    var latest = new BankAccountStatsHolder(acc.GetName(), acc.GetCompany(), acc.LatestValue().Value);
-                    namesAndCompanies.Add(latest);
-                }
-
-                namesAndCompanies.Sort();
-                var totals = new BankAccountStatsHolder("Totals", "", BankAccountStatistics.BankAccountTotal());
-                namesAndCompanies.Add(totals);
-                return namesAndCompanies;
-            }
-
-            return new List<BankAccountStatsHolder>();
-        }
-
-        public static List<DatabaseStatistics> GenerateDatabaseStatistics()
-        {
-            var outputs = new List<DatabaseStatistics>();
-            if (GlobalData.Finances != null)
-            {
-                outputs.AddRange(GlobalData.Finances.GenerateDatabaseStatistics());
-            }
-            return outputs;
-        }
-
-        public static List<NameComp> GetBankAccountNamesAndCompanies()
-        {
-            if (GlobalData.Finances != null)
-            {
-                return GlobalData.Finances.GetBankAccountNamesAndCompanies();
-            }
-            return new List<NameComp>();
-        }
-
-        public static List<DailyValuation_Named> AllSecuritiesInvestments()
-        {
-            return GlobalData.Finances.AllSecuritiesInvestments();
         }
 
         public static void ClearPortfolio()
@@ -386,7 +83,7 @@ namespace GUIAccessorFunctions
 
         public static void SavePortfolio(ErrorReports reports)
         {
-            var toSave = new AllData(GetPortfolio(), GetBenchMarks());
+            var toSave = new AllData(GlobalData.Finances.GetPortfolio(), GetBenchMarks());
             if (GlobalData.fDatabaseFilePath != null)
             {
                 WriteToXmlFile(GlobalData.fDatabaseFilePath, toSave);

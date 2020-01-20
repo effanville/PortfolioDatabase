@@ -66,7 +66,7 @@ namespace GUISupport
                     break;
                 }
 
-                var line = new BasicDayDataView(DateTime.Parse(dayValuation[0]), double.Parse(dayValuation[1]), double.Parse(dayValuation[2]), double.Parse(dayValuation[3]));
+                var line = new DayDataView(DateTime.Parse(dayValuation[0]), double.Parse(dayValuation[1]), double.Parse(dayValuation[2]), double.Parse(dayValuation[3]));
                 dailyValuations.Add(line);
             }
 

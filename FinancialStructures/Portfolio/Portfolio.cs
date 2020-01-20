@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using FinancialStructures.FinanceStructures;
 
-namespace FinancialStructures.FinanceStructures
+namespace FinancialStructures.Database
 {
     public partial class Portfolio
     {
