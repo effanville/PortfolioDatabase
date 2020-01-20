@@ -1,20 +1,21 @@
 ﻿using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.Database;
 using FinancialStructures.ReportingStructures;
 using GUIAccessorFunctions;
 using GUISupport;
-using CurrencyHelperFunctions;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using GlobalHeldData;
 
 namespace FinanceWindowsViewModels
 {
     public class CurrencyEditWindowViewModel : PropertyChangedBase
     {
-        private List<NameComp> fPreEditSectorNames;
+        private List<NameData> fPreEditSectorNames;
 
-        private List<NameComp> fSectorNames;
-        public List<NameComp> SectorNames
+        private List<NameData> fSectorNames;
+        public List<NameData> SectorNames
         {
             get
             {
@@ -27,8 +28,8 @@ namespace FinanceWindowsViewModels
             }
         }
 
-        private NameComp fSelectedName;
-        public NameComp SelectedName
+        private NameData fSelectedName;
+        public NameData SelectedName
         {
             get
             {
@@ -89,9 +90,9 @@ namespace FinanceWindowsViewModels
         public void UpdateSectorListBox()
         {
             var currentSelectedName = SelectedName;
-            SectorNames = DatabaseAccessor.GetCurrencyNames();
+            SectorNames = GlobalData.Finances.GetCurrencyNames();
             SectorNames.Sort();
-            fPreEditSectorNames = DatabaseAccessor.GetCurrencyNames();
+            fPreEditSectorNames = GlobalData.Finances.GetCurrencyNames();
             fPreEditSectorNames.Sort();
 
             for (int i = 0; i < SectorNames.Count; i++)
@@ -107,7 +108,7 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                if (CurrencyEditor.TryGetCurrencyData(fSelectedName.Name, out List<AccountDayDataView> values))
+                if (GlobalData.Finances.TryGetCurrencyData(fSelectedName.Name, out List<AccountDayDataView> values))
                 {
                     SelectedSectorData = values;
                 }
@@ -127,7 +128,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateSector(Object obj)
         {
             var reports = new ErrorReports();
-            if (DatabaseAccessor.GetCurrencies().Count != SectorNames.Count)
+            if (GlobalData.Finances.GetCurrencies().Count != SectorNames.Count)
             {
                 bool edited = false;
                 foreach (var name in SectorNames)
@@ -135,7 +136,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        CurrencyEditor.TryAddCurrency(name.Name, name.Url, reports);
+                        GlobalData.Finances.TryAddCurrency(name.Name, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
@@ -155,7 +156,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        CurrencyEditor.TryEditCurrencyName(fPreEditSectorNames[i].Name, name.Name, name.Url, reports);
+                        GlobalData.Finances.TryEditCurrencyName(fPreEditSectorNames[i].Name, name.Name, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
@@ -178,9 +179,9 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
-                if (DatabaseAccessor.GetCurrencyFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
+                if (GlobalData.Finances.GetCurrencyFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
                 {
-                    CurrencyEditor.TryAddDataToCurrency(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
+                    GlobalData.Finances.TryAddDataToCurrency(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
                     SelectedDataPoint.NewValue = false;
                 }
                 else
@@ -193,7 +194,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            CurrencyEditor.TryEditCurrency(SelectedName.Name, fOldSelectedData.Date, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
+                            GlobalData.Finances.TryEditCurrency(SelectedName.Name, fOldSelectedData.Date, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
                             name.NewValue = false;
                         }
                     }
@@ -216,7 +217,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
-                if (CurrencyEditor.TryDeleteCurrencyData(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports))
+                if (GlobalData.Finances.TryDeleteCurrencyData(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports))
                 {
                     UpdateSectorListBox();
                 }
@@ -235,9 +236,9 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null)
             {
-                CurrencyEditor.TryDeleteCurrency(SelectedName.Name);
+                GlobalData.Finances.TryDeleteCurrency(SelectedName.Name);
             }
-            else if (DatabaseAccessor.GetCurrencies().Count != SectorNames.Count)
+            else if (GlobalData.Finances.GetCurrencies().Count != SectorNames.Count)
             {
 
             }
@@ -261,8 +262,8 @@ namespace FinanceWindowsViewModels
         {
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
-            SectorNames = new List<NameComp>();
-            fPreEditSectorNames = new List<NameComp>();
+            SectorNames = new List<NameData>();
+            fPreEditSectorNames = new List<NameData>();
             SelectedSectorData = new List<AccountDayDataView>();
             UpdateSectorListBox();
 

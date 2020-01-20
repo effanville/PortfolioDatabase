@@ -1,21 +1,21 @@
 ﻿using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using FinancialStructures.Database;
 using GUISupport;
 using PADGlobals;
-using SecurityHelperFunctions;
 using System;
 using System.Windows.Input;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using GlobalHeldData;
 
 namespace FinanceWindowsViewModels.SecurityEdit
-{
-    public class UserButtonsViewModel : PropertyChangedBase
+{    public class UserButtonsViewModel : PropertyChangedBase
     {
-        private NameComp fSelectedName;
+        private NameData fSelectedName;
 
 
-        private BasicDayDataView fSelectedValues;
+        private DayDataView fSelectedValues;
         public ICommand DownloadCommand { get; }
 
         private async void ExecuteDownloadCommand(Object obj)
@@ -38,7 +38,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                SecurityEditor.TryDeleteSecurity(fSelectedName.Name, fSelectedName.Company, reports);
+                GlobalData.Finances.TryRemoveSecurity(fSelectedName.Name, fSelectedName.Company, reports);
             }
             else
             {
@@ -52,7 +52,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
             UpdateMainWindow(true);
         }
 
-        public void UpdateButtonViewData(NameComp newName, BasicDayDataView newData)
+        public void UpdateButtonViewData(NameData newName, DayDataView newData)
         {
             fSelectedName = newName;
             fSelectedValues = newData;
@@ -65,7 +65,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
             var reports = new ErrorReports();
             if (fSelectedName != null && fSelectedValues != null)
             {
-                SecurityEditor.TryDeleteSecurityData(reports, fSelectedName.Name, fSelectedName.Company, fSelectedValues.Date, fSelectedValues.ShareNo, fSelectedValues.UnitPrice, fSelectedValues.Investment);
+                GlobalData.Finances.TryRemoveSecurityData(reports, fSelectedName.Name, fSelectedName.Company, fSelectedValues.Date, fSelectedValues.ShareNo, fSelectedValues.UnitPrice, fSelectedValues.Investment);
             }
 
             if (reports.Any())
@@ -93,9 +93,9 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
                 foreach (var objec in outputs)
                 {
-                    if (objec is BasicDayDataView view)
+                    if (objec is DayDataView view)
                     {
-                        SecurityEditor.TryAddDataToSecurity(reports, fSelectedName.Name, fSelectedName.Company, view.Date, view.ShareNo, view.UnitPrice, view.Investment);
+                        GlobalData.Finances.TryAddDataToSecurity(reports, fSelectedName.Name, fSelectedName.Company, view.Date, view.ShareNo, view.UnitPrice, view.Investment);
                     }
                     else
                     {
@@ -114,7 +114,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
 
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
-        public UserButtonsViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports, NameComp newName, BasicDayDataView newData)
+        public UserButtonsViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports, NameData newName, DayDataView newData)
         {
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;

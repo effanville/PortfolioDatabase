@@ -6,19 +6,26 @@ namespace GuiSupport
     {
         public static Color BackgroundPink { get; set; } = Colors.LightPink;
 
-        private static Brush fBackground = new SolidColorBrush(Colors.LightPink);
+        private static Brush fBackgroundBrush = new SolidColorBrush(Colors.LightPink);
         public static Brush BackgroundBrush 
         { 
-            get { return fBackground; }
-            set { fBackground = value; }
+            get { return fBackgroundBrush; }
+            set { fBackgroundBrush = value; }
         }
 
 
-        private static Brush fBackgroundSecondary = (SolidColorBrush)(new BrushConverter().ConvertFrom("#F98866"));
+        private static Brush fBackgroundSecondaryBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#F98866"));
         public static Brush BackgroundSecondaryBrush
         {
-            get { return fBackgroundSecondary; }
-            set { fBackgroundSecondary = value; }
+            get { return fBackgroundSecondaryBrush; }
+            set { fBackgroundSecondaryBrush = value; }
+        }
+
+        private static Brush fDefaultButtonBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#F99966"));
+        public static Brush DefaultTextBrush
+        {
+            get { return fDefaultButtonBrush; }
+            set { fDefaultButtonBrush = value; }
         }
     }
 }

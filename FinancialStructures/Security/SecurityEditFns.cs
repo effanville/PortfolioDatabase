@@ -36,7 +36,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns true if shares and unit prices have an item or are not null.
         /// </summary>
-        public bool Any()
+        internal bool Any()
         {
             if (fUnitPrice.Any() && fShares.Any())
             {
@@ -49,7 +49,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Makes a copy of the security.
         /// </summary>
-        public Security Copy()
+        internal Security Copy()
         {
             return new Security(fName, fCompany, fCurrency, fUrl, fShares, fUnitPrice, fInvestments);
         }
@@ -98,9 +98,9 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Produces a list of data for visual display purposes. Display in the base currency of the fund ( so this does not modify values due to currency)
         /// </summary>
-        internal List<BasicDayDataView> GetDataForDisplay()
+        internal List<DayDataView> GetDataForDisplay()
         {
-            var output = new List<BasicDayDataView>();
+            var output = new List<DayDataView>();
             if (fUnitPrice.Any())
             {
                 foreach (var datevalue in fUnitPrice.GetValuesBetween(fUnitPrice.FirstDate(), fUnitPrice.LatestDate()))
@@ -108,7 +108,7 @@ namespace FinancialStructures.FinanceStructures
                     fUnitPrice.TryGetValue(datevalue.Day, out double UnitPrice);
                     fShares.TryGetValue(datevalue.Day, out double shares);
                     fInvestments.TryGetValue(datevalue.Day, out double invest);
-                    var thisday = new BasicDayDataView(datevalue.Day, UnitPrice, shares, invest);
+                    var thisday = new DayDataView(datevalue.Day, UnitPrice, shares, invest);
                     output.Add(thisday);
                 }
             }
@@ -120,7 +120,7 @@ namespace FinancialStructures.FinanceStructures
                     {
                         fShares.TryGetValue(datevalue.Day, out double shares);
                         fInvestments.TryGetValue(datevalue.Day, out double invest);
-                        var thisday = new BasicDayDataView(datevalue.Day, double.NaN, shares, invest);
+                        var thisday = new DayDataView(datevalue.Day, double.NaN, shares, invest);
                         output.Add(thisday);
                     }
                 }
@@ -132,7 +132,7 @@ namespace FinancialStructures.FinanceStructures
                     if (!fUnitPrice.TryGetValue(datevalue.Day, out double _) && !fShares.TryGetValue(datevalue.Day, out double _))
                     {
                         fInvestments.TryGetValue(datevalue.Day, out double invest);
-                        var thisday = new BasicDayDataView(datevalue.Day, double.NaN, double.NaN, invest);
+                        var thisday = new DayDataView(datevalue.Day, double.NaN, double.NaN, invest);
 
                         output.Add(thisday);
                     }
@@ -252,7 +252,7 @@ namespace FinancialStructures.FinanceStructures
             return true;
         }
 
-        public bool TryRemoveSector(string sectorName)
+        internal bool TryRemoveSector(string sectorName)
         {
             if (IsSectorLinked(sectorName))
             {
@@ -263,7 +263,7 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddSector(string sectorName)
+        internal bool TryAddSector(string sectorName)
         {
             if (!IsSectorLinked(sectorName))
             {
@@ -293,7 +293,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Trys to get data on specific date. Only returns true if all data present.
         /// </summary>
-        public bool TryGetData(DateTime date, out double price, out double units, out double investment)
+        internal bool TryGetData(DateTime date, out double price, out double units, out double investment)
         {
             return fUnitPrice.TryGetValue(date, out price) & fShares.TryGetValue(date, out units) & fInvestments.TryGetValue(date, out investment);
         }
@@ -301,7 +301,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Trys to get latest data earlier than date requested. Only returns true if all data present.
         /// </summary>
-        public bool TryGetEarlierData(DateTime date, out DailyValuation price, out DailyValuation units, out DailyValuation investment)
+        internal bool TryGetEarlierData(DateTime date, out DailyValuation price, out DailyValuation units, out DailyValuation investment)
         {
             return fUnitPrice.TryGetNearestEarlierValue(date, out price) & fShares.TryGetNearestEarlierValue(date, out units) & fInvestments.TryGetNearestEarlierValue(date, out investment);
         }
@@ -309,7 +309,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Tries to delete the data. If it can, it deletes all data specified, then returns true only if all data has been successfully deleted.
         /// </summary>
-        public bool TryDeleteData(ErrorReports reports, DateTime date, double shares, double unitPrice, double Investment = 0)
+        internal bool TryDeleteData(ErrorReports reports, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
             bool units = false;
             bool sharetrue = false;

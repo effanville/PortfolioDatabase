@@ -1,16 +1,17 @@
-﻿using FinancialStructures.GUIFinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 
-namespace FinancialStructures.FinanceStructures
+namespace FinancialStructures.Database
 {
-    public partial class Portfolio
+    public static partial class PortfolioSecurity
     {
-        public List<string> GetSecurityNames()
+        public static List<string> GetSecurityNames(this Portfolio portfolio)
         {
             var names = new List<string>();
-            foreach (var security in Funds)
+            foreach (var security in portfolio.Funds)
             {
                 names.Add(security.GetName());
             }
@@ -22,10 +23,10 @@ namespace FinancialStructures.FinanceStructures
         /// Return alphabetically ordered list of all companies without repetition.
         /// </summary>
         /// <returns></returns>
-        public List<string> GetSecuritiesCompanyNames()
+        public static List<string> GetSecuritiesCompanyNames(this Portfolio portfolio)
         {
             var companies = new List<string>();
-            foreach (var security in Funds)
+            foreach (var security in portfolio.Funds)
             {
                 if (companies.IndexOf(security.GetCompany()) == -1)
                 {
@@ -41,10 +42,10 @@ namespace FinancialStructures.FinanceStructures
         /// Return alphabetically ordered list of all companies without repetition.
         /// </summary>
         /// <returns></returns>
-        public List<string> GetSecuritiesSectors()
+        public static List<string> GetSecuritiesSectors(this Portfolio portfolio)
         {
             var companies = new List<string>();
-            foreach (var security in Funds)
+            foreach (var security in portfolio.Funds)
             {
                 var sectors = security.GetSectors();
                 foreach (var sector in sectors)
@@ -60,11 +61,11 @@ namespace FinancialStructures.FinanceStructures
             return companies;
         }
 
-        public List<NameCompDate> GetSecurityNamesAndCompanies()
+        public static List<NameCompDate> GetSecurityNamesAndCompanies(this Portfolio portfolio)
         {
             var namesAndCompanies = new List<NameCompDate>();
 
-            foreach (var security in Funds)
+            foreach (var security in portfolio.Funds)
             {
                 DateTime date = DateTime.MinValue;
                 if (security.Any())
@@ -78,9 +79,9 @@ namespace FinancialStructures.FinanceStructures
             return namesAndCompanies;
         }
 
-        public bool DoesSecurityExist(Security fund)
+        public static bool DoesSecurityExist(this Portfolio portfolio, Security fund)
         {
-            foreach (Security sec in Funds)
+            foreach (Security sec in portfolio.Funds)
             {
                 if (sec.IsEqualTo(fund))
                 {
@@ -94,32 +95,22 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// This should only be called in combination with GetPortfolio() to avoid accidentally overwriting data.
         /// </summary>
-        public List<Security> GetSecurities()
+        public static List<Security> GetSecurities(this Portfolio portfolio)
         {
             var listOfFunds = new List<Security>();
-            foreach (Security sec in Funds)
+            foreach (Security sec in portfolio.Funds)
             {
                 listOfFunds.Add(sec.Copy());
             }
             return listOfFunds;
         }
 
-        public List<CashAccount> GetBankAccounts()
-        {
-            return BankAccounts;
-        }
-
-        public List<Currency> GetCurrencies()
-        {
-            return Currencies;
-        }
-
         /// <summary>
         /// Outputs a copy of the security if it exists.
         /// </summary>
-        public bool TryGetSecurity(string name, string company, out Security desired)
+        public static bool TryGetSecurity(this Portfolio portfolio, string name, string company, out Security desired)
         {
-            foreach (Security sec in Funds)
+            foreach (Security sec in portfolio.Funds)
             {
                 if (sec.GetName() == name && sec.GetCompany() == company)
                 {
@@ -131,10 +122,10 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryGetSecurityData(string name, string company, out List<BasicDayDataView> data)
+        public static bool TryGetSecurityData(this Portfolio portfolio, string name, string company, out List<DayDataView> data)
         {
-            data = new List<BasicDayDataView>();
-            foreach (Security sec in Funds)
+            data = new List<DayDataView>();
+            foreach (Security sec in portfolio.Funds)
             {
                 if (sec.GetName() == name && sec.GetCompany() == company)
                 {
@@ -146,9 +137,9 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool DoesSecurityExistFromName(string name, string company)
+        public static bool DoesSecurityExistFromName(this Portfolio portfolio, string name, string company)
         {
-            foreach (Security sec in Funds)
+            foreach (Security sec in portfolio.Funds)
             {
                 if (sec.GetCompany() == company && sec.GetName() == name)
                 {
@@ -159,7 +150,7 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddSecurityFromName(string name, string company, string currency, string url, List<string> sectors, ErrorReports reports)
+        public static bool TryAddSecurityFromName(this Portfolio portfolio, string name, string company, string currency, string url, List<string> sectors, ErrorReports reports)
         {
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(company))
             {
@@ -167,7 +158,7 @@ namespace FinancialStructures.FinanceStructures
                 return false;
             }
 
-            if (DoesSecurityExistFromName(name, company))
+            if (portfolio.DoesSecurityExistFromName(name, company))
             {
                 reports.AddGeneralReport(ReportType.Error, $"Security `{company}'-`{name}' already exists.");
                 return false;
@@ -178,18 +169,18 @@ namespace FinancialStructures.FinanceStructures
             {
                 NewFund.TryAddSector(sector);
             }
-            Funds.Add(NewFund);
+            portfolio.Funds.Add(NewFund);
             reports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' added to database.");
             return true;
         }
 
-        public bool TryRemoveSecurity(string name, string company, ErrorReports reports)
+        public static bool TryRemoveSecurity(this Portfolio portfolio, string name, string company, ErrorReports reports)
         {
-            foreach (Security sec in Funds)
+            foreach (Security sec in portfolio.Funds)
             {
                 if (sec.GetCompany() == company && sec.GetName() == name)
                 {
-                    Funds.Remove(sec);
+                    portfolio.Funds.Remove(sec);
                     reports.AddGeneralReport(ReportType.Report, $"Security `{company}'-`{name}' removed from the database.");
                     return true;
                 }
@@ -198,56 +189,95 @@ namespace FinancialStructures.FinanceStructures
             return false;
         }
 
-        public bool TryAddDataToSecurity(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        public static bool TryAddDataToSecurity(this Portfolio portfolio, ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
-            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            for (int fundIndex = 0; fundIndex < portfolio.Funds.Count; fundIndex++)
             {
-                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                if (portfolio.Funds[fundIndex].GetCompany() == company && portfolio.Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryAddData(reports, date, unitPrice, shares, Investment);
+                    return portfolio.Funds[fundIndex].TryAddData(reports, date, unitPrice, shares, Investment);
                 }
             }
             reports.AddError($"Security `{company}'-`{name}' could not be found in the database.");
             return false;
         }
 
-        public bool TryEditSecurity(ErrorReports reports, string name, string company, DateTime oldDate, DateTime newDate, double shares, double unitPrice, double Investment = 0)
+        /// <summary>
+        /// Tries to add a security to the underlying global database
+        /// </summary>
+        public static bool TryAddSecurity(this Portfolio portfolio, string name, string company, string currency, string url, string sectors, ErrorReports reports)
         {
-            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(sectors))
             {
-                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                var sectorsSplit = sectors.Split(',');
+
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+
+            return portfolio.TryAddSecurityFromName(name, company, currency, url, sectorList, reports);
+        }
+
+        /// <summary>
+        /// Renames the security if this exists.
+        /// </summary>
+        public static bool TryEditSecurityName(this Portfolio portfolio, string name, string company, string newName, string newCompany, string currency, string url, string sectors, ErrorReports reports)
+        {
+            List<string> sectorList = new List<string>();
+            if (!string.IsNullOrEmpty(sectors))
+            {
+                var sectorsSplit = sectors.Split(',');
+                sectorList.AddRange(sectorsSplit);
+                for (int i = 0; i < sectorList.Count; i++)
+                {
+                    sectorList[i] = sectorList[i].Trim(' ');
+                }
+            }
+            return portfolio.TryEditSecurityNameCompany(name, company, newName, newCompany, currency, url, sectorList, reports);
+        }
+
+
+        public static bool TryEditSecurity(this Portfolio portfolio, ErrorReports reports, string name, string company, DateTime oldDate, DateTime newDate, double shares, double unitPrice, double Investment = 0)
+        {
+            for (int fundIndex = 0; fundIndex < portfolio.Funds.Count; fundIndex++)
+            {
+                if (portfolio.Funds[fundIndex].GetCompany() == company && portfolio.Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditData(reports, oldDate, newDate, shares, unitPrice, Investment);
+                    return portfolio.Funds[fundIndex].TryEditData(reports, oldDate, newDate, shares, unitPrice, Investment);
                 }
             }
 
             return false;
         }
 
-        public bool TryEditSecurityNameCompany(string name, string company, string newName, string newCompany, string currency, string url, List<string> sectors, ErrorReports reports)
+        public static bool TryEditSecurityNameCompany(this Portfolio portfolio, string name, string company, string newName, string newCompany, string currency, string url, List<string> sectors, ErrorReports reports)
         {
-            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            for (int fundIndex = 0; fundIndex < portfolio.Funds.Count; fundIndex++)
             {
-                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                if (portfolio.Funds[fundIndex].GetCompany() == company && portfolio.Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryEditNameCompany(newName, newCompany, currency, url, sectors, reports);
+                    return portfolio.Funds[fundIndex].TryEditNameCompany(newName, newCompany, currency, url, sectors, reports);
                 }
             }
 
             return false;
         }
 
-        public bool TryRemoveSecurityData(ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
+        public static bool TryRemoveSecurityData(this Portfolio portfolio, ErrorReports reports, string name, string company, DateTime date, double shares, double unitPrice, double Investment = 0)
         {
-            for (int fundIndex = 0; fundIndex < Funds.Count; fundIndex++)
+            for (int fundIndex = 0; fundIndex < portfolio.Funds.Count; fundIndex++)
             {
-                if (Funds[fundIndex].GetCompany() == company && Funds[fundIndex].GetName() == name)
+                if (portfolio.Funds[fundIndex].GetCompany() == company && portfolio.Funds[fundIndex].GetName() == name)
                 {
                     // now edit data
-                    return Funds[fundIndex].TryDeleteData(reports, date, shares, unitPrice, Investment);
+                    return portfolio.Funds[fundIndex].TryDeleteData(reports, date, shares, unitPrice, Investment);
                 }
             }
 

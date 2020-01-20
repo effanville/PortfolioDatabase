@@ -120,7 +120,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Constructor creating a new security.
         /// </summary>
-        public Security(string name, string company, string currency = "GBP", string url = null)
+        internal Security(string name, string company, string currency = "GBP", string url = null)
         {
             fName = name;
             fCompany = company;
@@ -149,12 +149,12 @@ namespace FinancialStructures.FinanceStructures
         {
             if (obj is Security value)
             {
-                if (Company == value.Company)
+                if (fCompany == value.fCompany)
                 {
-                    return Name.CompareTo(value.Name);
+                    return fName.CompareTo(value.fName);
                 }
 
-                return Company.CompareTo(value.Company);
+                return fCompany.CompareTo(value.fCompany);
             }
 
             return 0;

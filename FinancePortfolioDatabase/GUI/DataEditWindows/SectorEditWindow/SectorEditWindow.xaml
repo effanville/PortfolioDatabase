@@ -4,12 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:cl="clr-namespace:GuiSupport"
       mc:Ignorable="d">
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Grid.Resources>
     
     <Grid >
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.504,1.5" StartPoint="0.504,0.03">
+                <GradientStop Color="{Binding Source={x:Static cl:Colours.BackgroundBrush}}" Offset="0"/>
+                <GradientStop Color="#FFFFFFFF" Offset="0.567"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
@@ -27,11 +34,11 @@
                     Orientation="Horizontal"
                     Height="40">
             <Button Content="Delete Sector"
-                        Margin="10 10 10 10 "
-                        Command="{Binding DeleteSectorCommand}"
+                       Command="{Binding DeleteSectorCommand}"
                         ToolTip="Delete the Sector highlighted"/>
             <Button Content="Delete Valuation"
                         Margin="10 10 10 10 "
+                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                         Command="{Binding DeleteSectorDataCommand}"
                         ToolTip="Deletes the Sector data highlighted."/>
         </StackPanel>

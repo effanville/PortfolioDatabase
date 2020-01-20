@@ -11,10 +11,10 @@ namespace FinanceWindowsViewModels
 {
     public class SectorEditWindowViewModel : PropertyChangedBase
     {
-        private List<NameComp> fPreEditSectorNames;
+        private List<NameData> fPreEditSectorNames;
 
-        private List<NameComp> fSectorNames;
-        public List<NameComp> SectorNames
+        private List<NameData> fSectorNames;
+        public List<NameData> SectorNames
         {
             get
             {
@@ -27,8 +27,8 @@ namespace FinanceWindowsViewModels
             }
         }
 
-        private NameComp fSelectedName;
-        public NameComp SelectedName
+        private NameData fSelectedName;
+        public NameData SelectedName
         {
             get
             {
@@ -260,8 +260,8 @@ namespace FinanceWindowsViewModels
         {
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
-            SectorNames = new List<NameComp>();
-            fPreEditSectorNames = new List<NameComp>();
+            SectorNames = new List<NameData>();
+            fPreEditSectorNames = new List<NameData>();
             SelectedSectorData = new List<AccountDayDataView>();
             UpdateSectorListBox();
 

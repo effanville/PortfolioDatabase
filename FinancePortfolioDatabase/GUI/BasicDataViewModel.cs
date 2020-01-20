@@ -1,4 +1,6 @@
 ﻿using FinancialStructures.GUIFinanceStructures;
+using FinancialStructures.Database;
+using GlobalHeldData;
 using GUIAccessorFunctions;
 using GUISupport;
 using System;
@@ -15,22 +17,22 @@ namespace FinanceWindowsViewModels
             set { fFundNames = value; OnPropertyChanged(); }
         }
 
-        private List<NameComp> fAccountNames;
-        public List<NameComp> AccountNames
+        private List<NameData> fAccountNames;
+        public List<NameData> AccountNames
         {
             get { return fAccountNames; }
             set { fAccountNames = value; OnPropertyChanged(); }
         }
 
-        private List<NameComp> fSectorNames;
-        public List<NameComp> SectorNames
+        private List<NameData> fSectorNames;
+        public List<NameData> SectorNames
         {
             get { return fSectorNames; }
             set { fSectorNames = value; OnPropertyChanged(); }
         }
 
-        private List<NameComp> fCurrencyNames;
-        public List<NameComp> CurrencyNames
+        private List<NameData> fCurrencyNames;
+        public List<NameData> CurrencyNames
         {
             get { return fCurrencyNames; }
             set { fCurrencyNames = value; OnPropertyChanged(); }
@@ -38,13 +40,13 @@ namespace FinanceWindowsViewModels
 
         public void DataUpdate()
         {
-            FundNames = DatabaseAccessor.GetSecurityNamesAndCompanies();
+            FundNames = GlobalData.Finances.GetSecurityNamesAndCompanies();
             FundNames.Sort();
-            AccountNames = DatabaseAccessor.GetBankAccountNamesAndCompanies();
+            AccountNames = GlobalData.Finances.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
             SectorNames = DatabaseAccessor.GetSectorNames();
             SectorNames.Sort();
-            CurrencyNames = DatabaseAccessor.GetCurrencyNames();
+            CurrencyNames = GlobalData.Finances.GetCurrencyNames();
             CurrencyNames.Sort();
         }
 

@@ -1,6 +1,8 @@
 ﻿using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using FinancialStructures.Database;
+using GlobalHeldData;
 using GUIAccessorFunctions;
 using GUISupport;
 using FinanceWindows;
@@ -9,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows;
+using PortfolioStatsCreatorHelper;
 
 namespace FinanceWindowsViewModels
 {
@@ -55,49 +57,11 @@ namespace FinanceWindowsViewModels
 
         private void ExecuteExportToCSVCommand(Object obj)
         {
-            var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName +"-CSVStats.csv",  InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
-            saving.Filter = "CSV file|*.csv|All files|*.*";
-            if (saving.ShowDialog() == DialogResult.OK)
-            {
-                if (!saving.FileName.EndsWith(".csv"))
-                {
-                    saving.FileName += ".csv";
-                }
-                StreamWriter statsWriter = new StreamWriter(saving.FileName);
-                // write in column headers
-                statsWriter.WriteLine("Securities Data");
-                statsWriter.WriteLine("Company, Name, Latest Value, CAR total");
-                foreach (SecurityStatsHolder stats in SecuritiesStats)
-                {
-                    if (stats.LatestVal > 0)
-                    {
-                        string securitiesData = stats.Company + ", " + stats.Name + ", " + stats.LatestVal.ToString() + ", " + stats.CARTotal.ToString();
-                        statsWriter.WriteLine(securitiesData);
-                    }
-                }
-                statsWriter.WriteLine("");
-                statsWriter.WriteLine("Bank Account Data");
-                statsWriter.WriteLine("Company, Name, Latest Value");
-                foreach (BankAccountStatsHolder stats in BankAccountStats)
-                {
-                    string BankAccData = stats.Company + ", " + stats.Name + ", " + stats.LatestVal.ToString();
-                    statsWriter.WriteLine(BankAccData);
-                }
-
-                reports.AddReport($"Created csv statistics at ${saving.FileName}");
-                statsWriter.Close();
-
-            }
-            else
-            {
-                reports.AddGeneralReport(ReportType.Error, $"Was not able to create csv file at {saving.FileName}");
-            }
-            saving.Dispose();
-            if (reports.Any())
-            {
-                UpdateReports(reports);
-            }
+            var optionWindow = new StatsOptionsWindow();
+            Action<string> StatsOptionFeedback = (filePath) => StatsFeedback(optionWindow, filePath);
+            var context = new StatsOptionsViewModel(ExportType.CSV, UpdateReports, StatsOptionFeedback);
+            optionWindow.DataContext = context;
+            optionWindow.ShowDialog();
         }
 
         private void ExecuteInvestmentListCommand(Object obj)
@@ -138,7 +102,7 @@ namespace FinanceWindowsViewModels
         {
             var optionWindow = new StatsOptionsWindow();
             Action<string> StatsOptionFeedback = (filePath) => StatsFeedback(optionWindow, filePath);
-            var context = new StatsOptionsViewModel(UpdateReports, StatsOptionFeedback);
+            var context = new StatsOptionsViewModel(ExportType.HTML, UpdateReports, StatsOptionFeedback);
             optionWindow.DataContext = context;
             optionWindow.ShowDialog();
         }
@@ -194,10 +158,10 @@ namespace FinanceWindowsViewModels
 
         public void GenerateStatistics()
         {
-            SecuritiesStats = DatabaseAccessor.GenerateSecurityStatistics(DisplayValueFunds);
-            SecuritiesInvestments = DatabaseAccessor.AllSecuritiesInvestments();
-            BankAccountStats = DatabaseAccessor.GenerateBankAccountStatistics(DisplayValueFunds);
-            DatabaseStats = DatabaseAccessor.GenerateDatabaseStatistics();
+            SecuritiesStats = GlobalData.Finances.GenerateSecurityStatistics(DisplayValueFunds);
+            SecuritiesInvestments = GlobalData.Finances.AllSecuritiesInvestments();
+            BankAccountStats = GlobalData.Finances.GenerateBankAccountStatistics(DisplayValueFunds);
+            DatabaseStats = GlobalData.Finances.GenerateDatabaseStatistics();
         }
 
         public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)

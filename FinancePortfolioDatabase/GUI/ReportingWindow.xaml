@@ -22,9 +22,11 @@
             <TextBlock Margin="10 10 10 10" Text="Error Reports"/>
             <Button Margin="10 10 10 10"
                     Content="Clear Reports"
+                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                     Command="{Binding ClearReportsCommand}"/>
             <Button Margin="10 10 10 10"
                     Content="Clear Selected"
+                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                     Command="{Binding ClearSingleReportCommand}"/>
         </StackPanel>
         </Grid>

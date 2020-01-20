@@ -1,4 +1,4 @@
-﻿using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.Database;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
 using GUIAccessorFunctions;
@@ -16,7 +16,7 @@ namespace PADGlobals
 
         public async static Task DownloadSecurity(string company, string name, ErrorReports reports)
         {
-            var sec = DatabaseAccessor.GetSecurityFromName(name, company);
+            var sec = GlobalData.Finances.GetSecurityFromName(name, company);
             await Download.DownloadSecurityLatest(sec, reports).ConfigureAwait(false);
         }
     }

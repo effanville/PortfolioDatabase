@@ -1,14 +1,15 @@
 ﻿using FinancialStructures.DataStructures;
 using FinancialStructures.ReportingStructures;
+using FinancialStructures.FinanceStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace FinancialStructures.FinanceStructures
+namespace FinancialStructures.Database
 {
-    public class Download
+    public static class Download
     {
         private static string Pence = "GBX";
         private static string Pounds = "GBP";

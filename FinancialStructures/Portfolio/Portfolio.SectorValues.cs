@@ -1,19 +1,19 @@
 ﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceFunctionsList;
+using FinancialStructures.FinanceStructures;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace FinancialStructures.FinanceStructures
+namespace FinancialStructures.Database
 {
-    public partial class Portfolio
+    public static partial class PortfolioSector
     {
-        public double SectorValue(string sectorName, DateTime date)
+        public static double SectorValue(this Portfolio portfolio, string sectorName, DateTime date)
         {
             double sum = 0;
-            if (fFunds != null)
+            if (portfolio.Funds != null)
             {
-                foreach (var fund in fFunds)
+                foreach (var fund in portfolio.Funds)
                 {
                     if (fund.IsSectorLinked(sectorName))
                     {
@@ -25,10 +25,10 @@ namespace FinancialStructures.FinanceStructures
             return sum;
         }
 
-        public List<Security> SectorSecurities(string sectorName)
+        public static List<Security> SectorSecurities(this Portfolio portfolio, string sectorName)
         {
             var securities = new List<Security>();
-            foreach (var sec in Funds)
+            foreach (var sec in portfolio.Funds)
             {
                 if (sec.IsSectorLinked(sectorName))
                 {
@@ -39,10 +39,10 @@ namespace FinancialStructures.FinanceStructures
             return securities;
         }
 
-        public List<DailyValuation_Named> GetSectorInvestments(string company)
+        public static List<DailyValuation_Named> SectorInvestments(this Portfolio portfolio, string company)
         {
             var output = new List<DailyValuation_Named>();
-            foreach (var sec in SectorSecurities(company))
+            foreach (var sec in portfolio.SectorSecurities(company))
             {
                 output.AddRange(sec.AllInvestmentsNamed());
             }
@@ -50,9 +50,9 @@ namespace FinancialStructures.FinanceStructures
             return output;
         }
 
-        public double SectorProfit(string sectorName)
+        public static double SectorProfit(this Portfolio portfolio, string sectorName)
         {
-            var securities = SectorSecurities(sectorName);
+            var securities = portfolio.SectorSecurities(sectorName);
             double value = 0;
             foreach (var security in securities)
             {
@@ -65,17 +65,17 @@ namespace FinancialStructures.FinanceStructures
             return value;
         }
 
-        public double SectorFraction(string sectorName, DateTime date)
+        public static double SectorFraction(this Portfolio portfolio, string sectorName, DateTime date)
         {
-            return SectorValue(sectorName, date) / Value(date);
+            return portfolio.SectorValue(sectorName, date) / portfolio.Value(date);
         }
 
         /// <summary>
         /// If possible, returns the IRR of all securities in the sector specified over the time period.
         /// </summary>
-        public double IRRSector(string sectorName, DateTime earlierTime, DateTime laterTime)
+        public static double IRRSector(this Portfolio portfolio, string sectorName, DateTime earlierTime, DateTime laterTime)
         {
-            var securities = SectorSecurities(sectorName);
+            var securities = portfolio.SectorSecurities(sectorName);
             if (securities.Count == 0)
             {
                 return double.NaN;
