@@ -38,7 +38,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                GlobalData.Finances.TryRemoveSecurity(fSelectedName.Name, fSelectedName.Company, reports);
+                GlobalData.Finances.TryRemoveSecurity(reports, fSelectedName.Company, fSelectedName.Name);
             }
             else
             {
@@ -65,7 +65,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
             var reports = new ErrorReports();
             if (fSelectedName != null && fSelectedValues != null)
             {
-                GlobalData.Finances.TryRemoveSecurityData(reports, fSelectedName.Name, fSelectedName.Company, fSelectedValues.Date, fSelectedValues.ShareNo, fSelectedValues.UnitPrice, fSelectedValues.Investment);
+                GlobalData.Finances.TryRemoveSecurityData(reports, fSelectedName.Company, fSelectedName.Name, fSelectedValues.Date, fSelectedValues.ShareNo, fSelectedValues.UnitPrice, fSelectedValues.Investment);
             }
 
             if (reports.Any())
@@ -95,7 +95,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
                 {
                     if (objec is DayDataView view)
                     {
-                        GlobalData.Finances.TryAddDataToSecurity(reports, fSelectedName.Name, fSelectedName.Company, view.Date, view.ShareNo, view.UnitPrice, view.Investment);
+                        GlobalData.Finances.TryAddDataToSecurity(reports, fSelectedName.Company, fSelectedName.Name, view.Date, view.ShareNo, view.UnitPrice, view.Investment);
                     }
                     else
                     {

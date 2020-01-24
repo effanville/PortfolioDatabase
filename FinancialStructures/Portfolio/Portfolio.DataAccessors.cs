@@ -235,7 +235,7 @@ namespace FinancialStructures.Database
 
         public static int LongestName(this Portfolio portfolio)
         {
-            return portfolio.GetSecurityNames().Max().Length;
+            return portfolio.SecurityNames().Max().Length;
         }
 
         public static int LongestCompany(this Portfolio portfolio)

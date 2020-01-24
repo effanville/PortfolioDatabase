@@ -120,12 +120,13 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Constructor creating a new security.
         /// </summary>
-        internal Security(string name, string company, string currency = "GBP", string url = null)
+        internal Security(string name, string company, string currency = "GBP", string url = null, List<string> sectors = null)
         {
             fName = name;
             fCompany = company;
             fCurrency = currency;
             fUrl = url;
+            fSectors = sectors;
         }
 
         /// <summary>

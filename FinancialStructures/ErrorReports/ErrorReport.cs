@@ -24,24 +24,24 @@ namespace FinancialStructures.ReportingStructures
 
         private ReportType fErrorType;
 
-        public ReportType ErrorType
+        internal ReportType ErrorType
         {
             get { return fErrorType; }
             set { fErrorType = value; }
         }
 
         private string fMessage;
-        public string Message
+        internal string Message
         {
             get { return fMessage; }
             set { fMessage = value; }
         }
 
-        public ErrorReport()
+        private ErrorReport()
         {
         }
 
-        public ErrorReport(ReportType type, string msg)
+        internal ErrorReport(ReportType type, string msg)
         {
             ErrorType = type;
             Message = msg;

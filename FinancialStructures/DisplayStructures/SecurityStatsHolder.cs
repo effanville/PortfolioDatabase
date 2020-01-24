@@ -29,7 +29,7 @@ namespace FinancialStructures.GUIFinanceStructures
                 var c = a.Company;
                 a.LatestVal = MathSupport.Truncate(portfolio.CompanyValue(c, date));
                 a.RecentChange = 0;
-                a.FundsFraction = MathSupport.Truncate(portfolio.FundsCompanyFraction(c, date), 4);
+                a.FundsFraction = MathSupport.Truncate(portfolio.CompanyFraction(c, date), 4);
                 a.Profit = MathSupport.Truncate(portfolio.CompanyProfit(c));
                 a.CAR3M = MathSupport.Truncate(100 * portfolio.IRRCompany(c, date.AddMonths(-3), date));
                 a.CAR6M = MathSupport.Truncate(100 * portfolio.IRRCompany(c, date.AddMonths(-6), date));
@@ -41,15 +41,15 @@ namespace FinancialStructures.GUIFinanceStructures
             {
                 var c = a.Company;
                 var n = a.Name;
-                a.LatestVal = MathSupport.Truncate(portfolio.SecurityLatestValue(n, c));
-                a.RecentChange = MathSupport.Truncate(portfolio.RecentChange(n, c));
-                a.FundsFraction = MathSupport.Truncate(portfolio.FundsFraction(n, c), 4);
-                a.Profit = MathSupport.Truncate(portfolio.Profit(n, c));
-                a.CAR3M = MathSupport.Truncate(100 * portfolio.IRR(n, c, date.AddMonths(-3), date));
-                a.CAR6M = MathSupport.Truncate(100 * portfolio.IRR(n, c, date.AddMonths(-6), date));
-                a.CAR1Y = MathSupport.Truncate(100 * portfolio.IRR(n, c, date.AddMonths(-12), date));
-                a.CAR5Y = MathSupport.Truncate(100 * portfolio.IRR(n, c, date.AddMonths(-60), date));
-                a.CARTotal = MathSupport.Truncate(100 * portfolio.IRR(n, c));
+                a.LatestVal = MathSupport.Truncate(portfolio.SecurityLatestValue(c, n));
+                a.RecentChange = MathSupport.Truncate(portfolio.RecentChange(c, n));
+                a.FundsFraction = MathSupport.Truncate(portfolio.SecurityFraction(c, n, date), 4);
+                a.Profit = MathSupport.Truncate(portfolio.Profit(c, n));
+                a.CAR3M = MathSupport.Truncate(100 * portfolio.IRR(c, n, date.AddMonths(-3), date));
+                a.CAR6M = MathSupport.Truncate(100 * portfolio.IRR(c, n, date.AddMonths(-6), date));
+                a.CAR1Y = MathSupport.Truncate(100 * portfolio.IRR(c, n, date.AddMonths(-12), date));
+                a.CAR5Y = MathSupport.Truncate(100 * portfolio.IRR(c, n, date.AddMonths(-60), date));
+                a.CARTotal = MathSupport.Truncate(100 * portfolio.IRR(c, n));
             }
         }
 

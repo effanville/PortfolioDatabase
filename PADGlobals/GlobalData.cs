@@ -56,7 +56,7 @@ namespace GlobalHeldData
 
         /// <summary>
         ///  loads in data 
-        ///  This should only every be called once in the loading routine.
+        ///  This should only ever be called once in the loading routine.
         /// </summary>
         public static void LoadDatabase(Portfolio database, List<Sector> myBenchMarks)
         {
