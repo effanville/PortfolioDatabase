@@ -98,9 +98,9 @@ namespace FinanceWindowsViewModels
         public void UpdateFundListBox()
         {
             var currentSelectedName = selectedName;
-            FundNames = GlobalData.Finances.GetSecurityNamesAndCompanies();
+            FundNames = GlobalData.Finances.SecurityNamesAndCompanies();
             FundNames.Sort();
-            fPreEditFundNames = GlobalData.Finances.GetSecurityNamesAndCompanies();
+            fPreEditFundNames = GlobalData.Finances.SecurityNamesAndCompanies();
             fPreEditFundNames.Sort();
 
             for (int i = 0; i < FundNames.Count; i++)
@@ -116,9 +116,9 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                GlobalData.Finances.GetPortfolio().TryGetSecurity(fSelectedName.Name, fSelectedName.Company, out Security wanted);
+                GlobalData.Finances.GetPortfolio().TryGetSecurity(fSelectedName.Company, fSelectedName.Name, out Security wanted);
                 selectedSecurity = wanted;
-                if (GlobalData.Finances.TryGetSecurityData(fSelectedName.Name, fSelectedName.Company, out List<DayDataView> values))
+                if (GlobalData.Finances.TryGetSecurityData(fSelectedName.Company, fSelectedName.Name, out List<DayDataView> values))
                 {
                     SelectedSecurityData = values;
                 }
@@ -161,7 +161,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        GlobalData.Finances.TryAddSecurity(name.Name, name.Company, name.Currency, name.Url, name.Sectors, reports);
+                        GlobalData.Finances.TryAddSecurity(reports, name.Company, name.Name, name.Currency, name.Url, name.Sectors);
                         name.NewValue = false;
                     }
                 }
@@ -181,7 +181,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        GlobalData.Finances.TryEditSecurityName(fPreEditFundNames[i].Name, fPreEditFundNames[i].Company, name.Name, name.Company, name.Currency, name.Url, name.Sectors, reports);
+                        GlobalData.Finances.TryEditSecurityName(reports, fPreEditFundNames[i].Company, fPreEditFundNames[i].Name, name.Company, name.Name, name.Currency, name.Url, name.Sectors);
                         name.NewValue = false;
                     }
                 }
@@ -207,7 +207,7 @@ namespace FinanceWindowsViewModels
             {
                 if (GlobalData.Finances.GetSecurityFromName(selectedName.Name, selectedName.Company).Count() != SelectedSecurityData.Count)
                 {
-                    GlobalData.Finances.TryAddDataToSecurity(reports, selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                    GlobalData.Finances.TryAddDataToSecurity(reports, selectedName.Company, selectedName.Name, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                     selectedName.NewValue = false;
                 }
                 else
@@ -220,7 +220,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            GlobalData.Finances.TryEditSecurity(reports, selectedName.Name, selectedName.Company, fOldSelectedValues.Date, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                            GlobalData.Finances.TryEditSecurityData(reports, selectedName.Company, selectedName.Name, fOldSelectedValues.Date, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                             name.NewValue = false;
                         }
                     }

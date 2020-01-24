@@ -57,7 +57,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Returns the name of the security.
         /// </summary>
-        public string GetName()
+        internal string GetName()
         {
             return fName;
         }
@@ -313,6 +313,7 @@ namespace FinancialStructures.FinanceStructures
         {
             bool units = false;
             bool sharetrue = false;
+            bool invs = false;
             if (shares > 0)
             {
                 sharetrue = fShares.TryDeleteValue(date, reports);
@@ -321,8 +322,12 @@ namespace FinancialStructures.FinanceStructures
             {
                 units = fUnitPrice.TryDeleteValue(date, reports);
             }
+            if (Investment > 0)
+            {
+                invs = fInvestments.TryDeleteValue(date, reports);
+            }
 
-            return units & sharetrue & fInvestments.TryDeleteValue(date, reports) && ComputeInvestments(reports);
+            return units & sharetrue & invs && ComputeInvestments(reports);
         }
 
         /// <summary>

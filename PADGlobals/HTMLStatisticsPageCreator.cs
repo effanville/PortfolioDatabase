@@ -1,7 +1,6 @@
 ﻿using FinancialStructures.DataStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.Database;
-using GUIAccessorFunctions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +44,7 @@ namespace PortfolioStatsCreatorHelper
 
             WriteHeader(writer, info, options.SecurityDataToExport, maxNameLength, maxCompanyLength, maxNumLength);
 
-            List<string> sectorNames = portfolio.GetSecuritiesSectors();
+            List<string> sectorNames = portfolio.AllSecuritiesSectors();
             foreach (string sectorName in sectorNames)
             {
                 List<SecurityStatsHolder> valuesToWrite = new List<SecurityStatsHolder>();

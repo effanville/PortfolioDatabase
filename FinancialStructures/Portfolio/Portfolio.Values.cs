@@ -1,6 +1,5 @@
 ﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceFunctionsList;
-using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using System;
 using System.Collections.Generic;
@@ -39,12 +38,15 @@ namespace FinancialStructures.Database
             var output = new List<DailyValuation_Named>();
             foreach (var comp in portfolio.GetSecuritiesCompanyNames())
             {
-                output.AddRange(portfolio.GetCompanyInvestments(comp));
+                output.AddRange(portfolio.CompanyInvestments(comp));
             }
             output.Sort();
             return output;
         }
 
+        /// <summary>
+        /// returns the total profit in the portfolio.
+        /// </summary>
         public static double TotalProfit(this Portfolio portfolio)
         {
             double total = 0;
@@ -54,7 +56,7 @@ namespace FinancialStructures.Database
                 {
                     var currencyName = sec.GetCurrency();
                     var currency = portfolio.Currencies.Find(cur => cur.Name == currencyName);
-                    total += portfolio.Profit(sec.GetName(), sec.GetCompany());
+                    total += portfolio.Profit(sec.GetCompany(), sec.GetName());
                 }
             }
 

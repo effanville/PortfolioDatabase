@@ -1,5 +1,4 @@
-﻿using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.Database;
 using FinancialStructures.ReportingStructures;
@@ -8,7 +7,6 @@ using SavingDummyClasses;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace GUIAccessorFunctions

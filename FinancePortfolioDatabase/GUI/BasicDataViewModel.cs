@@ -40,7 +40,7 @@ namespace FinanceWindowsViewModels
 
         public void DataUpdate()
         {
-            FundNames = GlobalData.Finances.GetSecurityNamesAndCompanies();
+            FundNames = GlobalData.Finances.SecurityNamesAndCompanies();
             FundNames.Sort();
             AccountNames = GlobalData.Finances.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
