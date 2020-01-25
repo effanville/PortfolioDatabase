@@ -29,13 +29,11 @@
                     Grid.ColumnSpan="3">
 
             <Button Content="Delete BankAccount"
-                        Margin="10 10 10 10 "
-                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
+                    Style="{StaticResource ResourceKey=defaultButton}"
                         Command="{Binding DeleteAccountCommand}"
                         ToolTip="Delete the BankAccount highlighted"/>
             <Button Content="Delete Valuation"
-                        Margin="10 10 10 10 "
-                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
+                    Style="{StaticResource ResourceKey=defaultButton}"
                         Command="{Binding DeleteValuationCommand}"
                         ToolTip="Deletes the BankAccount data highlighted."/>
         </StackPanel>

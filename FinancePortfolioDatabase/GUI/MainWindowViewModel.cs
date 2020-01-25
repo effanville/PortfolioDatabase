@@ -1,4 +1,5 @@
-﻿using FinancialStructures.ReportingStructures;
+﻿using FinancialStructures.Database;
+using FinancialStructures.ReportingStructures;
 using GUIAccessorFunctions;
 using GUISupport;
 using System;

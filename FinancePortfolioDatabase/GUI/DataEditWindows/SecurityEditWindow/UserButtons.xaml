@@ -9,19 +9,19 @@
     <StackPanel Orientation="Horizontal"
                 Height="40">
         <Button Content="Download selected Data"
-                    Margin="10 10 10 10 "
+                Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding DownloadCommand}"
                     ToolTip="Press here to close Add/Edit Securities"/>
         <Button Content="Delete Security"
-                    Margin="10 10 10 10 "
+                Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding DeleteSecurityCommand}"
                     ToolTip="Delete the security highlighted"/>
         <Button Content="Delete Valuation"
-                    Margin="10 10 10 10 "
+                Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding DeleteValuationCommand}"
                     ToolTip="Deletes the security data highlighted."/>
         <Button Content="Add Data From Csv file"
-                Margin="10 10 10 10 "
+                Style="{StaticResource ResourceKey=defaultButton}"
                 Command="{Binding AddCsvData}"
                 ToolTip="Adds data to the selected security."/>
     </StackPanel>

@@ -24,17 +24,18 @@
                         </ToolBar>
                     </ToolBarTray>
                     <Button Content="Save Database"
-                            Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
-                    Command="{Binding SaveDatabaseCommand}"
-                    Margin="10 10 10 10"/>
+                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Height="20"
+                            Command="{Binding SaveDatabaseCommand}"/>
                     <Button Content="Load Database"
-                            Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
-                    Command="{Binding LoadDatabaseCommand}"
-                    Margin="10 10 10 10"/>
+                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Command="{Binding LoadDatabaseCommand}"/>
                     <Button Content="Update Data"
-                            Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
-                    Command="{Binding UpdateDataCommand}"
-                    Margin="10 10 10 10"/>
+                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Command="{Binding UpdateDataCommand}"/>
+                    <Button Content="Refresh Display"
+                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Command="{Binding RefreshCommand}"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Help"
@@ -51,6 +52,7 @@
                     <Button Width="25"
                         Height="25" 
                         HorizontalAlignment="Right"
+                        Style="{StaticResource ResourceKey=defaultButton}"
                         Command="{Binding OpenHelpCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="GuiSupport/helpIcon.png" />

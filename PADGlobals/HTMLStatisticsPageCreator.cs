@@ -336,11 +336,11 @@ namespace PortfolioStatsCreatorHelper
                     {
                         if (props.Name == "Name")
                         {
-                            header += props.Name.WithMaxLength(maxNameLength - 2).PadRight(maxNameLength) + ",";
+                            header += "<b>" + props.Name.WithMaxLength(maxNameLength - 2).PadRight(maxNameLength) + "</b>";
                         }
                         else
                         {
-                            header += props.Name.WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength) + ",";
+                            header += "<b>" + props.Name.WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength) + "</b>";
                         }
 
                     }
