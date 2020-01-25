@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading;
 
-namespace GuiSupport
+namespace GUISupport
 {
     public static class OutputHelper
     {

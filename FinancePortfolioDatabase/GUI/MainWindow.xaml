@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanceWindows"
-        xmlns:cl="clr-namespace:GuiSupport"
+        xmlns:cl="clr-namespace:GUISupport"
         mc:Ignorable="d"
         Title="{Binding TitleValue}"
         MinHeight="400"

@@ -1,11 +1,13 @@
-﻿using FinancialStructures.GUIFinanceStructures;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Input;
+using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GUIAccessorFunctions;
 using GUISupport;
+using PADGlobals;
 using SectorHelperFunctions;
-using System;
-using System.Collections.Generic;
-using System.Windows.Input;
+
 
 namespace FinanceWindowsViewModels
 {
@@ -85,6 +87,22 @@ namespace FinanceWindowsViewModels
         public ICommand DeleteSectorDataCommand { get; }
 
         public ICommand EditSectorDataCommand { get; set; }
+
+        public ICommand DownloadCommand { get; }
+
+        private async void ExecuteDownloadCommand(Object obj)
+        {
+            var reports = new ErrorReports();
+            if (fSelectedName != null)
+            {
+                await DataUpdater.DownloadSector(fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
+            }
+            UpdateMainWindow(true);
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
+        }
 
         public void UpdateSectorListBox()
         {
@@ -269,6 +287,7 @@ namespace FinanceWindowsViewModels
             EditSectorDataCommand = new BasicCommand(ExecuteEditSectorData);
             DeleteSectorCommand = new BasicCommand(ExecuteDeleteSector);
             DeleteSectorDataCommand = new BasicCommand(ExecuteDeleteSectorData);
+            DownloadCommand = new BasicCommand(ExecuteDownloadCommand);
         }
     }
 }

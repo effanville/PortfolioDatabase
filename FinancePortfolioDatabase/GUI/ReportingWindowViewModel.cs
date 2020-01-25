@@ -59,6 +59,7 @@ namespace FinanceWindowsViewModels
         {
             Reports.AddReports(reports);
             SyncReports();
+            reports.Clear();
         }
 
         public ReportingWindowViewModel()

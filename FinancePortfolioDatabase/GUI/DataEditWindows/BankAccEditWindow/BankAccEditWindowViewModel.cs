@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using GlobalHeldData;
+using PADGlobals;
 
 namespace FinanceWindowsViewModels
 {
@@ -82,6 +83,22 @@ namespace FinanceWindowsViewModels
         public ICommand EditAccountDataCommand { get; set; }
 
         public ICommand DeleteValuationCommand { get; }
+
+        public ICommand DownloadCommand { get; }
+
+        private async void ExecuteDownloadCommand(Object obj)
+        {
+            var reports = new ErrorReports();
+            if (fSelectedName != null)
+            {
+                await DataUpdater.DownloadBankAccount(fSelectedName.Company, fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
+            }
+            UpdateMainWindow(true);
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
+        }
 
         public void UpdateAccountListBox()
         {
@@ -263,6 +280,7 @@ namespace FinanceWindowsViewModels
             EditAccountDataCommand = new BasicCommand(ExecuteEditDataCommand);
             DeleteAccountCommand = new BasicCommand(ExecuteDeleteBankAccount);
             DeleteValuationCommand = new BasicCommand(ExecuteDeleteValuation);
+            DownloadCommand = new BasicCommand(ExecuteDownloadCommand);
         }
     }
 }

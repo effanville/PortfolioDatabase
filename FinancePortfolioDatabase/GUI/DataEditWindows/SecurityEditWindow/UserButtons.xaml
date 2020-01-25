@@ -11,7 +11,7 @@
         <Button Content="Download selected Data"
                 Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding DownloadCommand}"
-                    ToolTip="Press here to close Add/Edit Securities"/>
+                    ToolTip="Press here to download data for selected security."/>
         <Button Content="Delete Security"
                 Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding DeleteSecurityCommand}"
