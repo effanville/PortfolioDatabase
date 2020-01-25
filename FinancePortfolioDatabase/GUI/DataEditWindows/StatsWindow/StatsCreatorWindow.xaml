@@ -23,13 +23,13 @@
                     Height="40"
                     Orientation="Horizontal">
             <Button Content="Create CSV stats"
-                    Margin="10 10 10 10 "
+                    Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding CreateCSVStatsCommand}"/>
             <Button Content="Create HTML stats"
-                    Margin="10 10 10 10 "
+                    Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding CreateHTMLCommand}"/>
             <Button Content="Investment list"
-                    Margin="10 10 10 10 "
+                    Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding  CreateInvestmentListCommand}"/>
 
             <CheckBox IsChecked="{Binding DisplayValueFunds}"

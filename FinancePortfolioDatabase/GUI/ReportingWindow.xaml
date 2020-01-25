@@ -20,13 +20,11 @@
         <StackPanel 
                     VerticalAlignment="Top">
             <TextBlock Margin="10 10 10 10" Text="Error Reports"/>
-            <Button Margin="10 10 10 10"
+            <Button Style="{StaticResource ResourceKey=defaultButton}"
                     Content="Clear Reports"
-                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                     Command="{Binding ClearReportsCommand}"/>
-            <Button Margin="10 10 10 10"
-                    Content="Clear Selected"
-                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
+            <Button Content="Clear Selected"
+                    Style="{StaticResource ResourceKey=defaultButton}"
                     Command="{Binding ClearSingleReportCommand}"/>
         </StackPanel>
         </Grid>

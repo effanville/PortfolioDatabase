@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cl="clr-namespace:GuiSupport">
+    <Style x:Key="defaultButton" 
+           TargetType="Button">
+        <Setter Property="Background" Value="{Binding Source={x:Static cl:Colours.DefaultButtonBrush}}"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="90"/>
+    </Style>
+</ResourceDictionary>

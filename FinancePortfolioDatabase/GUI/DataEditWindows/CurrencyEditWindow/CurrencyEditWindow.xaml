@@ -28,13 +28,11 @@
                     Orientation="Horizontal"
                     Height="40">
             <Button Content="Delete Currency"
-                        Margin="10 10 10 10 "
-                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
+                    Style="{StaticResource ResourceKey=defaultButton}"
                         Command="{Binding DeleteSectorCommand}"
                         ToolTip="Delete the Currency highlighted"/>
             <Button Content="Delete Valuation"
-                        Margin="10 10 10 10 "
-                    Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
+                    Style="{StaticResource ResourceKey=defaultButton}"
                         Command="{Binding DeleteSectorDataCommand}"
                         ToolTip="Deletes the Currency data highlighted."/>
         </StackPanel>

@@ -62,6 +62,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <Button Content="Export Statistics"
+                Style="{StaticResource ResourceKey=defaultButton}"
                 Grid.Row="3"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
