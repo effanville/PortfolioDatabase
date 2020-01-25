@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:wb="clr-namespace:WebBrowserWindow"
-      xmlns:cl="clr-namespace:GuiSupport"
+      xmlns:cl="clr-namespace:GUISupport"
         mc:Ignorable="d"
       VerticalAlignment="Top"
       Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">

@@ -92,7 +92,7 @@ namespace FinanceWindowsViewModels
         private async void ExecuteUpdateData(Object obj)
         {
             var reports = new ErrorReports();
-            await DataUpdater.Downloader(reports).ConfigureAwait(false);
+            await DataUpdater.Downloader(UpdateReports, reports).ConfigureAwait(false);
 
             if (reports.Any())
             {

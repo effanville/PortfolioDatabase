@@ -322,23 +322,23 @@ namespace FinancialStructures.Database
             return double.NaN;
         }
 
-        public async static Task DownloadPortfolioLatest(Portfolio portfo, ErrorReports reports)
+        public async static Task DownloadPortfolioLatest(Portfolio portfo, Action<ErrorReports> updateReports, ErrorReports reports)
         {
             foreach (var sec in portfo.GetSecurities())
             {
-                await DownloadSecurityLatest(sec, reports).ConfigureAwait(false);
+                await DownloadSecurityLatest(sec, updateReports, reports).ConfigureAwait(false);
             }
             foreach (var acc in portfo.GetBankAccounts())
             {
-                await DownloadBankAccountLatest(acc, reports).ConfigureAwait(false);
+                await DownloadBankAccountLatest(acc, updateReports, reports).ConfigureAwait(false);
             }
             foreach (var currency in portfo.GetCurrencies())
             {
-                await DownloadCurrencyLatest(currency, reports).ConfigureAwait(false);
+                await DownloadCurrencyLatest(currency, updateReports, reports).ConfigureAwait(false);
             }
         }
 
-        public async static Task DownloadSecurityLatest(Security sec, ErrorReports reports)
+        public async static Task DownloadSecurityLatest(Security sec, Action<ErrorReports> updateReports, ErrorReports reports)
         {
             string data = await DownloadFromURL(sec.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
@@ -359,9 +359,10 @@ namespace FinancialStructures.Database
             }
 
             sec.TryAddData(reports, DateTime.Today, value, units.Value);
+            updateReports(reports);
         }
 
-        public async static Task DownloadBankAccountLatest(CashAccount acc, ErrorReports reports)
+        public async static Task DownloadBankAccountLatest(CashAccount acc, Action<ErrorReports> updateReports, ErrorReports reports)
         {
             string data = await DownloadFromURL(acc.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
@@ -375,10 +376,10 @@ namespace FinancialStructures.Database
             }
 
             acc.TryAddValue(DateTime.Today, value);
-            return;
+            updateReports(reports);
         }
 
-        public async static Task DownloadCurrencyLatest(Currency currency, ErrorReports reports)
+        public async static Task DownloadCurrencyLatest(Currency currency,Action<ErrorReports> updateReports, ErrorReports reports)
         {
             string data = await DownloadFromURL(currency.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
@@ -392,18 +393,18 @@ namespace FinancialStructures.Database
             }
 
             currency.TryAddData(DateTime.Today, value);
-            return;
+            updateReports(reports);
         }
 
-        public async static Task DownloadBenchMarksLatest(List<Sector> sectors, ErrorReports reports)
+        public async static Task DownloadBenchMarksLatest(List<Sector> sectors, Action<ErrorReports> updateReports, ErrorReports reports)
         {
             foreach (var sector in sectors)
             {
-                await DownloadSectorLatest(sector, reports).ConfigureAwait(false);
+                await DownloadSectorLatest(sector, updateReports, reports).ConfigureAwait(false);
             }
         }
 
-        public async static Task DownloadSectorLatest(Sector sector, ErrorReports reports)
+        public async static Task DownloadSectorLatest(Sector sector, Action<ErrorReports> updateReports, ErrorReports reports)
         {
             string data = await DownloadFromURL(sector.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))
@@ -416,6 +417,7 @@ namespace FinancialStructures.Database
                 return;
             }
             sector.TryAddData(DateTime.Today, value);
+            updateReports(reports);
         }
     }
 }

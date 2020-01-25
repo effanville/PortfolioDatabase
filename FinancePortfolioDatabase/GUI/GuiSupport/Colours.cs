@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace GuiSupport
+namespace GUISupport
 {
     public static class Colours
     {

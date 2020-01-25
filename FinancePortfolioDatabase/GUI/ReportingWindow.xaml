@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:cl="clr-namespace:GuiSupport"
+      xmlns:cl="clr-namespace:GUISupport"
       mc:Ignorable="d"
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch">
@@ -28,19 +28,17 @@
                     Command="{Binding ClearSingleReportCommand}"/>
         </StackPanel>
         </Grid>
-        <ListView Name="SecBox"
+        <DataGrid Name="SecBox"
+                  SelectionUnit="FullRow"
+                  CanUserAddRows="True"
+                  CanUserDeleteRows="False"
+                  AutoGenerateColumns="True"
+                  GridLinesVisibility="None"
                   ItemsSource="{Binding ReportsToView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedIndex="{Binding IndexToDelete}"
                   Grid.Column="1"
                   Margin="10 10 10 10"
                   ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Type" 
-                                    DisplayMemberBinding="{Binding ErrorType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <GridViewColumn Header="Message" 
-                                    DisplayMemberBinding="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        </DataGrid>
     </Grid>
 </Grid>

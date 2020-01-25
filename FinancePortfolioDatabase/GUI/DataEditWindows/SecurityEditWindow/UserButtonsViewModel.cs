@@ -23,7 +23,7 @@ namespace FinanceWindowsViewModels.SecurityEdit
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                await DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name, reports).ConfigureAwait(false);
+                await DataUpdater.DownloadSecurity(fSelectedName.Company, fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
             }
             UpdateMainWindow(true);
             if (reports.Any())

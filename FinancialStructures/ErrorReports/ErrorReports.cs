@@ -35,7 +35,7 @@ namespace FinancialStructures.ReportingStructures
         public void AddReports(ErrorReports reports)
         {
             fReports.AddRange(reports.GetReports());
-            fReports.Sort();
+            //fReports.Sort();
         }
 
         /// <summary>
