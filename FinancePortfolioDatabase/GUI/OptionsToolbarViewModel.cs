@@ -9,6 +9,7 @@ using GlobalHeldData;
 using System.IO;
 using PADGlobals;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FinanceWindowsViewModels
 {
@@ -63,7 +64,7 @@ namespace FinanceWindowsViewModels
             }
         }
 
-        public void ExecuteLoadDatabase(Object obj)
+        public async void ExecuteLoadDatabase(Object obj)
         {
             var reports = new ErrorReports();
             OpenFileDialog openFile = new OpenFileDialog() { DefaultExt = "xml" };
@@ -72,7 +73,7 @@ namespace FinanceWindowsViewModels
             {
                 DatabaseAccessor.SetFilePath(openFile.FileName);
                 DatabaseAccessor.ClearPortfolio();
-                DatabaseAccessor.LoadPortfolio(reports);
+                await Task.Run(()=>DatabaseAccessor.LoadPortfolio(reports));
                 reports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
             }
             openFile.Dispose();

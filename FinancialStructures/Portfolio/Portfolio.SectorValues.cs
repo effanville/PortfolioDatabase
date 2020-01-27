@@ -8,6 +8,19 @@ namespace FinancialStructures.Database
 {
     public static partial class PortfolioSector
     {
+        public static DateTime SectorFirstDate(this Portfolio portfolio, string sector)
+        {
+            var output = DateTime.Today;
+            foreach (var sec in portfolio.SectorSecurities(sector))
+            {
+                if (sec.FirstValue().Day < output)
+                {
+                    output = sec.FirstValue().Day;
+                }
+            }
+
+            return output;
+        }
         public static double SectorValue(this Portfolio portfolio, string sectorName, DateTime date)
         {
             double sum = 0;

@@ -51,7 +51,7 @@ namespace PortfolioStatsCreatorHelper
 
             WriteHeader(writer, info, options.SecurityDataToExport, maxNameLength, maxCompanyLength, maxNumLength);
 
-            List<string> sectorNames = funds.AllSecuritiesSectors();
+            List<string> sectorNames = funds.GetSecuritiesSectors();
             foreach (string sectorName in sectorNames)
             {
                 List<SecurityStatsHolder> valuesToWrite = new List<SecurityStatsHolder>();

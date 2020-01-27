@@ -37,7 +37,7 @@ namespace FinancialStructures.Database
         /// <summary>
         /// Return alphabetically ordered list of all sectors linked to securities without repetition.
         /// </summary>
-        public static List<string> AllSecuritiesSectors(this Portfolio portfolio)
+        public static List<string> GetSecuritiesSectors(this Portfolio portfolio)
         {
             var companies = new List<string>();
             foreach (var security in portfolio.Funds)

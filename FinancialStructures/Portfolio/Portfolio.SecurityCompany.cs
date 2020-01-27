@@ -8,6 +8,20 @@ namespace FinancialStructures.Database
 {
     public static partial class PortfolioSecurity
     {
+        public static DateTime CompanyFirstDate(this Portfolio portfolio, string company)
+        {
+            var output = DateTime.Today;
+            foreach (var sec in portfolio.CompanySecurities(company))
+            {
+                if (sec.FirstValue().Day < output)
+                {
+                    output = sec.FirstValue().Day;
+                }
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// Returns whether there is a security with this company name.
         /// </summary>
@@ -57,9 +71,9 @@ namespace FinancialStructures.Database
         }
 
         /// <summary>
-        /// returns the value of holdingsin the company on the date specified. 
+        /// returns the value of security holdings in the company on the date specified. 
         /// </summary>
-        public static double CompanyValue(this Portfolio portfolio, string company, DateTime date)
+        public static double SecurityCompanyValue(this Portfolio portfolio, string company, DateTime date)
         {
             var securities = portfolio.CompanySecurities(company);
             double value = 0;
@@ -99,7 +113,7 @@ namespace FinancialStructures.Database
         /// </summary>
         public static double CompanyFraction(this Portfolio portfolio, string company, DateTime date)
         {
-            return portfolio.CompanyValue(company, date) / portfolio.AllSecuritiesValue(date);
+            return portfolio.SecurityCompanyValue(company, date) / portfolio.AllSecuritiesValue(date);
         }
 
         /// <summary>
@@ -153,8 +167,8 @@ namespace FinancialStructures.Database
                 {
                     var currencyName = security.GetCurrency();
                     var currency = portfolio.Currencies.Find(cur => cur.Name == currencyName);
-                    earlierValue += security.NearestEarlierValuation(earlierTime, currency).Value;
-                    laterValue += security.NearestEarlierValuation(laterTime, currency).Value;
+                    earlierValue += security.Value(earlierTime, currency).Value;
+                    laterValue += security.Value(laterTime, currency).Value;
                     Investments.AddRange(security.InvestmentsBetween(earlierTime, laterTime, currency));
                 }
             }

@@ -26,6 +26,17 @@ namespace FinancialStructures.FinanceStructures
         }
 
         /// <summary>
+        /// Returns the interpolated value of the security on the date provided.
+        /// </summary>
+        internal DailyValuation Value(DateTime date, Currency currency = null)
+        {
+            DailyValuation perSharePrice = fAmounts.ValueZeroBefore(date);
+            double currencyValue = currency == null ? 1.0 : currency.Value(date).Value;
+            double value = perSharePrice.Value * currencyValue;
+            return new DailyValuation(date, value);
+        }
+
+        /// <summary>
         /// Returns the first valuation of the CashAccount.
         /// </summary>
         internal DailyValuation FirstValue(Currency currency = null)

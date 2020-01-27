@@ -24,17 +24,16 @@
                         </ToolBar>
                     </ToolBarTray>
                     <Button Content="Save Database"
-                            Style="{StaticResource ResourceKey=defaultButton}"
-                            Height="20"
+                            Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                             Command="{Binding SaveDatabaseCommand}"/>
                     <Button Content="Load Database"
-                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                             Command="{Binding LoadDatabaseCommand}"/>
                     <Button Content="Update Data"
-                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                             Command="{Binding UpdateDataCommand}"/>
                     <Button Content="Refresh Display"
-                            Style="{StaticResource ResourceKey=defaultButton}"
+                            Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                             Command="{Binding RefreshCommand}"/>
                 </StackPanel>
             </TabItem>
