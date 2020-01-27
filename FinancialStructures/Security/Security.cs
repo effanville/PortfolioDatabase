@@ -9,6 +9,10 @@ namespace FinancialStructures.FinanceStructures
     /// </summary>
     public partial class Security : IComparable
     {
+        public override string ToString()
+        {
+            return fCompany + " - " + fName ;
+        }
         /// <summary>
         /// The name of the security in question.
         /// </summary>

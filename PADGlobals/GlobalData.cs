@@ -14,7 +14,7 @@ namespace GlobalHeldData
         static AssemblyCreationDate()
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            Value = new DateTime(2000, 1, 2, 12, 24, 30).AddDays(version.Build).AddSeconds(version.MinorRevision * 2);
+            Value = new DateTime(2020, 1, 26, 20, 24, 30).AddDays(version.Build).AddSeconds(version.MinorRevision * 2);
         }
     }
     public static class GlobalData

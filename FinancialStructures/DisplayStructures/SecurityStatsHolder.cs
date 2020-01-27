@@ -27,7 +27,7 @@ namespace FinancialStructures.GUIFinanceStructures
             else if (a.Name == "Totals" && !string.IsNullOrEmpty(a.Company))
             {
                 var c = a.Company;
-                a.LatestVal = MathSupport.Truncate(portfolio.CompanyValue(c, date));
+                a.LatestVal = MathSupport.Truncate(portfolio.SecurityCompanyValue(c, date));
                 a.RecentChange = 0;
                 a.FundsFraction = MathSupport.Truncate(portfolio.CompanyFraction(c, date), 4);
                 a.Profit = MathSupport.Truncate(portfolio.CompanyProfit(c));

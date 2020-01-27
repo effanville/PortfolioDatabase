@@ -36,6 +36,36 @@ namespace FinancialStructures.DataStructures
         }
 
         /// <summary>
+        /// Returns linearly interpolated value of the List on the date provided.
+        /// </summary>
+        internal DailyValuation ValueZeroBefore(DateTime date)
+        {
+            if (fValues == null)
+            {
+                return new DailyValuation(DateTime.Today, 1.0);
+            }
+           
+            if (date < FirstDate())
+            {
+                return new DailyValuation(date, 0.0);
+            }
+            if (date >= LatestDate())
+            {
+                return LatestValuation();
+            }
+            if (Count() == 1)
+            {
+                return fValues[0].Copy();
+            }
+
+            var earlier = NearestEarlierValue(date);
+            var later = NearestLaterValue(date);
+
+            double value = earlier.Value + (later.Value - earlier.Value) / (later.Day - earlier.Day).Days * (date - earlier.Day).Days;
+            return new DailyValuation(date, value);
+        }
+
+        /// <summary>
         /// Returns the DailyValuation on or before the date specified.
         /// </summary>
         internal DailyValuation NearestEarlierValue(DateTime date)

@@ -8,6 +8,14 @@ namespace FinancialStructures.DataStructures
     public class DailyValuation : IComparable
     {
         /// <summary>
+        /// Appends date in UK format with value, separated by a comma.
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Concat(Day.Day.ToString().PadLeft(2,'0'), "/", Day.Month.ToString().PadLeft(2, '0'), "/", Day.Year, ", ", Value.ToString());
+        }
+
+        /// <summary>
         /// Method of comparison. Compares dates.
         /// </summary>
         public int CompareTo(object obj)

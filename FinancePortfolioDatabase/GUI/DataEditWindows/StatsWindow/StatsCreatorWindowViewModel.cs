@@ -3,7 +3,6 @@ using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using FinancialStructures.Database;
 using GlobalHeldData;
-using GUIAccessorFunctions;
 using GUISupport;
 using FinanceWindows;
 using System;
@@ -12,6 +11,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
 using PortfolioStatsCreatorHelper;
+using FinancialStructures.DisplayStructures;
 
 namespace FinanceWindowsViewModels
 {
@@ -53,6 +53,8 @@ namespace FinanceWindowsViewModels
         public ICommand CreateInvestmentListCommand { get; }
         public ICommand CreateHTMLCommand { get; }
 
+        public ICommand ExportHistoryCommand { get; }
+
         public ICommand FileSelect { get; }
 
         private void ExecuteExportToCSVCommand(Object obj)
@@ -67,7 +69,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteInvestmentListCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName + "-CSVStats.csv", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName + "-CSVStats.csv", InitialDirectory = GlobalData.fStatsDirectory };
             saving.Filter = "CSV file|*.csv|All files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
@@ -86,6 +88,31 @@ namespace FinanceWindowsViewModels
                 }
                 reports.AddReport($"Created Investment list page at {saving.FileName}.");
                 statsWriter.Close();
+            }
+            else
+            {
+                reports.AddGeneralReport(ReportType.Error, $"Was not able to create Investment list page at {saving.FileName}");
+            }
+            saving.Dispose();
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
+        }
+
+        private void ExecuteCreateHistory(Object obj)
+        {
+            var reports = new ErrorReports();
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + GlobalData.DatabaseName + "-History.csv", InitialDirectory = GlobalData.fStatsDirectory };
+            saving.Filter = "CSV file|*.csv|All files|*.*";
+            if (saving.ShowDialog() == DialogResult.OK)
+            {
+                if (!saving.FileName.EndsWith(".csv"))
+                {
+                    saving.FileName += ".csv";
+                }
+
+                CSVHistoryWriter.WriteHistoryToCSV(GlobalData.Finances, UpdateReports, saving.FileName, HistoryGapDays);
             }
             else
             {
@@ -153,15 +180,55 @@ namespace FinanceWindowsViewModels
             set { fDatabaseStats = value; OnPropertyChanged(); }
         }
 
+        private List<HistoryStatistic> fHistoryStats;
+        public List<HistoryStatistic> HistoryStats
+        {
+            get { return fHistoryStats; }
+            set { fHistoryStats = value; OnPropertyChanged(); }
+        }
+
+        private List<DailyValuation_Named> fDistributionValues;
+        public List<DailyValuation_Named> DistributionValues
+        {
+            get { return fDistributionValues; }
+            set { fDistributionValues = value; OnPropertyChanged(); }
+        }
+
+
+        private List<DailyValuation_Named> fDistributionValues2;
+        public List<DailyValuation_Named> DistributionValues2
+        {
+            get { return fDistributionValues2; }
+            set { fDistributionValues2 = value; OnPropertyChanged(); }
+        }
+
+        private List<DailyValuation_Named> fDistributionValues3;
+        public List<DailyValuation_Named> DistributionValues3
+        {
+            get { return fDistributionValues3; }
+            set { fDistributionValues3 = value; OnPropertyChanged(); }
+        }
+
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
-        public void GenerateStatistics()
+        private int fHistoryGapDays = 25;
+        public int HistoryGapDays
+        {
+            get { return fHistoryGapDays; }
+            set { fHistoryGapDays = value; OnPropertyChanged(); }
+        }
+
+        public async void GenerateStatistics()
         {
             SecuritiesStats = GlobalData.Finances.GenerateSecurityStatistics(DisplayValueFunds);
             SecuritiesInvestments = GlobalData.Finances.AllSecuritiesInvestments();
             BankAccountStats = GlobalData.Finances.GenerateBankAccountStatistics(DisplayValueFunds);
             DatabaseStats = GlobalData.Finances.GenerateDatabaseStatistics();
+            HistoryStats = await GlobalData.Finances.GenerateHistoryStats(HistoryGapDays).ConfigureAwait(false);
+            DistributionValues = HistoryStats[HistoryStats.Count - 1].SecurityValues;
+            DistributionValues2 = HistoryStats[HistoryStats.Count - 1].BankAccValues;
+            DistributionValues3 = HistoryStats[HistoryStats.Count - 1].SectorValues;
         }
 
         public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
@@ -172,6 +239,7 @@ namespace FinanceWindowsViewModels
             CreateCSVStatsCommand = new BasicCommand(ExecuteExportToCSVCommand);
             CreateInvestmentListCommand = new BasicCommand(ExecuteInvestmentListCommand);
             CreateHTMLCommand = new BasicCommand(ExecuteCreateHTMLCommand);
+            ExportHistoryCommand = new BasicCommand(ExecuteCreateHistory);
             FileSelect = new BasicCommand(ExecuteFileSelect);
             SelectedIndex = 0;
         }

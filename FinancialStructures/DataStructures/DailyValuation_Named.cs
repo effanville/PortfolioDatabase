@@ -4,6 +4,21 @@ namespace FinancialStructures.DataStructures
 {
     public class DailyValuation_Named : DailyValuation
     {
+        public override string ToString()
+        {
+            //both name and company cannot be null so this is all cases.
+            if (string.IsNullOrEmpty(Company)&& !string.IsNullOrEmpty(Name))
+            {
+                return Name + "-" + base.ToString();
+            }
+            if (string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Company))
+            { 
+                return Company + "-" + base.ToString();
+            }
+
+            return Company + "-" + Name + "-" + base.ToString();
+        }
+
         /// <summary>
         /// Added company of the Daily valuation
         /// </summary>

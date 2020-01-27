@@ -1,8 +1,10 @@
 ﻿using FinancialStructures.DataStructures;
+using FinancialStructures.DisplayStructures;
 using FinancialStructures.FinanceFunctionsList;
 using FinancialStructures.GUIFinanceStructures;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FinancialStructures.Database
 {
@@ -82,8 +84,8 @@ namespace FinancialStructures.Database
                 {
                     var currencyName = security.GetCurrency();
                     var currency = portfolio.Currencies.Find(cur => cur.Name == currencyName);
-                    earlierValue += security.NearestEarlierValuation(earlierTime, currency).Value;
-                    laterValue += security.NearestEarlierValuation(laterTime, currency).Value;
+                    earlierValue += security.Value(earlierTime, currency).Value;
+                    laterValue += security.Value(laterTime, currency).Value;
                     Investments.AddRange(security.InvestmentsBetween(earlierTime, laterTime, currency));
                 }
             }
@@ -103,7 +105,7 @@ namespace FinancialStructures.Database
                 {
                     var currencyName = sec.GetCurrency();
                     var currency = portfolio.Currencies.Find(cur => cur.Name == currencyName);
-                    total += sec.NearestEarlierValuation(date, currency).Value;
+                    total += sec.Value(date, currency).Value;
                 }
             }
 
@@ -122,7 +124,7 @@ namespace FinancialStructures.Database
                 {
                     var currencyName = acc.GetCurrency();
                     var currency = portfolio.Currencies.Find(cur => cur.Name == currencyName);
-                    total += acc.NearestEarlierValuation(date, currency).Value;
+                    total += acc.Value(date, currency).Value;
                 }
             }
 
@@ -150,6 +152,29 @@ namespace FinancialStructures.Database
             }
 
             return names;
+        }
+
+        public async static Task<List<HistoryStatistic>> GenerateHistoryStats(this Portfolio portfolio, int daysGap)
+        {
+            var outputs = new List<HistoryStatistic>();
+            var calculationDate = portfolio.FirstValueDate();
+            await Task.Run(() => BackGroundTask(calculationDate, portfolio, outputs, daysGap));
+            return outputs;
+        }
+
+        private static void BackGroundTask(DateTime calculationDate, Portfolio portfolio, List<HistoryStatistic> outputs, int daysGap)
+        {
+            while (calculationDate < DateTime.Today)
+            {
+                var calcuationDateStatistics = new HistoryStatistic(portfolio, calculationDate);
+                outputs.Add(calcuationDateStatistics);
+                calculationDate = calculationDate.AddDays(daysGap);
+            }
+            if (calculationDate == DateTime.Today)
+            {
+                var calcuationDateStatistics = new HistoryStatistic(portfolio, calculationDate);
+                outputs.Add(calcuationDateStatistics);
+            }
         }
     }
 }
