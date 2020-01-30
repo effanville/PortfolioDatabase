@@ -22,6 +22,34 @@ namespace FinancialStructures.Database
             return output;
         }
 
+        public static double CompanyRecentChange(this Portfolio portfolio, string company)
+        {
+            double total = 0;
+            
+            var securities = portfolio.CompanySecurities(company);
+            if (securities.Count == 0)
+            {
+                return double.NaN;
+            }
+            DateTime recentDate = securities[0].LastEarlierValuation(securities[0].LatestValue().Day).Day;
+            foreach (var desired in securities)
+            { 
+                if (desired.Any())
+                {
+                    var currency = SecurityCurrency(portfolio, desired);
+                    var needed = desired.LatestValue(currency);
+                    if (needed.Day != recentDate)
+                    {
+                        return 0.0;
+                    }
+
+                    total +=( needed.Value - desired.LastEarlierValuation(needed.Day, currency).Value);
+                }
+            }
+
+            return total;
+        }
+
         /// <summary>
         /// Returns whether there is a security with this company name.
         /// </summary>
