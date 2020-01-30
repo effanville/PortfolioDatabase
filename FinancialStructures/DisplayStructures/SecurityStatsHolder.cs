@@ -3,6 +3,8 @@ using FinancialStructures.Mathematics;
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using System.Collections.Generic;
+using PortfolioStatsCreatorHelper;
+using StringFunctions;
 
 namespace FinancialStructures.GUIFinanceStructures
 {
@@ -15,7 +17,7 @@ namespace FinancialStructures.GUIFinanceStructures
             if (a.Name == "Totals" && string.IsNullOrEmpty(a.Company))
             {
                 a.LatestVal = MathSupport.Truncate(portfolio.AllSecuritiesValue(date));
-                a.RecentChange = 0;
+                a.RecentChange = 0.0;
                 a.FundsFraction = 1.0;
                 a.Profit = MathSupport.Truncate(portfolio.TotalProfit());
                 a.CAR3M = MathSupport.Truncate(100 * portfolio.IRRPortfolio(date.AddMonths(-3), date));
@@ -28,7 +30,7 @@ namespace FinancialStructures.GUIFinanceStructures
             {
                 var c = a.Company;
                 a.LatestVal = MathSupport.Truncate(portfolio.SecurityCompanyValue(c, date));
-                a.RecentChange = 0;
+                a.RecentChange = MathSupport.Truncate(portfolio.CompanyRecentChange(c));
                 a.FundsFraction = MathSupport.Truncate(portfolio.CompanyFraction(c, date), 4);
                 a.Profit = MathSupport.Truncate(portfolio.CompanyProfit(c));
                 a.CAR3M = MathSupport.Truncate(100 * portfolio.IRRCompany(c, date.AddMonths(-3), date));
@@ -93,6 +95,118 @@ namespace FinancialStructures.GUIFinanceStructures
 
     public class SecurityStatsHolder : IComparable
     {
+        /// <summary>
+        /// Returns the property names with suitable html tags surrounding to place in a table header.
+        /// </summary>
+        public string HtmlData(UserOptions options, int maxNumLength, int maxNameLength, int maxCompanyLength)
+        {
+            var properties = this.GetType().GetProperties();
+            string htmlData = string.Empty;
+
+            foreach (var props in properties)
+            {
+                if (options.SecurityDataToExport.Contains(props.Name))
+                {
+                    
+                    if (Double.TryParse(props.GetValue(this).ToString(), out double result))
+                    {
+                        htmlData += result.ToString().PadLeft(maxNumLength);
+                    }
+                    else
+                    {
+                        if (props.Name == "Name")
+                        {
+                            htmlData += props.GetValue(this).ToString().WithMaxLength(maxNameLength - 2).PadRight(maxNameLength);
+                        }
+                        else
+                        {
+                            htmlData += props.GetValue(this).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
+                        }
+                    }
+                    
+                }
+            }
+
+            return htmlData;
+        }
+
+        public string HtmlHeader(UserOptions options, List<string> names, int maxNumLength, int maxNameLength, int maxCompanyLength)
+        {
+            var properties = this.GetType().GetProperties();
+            string header = string.Empty;
+
+            foreach (var props in properties)
+            {
+                if (names.Contains(props.Name))
+                {
+                    if (props.PropertyType == typeof(string))
+                    {
+                        if (props.Name == "Name")
+                        {
+                            header += "<b>" + props.Name.WithMaxLength(maxNameLength - 2).PadRight(maxNameLength) + "</b>";
+                        }
+                        else
+                        {
+                            header += "<b>" + props.Name.WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength) + "</b>";
+                        }
+
+                    }
+
+                    if (props.PropertyType == typeof(double))
+                    {
+                        header += "<b>" + props.Name.WithMaxLength(maxNumLength - 2).PadLeft(maxNumLength) + "</b>";
+                    }
+                }
+            }
+            return header;
+        }
+
+        /// <summary>
+        /// Returns the property names with suitable html tags surrounding to place in a table header.
+        /// </summary>
+        public string HtmlTableData(UserOptions options, List<string> names)
+        {
+            var properties = this.GetType().GetProperties();
+            string htmlData = "<th scope=\"row\">";
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                if (names.Contains(properties[i].Name))
+                {
+                    if (i != 0)
+                    {
+                        htmlData += "<td>";
+                    }
+
+                    htmlData += properties[i].GetValue(this).ToString();
+                    htmlData += "</td>";
+                }
+            }
+
+            return htmlData;
+        }
+
+        /// <summary>
+        /// Returns the property names with suitable html tags surrounding to place in a table header.
+        /// </summary>
+        /// <returns></returns>
+        public string HtmlTableHeader(UserOptions options, List<string> names)
+        {
+            var properties = this.GetType().GetProperties();
+            string htmlHeader = string.Empty;
+            foreach (var property in properties)
+            {
+                if (names.Contains(property.Name))
+                {
+                    htmlHeader += "<th scope=\"col\">";
+                    htmlHeader += property.Name;
+                    htmlHeader += "</th>";
+                }
+            }
+            
+            return htmlHeader;
+        }
+
         public int CompareTo(object obj)
         {
             if (obj is SecurityStatsHolder value)

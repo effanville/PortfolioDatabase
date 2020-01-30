@@ -166,7 +166,14 @@ namespace FinanceWindowsViewModels
             BankColumnNames = new List<VisibleName>();
             foreach (var info in props)
             {
-                BankColumnNames.Add(new VisibleName(info.Name, true));
+                if (info.Name == "Day")
+                { 
+                    BankColumnNames.Add(new VisibleName(info.Name, false)); 
+                }
+                else
+                {
+                    BankColumnNames.Add(new VisibleName(info.Name, true));
+                }
             }
         }
     }

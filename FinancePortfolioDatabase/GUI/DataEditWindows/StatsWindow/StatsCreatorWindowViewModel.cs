@@ -37,7 +37,7 @@ namespace FinanceWindowsViewModels
         public string StatsFilepath
         {
             get { return fStatsFilepath; }
-            set { fStatsFilepath = value; OnPropertyChanged(); DisplayStats = new Uri(fStatsFilepath);  }
+            set { fStatsFilepath = value; OnPropertyChanged(); if (value != null) { DisplayStats = new Uri(fStatsFilepath); }  }
         }
 
         private int fSelectedIndex;
