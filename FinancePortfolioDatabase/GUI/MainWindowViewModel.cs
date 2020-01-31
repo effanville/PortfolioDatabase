@@ -46,22 +46,11 @@ namespace FinanceWindowsViewModels
 
         public void UpdateSubWindowData(object obj)
         {
-            if (SecurityEditViewModel != null)
-            {
-                SecurityEditViewModel.UpdateFundListBox();
-            }
-            if (BankAccEditViewModel != null)
-            {
-                BankAccEditViewModel.UpdateAccountListBox();
-            }
-            if (SectorEditViewModel != null)
-            {
+               SecurityEditViewModel.UpdateFundListBox();
+               BankAccEditViewModel.UpdateAccountListBox();
                 SectorEditViewModel.UpdateSectorListBox();
-            }
-            if (StatsEditViewModel != null)
-            {
                 StatsEditViewModel.GenerateStatistics();
-            }
+            CurrencyEditViewModel.UpdateSectorListBox();
         }
 
         private OptionsToolbarViewModel fOptionsToolbarCommands;
