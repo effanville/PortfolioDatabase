@@ -86,7 +86,7 @@ namespace PortfolioStatsCreatorHelper
             List<string> headersList = new List<string>();
             headersList.AddRange(options.BankAccDataToExport);
             headersList.Remove("Name");
-            htmlWriter.WriteLine("<table>");
+            htmlWriter.WriteLine("<table width=\"Auto\">");
             htmlWriter.WriteLine("<caption>Total held in portfolio.</caption>");
             htmlWriter.WriteLine("<thead><tr>");
             htmlWriter.WriteLine(portfolioTotals.HTMLTableHeader(options, headersList));
@@ -209,32 +209,24 @@ namespace PortfolioStatsCreatorHelper
             writer.WriteLine("<head>");
             writer.WriteLine($"<title> Statement for funds as of {DateTime.Today.ToShortDateString()}</title>");
             writer.WriteLine("<style>");
-            writer.WriteLine("html, body, h1, h2, h3, h4, h5, h6 {font-family: \"Arial\", cursive, sans-serif;}");
-            writer.WriteLine("html, h1, h2, h3, h4, h5, h6 {font-family: \"Arial\", cursive, sans-serif;}");
-            writer.WriteLine("body{ font-family: \"Arial\", cursive, sans-serif; font-size:small}");
-            writer.WriteLine("table {");
-            writer.WriteLine("Width: 100%;");
-            writer.WriteLine("border-collapse: collapse;");
-            writer.WriteLine("}");
-            writer.WriteLine("table, th, td {");
-            writer.WriteLine("border: 1px solid black;");
-            writer.WriteLine(" }");
-            writer.WriteLine("th td {");
-            writer.WriteLine("padding: 15px;");
-            writer.WriteLine(" }");
+            writer.WriteLine("html, h1, h2, h3, h4, h5, h6 {font-family: \"Arial\", cursive, sans-serif; }");
+            writer.WriteLine("h1 { font-family: \"Arial\", cursive, sans-serif; font-size:7;margin-top: 1.5em; }");
+            writer.WriteLine("h2 { font-family: \"Arial\", cursive, sans-serif; margin-top: 1.5em; }");
+            writer.WriteLine("body{ font-family: \"Arial\", cursive, sans-serif; font-size:small }");
+            writer.WriteLine("table { Width: 90%; border-collapse: collapse; margin-left: 5%; margin-right: 5%;}");
+            writer.WriteLine("table, th, td { border: 1px solid black; }");
+            writer.WriteLine("caption { margin-bottom: 1.2em; font-family: \"Arial\", cursive, sans-serif; font-size:medium; }");
             writer.WriteLine("tr:nth-child(even) {background-color: #f0f8ff;}");
-            writer.WriteLine("th{");
-            writer.WriteLine("background-color: #ADD8E6;");
-            writer.WriteLine("height: 50px;");
-            writer.WriteLine(" }");
+            writer.WriteLine("th{ background-color: #ADD8E6; height: 50px; }");
+            writer.WriteLine(" p { line-height:2.2em; margin-bottom: 2.2em;}");
             writer.WriteLine("</style> ");
+
             writer.WriteLine("</head>");
             writer.WriteLine("<body>");
 
-            writer.WriteLine("<h1>Portfolio Statement</h1>");
-            writer.WriteLine($"on the date {DateTime.Today.ToShortDateString()}.");
-            writer.WriteLine($"Produced by Finance Portfolio Database");
-            writer.WriteLine("as written by Matthew Egginton");
+            writer.WriteLine($"<h1>{GlobalHeldData.GlobalData.DatabaseName} - Portfolio Statement</h1>");
+
+            writer.WriteLine($"<p>Produced by Finance Portfolio Database on the date {DateTime.Today.ToShortDateString()}.</p>");
 
         }
 
