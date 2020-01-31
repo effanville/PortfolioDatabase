@@ -1,9 +1,8 @@
-﻿using System;
-using System.Drawing;
+﻿using FinanceWindowsViewModels;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using FinanceWindowsViewModels;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
 
@@ -18,7 +17,7 @@ namespace FinanceWindows
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
-            
+
         }
         private Random rnd = new Random();
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -38,7 +37,7 @@ namespace FinanceWindows
                                 var pc = new List<KeyValuePair<DateTime, double>>();
                                 for (int time = 0; time < stats.Count; time++)
                                 {
-                                    pc.Add(new KeyValuePair<DateTime, double> (stats[time].SectorCar[sectorIndex].Day, stats[time].SectorCar[sectorIndex].Value ));
+                                    pc.Add(new KeyValuePair<DateTime, double>(stats[time].SectorCar[sectorIndex].Day, stats[time].SectorCar[sectorIndex].Value));
                                 }
 
                                 LineSeries series1 = new LineSeries();

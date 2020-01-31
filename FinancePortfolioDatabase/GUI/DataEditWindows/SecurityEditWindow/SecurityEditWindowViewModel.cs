@@ -1,20 +1,19 @@
 ﻿using FinanceWindowsViewModels.SecurityEdit;
-using FinancialStructures.FinanceStructures;
 using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GlobalHeldData;
-using GUIAccessorFunctions;
 using GUISupport;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace FinanceWindowsViewModels
 {
     public class SecurityEditWindowViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
         private List<NameCompDate> fPreEditFundNames;
 
         private List<NameCompDate> fFundNames;
@@ -64,11 +63,11 @@ namespace FinanceWindowsViewModels
         private int selectedIndex;
         public DayDataView selectedValues
         {
-            get 
+            get
             {
-                return fSelectedValues; 
+                return fSelectedValues;
             }
-            set 
+            set
             {
                 fSelectedValues = value;
                 int index = SelectedSecurityData.IndexOf(value);
@@ -78,8 +77,8 @@ namespace FinanceWindowsViewModels
                     fOldSelectedValues = fSelectedValues?.Copy();
                 }
 
-                OnPropertyChanged(); 
-                UpdateSubWindows(); 
+                OnPropertyChanged();
+                UpdateSubWindows();
             }
         }
 
@@ -98,9 +97,9 @@ namespace FinanceWindowsViewModels
         public void UpdateFundListBox()
         {
             var currentSelectedName = selectedName;
-            FundNames = GlobalData.Finances.SecurityNamesAndCompanies();
+            FundNames = Portfolio.SecurityNamesAndCompanies();
             FundNames.Sort();
-            fPreEditFundNames = GlobalData.Finances.SecurityNamesAndCompanies();
+            fPreEditFundNames = Portfolio.SecurityNamesAndCompanies();
             fPreEditFundNames.Sort();
 
             for (int i = 0; i < FundNames.Count; i++)
@@ -116,9 +115,9 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                GlobalData.Finances.GetPortfolio().TryGetSecurity(fSelectedName.Company, fSelectedName.Name, out Security wanted);
+                Portfolio.TryGetSecurity(fSelectedName.Company, fSelectedName.Name, out Security wanted);
                 selectedSecurity = wanted;
-                if (GlobalData.Finances.TryGetSecurityData(fSelectedName.Company, fSelectedName.Name, out List<DayDataView> values))
+                if (Portfolio.TryGetSecurityData(fSelectedName.Company, fSelectedName.Name, out List<DayDataView> values))
                 {
                     SelectedSecurityData = values;
                 }
@@ -153,7 +152,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateEditCommand(Object obj)
         {
             var reports = new ErrorReports();
-            if (GlobalData.Finances.GetPortfolio().Funds.Count != FundNames.Count)
+            if (Portfolio.Funds.Count != FundNames.Count)
             {
                 bool edited = false;
                 foreach (var name in FundNames)
@@ -161,7 +160,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        GlobalData.Finances.TryAddSecurity(reports, name.Company, name.Name, name.Currency, name.Url, name.Sectors);
+                        Portfolio.TryAddSecurity(reports, name.Company, name.Name, name.Currency, name.Url, name.Sectors);
                         name.NewValue = false;
                     }
                 }
@@ -181,7 +180,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        GlobalData.Finances.TryEditSecurityName(reports, fPreEditFundNames[i].Company, fPreEditFundNames[i].Name, name.Company, name.Name, name.Currency, name.Url, name.Sectors);
+                        Portfolio.TryEditSecurityName(reports, fPreEditFundNames[i].Company, fPreEditFundNames[i].Name, name.Company, name.Name, name.Currency, name.Url, name.Sectors);
                         name.NewValue = false;
                     }
                 }
@@ -205,9 +204,9 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (selectedName != null && selectedSecurity != null)
             {
-                if (GlobalData.Finances.GetSecurityFromName(selectedName.Name, selectedName.Company).Count() != SelectedSecurityData.Count)
+                if (Portfolio.GetSecurityFromName(selectedName.Name, selectedName.Company).Count() != SelectedSecurityData.Count)
                 {
-                    GlobalData.Finances.TryAddDataToSecurity(reports, selectedName.Company, selectedName.Name, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                    Portfolio.TryAddDataToSecurity(reports, selectedName.Company, selectedName.Name, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                     selectedName.NewValue = false;
                 }
                 else
@@ -220,7 +219,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            GlobalData.Finances.TryEditSecurityData(reports, selectedName.Company, selectedName.Name, fOldSelectedValues.Date, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
+                            Portfolio.TryEditSecurityData(reports, selectedName.Company, selectedName.Name, fOldSelectedValues.Date, selectedValues.Date, selectedValues.ShareNo, selectedValues.UnitPrice, selectedValues.Investment);
                             name.NewValue = false;
                         }
                     }
@@ -240,11 +239,13 @@ namespace FinanceWindowsViewModels
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
-        public SecurityEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public SecurityEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
-            UserClickingVM = new UserButtonsViewModel(updateWindow, updateReports, selectedName, selectedValues);
+            UserClickingVM = new UserButtonsViewModel(Portfolio, updateWindow, updateReports, selectedName, selectedValues);
 
             fFundNames = new List<NameCompDate>();
             fPreEditFundNames = new List<NameCompDate>();

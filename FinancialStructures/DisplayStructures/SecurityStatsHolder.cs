@@ -1,10 +1,10 @@
-﻿using System;
-using FinancialStructures.Mathematics;
-using FinancialStructures.Database;
+﻿using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
-using System.Collections.Generic;
+using FinancialStructures.Mathematics;
 using PortfolioStatsCreatorHelper;
 using StringFunctions;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.GUIFinanceStructures
 {
@@ -107,7 +107,7 @@ namespace FinancialStructures.GUIFinanceStructures
             {
                 if (options.SecurityDataToExport.Contains(props.Name))
                 {
-                    
+
                     if (Double.TryParse(props.GetValue(this).ToString(), out double result))
                     {
                         htmlData += result.ToString().PadLeft(maxNumLength);
@@ -123,7 +123,7 @@ namespace FinancialStructures.GUIFinanceStructures
                             htmlData += props.GetValue(this).ToString().WithMaxLength(maxCompanyLength - 2).PadRight(maxCompanyLength);
                         }
                     }
-                    
+
                 }
             }
 
@@ -203,7 +203,7 @@ namespace FinancialStructures.GUIFinanceStructures
                     htmlHeader += "</th>";
                 }
             }
-            
+
             return htmlHeader;
         }
 

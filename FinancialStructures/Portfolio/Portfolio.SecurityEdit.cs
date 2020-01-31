@@ -21,7 +21,7 @@ namespace FinancialStructures.Database
             }
 
             return false;
-        }      
+        }
 
         public static bool TryRemoveSecurity(this Portfolio portfolio, ErrorReports reports, string company, string name)
         {

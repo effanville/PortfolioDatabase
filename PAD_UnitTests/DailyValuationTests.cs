@@ -1,12 +1,12 @@
-﻿using System;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
 using NUnit.Framework;
+using System;
 
 namespace DataStructures._UnitTests
 {
     public class DailyValuationTests
     {
-        [TestCase( "1/1/2018", 1, "1/1/2019", 0.0, -1)]
+        [TestCase("1/1/2018", 1, "1/1/2019", 0.0, -1)]
         [TestCase("1/1/2020", 1, "1/1/2019", 0.0, 1)]
         [TestCase("1/1/2018", 1, "1/1/2018", 0.0, 0)]
         public void ComparisonTests(DateTime firstDate, double firstValue, DateTime secondDate, double secondValue, int result)

@@ -148,7 +148,7 @@ namespace FinancialStructures.Database
             }
             foreach (var bankAcc in portfolio.BankAccounts)
             {
-                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.FirstValue().Day, bankAcc.LatestValue().Day, bankAcc.Count(), 365 * (double)bankAcc.Count()/(bankAcc.LatestValue().Day - bankAcc.FirstValue().Day).Days ) );
+                names.Add(new DatabaseStatistics(bankAcc.GetName(), bankAcc.GetCompany(), bankAcc.FirstValue().Day, bankAcc.LatestValue().Day, bankAcc.Count(), 365 * (double)bankAcc.Count() / (bankAcc.LatestValue().Day - bankAcc.FirstValue().Day).Days));
             }
 
             return names;

@@ -1,50 +1,66 @@
 ﻿using FinanceWindows;
-using System;
-using GUISupport;
-using System.Windows.Input;
-using GUIAccessorFunctions;
-using System.Windows.Forms;
+using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
-using System.IO;
+using GUIAccessorFunctions;
+using GUISupport;
 using PADGlobals;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace FinanceWindowsViewModels
 {
-    public class OptionsToolbarViewModel :PropertyChangedBase
+    public class OptionsToolbarViewModel : PropertyChangedBase
     {
-        public OptionsToolbarViewModel(Action<bool> updateWindow, Action<bool> updateSubWindow, Action<ErrorReports> updateReports)
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
+        Action<bool> UpdateMainWindow;
+        Action<ErrorReports> UpdateReports;
+
+        public ICommand OpenHelpCommand { get; }
+        public ICommand NewDatabaseCommand { get; }
+        public ICommand SaveDatabaseCommand { get; }
+        public ICommand LoadDatabaseCommand { get; }
+        public ICommand UpdateDataCommand { get; }
+        public ICommand RefreshCommand { get; }
+
+        public OptionsToolbarViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateMainWindow = updateWindow;
-            UpdateSubWindows = updateSubWindow;
             UpdateReports = updateReports;
             OpenHelpCommand = new BasicCommand(OpenHelpDocsCommand);
+
+            NewDatabaseCommand = new BasicCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new BasicCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new BasicCommand(ExecuteLoadDatabase);
             UpdateDataCommand = new BasicCommand(ExecuteUpdateData);
             RefreshCommand = new BasicCommand(RefreshData);
         }
 
-        Action<bool> UpdateMainWindow;
-        Action<bool> UpdateSubWindows;
-        Action<ErrorReports> UpdateReports;
-
-        public ICommand OpenHelpCommand { get; }
-
-        public ICommand SaveDatabaseCommand { get; }
-
-        public ICommand LoadDatabaseCommand { get; }
-        public ICommand UpdateDataCommand { get; }
-        public ICommand RefreshCommand { get; }
-
         private void OpenHelpDocsCommand(Object obj)
         {
             var helpwindow = new HelpWindow();
             helpwindow.Show();
         }
-
+        public void ExecuteNewDatabase(Object obj)
+        {
+            var reports = new ErrorReports();
+            DatabaseAccessor.ClearPortfolio();
+            DatabaseAccessor.SetFilePath("");
+            DatabaseAccessor.LoadPortfolio(reports);
+            UpdateMainWindow(true);
+            if (reports.Any())
+            {
+                UpdateReports(reports);
+            }
+        }
         public void ExecuteSaveDatabase(Object obj)
         {
             var reports = new ErrorReports();
@@ -73,7 +89,7 @@ namespace FinanceWindowsViewModels
             {
                 DatabaseAccessor.SetFilePath(openFile.FileName);
                 DatabaseAccessor.ClearPortfolio();
-                await Task.Run(()=>DatabaseAccessor.LoadPortfolio(reports));
+                await Task.Run(() => DatabaseAccessor.LoadPortfolio(reports));
                 reports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
             }
             openFile.Dispose();
@@ -93,7 +109,7 @@ namespace FinanceWindowsViewModels
         private async void ExecuteUpdateData(Object obj)
         {
             var reports = new ErrorReports();
-            await DataUpdater.Downloader(UpdateReports, reports).ConfigureAwait(false);
+            await DataUpdater.Downloader(Portfolio, Sectors, UpdateReports, reports).ConfigureAwait(false);
 
             if (reports.Any())
             {

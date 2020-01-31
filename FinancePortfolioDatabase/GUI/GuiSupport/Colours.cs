@@ -7,8 +7,8 @@ namespace GUISupport
         public static Color BackgroundMainColour { get; set; } = Colors.AliceBlue;
 
         private static Brush fBackgroundBrush = new SolidColorBrush(BackgroundMainColour);
-        public static Brush BackgroundBrush 
-        { 
+        public static Brush BackgroundBrush
+        {
             get { return fBackgroundBrush; }
             set { fBackgroundBrush = value; }
         }

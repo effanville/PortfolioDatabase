@@ -52,8 +52,8 @@ namespace GUISupport
                 if (reader != null)
                     reader.Close();
             }
-        
-       }
+
+        }
 
         public static List<object> CreateSecurityData(List<string[]> valuationsToRead, ErrorReports reports)
         {

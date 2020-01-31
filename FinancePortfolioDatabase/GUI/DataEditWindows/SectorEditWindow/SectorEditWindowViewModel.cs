@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
+﻿using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GUIAccessorFunctions;
 using GUISupport;
 using PADGlobals;
 using SectorHelperFunctions;
+using System;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 
 namespace FinanceWindowsViewModels
 {
     public class SectorEditWindowViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
         private List<NameData> fPreEditSectorNames;
 
         private List<NameData> fSectorNames;
@@ -63,12 +67,12 @@ namespace FinanceWindowsViewModels
         private int selectedIndex;
         public AccountDayDataView SelectedDataPoint
         {
-            get 
-            { 
+            get
+            {
                 return fSelectedDataPoint;
             }
-            set 
-            { 
+            set
+            {
                 fSelectedDataPoint = value;
                 int index = SelectedSectorData.IndexOf(value);
                 if (selectedIndex != index)
@@ -76,7 +80,7 @@ namespace FinanceWindowsViewModels
                     selectedIndex = index;
                     fOldSelectedData = fSelectedDataPoint?.Copy();
                 }
-                OnPropertyChanged(); 
+                OnPropertyChanged();
             }
         }
 
@@ -95,7 +99,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                await DataUpdater.DownloadSector(fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
+                await DataUpdater.DownloadSector(Sectors, fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
             }
             UpdateMainWindow(true);
             if (reports.Any())
@@ -196,7 +200,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
-                if (DatabaseAccessor.GetSectorFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
+                if (Sectors.Find(sector => sector.GetName() == SelectedName.Name).Count() != SelectedSectorData.Count)
                 {
                     SectorEditor.TryAddDataToSector(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
                     SelectedDataPoint.NewValue = false;
@@ -274,8 +278,10 @@ namespace FinanceWindowsViewModels
 
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
-        public SectorEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public SectorEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             SectorNames = new List<NameData>();

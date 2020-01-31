@@ -44,7 +44,7 @@ namespace FinancialStructures.DataStructures
             {
                 return new DailyValuation(DateTime.Today, 1.0);
             }
-           
+
             if (date < FirstDate())
             {
                 return new DailyValuation(date, 0.0);

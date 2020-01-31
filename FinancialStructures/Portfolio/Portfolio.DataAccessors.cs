@@ -1,5 +1,4 @@
-﻿using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using System;
 using System.Collections.Generic;
@@ -183,7 +182,7 @@ namespace FinancialStructures.Database
         /// <summary>
         /// returns the securities under the company name.
         /// </summary>
-        public static SecurityStatsHolder GenerateSectorFundsStatistics(this Portfolio portfolio, List<Sector> sectors,  string sectorName)
+        public static SecurityStatsHolder GenerateSectorFundsStatistics(this Portfolio portfolio, List<Sector> sectors, string sectorName)
         {
             if (portfolio != null)
             {

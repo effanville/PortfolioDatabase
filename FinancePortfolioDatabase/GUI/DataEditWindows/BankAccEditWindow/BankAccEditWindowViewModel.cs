@@ -2,18 +2,18 @@
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GUIAccessorFunctions;
 using GUISupport;
+using PADGlobals;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using GlobalHeldData;
-using PADGlobals;
 
 namespace FinanceWindowsViewModels
 {
     public class BankAccEditWindowViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
         private List<NameData> fPreEditAccountNames;
 
         private List<NameData> fAccountNames;
@@ -59,12 +59,12 @@ namespace FinanceWindowsViewModels
         private int selectedIndex;
         public AccountDayDataView selectedValues
         {
-            get 
+            get
             {
-                return fSelectedValues; 
+                return fSelectedValues;
             }
-            set 
-            { 
+            set
+            {
                 fSelectedValues = value;
                 int index = SelectedAccountData.IndexOf(value);
                 if (selectedIndex != index)
@@ -72,7 +72,7 @@ namespace FinanceWindowsViewModels
                     selectedIndex = index;
                     fOldSelectedValue = fSelectedValues?.Copy();
                 }
-                OnPropertyChanged(); 
+                OnPropertyChanged();
             }
         }
 
@@ -91,7 +91,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                await DataUpdater.DownloadBankAccount(fSelectedName.Company, fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
+                await DataUpdater.DownloadBankAccount(Portfolio, fSelectedName.Company, fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
             }
             UpdateMainWindow(true);
             if (reports.Any())
@@ -103,8 +103,8 @@ namespace FinanceWindowsViewModels
         public void UpdateAccountListBox()
         {
             var currentSelectionName = selectedName;
-            AccountNames = GlobalData.Finances.GetBankAccountNamesAndCompanies();
-            fPreEditAccountNames = GlobalData.Finances.GetBankAccountNamesAndCompanies();
+            AccountNames = Portfolio.GetBankAccountNamesAndCompanies();
+            fPreEditAccountNames = Portfolio.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
             fPreEditAccountNames.Sort();
 
@@ -121,10 +121,10 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                GlobalData.Finances.GetPortfolio().TryGetBankAccount(fSelectedName.Name, fSelectedName.Company, out CashAccount wanted);
+                Portfolio.GetPortfolio().TryGetBankAccount(fSelectedName.Name, fSelectedName.Company, out CashAccount wanted);
                 selectedAccount = wanted;
 
-                if (GlobalData.Finances.TryGetAccountData(fSelectedName.Name, fSelectedName.Company, out List<AccountDayDataView> values))
+                if (Portfolio.TryGetAccountData(fSelectedName.Name, fSelectedName.Company, out List<AccountDayDataView> values))
                 {
                     SelectedAccountData = values;
                 }
@@ -144,7 +144,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateBankAccount(Object obj)
         {
             var reports = new ErrorReports();
-            if (GlobalData.Finances.GetPortfolio().BankAccounts.Count != AccountNames.Count)
+            if (Portfolio.GetPortfolio().BankAccounts.Count != AccountNames.Count)
             {
                 bool edited = false;
                 foreach (var name in AccountNames)
@@ -152,7 +152,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        GlobalData.Finances.TryAddBankAccount(name.Name, name.Company, name.Currency, name.Sectors, reports);
+                        Portfolio.TryAddBankAccount(name.Name, name.Company, name.Currency, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -172,7 +172,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && (!string.IsNullOrEmpty(name.Name) || !string.IsNullOrEmpty(name.Company)))
                     {
                         edited = true;
-                        GlobalData.Finances.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, name.Currency, name.Sectors, reports);
+                        Portfolio.TryEditBankAccountName(fPreEditAccountNames[i].Name, fPreEditAccountNames[i].Company, name.Name, name.Company, name.Currency, name.Sectors, reports);
                         name.NewValue = false;
                     }
                 }
@@ -194,9 +194,9 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (fSelectedName != null && selectedAccount != null)
             {
-                if (GlobalData.Finances.GetBankAccountFromName(fSelectedName.Name, fSelectedName.Company).Count() != SelectedAccountData.Count)
+                if (Portfolio.GetBankAccountFromName(fSelectedName.Name, fSelectedName.Company).Count() != SelectedAccountData.Count)
                 {
-                    GlobalData.Finances.TryAddDataToBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount);
+                    Portfolio.TryAddDataToBankAccount(selectedName.Name, selectedName.Company, selectedValues.Date, selectedValues.Amount);
                     selectedName.NewValue = false;
                 }
                 else
@@ -209,7 +209,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            GlobalData.Finances.TryEditBankAccount(selectedName.Name, selectedName.Company, fOldSelectedValue.Date, selectedValues.Date, selectedValues.Amount, reports);
+                            Portfolio.TryEditBankAccount(selectedName.Name, selectedName.Company, fOldSelectedValue.Date, selectedValues.Date, selectedValues.Amount, reports);
                             name.NewValue = false;
                         }
                     }
@@ -231,7 +231,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (selectedName.Name != null)
             {
-                GlobalData.Finances.TryRemoveBankAccount(selectedName.Name, selectedName.Company, reports);
+                Portfolio.TryRemoveBankAccount(selectedName.Name, selectedName.Company, reports);
             }
             else
             {
@@ -250,7 +250,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (selectedName != null)
             {
-                GlobalData.Finances.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date, reports);
+                Portfolio.TryDeleteBankAccountData(selectedName.Name, selectedName.Company, selectedValues.Date, reports);
             }
             else
             {
@@ -267,8 +267,10 @@ namespace FinanceWindowsViewModels
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
-        public BankAccEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public BankAccEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             fAccountNames = new List<NameData>();

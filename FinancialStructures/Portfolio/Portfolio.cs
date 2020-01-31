@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
+using System.Collections.Generic;
 
 namespace FinancialStructures.Database
 {

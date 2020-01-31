@@ -1,6 +1,4 @@
-﻿using FinancialStructures.ReportingStructures;
-
-namespace FinancialStructures.Database
+﻿namespace FinancialStructures.Database
 {
     public static partial class PortfolioSector
     {

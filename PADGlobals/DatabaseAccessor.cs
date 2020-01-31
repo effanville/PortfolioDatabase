@@ -1,6 +1,6 @@
-﻿using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.Database;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
 using SavingDummyClasses;
@@ -42,7 +42,7 @@ namespace GUIAccessorFunctions
 
             return null;
         }
-        
+
         public static List<NameData> GetSectorNames()
         {
             var outputs = new List<NameData>();
