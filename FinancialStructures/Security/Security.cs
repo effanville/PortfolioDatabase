@@ -11,7 +11,7 @@ namespace FinancialStructures.FinanceStructures
     {
         public override string ToString()
         {
-            return fCompany + " - " + fName ;
+            return fCompany + " - " + fName;
         }
         /// <summary>
         /// The name of the security in question.
@@ -136,7 +136,7 @@ namespace FinancialStructures.FinanceStructures
         /// <summary>
         /// Constructor to make a new security from known data.
         /// </summary>
-        private Security(string name, string company,string currency, string url, TimeList shares, TimeList prices, TimeList investments)
+        private Security(string name, string company, string currency, string url, TimeList shares, TimeList prices, TimeList investments)
         {
             fName = name;
             fCompany = company;

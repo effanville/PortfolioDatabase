@@ -18,11 +18,9 @@
                 <StackPanel Orientation="Horizontal" 
                             Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}"
                             Margin="-2">
-                    <ToolBarTray>
-                        <ToolBar>
-                        
-                        </ToolBar>
-                    </ToolBarTray>
+                    <Button Content="New Database"
+                            Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                            Command="{Binding NewDatabaseCommand}"/>
                     <Button Content="Save Database"
                             Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                             Command="{Binding SaveDatabaseCommand}"/>

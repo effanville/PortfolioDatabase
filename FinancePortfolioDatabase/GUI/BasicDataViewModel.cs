@@ -1,15 +1,17 @@
-﻿using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.Database;
-using GlobalHeldData;
+﻿using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using GUIAccessorFunctions;
 using GUISupport;
-using System;
 using System.Collections.Generic;
 
 namespace FinanceWindowsViewModels
 {
     public class BasicDataViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
+
         private List<NameCompDate> fFundNames;
         public List<NameCompDate> FundNames
         {
@@ -40,21 +42,20 @@ namespace FinanceWindowsViewModels
 
         public void DataUpdate()
         {
-            FundNames = GlobalData.Finances.SecurityNamesAndCompanies();
+            FundNames = Portfolio.SecurityNamesAndCompanies();
             FundNames.Sort();
-            AccountNames = GlobalData.Finances.GetBankAccountNamesAndCompanies();
+            AccountNames = Portfolio.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
             SectorNames = DatabaseAccessor.GetSectorNames();
             SectorNames.Sort();
-            CurrencyNames = GlobalData.Finances.GetCurrencyNames();
+            CurrencyNames = Portfolio.GetCurrencyNames();
             CurrencyNames.Sort();
         }
 
-        Action<bool> UpdateMainWindow;
-
-        public BasicDataViewModel(Action<bool> updateWindow)
+        public BasicDataViewModel(Portfolio portfolio, List<Sector> sectors)
         {
-            UpdateMainWindow = updateWindow;
+            Portfolio = portfolio;
+            Sectors = sectors;
             DataUpdate();
         }
     }

@@ -95,8 +95,8 @@ namespace FinancialStructures.GUIFinanceStructures
 
         private string fSectors;
 
-        public string Sectors 
-        { 
+        public string Sectors
+        {
             get { return fSectors; }
             set { fSectors = value; NewValue = true; }
         }

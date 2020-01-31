@@ -1,5 +1,5 @@
-﻿using FinancialStructures.Database;
-using FinancialStructures.ReportingStructures;
+﻿using FinancialStructures.ReportingStructures;
+using GlobalHeldData;
 using GUIAccessorFunctions;
 using GUISupport;
 using System;
@@ -10,14 +10,14 @@ namespace FinanceWindowsViewModels
     {
         public MainWindowViewModel()
         {
-            DatabaseAccessor.LoadPortfolio(new ErrorReports()); 
-            OptionsToolbarCommands = new OptionsToolbarViewModel(UpdateWindow, UpdateSubWindow, UpdateReports);
-            DataView = new BasicDataViewModel(UpdateWindow);
-            SecurityEditViewModel = new SecurityEditWindowViewModel(UpdateWindow, UpdateReports);
-            BankAccEditViewModel = new BankAccEditWindowViewModel(UpdateWindow, UpdateReports);
-            SectorEditViewModel = new SectorEditWindowViewModel(UpdateWindow, UpdateReports);
-            CurrencyEditViewModel = new CurrencyEditWindowViewModel(UpdateWindow, UpdateReports);
-            StatsEditViewModel = new StatsCreatorWindowViewModel(UpdateWindow, UpdateReports);
+            DatabaseAccessor.LoadPortfolio(new ErrorReports());
+            OptionsToolbarCommands = new OptionsToolbarViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
+            DataView = new BasicDataViewModel(GlobalData.Finances, GlobalData.BenchMarks);
+            SecurityEditViewModel = new SecurityEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
+            BankAccEditViewModel = new BankAccEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
+            SectorEditViewModel = new SectorEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
+            CurrencyEditViewModel = new CurrencyEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
+            StatsEditViewModel = new StatsCreatorWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
             ReportsViewModel = new ReportingWindowViewModel();
         }
         Action<ErrorReports> UpdateReports => (val) => AddReports(val);
@@ -46,10 +46,10 @@ namespace FinanceWindowsViewModels
 
         public void UpdateSubWindowData(object obj)
         {
-               SecurityEditViewModel.UpdateFundListBox();
-               BankAccEditViewModel.UpdateAccountListBox();
-                SectorEditViewModel.UpdateSectorListBox();
-                StatsEditViewModel.GenerateStatistics();
+            SecurityEditViewModel.UpdateFundListBox();
+            BankAccEditViewModel.UpdateAccountListBox();
+            SectorEditViewModel.UpdateSectorListBox();
+            StatsEditViewModel.GenerateStatistics();
             CurrencyEditViewModel.UpdateSectorListBox();
         }
 

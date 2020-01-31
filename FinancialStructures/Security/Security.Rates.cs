@@ -46,7 +46,7 @@ namespace FinancialStructures.FinanceStructures
                 return new DailyValuation(DateTime.MinValue, 0.0); ;
             }
             double currencyValue = currency == null ? 1.0 : currency.Value(firstDate.Day).Value;
-            double latestValue = firstDate.Value * fShares.FirstValue() *currencyValue;
+            double latestValue = firstDate.Value * fShares.FirstValue() * currencyValue;
 
             return new DailyValuation(firstDate.Day, latestValue);
         }

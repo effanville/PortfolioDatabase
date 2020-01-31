@@ -1,7 +1,6 @@
 ﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceFunctionsList;
 using System;
-using System.Collections.Generic;
 
 namespace FinancialStructures.FinanceStructures
 {

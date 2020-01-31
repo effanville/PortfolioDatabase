@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FinancialStructures.Database
 {

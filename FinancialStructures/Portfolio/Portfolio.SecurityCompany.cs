@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using FinancialStructures.DataStructures;
+﻿using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceFunctionsList;
 using FinancialStructures.FinanceStructures;
+using System;
+using System.Collections.Generic;
 
 namespace FinancialStructures.Database
 {
@@ -25,7 +25,7 @@ namespace FinancialStructures.Database
         public static double CompanyRecentChange(this Portfolio portfolio, string company)
         {
             double total = 0;
-            
+
             var securities = portfolio.CompanySecurities(company);
             if (securities.Count == 0)
             {
@@ -33,7 +33,7 @@ namespace FinancialStructures.Database
             }
             DateTime recentDate = securities[0].LastEarlierValuation(securities[0].LatestValue().Day).Day;
             foreach (var desired in securities)
-            { 
+            {
                 if (desired.Any())
                 {
                     var currency = SecurityCurrency(portfolio, desired);
@@ -43,7 +43,7 @@ namespace FinancialStructures.Database
                         return 0.0;
                     }
 
-                    total +=( needed.Value - desired.LastEarlierValuation(needed.Day, currency).Value);
+                    total += (needed.Value - desired.LastEarlierValuation(needed.Day, currency).Value);
                 }
             }
 

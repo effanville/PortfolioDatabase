@@ -12,7 +12,7 @@ namespace FinancialStructures.DataStructures
         /// </summary>
         public override string ToString()
         {
-            return string.Concat(Day.Day.ToString().PadLeft(2,'0'), "/", Day.Month.ToString().PadLeft(2, '0'), "/", Day.Year, ", ", Value.ToString());
+            return string.Concat(Day.Day.ToString().PadLeft(2, '0'), "/", Day.Month.ToString().PadLeft(2, '0'), "/", Day.Year, ", ", Value.ToString());
         }
 
         /// <summary>

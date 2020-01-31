@@ -99,15 +99,15 @@ namespace FinancialStructures.DataStructures
                     {
                         htmlData += "<td>";
                     }
-                    if (double.TryParse(properties[i].GetValue(this).ToString(),out double value))
+                    if (double.TryParse(properties[i].GetValue(this).ToString(), out double value))
                     {
                         htmlData += MathSupport.Trunc(value);
                     }
-                    else 
+                    else
                     {
                         htmlData += properties[i].GetValue(this);
                     }
-                    
+
                     htmlData += "</td>";
                 }
             }
@@ -118,12 +118,12 @@ namespace FinancialStructures.DataStructures
         public override string ToString()
         {
             //both name and company cannot be null so this is all cases.
-            if (string.IsNullOrEmpty(Company)&& !string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Company) && !string.IsNullOrEmpty(Name))
             {
                 return Name + "-" + base.ToString();
             }
             if (string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Company))
-            { 
+            {
                 return Company + "-" + base.ToString();
             }
 

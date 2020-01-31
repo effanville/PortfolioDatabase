@@ -1,18 +1,19 @@
-﻿using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.Database;
+﻿using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
+using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GUIAccessorFunctions;
 using GUISupport;
+using PADGlobals;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using GlobalHeldData;
-using PADGlobals;
 
 namespace FinanceWindowsViewModels
 {
     public class CurrencyEditWindowViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
         private List<NameData> fPreEditSectorNames;
 
         private List<NameData> fSectorNames;
@@ -63,12 +64,12 @@ namespace FinanceWindowsViewModels
         private int selectedIndex;
         public AccountDayDataView SelectedDataPoint
         {
-            get 
-            { 
+            get
+            {
                 return fSelectedDataPoint;
             }
-            set 
-            { 
+            set
+            {
                 fSelectedDataPoint = value;
                 int index = SelectedSectorData.IndexOf(value);
                 if (selectedIndex != index)
@@ -76,7 +77,7 @@ namespace FinanceWindowsViewModels
                     selectedIndex = index;
                     fOldSelectedData = fSelectedDataPoint?.Copy();
                 }
-                OnPropertyChanged(); 
+                OnPropertyChanged();
             }
         }
 
@@ -95,7 +96,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (fSelectedName != null)
             {
-                await DataUpdater.DownloadCurrency(fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
+                await DataUpdater.DownloadCurrency(Portfolio, fSelectedName.Name, UpdateReports, reports).ConfigureAwait(false);
             }
             UpdateMainWindow(true);
             if (reports.Any())
@@ -107,9 +108,9 @@ namespace FinanceWindowsViewModels
         public void UpdateSectorListBox()
         {
             var currentSelectedName = SelectedName;
-            SectorNames = GlobalData.Finances.GetCurrencyNames();
+            SectorNames = Portfolio.GetCurrencyNames();
             SectorNames.Sort();
-            fPreEditSectorNames = GlobalData.Finances.GetCurrencyNames();
+            fPreEditSectorNames = Portfolio.GetCurrencyNames();
             fPreEditSectorNames.Sort();
 
             for (int i = 0; i < SectorNames.Count; i++)
@@ -125,7 +126,7 @@ namespace FinanceWindowsViewModels
         {
             if (fSelectedName != null)
             {
-                if (GlobalData.Finances.TryGetCurrencyData(fSelectedName.Name, out List<AccountDayDataView> values))
+                if (Portfolio.TryGetCurrencyData(fSelectedName.Name, out List<AccountDayDataView> values))
                 {
                     SelectedSectorData = values;
                 }
@@ -145,7 +146,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateSector(Object obj)
         {
             var reports = new ErrorReports();
-            if (GlobalData.Finances.GetCurrencies().Count != SectorNames.Count)
+            if (Portfolio.GetCurrencies().Count != SectorNames.Count)
             {
                 bool edited = false;
                 foreach (var name in SectorNames)
@@ -153,7 +154,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        GlobalData.Finances.TryAddCurrency(name.Name, name.Url, reports);
+                        Portfolio.TryAddCurrency(name.Name, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
@@ -173,7 +174,7 @@ namespace FinanceWindowsViewModels
                     if (name.NewValue && !string.IsNullOrEmpty(name.Name))
                     {
                         edited = true;
-                        GlobalData.Finances.TryEditCurrencyName(fPreEditSectorNames[i].Name, name.Name, name.Url, reports);
+                        Portfolio.TryEditCurrencyName(fPreEditSectorNames[i].Name, name.Name, name.Url, reports);
                         name.NewValue = false;
                     }
                 }
@@ -196,9 +197,9 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
-                if (GlobalData.Finances.GetCurrencyFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
+                if (Portfolio.GetCurrencyFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
                 {
-                    GlobalData.Finances.TryAddDataToCurrency(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
+                    Portfolio.TryAddDataToCurrency(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
                     SelectedDataPoint.NewValue = false;
                 }
                 else
@@ -211,7 +212,7 @@ namespace FinanceWindowsViewModels
                         if (name.NewValue)
                         {
                             edited = true;
-                            GlobalData.Finances.TryEditCurrency(SelectedName.Name, fOldSelectedData.Date, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
+                            Portfolio.TryEditCurrency(SelectedName.Name, fOldSelectedData.Date, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
                             name.NewValue = false;
                         }
                     }
@@ -234,7 +235,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null && SelectedDataPoint != null)
             {
-                if (GlobalData.Finances.TryDeleteCurrencyData(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports))
+                if (Portfolio.TryDeleteCurrencyData(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports))
                 {
                     UpdateSectorListBox();
                 }
@@ -253,9 +254,9 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null)
             {
-                GlobalData.Finances.TryDeleteCurrency(SelectedName.Name);
+                Portfolio.TryDeleteCurrency(SelectedName.Name);
             }
-            else if (GlobalData.Finances.GetCurrencies().Count != SectorNames.Count)
+            else if (Portfolio.GetCurrencies().Count != SectorNames.Count)
             {
 
             }
@@ -275,8 +276,10 @@ namespace FinanceWindowsViewModels
 
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
-        public CurrencyEditWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public CurrencyEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             SectorNames = new List<NameData>();

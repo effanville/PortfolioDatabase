@@ -1,5 +1,5 @@
-﻿using FinancialStructures.FinanceStructures;
-using FinancialStructures.Database;
+﻿using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 using System;
 using System.Collections.Generic;
 using System.IO;

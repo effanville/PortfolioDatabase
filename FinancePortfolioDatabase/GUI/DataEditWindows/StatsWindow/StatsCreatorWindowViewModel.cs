@@ -1,22 +1,25 @@
-﻿using FinancialStructures.DataStructures;
+﻿using FinanceWindows;
+using FinancialStructures.Database;
+using FinancialStructures.DataStructures;
+using FinancialStructures.DisplayStructures;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using FinancialStructures.Database;
 using GlobalHeldData;
 using GUISupport;
-using FinanceWindows;
+using PortfolioStatsCreatorHelper;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
-using PortfolioStatsCreatorHelper;
-using FinancialStructures.DisplayStructures;
 
 namespace FinanceWindowsViewModels
 {
     public class StatsCreatorWindowViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
         private bool fDisplayValueFunds = true;
         public bool DisplayValueFunds
         {
@@ -37,7 +40,7 @@ namespace FinanceWindowsViewModels
         public string StatsFilepath
         {
             get { return fStatsFilepath; }
-            set { fStatsFilepath = value; OnPropertyChanged(); if (value != null) { DisplayStats = new Uri(fStatsFilepath); }  }
+            set { fStatsFilepath = value; OnPropertyChanged(); if (value != null) { DisplayStats = new Uri(fStatsFilepath); } }
         }
 
         private int fSelectedIndex;
@@ -61,7 +64,7 @@ namespace FinanceWindowsViewModels
         {
             var optionWindow = new StatsOptionsWindow();
             Action<string> StatsOptionFeedback = (filePath) => StatsFeedback(optionWindow, filePath);
-            var context = new StatsOptionsViewModel(ExportType.CSV, UpdateReports, StatsOptionFeedback);
+            var context = new StatsOptionsViewModel(Portfolio, Sectors, ExportType.CSV, UpdateReports, StatsOptionFeedback);
             optionWindow.DataContext = context;
             optionWindow.ShowDialog();
         }
@@ -112,7 +115,7 @@ namespace FinanceWindowsViewModels
                     saving.FileName += ".csv";
                 }
 
-                CSVHistoryWriter.WriteHistoryToCSV(GlobalData.Finances, UpdateReports, saving.FileName, HistoryGapDays);
+                CSVHistoryWriter.WriteHistoryToCSV(Portfolio, UpdateReports, saving.FileName, HistoryGapDays);
             }
             else
             {
@@ -129,7 +132,7 @@ namespace FinanceWindowsViewModels
         {
             var optionWindow = new StatsOptionsWindow();
             Action<string> StatsOptionFeedback = (filePath) => StatsFeedback(optionWindow, filePath);
-            var context = new StatsOptionsViewModel(ExportType.HTML, UpdateReports, StatsOptionFeedback);
+            var context = new StatsOptionsViewModel(Portfolio, Sectors, ExportType.HTML, UpdateReports, StatsOptionFeedback);
             optionWindow.DataContext = context;
             optionWindow.ShowDialog();
         }
@@ -221,18 +224,20 @@ namespace FinanceWindowsViewModels
 
         public async void GenerateStatistics()
         {
-            SecuritiesStats = GlobalData.Finances.GenerateSecurityStatistics(DisplayValueFunds);
-            SecuritiesInvestments = GlobalData.Finances.AllSecuritiesInvestments();
-            BankAccountStats = GlobalData.Finances.GenerateBankAccountStatistics(DisplayValueFunds);
-            DatabaseStats = GlobalData.Finances.GenerateDatabaseStatistics();
-            HistoryStats = await GlobalData.Finances.GenerateHistoryStats(HistoryGapDays).ConfigureAwait(false);
+            SecuritiesStats = Portfolio.GenerateSecurityStatistics(DisplayValueFunds);
+            SecuritiesInvestments = Portfolio.AllSecuritiesInvestments();
+            BankAccountStats = Portfolio.GenerateBankAccountStatistics(DisplayValueFunds);
+            DatabaseStats = Portfolio.GenerateDatabaseStatistics();
+            HistoryStats = await Portfolio.GenerateHistoryStats(HistoryGapDays).ConfigureAwait(false);
             DistributionValues = HistoryStats[HistoryStats.Count - 1].SecurityValues;
             DistributionValues2 = HistoryStats[HistoryStats.Count - 1].BankAccValues;
             DistributionValues3 = HistoryStats[HistoryStats.Count - 1].SectorValues;
         }
 
-        public StatsCreatorWindowViewModel(Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public StatsCreatorWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             GenerateStatistics();
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;

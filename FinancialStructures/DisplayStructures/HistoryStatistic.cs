@@ -41,14 +41,14 @@ namespace FinancialStructures.DisplayStructures
             outputCSVStyle += string.Concat(SecurityValue.Value, ",");
             foreach (var value in SecurityValues)
             {
-                outputCSVStyle += string.Concat( value.Value, ",");
+                outputCSVStyle += string.Concat(value.Value, ",");
             }
             foreach (var value in BankAccValues)
-            { 
-                outputCSVStyle += string.Concat(value.Value, ","); 
+            {
+                outputCSVStyle += string.Concat(value.Value, ",");
             }
             foreach (var value in SectorValues)
-            { 
+            {
                 outputCSVStyle += string.Concat(value.Value, ",");
             }
 
@@ -81,7 +81,7 @@ namespace FinancialStructures.DisplayStructures
 
         public string BankAccValuesString
         {
-            get 
+            get
             {
                 var stringRepresentation = string.Empty;
                 foreach (var data in BankAccValues)
@@ -89,7 +89,7 @@ namespace FinancialStructures.DisplayStructures
                     stringRepresentation = stringRepresentation + "  " + data.ToString();
                 }
                 return stringRepresentation;
-            } 
+            }
         }
 
         public List<DailyValuation_Named> SectorValues { get; set; } = new List<DailyValuation_Named>();
@@ -146,7 +146,7 @@ namespace FinancialStructures.DisplayStructures
             var companyBankNames = portfolio.GetBankAccountCompanyNames();
             foreach (var companyName in companyBankNames)
             {
-                var companyValue = new DailyValuation_Named(null, companyName, date, MathSupport.Truncate(portfolio.BankAccountCompanyValue(companyName,date)));
+                var companyValue = new DailyValuation_Named(null, companyName, date, MathSupport.Truncate(portfolio.BankAccountCompanyValue(companyName, date)));
                 BankAccValues.Add(companyValue);
             }
 

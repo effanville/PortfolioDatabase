@@ -1,9 +1,11 @@
-﻿using FinancialStructures.DataStructures;
+﻿using FinancialStructures.Database;
+using FinancialStructures.DataStructures;
+using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
+using GlobalHeldData;
 using GUISupport;
 using PortfolioStatsCreatorHelper;
-using GlobalHeldData;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -13,6 +15,8 @@ namespace FinanceWindowsViewModels
 {
     public class StatsOptionsViewModel : PropertyChangedBase
     {
+        private Portfolio Portfolio;
+        private List<Sector> Sectors;
         private bool fDisplayValueFunds = true;
         public bool displayValueFunds
         {
@@ -55,7 +59,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteExportHTMLCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = GlobalHeldData.GlobalData.DatabaseName + "-HTMLStats.html", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = GlobalData.DatabaseName + "-HTMLStats.html", InitialDirectory = GlobalData.fStatsDirectory };
             saving.Filter = "Html file|*.html|All files|*.*";
             string path = null;
             if (saving.ShowDialog() == DialogResult.OK)
@@ -77,8 +81,8 @@ namespace FinanceWindowsViewModels
                         BankSelected.Add(column.Name);
                     }
                 }
-                var options = new UserOptions() { DisplayValueFunds = displayValueFunds, Spacing = spacing, Colours = colours, SecurityDataToExport = selected, BankAccDataToExport = BankSelected};
-                PortfolioStatsCreators.CreateHTMLPageCustom(GlobalData.Finances, GlobalData.BenchMarks, saving.FileName, options);
+                var options = new UserOptions() { DisplayValueFunds = displayValueFunds, Spacing = spacing, Colours = colours, SecurityDataToExport = selected, BankAccDataToExport = BankSelected };
+                PortfolioStatsCreators.CreateHTMLPageCustom(Portfolio, Sectors, saving.FileName, options);
                 reports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
             else
@@ -120,7 +124,7 @@ namespace FinanceWindowsViewModels
                     }
                 }
                 var options = new UserOptions() { DisplayValueFunds = displayValueFunds, Spacing = spacing, Colours = colours, SecurityDataToExport = selected, BankAccDataToExport = BankSelected };
-                CSVStatsCreator.CreateCSVPageCustom(GlobalData.Finances, GlobalData.BenchMarks, saving.FileName, options);
+                CSVStatsCreator.CreateCSVPageCustom(Portfolio, Sectors, saving.FileName, options);
                 reports.AddGeneralReport(ReportType.Report, "Created statistics page");
             }
             else
@@ -140,8 +144,10 @@ namespace FinanceWindowsViewModels
         Action<ErrorReports> UpdateReports;
         private Action<string> CloseWindowAction;
 
-        public StatsOptionsViewModel(ExportType exportType, Action<ErrorReports> updateReports, Action<string> CloseWindow)
+        public StatsOptionsViewModel(Portfolio portfolio, List<Sector> sectors, ExportType exportType, Action<ErrorReports> updateReports, Action<string> CloseWindow)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateReports = updateReports;
             CloseWindowAction = CloseWindow;
             if (exportType == ExportType.HTML)
@@ -152,7 +158,7 @@ namespace FinanceWindowsViewModels
             {
                 ExportCommand = new BasicCommand(ExecuteExportCSVCommand);
             }
-            
+
             var totals = new SecurityStatsHolder();
             var properties = totals.GetType().GetProperties();
             ColumnNames = new List<VisibleName>();
@@ -167,8 +173,8 @@ namespace FinanceWindowsViewModels
             foreach (var info in props)
             {
                 if (info.Name == "Day")
-                { 
-                    BankColumnNames.Add(new VisibleName(info.Name, false)); 
+                {
+                    BankColumnNames.Add(new VisibleName(info.Name, false));
                 }
                 else
                 {

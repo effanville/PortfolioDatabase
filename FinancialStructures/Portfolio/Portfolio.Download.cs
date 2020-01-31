@@ -1,6 +1,6 @@
 ﻿using FinancialStructures.DataStructures;
-using FinancialStructures.ReportingStructures;
 using FinancialStructures.FinanceStructures;
+using FinancialStructures.ReportingStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -289,7 +289,7 @@ namespace FinancialStructures.Database
             return double.NaN;
         }
 
-        
+
 
         private static double ProcessFromBloomBerg(string data)
         {
@@ -379,7 +379,7 @@ namespace FinancialStructures.Database
             updateReports(reports);
         }
 
-        public async static Task DownloadCurrencyLatest(Currency currency,Action<ErrorReports> updateReports, ErrorReports reports)
+        public async static Task DownloadCurrencyLatest(Currency currency, Action<ErrorReports> updateReports, ErrorReports reports)
         {
             string data = await DownloadFromURL(currency.GetUrl(), reports).ConfigureAwait(false);
             if (string.IsNullOrEmpty(data))

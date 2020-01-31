@@ -34,7 +34,7 @@ namespace FinanceWindows
                     MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                SaveFileDialog saving = new SaveFileDialog(){ DefaultExt = "xml", FileName = GlobalData.DatabaseName + Path.GetExtension(GlobalData.fDatabaseFilePath), InitialDirectory = Path.GetDirectoryName(GlobalData.fDatabaseFilePath) };
+                SaveFileDialog saving = new SaveFileDialog() { DefaultExt = "xml", FileName = GlobalData.DatabaseName + Path.GetExtension(GlobalData.fDatabaseFilePath), InitialDirectory = Path.GetDirectoryName(GlobalData.fDatabaseFilePath) };
                 saving.Filter = "XML Files|*.xml|All Files|*.*";
                 if (saving.ShowDialog() == true)
                 {
