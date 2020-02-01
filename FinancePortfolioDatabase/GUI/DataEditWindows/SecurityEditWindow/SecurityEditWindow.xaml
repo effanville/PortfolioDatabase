@@ -3,105 +3,50 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-      xmlns:local="clr-namespace:FinanceWindows.SecurityEdit"
+      xmlns:vm="clr-namespace:FinanceWindowsViewModels"
+      xmlns:view="clr-namespace:FinanceWindows"
+      xmlns:cl="clr-namespace:GUISupport"
       mc:Ignorable="d">
+
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <Style TargetType="TabItem">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Header,Mode=OneWay}" FontSize="18" FontWeight="Bold" Foreground="DarkBlue" Width="Auto"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Grid.Resources>
+    
     <Grid x:Name="parent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <local:UserButtons Grid.Row="0"
-                           DataContext="{Binding UserClickingVM}"/>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0" 
-                      ToolTip="Lists all securities currently in the database. Select one to edit data.">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <DataGrid Grid.Row="1"
-                              Margin="5"
-                              SelectionUnit="FullRow"
-                              CanUserAddRows="True"
-                              CanUserDeleteRows="False"
-                              AutoGenerateColumns="False"
-                              ItemsSource="{Binding Path=FundNames, Mode=TwoWay}"
-                              SelectedItem="{Binding Path=selectedName, Mode=TwoWay}"
-                              ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="RowEditEnding">
-                            <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=CreateSecurityCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Company" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Company, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Name" MaxWidth="200" MinWidth="70" Binding="{Binding Path=Name, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Currency" MaxWidth="400" MinWidth="30" Binding="{Binding Path=Currency, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Url" MaxWidth="400" MinWidth="70" Binding="{Binding Path=Url, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Sectors" MaxWidth="400" MinWidth="70" Binding="{Binding Path=Sectors, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Last Date" MaxWidth="200" MinWidth="50" Binding="{Binding Path=DateToRecord, StringFormat=\{0:dd.MM.yyyy\}}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-
-            <Grid ToolTip="Shows the data held on the security selected in the Securities in Database list."               
-                      Grid.Column="1">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Label Grid.Row="0"
-                           Content="Selected Security Data"/>
-                
-                <DataGrid Grid.Row="1"
-                              Margin="5"
-                              SelectionUnit="FullRow"
-                              CanUserAddRows="True"
-                              CanUserDeleteRows="False"
-                              AutoGenerateColumns="False"
-                              ItemsSource="{Binding Path=SelectedSecurityData, Mode=TwoWay}"
-                              SelectedItem="{Binding Path=selectedValues, Mode=TwoWay}"
-                              ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <DataGrid.RowValidationRules>
-                    </DataGrid.RowValidationRules>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="RowEditEnding">
-                            <i:InvokeCommandAction Command="{Binding Mode=TwoWay, Path=AddEditSecurityDataCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Date" 
-                                            MinWidth="50"
-                                            Binding="{Binding Path=Date, StringFormat=\{0:dd.MM.yyyy\}, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Unit Price" 
-                                            MinWidth="50"
-                                            Binding="{Binding Path=UnitPrice, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Number of Shares"
-                                            MinWidth="50"
-                                            Binding="{Binding Path=ShareNo, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="Value"
-                                            MinWidth="50"
-                                            Binding="{Binding Path=Value, UpdateSourceTrigger=LostFocus}"/>
-                        <DataGridTextColumn Header="New Investment"
-                                            MinWidth="50"
-                                            Binding="{Binding Path=Investment, UpdateSourceTrigger=LostFocus}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-
-            </Grid>
-
-        </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl x:Name="TabMain"  Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Tabs}" Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}">
+            <TabControl.Resources>
+                <DataTemplate DataType="{x:Type vm:SecurityNamesViewModel}">
+                    <view:SecurityNamesView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:SelectedSecurityViewModel}">
+                    <view:SelectedSecurityView/>
+                </DataTemplate>
+            </TabControl.Resources>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Header}"/>
+                        <Button Background="Transparent" BorderThickness="0" Visibility="{Binding Closable, Converter={StaticResource BoolToVis}}" Height="12" Width="12" Margin="2 2 0 0" Click="Button_Click">
+                            <Image Source="../../GuiSupport/close.png" />
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
     </Grid>
 </Grid>
