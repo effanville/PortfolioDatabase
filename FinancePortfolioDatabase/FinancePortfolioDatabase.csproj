@@ -97,15 +97,23 @@
       <DependentUpon>CurrencyEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml.cs">
-      <DependentUpon>UserButtons.xaml</DependentUpon>
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityNamesView.xaml.cs">
+      <DependentUpon>SecurityNamesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\UserButtonsViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityNamesViewModel.cs" />
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SelectedSecurityView.xaml.cs">
+      <DependentUpon>SelectedSecurityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SelectedSecurityViewModel.cs" />
     <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsViewModel.cs" />
     <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml.cs">
       <DependentUpon>StatsOptionsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\DataEditWindows\StatsWindow\WebBrowserBehaviour.cs" />
+    <Compile Include="GUI\GuiSupport\ClosableItem.cs" />
+    <Compile Include="GUI\GuiSupport\ClosableHeader.xaml.cs">
+      <DependentUpon>ClosableHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\GuiSupport\Colours.cs" />
     <Compile Include="GUI\GuiSupport\OutputHelper.cs" />
     <Compile Include="GUI\GuiSupport\PropertyChangedBase.cs" />
@@ -157,11 +165,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow\UserButtons.xaml">
+    <Page Include="GUI\DataEditWindows\SecurityEditWindow\SecurityNamesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\DataEditWindows\SecurityEditWindow\SelectedSecurityView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\GuiSupport\ClosableHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -256,6 +272,7 @@
     <Resource Include="GUI\GuiSupport\helpicon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="GUI\GuiSupport\close.png" />
     <Content Include="GUI\GuiSupport\help.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

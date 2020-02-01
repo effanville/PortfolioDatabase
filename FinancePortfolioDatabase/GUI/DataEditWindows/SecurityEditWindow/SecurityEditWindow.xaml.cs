@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using FinanceWindowsViewModels;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace FinanceWindows
 {
@@ -10,6 +12,12 @@ namespace FinanceWindows
         public SecurityEditWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var VM = this.DataContext as SecurityEditWindowViewModel;
+            VM.Tabs.RemoveAt(TabMain.SelectedIndex);
         }
     }
 }
