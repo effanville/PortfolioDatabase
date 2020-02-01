@@ -1,6 +1,6 @@
 ﻿using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
-using GUIAccessorFunctions;
+using DatabaseAccess;
 using GUISupport;
 using System;
 
@@ -10,7 +10,7 @@ namespace FinanceWindowsViewModels
     {
         public MainWindowViewModel()
         {
-            DatabaseAccessor.LoadPortfolio(new ErrorReports());
+            DatabaseEdit.LoadPortfolio(new ErrorReports());
             OptionsToolbarCommands = new OptionsToolbarViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
             DataView = new BasicDataViewModel(GlobalData.Finances, GlobalData.BenchMarks);
             SecurityEditViewModel = new SecurityEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
@@ -35,22 +35,20 @@ namespace FinanceWindowsViewModels
             {
                 if (!updateReportsOnly)
                 {
-                    DataView.DataUpdate();
+                    DataView.DataUpdate(GlobalData.Finances, GlobalData.BenchMarks);
                 }
 
                 UpdateSubWindowData(false);
             }
         }
 
-        Action<bool> UpdateSubWindow => (val) => UpdateSubWindowData(val);
-
         public void UpdateSubWindowData(object obj)
         {
-            SecurityEditViewModel.UpdateFundListBox();
-            BankAccEditViewModel.UpdateAccountListBox();
-            SectorEditViewModel.UpdateSectorListBox();
-            StatsEditViewModel.GenerateStatistics();
-            CurrencyEditViewModel.UpdateSectorListBox();
+            SecurityEditViewModel.UpdateFundListBox(GlobalData.Finances, GlobalData.BenchMarks);
+            BankAccEditViewModel.UpdateAccountListBox(GlobalData.Finances, GlobalData.BenchMarks);
+            SectorEditViewModel.UpdateSectorListBox(GlobalData.Finances, GlobalData.BenchMarks);
+            StatsEditViewModel.GenerateStatistics(GlobalData.Finances, GlobalData.BenchMarks);
+            CurrencyEditViewModel.UpdateSectorListBox(GlobalData.Finances, GlobalData.BenchMarks);
         }
 
         private OptionsToolbarViewModel fOptionsToolbarCommands;

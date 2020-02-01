@@ -2,7 +2,7 @@
 using FinancialStructures.FinanceStructures;
 using System.Collections.Generic;
 
-namespace SavingDummyClasses
+namespace SavingClasses
 {
     public class AllData
     {

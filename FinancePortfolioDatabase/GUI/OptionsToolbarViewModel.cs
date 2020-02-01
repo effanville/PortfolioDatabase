@@ -3,13 +3,12 @@ using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
-using GUIAccessorFunctions;
+using DatabaseAccess;
 using GUISupport;
 using PADGlobals;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -51,14 +50,18 @@ namespace FinanceWindowsViewModels
         }
         public void ExecuteNewDatabase(Object obj)
         {
-            var reports = new ErrorReports();
-            DatabaseAccessor.ClearPortfolio();
-            DatabaseAccessor.SetFilePath("");
-            DatabaseAccessor.LoadPortfolio(reports);
-            UpdateMainWindow(true);
-            if (reports.Any())
+            DialogResult result = MessageBox.Show("Do you want to load a new database?", "New Database?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
             {
-                UpdateReports(reports);
+                var reports = new ErrorReports();
+                DatabaseEdit.ClearPortfolio();
+                DatabaseEdit.SetFilePath("");
+                DatabaseEdit.LoadPortfolio(reports);
+                UpdateMainWindow(false);
+                if (reports.Any())
+                {
+                    UpdateReports(reports);
+                }
             }
         }
         public void ExecuteSaveDatabase(Object obj)
@@ -68,10 +71,10 @@ namespace FinanceWindowsViewModels
             saving.Filter = "XML Files|*.xml|All Files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
-                DatabaseAccessor.SetFilePath(saving.FileName);
+                DatabaseEdit.SetFilePath(saving.FileName);
             }
 
-            DatabaseAccessor.SavePortfolio(reports);
+            DatabaseEdit.SavePortfolio(reports);
             saving.Dispose();
             UpdateMainWindow(true);
             if (reports.Any())
@@ -80,16 +83,16 @@ namespace FinanceWindowsViewModels
             }
         }
 
-        public async void ExecuteLoadDatabase(Object obj)
+        public void ExecuteLoadDatabase(Object obj)
         {
             var reports = new ErrorReports();
             OpenFileDialog openFile = new OpenFileDialog() { DefaultExt = "xml" };
             openFile.Filter = "XML Files|*.xml|All Files|*.*";
             if (openFile.ShowDialog() == DialogResult.OK)
             {
-                DatabaseAccessor.SetFilePath(openFile.FileName);
-                DatabaseAccessor.ClearPortfolio();
-                await Task.Run(() => DatabaseAccessor.LoadPortfolio(reports));
+                DatabaseEdit.SetFilePath(openFile.FileName);
+                DatabaseEdit.ClearPortfolio();
+                DatabaseEdit.LoadPortfolio(reports);
                 reports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
             }
             openFile.Dispose();

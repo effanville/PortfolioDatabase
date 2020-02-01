@@ -71,11 +71,14 @@ namespace FinanceWindowsViewModels
             set
             {
                 fSelectedDataPoint = value;
-                int index = SelectedSectorData.IndexOf(value);
-                if (selectedIndex != index)
+                if (SelectedSectorData != null)
                 {
-                    selectedIndex = index;
-                    fOldSelectedData = fSelectedDataPoint?.Copy();
+                    int index = SelectedSectorData.IndexOf(value);
+                    if (selectedIndex != index)
+                    {
+                        selectedIndex = index;
+                        fOldSelectedData = fSelectedDataPoint?.Copy();
+                    }
                 }
                 OnPropertyChanged();
             }
@@ -122,6 +125,25 @@ namespace FinanceWindowsViewModels
             }
         }
 
+        public void UpdateSectorListBox(Portfolio portfolio, List<Sector> sectors)
+        {
+            Portfolio = portfolio;
+            Sectors = sectors;
+            var currentSelectedName = SelectedName;
+            SectorNames = Portfolio.GetCurrencyNames();
+            SectorNames.Sort();
+            fPreEditSectorNames = Portfolio.GetCurrencyNames();
+            fPreEditSectorNames.Sort();
+
+            for (int i = 0; i < SectorNames.Count; i++)
+            {
+                if (SectorNames[i].CompareTo(currentSelectedName) == 0)
+                {
+                    SelectedName = SectorNames[i];
+                }
+            }
+        }
+
         private void UpdateSelectedSectorListBox()
         {
             if (fSelectedName != null)
@@ -132,6 +154,10 @@ namespace FinanceWindowsViewModels
                 }
 
                 SelectLatestValue();
+            }
+            else 
+            {
+                SelectedSectorData = null;
             }
         }
 
@@ -278,14 +304,13 @@ namespace FinanceWindowsViewModels
         Action<ErrorReports> UpdateReports;
         public CurrencyEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
-            Portfolio = portfolio;
-            Sectors = sectors;
+            UpdateSectorListBox(portfolio, sectors);
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             SectorNames = new List<NameData>();
             fPreEditSectorNames = new List<NameData>();
             SelectedSectorData = new List<AccountDayDataView>();
-            UpdateSectorListBox();
+            
 
             CreateSectorCommand = new BasicCommand(ExecuteCreateSector);
             EditSectorDataCommand = new BasicCommand(ExecuteEditSectorData);
