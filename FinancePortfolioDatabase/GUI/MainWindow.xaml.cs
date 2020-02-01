@@ -1,7 +1,7 @@
 ﻿using FinanceWindowsViewModels;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
-using GUIAccessorFunctions;
+using DatabaseAccess;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -40,11 +40,11 @@ namespace FinanceWindows
                 {
                     //if (!File.Exists(saving.FileName))
                     {
-                        DatabaseAccessor.SetFilePath(saving.FileName);
+                        DatabaseEdit.SetFilePath(saving.FileName);
                     }
                 }
 
-                DatabaseAccessor.SavePortfolio(new ErrorReports());
+                DatabaseEdit.SavePortfolio(new ErrorReports());
                 // saving.Dispose();
             }
             if (result == MessageBoxResult.Cancel)

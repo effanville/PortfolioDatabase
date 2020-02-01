@@ -1,7 +1,6 @@
 ﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GlobalHeldData;
 using System;
 using System.Collections.Generic;
 
@@ -15,9 +14,9 @@ namespace SectorHelperFunctions
         /// <summary>
         /// Tries to add a sector to the underlying global database
         /// </summary>
-        public static bool TryAddSector(string name, string url, ErrorReports reports)
+        public static bool TryAddSector(List<Sector> sectors, string name, string url, ErrorReports reports)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
@@ -27,16 +26,16 @@ namespace SectorHelperFunctions
             }
             Sector newSector = new Sector(name, url);
             reports.AddReport($"Added sector with name {name}.");
-            GlobalData.BenchMarks.Add(newSector);
+            sectors.Add(newSector);
             return true;
         }
 
         /// <summary>
         /// Returns a sector from the database with specified name.
         /// </summary>
-        public static bool TryGetSector(string name, out Sector Desired)
+        public static bool TryGetSector(List<Sector> sectors, string name, out Sector Desired)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
@@ -47,10 +46,10 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryGetSectorData(string name, out List<AccountDayDataView> data)
+        public static bool TryGetSectorData(List<Sector> sectors, string name, out List<AccountDayDataView> data)
         {
             data = new List<AccountDayDataView>();
-            foreach (Sector sec in GlobalData.BenchMarks)
+            foreach (Sector sec in sectors)
             {
                 if (sec.GetName() == name)
                 {
@@ -65,9 +64,9 @@ namespace SectorHelperFunctions
         /// <summary>
         /// Attempts to add data to the sector. Fails if data already exists
         /// </summary>
-        public static bool TryAddDataToSector(string name, DateTime date, double value)
+        public static bool TryAddDataToSector(List<Sector> sectors, string name, DateTime date, double value)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
@@ -78,9 +77,9 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryEditSector(string name, DateTime oldDate, DateTime date, double value, ErrorReports reports)
+        public static bool TryEditSector(List<Sector> sectors, string name, DateTime oldDate, DateTime date, double value, ErrorReports reports)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
@@ -91,9 +90,9 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryDeleteSectorData(string name, DateTime date, double value, ErrorReports reports)
+        public static bool TryDeleteSectorData(List<Sector> sectors, string name, DateTime date, double value, ErrorReports reports)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
@@ -104,9 +103,9 @@ namespace SectorHelperFunctions
             return false;
         }
 
-        public static bool TryEditSectorName(string oldName, string newName, string url, ErrorReports reports)
+        public static bool TryEditSectorName(List<Sector> sectors, string oldName, string newName, string url, ErrorReports reports)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (sector.GetName() == oldName)
                 {
@@ -123,9 +122,9 @@ namespace SectorHelperFunctions
         /// <summary>
         /// Returns true if sector with given name exists.
         /// </summary>
-        public static bool DoesSectorExist(string name)
+        public static bool DoesSectorExist(List<Sector> sectors, string name)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
@@ -139,13 +138,13 @@ namespace SectorHelperFunctions
         /// <summary>
         /// Deletes sector if sector exists. Does nothing otherwise.
         /// </summary>
-        public static bool TryDeleteSector(string name)
+        public static bool TryDeleteSector(List<Sector> sectors, string name)
         {
-            foreach (var sector in GlobalData.BenchMarks)
+            foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
-                    GlobalData.BenchMarks.Remove(sector);
+                    sectors.Remove(sector);
                     return true;
                 }
             }

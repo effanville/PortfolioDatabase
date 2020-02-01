@@ -14,9 +14,9 @@ namespace FinanceWindowsViewModels
     {
         private Portfolio Portfolio;
         private List<Sector> Sectors;
-        private List<NameCompDate> fPreEditFundNames;
+        private List<NameCompDate> fPreEditFundNames = new List<NameCompDate>();
 
-        private List<NameCompDate> fFundNames;
+        private List<NameCompDate> fFundNames = new List<NameCompDate>();
         /// <summary>
         /// Name and Company data of Funds in database for view.
         /// </summary>
@@ -51,7 +51,7 @@ namespace FinanceWindowsViewModels
         /// <summary>
         /// The pricing data of the selected security.
         /// </summary>
-        private List<DayDataView> fSelectedSecurityData;
+        private List<DayDataView> fSelectedSecurityData = new List<DayDataView>();
         public List<DayDataView> SelectedSecurityData
         {
             get { return fSelectedSecurityData; }
@@ -70,13 +70,15 @@ namespace FinanceWindowsViewModels
             set
             {
                 fSelectedValues = value;
-                int index = SelectedSecurityData.IndexOf(value);
-                if (selectedIndex != index)
+                if (SelectedSecurityData != null)
                 {
-                    selectedIndex = index;
-                    fOldSelectedValues = fSelectedValues?.Copy();
+                    int index = SelectedSecurityData.IndexOf(value);
+                    if (selectedIndex != index)
+                    {
+                        selectedIndex = index;
+                        fOldSelectedValues = fSelectedValues?.Copy();
+                    }
                 }
-
                 OnPropertyChanged();
                 UpdateSubWindows();
             }
@@ -94,8 +96,10 @@ namespace FinanceWindowsViewModels
 
         public ICommand AddEditSecurityDataCommand { get; set; }
 
-        public void UpdateFundListBox()
+        public void UpdateFundListBox(Portfolio portfolio, List<Sector> sectors)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             var currentSelectedName = selectedName;
             FundNames = Portfolio.SecurityNamesAndCompanies();
             FundNames.Sort();
@@ -107,8 +111,11 @@ namespace FinanceWindowsViewModels
                 if (FundNames[i].CompareTo(currentSelectedName) == 0)
                 {
                     selectedName = FundNames[i];
+                    return;
                 }
             }
+
+            selectedName = null;
         }
 
         private void UpdateSelectedSecurityListBox()
@@ -124,6 +131,10 @@ namespace FinanceWindowsViewModels
 
                 SelectLatestValue();
                 UpdateSubWindows();
+            }
+            else 
+            {
+                SelectedSecurityData = null;
             }
         }
 
@@ -241,17 +252,12 @@ namespace FinanceWindowsViewModels
 
         public SecurityEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
-            Portfolio = portfolio;
-            Sectors = sectors;
+            UpdateFundListBox(portfolio, sectors);
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             UserClickingVM = new UserButtonsViewModel(Portfolio, updateWindow, updateReports, selectedName, selectedValues);
 
-            fFundNames = new List<NameCompDate>();
-            fPreEditFundNames = new List<NameCompDate>();
-            fSelectedSecurityData = new List<DayDataView>();
-
-            UpdateFundListBox();
+            
 
             CreateSecurityCommand = new BasicCommand(ExecuteCreateEditCommand);
             AddEditSecurityDataCommand = new BasicCommand(ExecuteAddEditSecData);

@@ -1,7 +1,7 @@
 ﻿using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
-using GUIAccessorFunctions;
+using DatabaseAccess;
 using GUISupport;
 using System.Collections.Generic;
 
@@ -40,13 +40,15 @@ namespace FinanceWindowsViewModels
             set { fCurrencyNames = value; OnPropertyChanged(); }
         }
 
-        public void DataUpdate()
+        public void DataUpdate(Portfolio portfolio, List<Sector> sectors)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             FundNames = Portfolio.SecurityNamesAndCompanies();
             FundNames.Sort();
             AccountNames = Portfolio.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
-            SectorNames = DatabaseAccessor.GetSectorNames();
+            SectorNames = DatabaseEdit.GetSectorNames();
             SectorNames.Sort();
             CurrencyNames = Portfolio.GetCurrencyNames();
             CurrencyNames.Sort();
@@ -54,9 +56,7 @@ namespace FinanceWindowsViewModels
 
         public BasicDataViewModel(Portfolio portfolio, List<Sector> sectors)
         {
-            Portfolio = portfolio;
-            Sectors = sectors;
-            DataUpdate();
+            DataUpdate(portfolio, sectors);
         }
     }
 }

@@ -66,11 +66,14 @@ namespace FinanceWindowsViewModels
             set
             {
                 fSelectedValues = value;
-                int index = SelectedAccountData.IndexOf(value);
-                if (selectedIndex != index)
+                if (SelectedAccountData != null)
                 {
-                    selectedIndex = index;
-                    fOldSelectedValue = fSelectedValues?.Copy();
+                    int index = SelectedAccountData.IndexOf(value);
+                    if (selectedIndex != index)
+                    {
+                        selectedIndex = index;
+                        fOldSelectedValue = fSelectedValues?.Copy();
+                    }
                 }
                 OnPropertyChanged();
             }
@@ -97,6 +100,25 @@ namespace FinanceWindowsViewModels
             if (reports.Any())
             {
                 UpdateReports(reports);
+            }
+        }
+
+        public void UpdateAccountListBox(Portfolio portfolio, List<Sector> sectors)
+        {
+            Portfolio = portfolio;
+            Sectors = sectors;
+            var currentSelectionName = selectedName;
+            AccountNames = Portfolio.GetBankAccountNamesAndCompanies();
+            fPreEditAccountNames = Portfolio.GetBankAccountNamesAndCompanies();
+            AccountNames.Sort();
+            fPreEditAccountNames.Sort();
+
+            for (int i = 0; i < AccountNames.Count; i++)
+            {
+                if (AccountNames[i].CompareTo(currentSelectionName) == 0)
+                {
+                    selectedName = AccountNames[i];
+                }
             }
         }
 
@@ -130,6 +152,10 @@ namespace FinanceWindowsViewModels
                 }
 
                 SelectLatestValue();
+            }
+            else
+            {
+                SelectedAccountData = null;
             }
         }
 

@@ -1,48 +1,20 @@
-﻿using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
+﻿using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
 using GlobalHeldData;
-using SavingDummyClasses;
+using SavingClasses;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace GUIAccessorFunctions
+namespace DatabaseAccess
 {
     /// <summary>
     /// Class holding functions for User Interfaces to edit the global database.
     /// </summary>
-    public static class DatabaseAccessor
+    public static class DatabaseEdit
     {
-        /// <summary>
-        /// returns a copy of the 
-        /// </summary>
-        public static List<Sector> GetBenchMarks()
-        {
-            var output = new List<Sector>();
-            foreach (var sector in GlobalData.BenchMarks)
-            {
-                output.Add(sector);
-            }
-            return output;
-        }
-
-        public static Sector GetSectorFromName(string name)
-        {
-            var benchmarks = GetBenchMarks();
-            foreach (var sector in benchmarks)
-            {
-                if (sector.GetName() == name)
-                {
-                    return sector.Copy();
-                }
-            }
-
-            return null;
-        }
-
         public static List<NameData> GetSectorNames()
         {
             var outputs = new List<NameData>();
@@ -81,7 +53,7 @@ namespace GUIAccessorFunctions
 
         public static void SavePortfolio(ErrorReports reports)
         {
-            var toSave = new AllData(GlobalData.Finances.GetPortfolio(), GetBenchMarks());
+            var toSave = new AllData(GlobalData.Finances, GlobalData.BenchMarks);
             if (GlobalData.fDatabaseFilePath != null)
             {
                 WriteToXmlFile(GlobalData.fDatabaseFilePath, toSave);

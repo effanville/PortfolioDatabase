@@ -222,6 +222,20 @@ namespace FinanceWindowsViewModels
             set { fHistoryGapDays = value; OnPropertyChanged(); }
         }
 
+        public async void GenerateStatistics(Portfolio portfolio, List<Sector> sectors)
+        {
+            Portfolio = portfolio;
+            Sectors = sectors;
+            SecuritiesStats = Portfolio.GenerateSecurityStatistics(DisplayValueFunds);
+            SecuritiesInvestments = Portfolio.AllSecuritiesInvestments();
+            BankAccountStats = Portfolio.GenerateBankAccountStatistics(DisplayValueFunds);
+            DatabaseStats = Portfolio.GenerateDatabaseStatistics();
+            HistoryStats = await Portfolio.GenerateHistoryStats(HistoryGapDays).ConfigureAwait(false);
+            DistributionValues = HistoryStats[HistoryStats.Count - 1].SecurityValues;
+            DistributionValues2 = HistoryStats[HistoryStats.Count - 1].BankAccValues;
+            DistributionValues3 = HistoryStats[HistoryStats.Count - 1].SectorValues;
+        }
+
         public async void GenerateStatistics()
         {
             SecuritiesStats = Portfolio.GenerateSecurityStatistics(DisplayValueFunds);
@@ -236,9 +250,7 @@ namespace FinanceWindowsViewModels
 
         public StatsCreatorWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
-            Portfolio = portfolio;
-            Sectors = sectors;
-            GenerateStatistics();
+            GenerateStatistics(portfolio, sectors);
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
             CreateCSVStatsCommand = new BasicCommand(ExecuteExportToCSVCommand);
