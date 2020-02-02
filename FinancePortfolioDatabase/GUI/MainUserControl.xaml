@@ -50,7 +50,7 @@
                      Width="107"
                      VerticalAlignment="Stretch"
                      Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
-                <local:BankAccEditWindow  DataContext="{Binding BankAccEditViewModel}"
+                <local:SingleValueEditWindow  DataContext="{Binding BankAccEditNewViewModel}"
                                           Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
                                           Margin="-2"/>
             </TabItem>
@@ -60,7 +60,7 @@
                      Width="107"
                      VerticalAlignment="Stretch"
                      Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
-                <local:SectorEditWindow  DataContext="{Binding SectorEditViewModel}"
+                <local:SingleValueEditWindow DataContext="{Binding SectorEditNewViewModel}"
                                          Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
                                          Margin="-2"/>
             </TabItem>
@@ -70,7 +70,7 @@
                      Width="107"
                      VerticalAlignment="Stretch"
                      Background="{Binding Source={x:Static cl:Colours.BackgroundSecondaryBrush}}">
-                <local:CurrencyEditWindow  DataContext="{Binding CurrencyEditViewModel}"
+                <local:SingleValueEditWindow DataContext="{Binding CurrencyEditNewViewModel}"
                                            Background="{Binding Source={x:Static cl:Colours.BackgroundBrush}}"
                                            Margin="-2"/>
             </TabItem>

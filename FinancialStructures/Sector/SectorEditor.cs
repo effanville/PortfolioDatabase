@@ -11,6 +11,11 @@ namespace SectorHelperFunctions
     /// </summary>
     public static class SectorEditor
     {
+
+        public static bool TryAddSector(List<Sector> sectors, NameData name, ErrorReports reports)
+        { 
+            return TryAddSector(sectors, name.Name, name.Url, reports);
+        }
         /// <summary>
         /// Tries to add a sector to the underlying global database
         /// </summary>
@@ -61,20 +66,43 @@ namespace SectorHelperFunctions
             return false;
         }
 
+        public static List<AccountDayDataView> SectorData(List<Sector> sectors, NameData name, ErrorReports reports)
+        {
+            foreach (Sector sec in sectors)
+            {
+                if (sec.GetName() == name.Name)
+                {
+                    return sec.GetDataForDisplay();
+                }
+            }
+            reports.AddError($"Sector {name.Name} does not exist.");
+            return new List<AccountDayDataView>();
+        }
+
+        public static bool TryAddDataToSector(List<Sector> sectors, NameData name, AccountDayDataView value, ErrorReports reports)
+        {
+            return TryAddDataToSector(sectors, name.Name, value.Date, value.Amount, reports);
+        }
+
         /// <summary>
         /// Attempts to add data to the sector. Fails if data already exists
         /// </summary>
-        public static bool TryAddDataToSector(List<Sector> sectors, string name, DateTime date, double value)
+        public static bool TryAddDataToSector(List<Sector> sectors, string name, DateTime date, double value, ErrorReports reports)
         {
             foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
-                    return sector.TryAddData(date, value);
+                    return sector.TryAddData(date, value, reports);
                 }
             }
-
+            reports.AddError($"Could not find sector {name}");
             return false;
+        }
+
+        public static bool TryEditSector(List<Sector> sectors, NameData name, AccountDayDataView oldData, AccountDayDataView newData, ErrorReports reports)
+        {
+            return TryEditSector(sectors, name.Name, oldData.Date, newData.Date, newData.Amount, reports);
         }
 
         public static bool TryEditSector(List<Sector> sectors, string name, DateTime oldDate, DateTime date, double value, ErrorReports reports)
@@ -90,6 +118,11 @@ namespace SectorHelperFunctions
             return false;
         }
 
+        public static bool TryDeleteSectorData(List<Sector> sectors, NameData name, AccountDayDataView value, ErrorReports reports)
+        {
+            return TryDeleteSectorData(sectors, name.Name, value.Date, value.Amount, reports);
+        }
+
         public static bool TryDeleteSectorData(List<Sector> sectors, string name, DateTime date, double value, ErrorReports reports)
         {
             foreach (var sector in sectors)
@@ -101,6 +134,11 @@ namespace SectorHelperFunctions
             }
 
             return false;
+        }
+
+        public static bool TryEditSectorName(List<Sector> sectors, NameData oldName, NameData newName, ErrorReports reports)
+        { 
+            return TryEditSectorName(sectors, oldName.Name, newName.Name, newName.Url, reports); 
         }
 
         public static bool TryEditSectorName(List<Sector> sectors, string oldName, string newName, string url, ErrorReports reports)
@@ -135,15 +173,21 @@ namespace SectorHelperFunctions
             return false;
         }
 
+        public static bool TryDeleteSector(List<Sector> sectors, NameData name, ErrorReports reports)
+        { 
+            return TryDeleteSector(sectors, name.Name, reports);
+        }
+
         /// <summary>
         /// Deletes sector if sector exists. Does nothing otherwise.
         /// </summary>
-        public static bool TryDeleteSector(List<Sector> sectors, string name)
+        public static bool TryDeleteSector(List<Sector> sectors, string name, ErrorReports reports)
         {
             foreach (var sector in sectors)
             {
                 if (name == sector.GetName())
                 {
+                    reports.AddReport($"Removed sector {name}");
                     sectors.Remove(sector);
                     return true;
                 }

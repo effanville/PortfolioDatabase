@@ -392,7 +392,7 @@ namespace FinancialStructures.Database
                 return;
             }
 
-            currency.TryAddData(DateTime.Today, value);
+            currency.TryAddData(DateTime.Today, value, reports);
             updateReports(reports);
         }
 
@@ -416,7 +416,7 @@ namespace FinancialStructures.Database
             {
                 return;
             }
-            sector.TryAddData(DateTime.Today, value);
+            sector.TryAddData(DateTime.Today, value, reports);
             updateReports(reports);
         }
     }

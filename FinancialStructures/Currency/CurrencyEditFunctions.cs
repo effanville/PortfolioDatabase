@@ -60,10 +60,11 @@ namespace FinancialStructures.FinanceStructures
             return fValues.ValueExists(date, out index);
         }
 
-        public bool TryAddData(DateTime date, double value)
+        public bool TryAddData(DateTime date, double value, ErrorReports reports)
         {
             if (DoesDataExist(date, out int _))
             {
+                reports.AddError("Data already exists.");
                 return false;
             }
 
