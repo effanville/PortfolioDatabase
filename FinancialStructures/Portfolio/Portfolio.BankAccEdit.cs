@@ -74,6 +74,20 @@ namespace FinancialStructures.Database
             return false;
         }
 
+
+        public static List<AccountDayDataView> BankAccountData(this Portfolio portfolio, NameData name, ErrorReports reports)
+        {
+            foreach (CashAccount acc in portfolio.BankAccounts)
+            {
+                if (acc.GetName() == name.Name && acc.GetCompany() == name.Company)
+                {
+                    return acc.GetDataForDisplay();
+                }
+            }
+            reports.AddReport($"Bank account {name.ToString()} does not exist.");
+            return new List<AccountDayDataView>();
+        }
+
         /// <summary>
         /// Outputs a copy of the BankAccount if it exists.
         /// </summary>
@@ -92,6 +106,10 @@ namespace FinancialStructures.Database
             return false;
         }
 
+        public static bool TryAddBankAccount(this Portfolio portfolio, NameData name, ErrorReports reports)
+        {
+            return portfolio.TryAddBankAccount(name.Name, name.Company, name.Currency, name.Sectors, reports);
+        }
 
         /// <summary>
         /// Tries to add a CashAccount to the underlying global database
@@ -111,6 +129,12 @@ namespace FinancialStructures.Database
             }
             return portfolio.TryAddBankAccountFromName(name, company, currency, sectorList, reports);
         }
+
+        public static bool TryEditBankAccountName(this Portfolio portfolio, NameData oldNames, NameData newName, ErrorReports reports)
+        {
+            return portfolio.TryEditBankAccountName(oldNames.Name, oldNames.Company, newName.Name, newName.Company, newName.Currency, newName.Sectors, reports);
+        }
+
 
         /// <summary>
         /// Renames the BankAccount if this exists.
@@ -154,6 +178,11 @@ namespace FinancialStructures.Database
             return true;
         }
 
+        public static bool TryRemoveBankAccount(this Portfolio portfolio, NameData name, ErrorReports reports)
+        {
+            return portfolio.TryRemoveBankAccount(name.Name, name.Company, reports);
+        }
+
         public static bool TryRemoveBankAccount(this Portfolio portfolio, string name, string company, ErrorReports reports)
         {
             foreach (CashAccount acc in portfolio.BankAccounts)
@@ -169,6 +198,11 @@ namespace FinancialStructures.Database
             return false;
         }
 
+        public static bool TryAddDataToBankAccount(this Portfolio portfolio, NameData name, AccountDayDataView data, ErrorReports reports)
+        {
+            return portfolio.TryAddDataToBankAccount(name.Name, name.Company, data.Date, data.Amount);
+        }
+
         public static bool TryAddDataToBankAccount(this Portfolio portfolio, string name, string company, DateTime date, double value)
         {
             for (int accountIndex = 0; accountIndex < portfolio.BankAccounts.Count; accountIndex++)
@@ -181,6 +215,11 @@ namespace FinancialStructures.Database
             }
 
             return false;
+        }
+
+        public static bool TryEditBankAccount(this Portfolio portfolio, NameData name, AccountDayDataView oldData, AccountDayDataView newData, ErrorReports reports)
+        {
+            return portfolio.TryEditBankAccount(name.Name, name.Company, oldData.Date, newData.Date, newData.Amount, reports);
         }
 
         public static bool TryEditBankAccount(this Portfolio portfolio, string name, string company, DateTime oldDate, DateTime date, double value, ErrorReports reports)
@@ -211,6 +250,11 @@ namespace FinancialStructures.Database
 
             reports.AddError($"Renaming BankAccount: Could not find bank account `{company}'-`{name}'.");
             return false;
+        }
+
+        public static bool TryDeleteBankAccountData(this Portfolio portfolio, NameData name, AccountDayDataView data, ErrorReports reports)
+        {
+            return portfolio.TryDeleteBankAccountData( name.Name, name.Company, data.Date, reports);
         }
 
         public static bool TryDeleteBankAccountData(this Portfolio portfolio, string name, string company, DateTime date, ErrorReports reports)

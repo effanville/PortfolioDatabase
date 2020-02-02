@@ -225,7 +225,7 @@ namespace FinanceWindowsViewModels
             {
                 if (Portfolio.GetCurrencyFromName(SelectedName.Name).Count() != SelectedSectorData.Count)
                 {
-                    Portfolio.TryAddDataToCurrency(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
+                    Portfolio.TryAddDataToCurrency(SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
                     SelectedDataPoint.NewValue = false;
                 }
                 else

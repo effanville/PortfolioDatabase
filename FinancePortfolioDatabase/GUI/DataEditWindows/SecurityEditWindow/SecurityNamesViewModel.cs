@@ -121,8 +121,6 @@ namespace FinanceWindowsViewModels
                     return;
                 }
             }
-
-            selectedName = null;
         }
 
         public ICommand DeleteSecurityCommand { get; }

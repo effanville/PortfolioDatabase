@@ -228,7 +228,7 @@ namespace FinanceWindowsViewModels
             {
                 if (Sectors.Find(sector => sector.GetName() == SelectedName.Name).Count() != SelectedSectorData.Count)
                 {
-                    SectorEditor.TryAddDataToSector(Sectors, SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount);
+                    SectorEditor.TryAddDataToSector(Sectors, SelectedName.Name, SelectedDataPoint.Date, SelectedDataPoint.Amount, reports);
                     SelectedDataPoint.NewValue = false;
                 }
                 else
@@ -283,7 +283,7 @@ namespace FinanceWindowsViewModels
             var reports = new ErrorReports();
             if (SelectedName != null)
             {
-                SectorEditor.TryDeleteSector(Sectors, SelectedName.Name);
+                SectorEditor.TryDeleteSector(Sectors, SelectedName.Name, reports);
             }
             else if (Sectors.Count != SectorNames.Count)
             {

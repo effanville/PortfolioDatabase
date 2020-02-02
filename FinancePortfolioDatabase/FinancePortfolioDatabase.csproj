@@ -87,6 +87,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GUI\CommonWindows\DataNamesView.xaml.cs">
+      <DependentUpon>DataNamesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\CommonWindows\DataNamesViewModel.cs" />
+    <Compile Include="GUI\CommonWindows\EditMethods.cs" />
+    <Compile Include="GUI\CommonWindows\SelectedSingleDataView.xaml.cs">
+      <DependentUpon>SelectedSingleDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\CommonWindows\SelectedSingleDataViewModel.cs" />
+    <Compile Include="GUI\CommonWindows\SingleValueEditWindow.xaml.cs">
+      <DependentUpon>SingleValueEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\CommonWindows\SingleValueEditWindowViewModel.cs" />
+    <Compile Include="GUI\CommonWindows\ViewModelBase.cs" />
     <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml.cs">
       <DependentUpon>BankAccEditWindow.xaml</DependentUpon>
     </Compile>
@@ -157,6 +171,22 @@
     <Compile Include="GUI\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
+    <Page Include="GUI\CommonWindows\DataNamesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\CommonWindows\SelectedSingleDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\CommonWindows\SingleValueEditWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GUI\CommonWindows\ViewModelToViewDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -182,6 +212,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\GuiSupport\DefaultStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\GuiSupport\Dictionaries.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

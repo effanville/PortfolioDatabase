@@ -1,11 +1,10 @@
-﻿<Grid x:Class="FinanceWindows.SecurityEditWindow"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+﻿<Grid x:Class="FinanceWindows.SingleValueEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cl="clr-namespace:GUISupport"
       mc:Ignorable="d">
-
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <Style TargetType="TabItem">
@@ -18,8 +17,8 @@
             </Setter>
         </Style>
     </Grid.Resources>
-    
-    <Grid x:Name="parent">
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -31,8 +30,8 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Header}"/>
-                        <Button Background="Transparent" BorderThickness="0" Visibility="{Binding Closable, Converter={StaticResource BoolToVis}}" Height="12" Width="12" Margin="2 2 0 0" Click="Button_Click">
-                            <Image Source="../../GuiSupport/close.png" />
+                        <Button Background="Transparent" BorderThickness="0" Visibility="{Binding Closable, Converter={StaticResource BoolToVis}}" Height="12" Width="12" Margin="2 2 0 0" Click="CloseTabCommand">
+                            <Image Source="../GuiSupport/close.png"/>
                         </Button>
                     </StackPanel>
                 </DataTemplate>

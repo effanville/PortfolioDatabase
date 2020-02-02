@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace FinanceWindowsViewModels
 {
-    public class BankAccEditWindowViewModel : PropertyChangedBase
+    public class BankAccountEditWindowViewModel : PropertyChangedBase
     {
         private Portfolio Portfolio;
         private List<Sector> Sectors;
@@ -293,7 +293,7 @@ namespace FinanceWindowsViewModels
         Action<bool> UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
-        public BankAccEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public BankAccountEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
         {
             Portfolio = portfolio;
             Sectors = sectors;
