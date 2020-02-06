@@ -1,7 +1,5 @@
 ﻿using FinancialStructures.ReportingStructures;
 using FinancialStructures.Database;
-using GlobalHeldData;
-using DatabaseAccess;
 using GUISupport;
 using System;
 using System.Linq;
@@ -9,21 +7,26 @@ using FinanceCommonViewModels;
 using PADGlobals;
 using FinancialStructures.GUIFinanceStructures;
 using SectorHelperFunctions;
+using System.Collections.Generic;
+using FinancialStructures.FinanceStructures;
 
 namespace FinanceWindowsViewModels
 {
     public class MainWindowViewModel : PropertyChangedBase
     {
+        public Portfolio portfolio = new Portfolio();
+
+        public List<Sector> benchMarks = new List<Sector>();
+
         public MainWindowViewModel()
         {
-            DatabaseEdit.LoadPortfolio(new ErrorReports());
-            OptionsToolbarCommands = new OptionsToolbarViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
-            DataView = new BasicDataViewModel(GlobalData.Finances, GlobalData.BenchMarks);
-            SecurityEditViewModel = new SecurityEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
-            BankAccEditViewModel = new SingleValueEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports, bankAccEditMethods);
-            SectorEditViewModel = new SingleValueEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports, sectorEditMethods);
-            CurrencyEditViewModel = new SingleValueEditWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports, currencyEditMethods);
-            StatsEditViewModel = new StatsCreatorWindowViewModel(GlobalData.Finances, GlobalData.BenchMarks, UpdateWindow, UpdateReports);
+            OptionsToolbarCommands = new OptionsToolbarViewModel(portfolio, benchMarks, UpdateWindow, UpdateReports);
+            DataView = new BasicDataViewModel(portfolio, benchMarks);
+            SecurityEditViewModel = new SecurityEditWindowViewModel(portfolio, benchMarks, UpdateWindow, UpdateReports);
+            BankAccEditViewModel = new SingleValueEditWindowViewModel(portfolio, benchMarks, UpdateWindow, UpdateReports, bankAccEditMethods);
+            SectorEditViewModel = new SingleValueEditWindowViewModel(portfolio, benchMarks, UpdateWindow, UpdateReports, sectorEditMethods);
+            CurrencyEditViewModel = new SingleValueEditWindowViewModel(portfolio, benchMarks, UpdateWindow, UpdateReports, currencyEditMethods);
+            StatsEditViewModel = new StatsCreatorWindowViewModel(portfolio, benchMarks, UpdateWindow, UpdateReports);
             ReportsViewModel = new ReportingWindowViewModel();
         }
 
@@ -67,29 +70,31 @@ namespace FinanceWindowsViewModels
             ReportsViewModel.UpdateReports(reports);
         }
 
-        Action<bool> UpdateWindow => (val) => UpdateData(val);
+        Action UpdateWindow => () => UpdateViews(true);
 
-        public void UpdateData(object obj)
+        Action<Action<Portfolio, List<Sector>>> UpdateDataView => (updateAction) => UpdateData(updateAction);
+
+        public void UpdateViews(object obj)
         {
             if (obj is bool updateReportsOnly)
-            {
-                if (!updateReportsOnly)
-                {
-                    DataView.DataUpdate(GlobalData.Finances, GlobalData.BenchMarks);
-                }
 
-                UpdateSubWindowData(false);
+            {
+                DataView.DataUpdate(portfolio, benchMarks);
+                SecurityEditViewModel.UpdateListBoxes(portfolio, benchMarks);
+                BankAccEditViewModel.UpdateListBoxes(portfolio, benchMarks);
+                SectorEditViewModel.UpdateListBoxes(portfolio, benchMarks);
+
+                CurrencyEditViewModel.UpdateListBoxes(portfolio, benchMarks);
+                StatsEditViewModel.GenerateStatistics(portfolio, benchMarks);
             }
         }
 
-        public void UpdateSubWindowData(object obj)
+        public void UpdateData(object obj)
         {
-            SecurityEditViewModel.UpdateFundListBox(GlobalData.Finances, GlobalData.BenchMarks);
-            BankAccEditViewModel.UpdateListBoxes(GlobalData.Finances, GlobalData.BenchMarks);
-            BankAccEditViewModel.UpdateListBoxes(GlobalData.Finances, GlobalData.BenchMarks);
-            SectorEditViewModel.UpdateListBoxes(GlobalData.Finances, GlobalData.BenchMarks);
-            StatsEditViewModel.GenerateStatistics(GlobalData.Finances, GlobalData.BenchMarks);
-            CurrencyEditViewModel.UpdateListBoxes(GlobalData.Finances, GlobalData.BenchMarks);
+            if(obj is Action <Portfolio, List<Sector>> updateAction)
+            {
+                updateAction(portfolio, benchMarks);
+            }
         }
 
         private OptionsToolbarViewModel fOptionsToolbarCommands;

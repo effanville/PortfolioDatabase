@@ -1,10 +1,50 @@
 ﻿using FinancialStructures.FinanceStructures;
 using System.Collections.Generic;
+using System.IO;
 
 namespace FinancialStructures.Database
 {
     public partial class Portfolio
     {
+
+
+        private string fDatabaseFilePath;
+
+        public void SetFilePath(string path)
+        {
+            fDatabaseFilePath = path;
+        }
+
+        public string FilePath
+        {
+            get
+            {
+                return fDatabaseFilePath;
+            }
+        }
+
+        public string Extension
+        {
+            get
+            {
+                return Path.GetExtension(fDatabaseFilePath);
+            }
+        }
+        public string Directory
+        {
+            get
+            { 
+                return Path.GetDirectoryName(fDatabaseFilePath);
+            }
+        }
+
+        public string DatabaseName 
+        { 
+            get 
+            { 
+                return Path.GetFileNameWithoutExtension(fDatabaseFilePath); 
+            } 
+        }
 
         private List<Security> fFunds;
 
@@ -35,6 +75,13 @@ namespace FinancialStructures.Database
             fFunds = new List<Security>();
             fBankAccounts = new List<CashAccount>();
             fCurrencies = new List<Currency>();
+        }
+
+        public void CopyData(Portfolio portfolio)
+        {
+            this.Funds = portfolio.Funds;
+            this.BankAccounts = portfolio.BankAccounts;
+            this.Currencies = portfolio.Currencies;
         }
     }
 }

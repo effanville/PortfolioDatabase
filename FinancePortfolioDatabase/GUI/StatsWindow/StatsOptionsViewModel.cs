@@ -3,7 +3,6 @@ using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GlobalHeldData;
 using GUISupport;
 using PortfolioStatsCreatorHelper;
 using System;
@@ -59,7 +58,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteExportHTMLCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = GlobalData.DatabaseName + "-HTMLStats.html", InitialDirectory = GlobalData.fStatsDirectory };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".html", FileName = Portfolio.DatabaseName + "-HTMLStats.html", InitialDirectory = Portfolio.Directory };
             saving.Filter = "Html file|*.html|All files|*.*";
             string path = null;
             if (saving.ShowDialog() == DialogResult.OK)
@@ -101,7 +100,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteExportCSVCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName + "-CSVStats.csv", InitialDirectory = GlobalHeldData.GlobalData.fStatsDirectory };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = Portfolio.DatabaseName + "-CSVStats.csv", InitialDirectory = Portfolio.Directory };
             saving.Filter = "Csv file|*.csv|All files|*.*";
             string path = null;
             if (saving.ShowDialog() == DialogResult.OK)

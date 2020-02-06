@@ -3,11 +3,11 @@
 namespace FinanceWindows
 {
     /// <summary>
-    /// Interaction logic for SectorEditWindow.xaml
+    /// Interaction logic for SelectedSecurityView.xaml
     /// </summary>
-    public partial class SectorEditWindow : Grid
+    public partial class SelectedSecurityView : UserControl
     {
-        public SectorEditWindow()
+        public SelectedSecurityView()
         {
             InitializeComponent();
         }

@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace FinanceCommonViewModels
+namespace FinanceWindowsViewModels
 {
-    public class SingleValueEditWindowViewModel : PropertyChangedBase
+    public class SecurityEditWindowViewModel : PropertyChangedBase
     {
         private Portfolio Portfolio;
         private List<Sector> Sectors;
+
         public ObservableCollection<object> Tabs { get; set; } = new ObservableCollection<object>();
 
         public void UpdateListBoxes(Portfolio portfolio, List<Sector> sectors)
@@ -23,34 +24,35 @@ namespace FinanceCommonViewModels
             {
                 foreach (var item in Tabs)
                 {
-                    if (item is ViewModelBase viewModel)
+                    if (item is SecurityNamesViewModel viewModel)
                     {
-                        viewModel.UpdateData(portfolio, sectors);
+                        viewModel.UpdateFundListBox(portfolio);
+                    }
+                    if (item is SelectedSecurityViewModel selectedVM)
+                    {
+                        selectedVM.UpdateData(portfolio);
                     }
                 }
             }
         }
 
+        Action UpdateMainWindow;
+        Action<ErrorReports> UpdateReports;
+
         Action<NameData> loadTab => (name) => LoadTabFunc(name);
 
         private void LoadTabFunc(NameData name)
         {
-            Tabs.Add(new SelectedSingleDataViewModel(Portfolio, Sectors, UpdateMainWindow, UpdateReports, EditMethods, name));
+            Tabs.Add(new SelectedSecurityViewModel(Portfolio, UpdateMainWindow, UpdateReports, name));
         }
 
-
-        Action UpdateMainWindow;
-        Action<ErrorReports> UpdateReports;
-        EditMethods EditMethods;
-
-        public SingleValueEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action updateWindow, Action<ErrorReports> updateReports, EditMethods editMethods)
+        public SecurityEditWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action updateWindow, Action<ErrorReports> updateReports)
         {
+            Portfolio = portfolio;
+            Sectors = sectors;
             UpdateMainWindow = updateWindow;
             UpdateReports = updateReports;
-            EditMethods = editMethods;
-            UpdateListBoxes(portfolio, sectors);
-
-            Tabs.Add(new DataNamesViewModel(Portfolio, sectors, updateWindow, updateReports, loadTab, editMethods));
+            Tabs.Add(new SecurityNamesViewModel(Portfolio, updateWindow, updateReports, loadTab));
         }
     }
 }

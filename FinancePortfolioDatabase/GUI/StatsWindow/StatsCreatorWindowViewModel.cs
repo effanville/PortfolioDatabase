@@ -5,7 +5,6 @@ using FinancialStructures.DisplayStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GlobalHeldData;
 using GUISupport;
 using PortfolioStatsCreatorHelper;
 using System;
@@ -72,7 +71,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteInvestmentListCommand(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = GlobalHeldData.GlobalData.DatabaseName + "-CSVStats.csv", InitialDirectory = GlobalData.fStatsDirectory };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = Portfolio.DatabaseName + "-CSVStats.csv", InitialDirectory = Portfolio.Directory };
             saving.Filter = "CSV file|*.csv|All files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
@@ -106,7 +105,7 @@ namespace FinanceWindowsViewModels
         private void ExecuteCreateHistory(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + GlobalData.DatabaseName + "-History.csv", InitialDirectory = GlobalData.fStatsDirectory };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = ".csv", FileName = DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + Portfolio.DatabaseName + "-History.csv", InitialDirectory = Portfolio.Directory };
             saving.Filter = "CSV file|*.csv|All files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
@@ -212,7 +211,7 @@ namespace FinanceWindowsViewModels
             set { fDistributionValues3 = value; OnPropertyChanged(); }
         }
 
-        Action<bool> UpdateMainWindow;
+        Action UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
         private int fHistoryGapDays = 25;
@@ -248,7 +247,7 @@ namespace FinanceWindowsViewModels
             DistributionValues3 = HistoryStats[HistoryStats.Count - 1].SectorValues;
         }
 
-        public StatsCreatorWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public StatsCreatorWindowViewModel(Portfolio portfolio, List<Sector> sectors, Action updateWindow, Action<ErrorReports> updateReports)
         {
             GenerateStatistics(portfolio, sectors);
             UpdateMainWindow = updateWindow;

@@ -130,7 +130,7 @@ namespace FinanceCommonViewModels
             {
                 UpdateReports(reports);
             }
-            UpdateMainWindow(true);
+            UpdateMainWindow();
         }
 
         private void SelectLatestValue()
@@ -142,11 +142,11 @@ namespace FinanceCommonViewModels
         }
 
         public override Action<NameData> LoadSelectedTab { get; set; }
-        Action<bool> UpdateMainWindow;
+        Action UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
         private EditMethods EditMethods;
-        public SelectedSingleDataViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports, EditMethods editMethods, NameData selectedName)
+        public SelectedSingleDataViewModel(Portfolio portfolio, List<Sector> sectors, Action updateWindow, Action<ErrorReports> updateReports, EditMethods editMethods, NameData selectedName)
         {
             if (selectedName != null)
             {

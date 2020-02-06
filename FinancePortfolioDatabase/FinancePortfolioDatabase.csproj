@@ -101,29 +101,25 @@
     </Compile>
     <Compile Include="GUI\CommonWindows\SingleValueEditWindowViewModel.cs" />
     <Compile Include="GUI\CommonWindows\ViewModelBase.cs" />
-    <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml.cs">
-      <DependentUpon>BankAccEditWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindowViewModel.cs" />
     <Compile Include="GUI\BasicDataViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\CsvDataRead.cs" />
-    <Compile Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindow.xaml.cs">
-      <DependentUpon>CurrencyEditWindow.xaml</DependentUpon>
+    <Compile Include="GUI\CsvDataRead.cs" />
+    <Compile Include="GUI\Security Edit Window\SecurityEditWindow.xaml.cs">
+      <DependentUpon>SecurityEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityNamesView.xaml.cs">
+    <Compile Include="GUI\Security Edit Window\SecurityEditWindowViewModel.cs" />
+    <Compile Include="GUI\Security Edit Window\SecurityNamesView.xaml.cs">
       <DependentUpon>SecurityNamesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityNamesViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SelectedSecurityView.xaml.cs">
+    <Compile Include="GUI\Security Edit Window\SecurityNamesViewModel.cs" />
+    <Compile Include="GUI\Security Edit Window\SelectedSecurityView.xaml.cs">
       <DependentUpon>SelectedSecurityView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SelectedSecurityViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml.cs">
+    <Compile Include="GUI\Security Edit Window\SelectedSecurityViewModel.cs" />
+    <Compile Include="GUI\StatsWindow\StatsOptionsViewModel.cs" />
+    <Compile Include="GUI\StatsWindow\StatsOptionsWindow.xaml.cs">
       <DependentUpon>StatsOptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\StatsWindow\WebBrowserBehaviour.cs" />
+    <Compile Include="GUI\StatsWindow\WebBrowserBehaviour.cs" />
     <Compile Include="GUI\GuiSupport\ClosableItem.cs" />
     <Compile Include="GUI\GuiSupport\ClosableHeader.xaml.cs">
       <DependentUpon>ClosableHeader.xaml</DependentUpon>
@@ -156,21 +152,10 @@
       <DependentUpon>ReportingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\ReportingWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SectorEditWindow\SectorEditWindow.xaml.cs">
-      <DependentUpon>SectorEditWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\DataEditWindows\SectorEditWindow\SectorEditWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityEditWindow.xaml.cs">
-      <DependentUpon>SecurityEditWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\DataEditWindows\SecurityEditWindow\SecurityEditWindowViewModel.cs" />
-    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsCreatorWindow.xaml.cs">
+    <Compile Include="GUI\StatsWindow\StatsCreatorWindow.xaml.cs">
       <DependentUpon>StatsCreatorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\DataEditWindows\StatsWindow\StatsCreatorWindowViewModel.cs" />
-    <Compile Include="GUI\TitleBar.xaml.cs">
-      <DependentUpon>TitleBar.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="GUI\StatsWindow\StatsCreatorWindowViewModel.cs" />
     <Page Include="GUI\CommonWindows\DataNamesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -187,23 +172,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\DataEditWindows\BankAccEditWindow\BankAccEditWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\DataEditWindows\CurrencyEditWindow\CurrencyEditWindow.xaml">
+    <Page Include="GUI\Security Edit Window\SecurityEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow\SecurityNamesView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="GUI\Security Edit Window\SecurityNamesView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow\SelectedSecurityView.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\DataEditWindows\StatsWindow\StatsOptionsWindow.xaml">
+    <Page Include="GUI\Security Edit Window\SelectedSecurityView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GUI\StatsWindow\StatsOptionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -255,19 +236,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\DataEditWindows\SectorEditWindow\SectorEditWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\DataEditWindows\SecurityEditWindow\SecurityEditWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\DataEditWindows\StatsWindow\StatsCreatorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\TitleBar.xaml">
+    <Page Include="GUI\StatsWindow\StatsCreatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -316,10 +285,6 @@
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj">
       <Project>{0738a1ca-623a-4f3e-96fa-8a9439f74446}</Project>
       <Name>FinancialStructures</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PADGlobals\PADGlobals.csproj">
-      <Project>{9ac5bde6-a6af-4806-8f84-f6a1688d93c5}</Project>
-      <Name>PADGlobals</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

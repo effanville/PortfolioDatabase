@@ -11,6 +11,18 @@ namespace SectorHelperFunctions
     /// </summary>
     public static class SectorEditor
     {
+        public static List<NameData> GetSectorNames(List<Sector> sectors)
+        {
+            var outputs = new List<NameData>();
+            if (sectors != null)
+            {
+                foreach (Sector thing in sectors)
+                {
+                    outputs.Add(new NameData(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
+                }
+            }
+            return outputs;
+        }
 
         public static bool TryAddSector(List<Sector> sectors, NameData name, ErrorReports reports)
         { 

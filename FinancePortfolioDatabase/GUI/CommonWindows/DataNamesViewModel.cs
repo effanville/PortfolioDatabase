@@ -13,7 +13,7 @@ namespace FinanceCommonViewModels
     {
         private Portfolio Portfolio;
         private List<Sector> Sectors;
-        Action<bool> UpdateMainWindow;
+        Action UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
         public string Header { get; set; } = "Accounts";
@@ -55,7 +55,7 @@ namespace FinanceCommonViewModels
             {
                 await editMethods.DownloadMethod(Portfolio, Sectors, SelectedName, UpdateReports, reports).ConfigureAwait(false);
             }
-            UpdateMainWindow(true);
+            UpdateMainWindow();
             if (reports.Any())
             {
                 UpdateReports(reports);
@@ -107,7 +107,7 @@ namespace FinanceCommonViewModels
                 UpdateReports(reports);
             }
 
-            UpdateMainWindow(true);
+            UpdateMainWindow();
         }
 
         private void ExecuteDelete(Object obj)
@@ -126,7 +126,7 @@ namespace FinanceCommonViewModels
                 UpdateReports(reports);
             }
 
-            UpdateMainWindow(true);
+            UpdateMainWindow();
         }
 
         public override void UpdateData(Portfolio portfolio, List<Sector> sectors)
@@ -152,7 +152,7 @@ namespace FinanceCommonViewModels
         private EditMethods editMethods;
         public override Action<NameData> LoadSelectedTab { get; set; }
 
-        public DataNamesViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports, Action<NameData> loadSelectedData, EditMethods updateMethods)
+        public DataNamesViewModel(Portfolio portfolio, List<Sector> sectors, Action updateWindow, Action<ErrorReports> updateReports, Action<NameData> loadSelectedData, EditMethods updateMethods)
         {
             Portfolio = portfolio;
             Sectors = sectors;
