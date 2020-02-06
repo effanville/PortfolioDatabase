@@ -1,9 +1,9 @@
 ﻿using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.GUIFinanceStructures;
-using DatabaseAccess;
 using GUISupport;
 using System.Collections.Generic;
+using SectorHelperFunctions;
 
 namespace FinanceWindowsViewModels
 {
@@ -48,7 +48,7 @@ namespace FinanceWindowsViewModels
             FundNames.Sort();
             AccountNames = Portfolio.GetBankAccountNamesAndCompanies();
             AccountNames.Sort();
-            SectorNames = DatabaseEdit.GetSectorNames();
+            SectorNames = SectorEditor.GetSectorNames(sectors);
             SectorNames.Sort();
             CurrencyNames = Portfolio.GetCurrencyNames();
             CurrencyNames.Sort();

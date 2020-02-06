@@ -1,65 +1,11 @@
-﻿using FinancialStructures.FinanceStructures;
-using FinancialStructures.GUIFinanceStructures;
-using FinancialStructures.ReportingStructures;
-using GlobalHeldData;
-using SavingClasses;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace DatabaseAccess
+namespace FileSupport
 {
-    /// <summary>
-    /// Class holding functions for User Interfaces to edit the global database.
-    /// </summary>
-    public static class DatabaseEdit
+    public static class XmlFileAccess
     {
-        public static List<NameData> GetSectorNames()
-        {
-            var outputs = new List<NameData>();
-            if (GlobalData.BenchMarks != null)
-            {
-                foreach (Sector thing in GlobalData.BenchMarks)
-                {
-                    outputs.Add(new NameData(thing.GetName(), string.Empty, string.Empty, thing.GetUrl(), false));
-                }
-            }
-            return outputs;
-        }
-
-        public static void SetFilePath(string path)
-        {
-            GlobalData.fDatabaseFilePath = path;
-        }
-
-        public static void ClearPortfolio()
-        {
-            GlobalData.ClearDatabase();
-        }
-
-        public static void LoadPortfolio(ErrorReports reports)
-        {
-            if (File.Exists(GlobalData.fDatabaseFilePath))
-            {
-                var database = ReadFromXmlFile<AllData>(GlobalData.fDatabaseFilePath);
-                GlobalData.LoadDatabase(database.MyFunds, database.myBenchMarks);
-                return;
-            }
-
-            reports.AddReport("Loaded Empty New Database.");
-            GlobalData.LoadDatabase(null, null);
-        }
-
-        public static void SavePortfolio(ErrorReports reports)
-        {
-            var toSave = new AllData(GlobalData.Finances, GlobalData.BenchMarks);
-            if (GlobalData.fDatabaseFilePath != null)
-            {
-                WriteToXmlFile(GlobalData.fDatabaseFilePath, toSave);
-                reports.AddReport("Saved Database.");
-            }
-        }
 
         /// <summary>
         /// Writes the given object instance to an XML file.

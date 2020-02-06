@@ -2,8 +2,6 @@
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.ReportingStructures;
-using GlobalHeldData;
-using DatabaseAccess;
 using GUISupport;
 using PADGlobals;
 using System;
@@ -18,7 +16,7 @@ namespace FinanceWindowsViewModels
     {
         private Portfolio Portfolio;
         private List<Sector> Sectors;
-        Action<bool> UpdateMainWindow;
+        Action UpdateMainWindow;
         Action<ErrorReports> UpdateReports;
 
         public ICommand OpenHelpCommand { get; }
@@ -28,7 +26,7 @@ namespace FinanceWindowsViewModels
         public ICommand UpdateDataCommand { get; }
         public ICommand RefreshCommand { get; }
 
-        public OptionsToolbarViewModel(Portfolio portfolio, List<Sector> sectors, Action<bool> updateWindow, Action<ErrorReports> updateReports)
+        public OptionsToolbarViewModel(Portfolio portfolio, List<Sector> sectors, Action updateWindow, Action<ErrorReports> updateReports)
         {
             Portfolio = portfolio;
             Sectors = sectors;
@@ -54,10 +52,9 @@ namespace FinanceWindowsViewModels
             if (result == DialogResult.Yes)
             {
                 var reports = new ErrorReports();
-                DatabaseEdit.ClearPortfolio();
-                DatabaseEdit.SetFilePath("");
-                DatabaseEdit.LoadPortfolio(reports);
-                UpdateMainWindow(false);
+                Portfolio.SetFilePath("");
+                Sectors = Portfolio.LoadPortfolio(Portfolio.FilePath, reports);
+                UpdateMainWindow();
                 if (reports.Any())
                 {
                     UpdateReports(reports);
@@ -67,16 +64,17 @@ namespace FinanceWindowsViewModels
         public void ExecuteSaveDatabase(Object obj)
         {
             var reports = new ErrorReports();
-            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = "xml", FileName = GlobalData.DatabaseName + Path.GetExtension(GlobalData.fDatabaseFilePath), InitialDirectory = Path.GetDirectoryName(GlobalData.fDatabaseFilePath) };
+            SaveFileDialog saving = new SaveFileDialog() { DefaultExt = "xml", FileName = Portfolio.DatabaseName + Portfolio.Extension, InitialDirectory = Portfolio.Directory };
             saving.Filter = "XML Files|*.xml|All Files|*.*";
             if (saving.ShowDialog() == DialogResult.OK)
             {
-                DatabaseEdit.SetFilePath(saving.FileName);
+                Portfolio.SetFilePath(saving.FileName);
+                Portfolio.SavePortfolio(Sectors, saving.FileName, reports);
             }
 
-            DatabaseEdit.SavePortfolio(reports);
+            
             saving.Dispose();
-            UpdateMainWindow(true);
+            UpdateMainWindow();
             if (reports.Any())
             {
                 UpdateReports(reports);
@@ -90,9 +88,8 @@ namespace FinanceWindowsViewModels
             openFile.Filter = "XML Files|*.xml|All Files|*.*";
             if (openFile.ShowDialog() == DialogResult.OK)
             {
-                DatabaseEdit.SetFilePath(openFile.FileName);
-                DatabaseEdit.ClearPortfolio();
-                DatabaseEdit.LoadPortfolio(reports);
+                Portfolio.SetFilePath(openFile.FileName);
+                Sectors = Portfolio.LoadPortfolio(openFile.FileName, reports);
                 reports.AddGeneralReport(ReportType.Report, $"Loaded new database from {openFile.FileName}");
             }
             openFile.Dispose();
@@ -101,12 +98,12 @@ namespace FinanceWindowsViewModels
             {
                 UpdateReports(reports);
             }
-            UpdateMainWindow(false);
+            UpdateMainWindow();
         }
 
         private void RefreshData(object obj)
         {
-            UpdateMainWindow(false);
+            UpdateMainWindow();
         }
 
         private async void ExecuteUpdateData(Object obj)
@@ -119,7 +116,7 @@ namespace FinanceWindowsViewModels
                 UpdateReports(reports);
             }
 
-            UpdateMainWindow(false);
+            UpdateMainWindow();
         }
     }
 }
