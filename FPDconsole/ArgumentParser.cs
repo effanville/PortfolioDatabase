@@ -1,52 +1,61 @@
-﻿using System;
+﻿using FinancialStructures.ReportingStructures;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace FPDconsole
 {
     public static class ArgumentParser
     {
-        public static List<TextToken> Parse(string[] args)
+        private static string ParameterSpecifier ="--";
+
+        private static HashSet<string> downloadArguments= new HashSet<string>() { "download", "d"};
+        private static HashSet<string> helpArguments = new HashSet<string>() {"help", "h" };
+        public static List<TextToken> Parse(string[] args, ErrorReports reports)
         {
             List<TextToken> tokens = new List<TextToken>();
-            if (args.Length > 0)
+            if (args.Length > 1)
             {
-                tokens.Add(PrepareFilePath(args[0]));
+                tokens.Add(PrepareFilePath(args[0], reports));
+                for (int index = 1; index < args.Length; index++)
+                {
+                    tokens.Add(ParseNonFilePathToken(args[index], reports));
+                }
             }
-            else { }
+            else 
+            {
+                reports.AddError("Insufficient parameters specified for program to run.", Location.Parsing);
+            }
 
             return tokens;
         }
 
-        public static TextToken PrepareFilePath(string expectedFilePath)
+        private static TextToken PrepareFilePath(string expectedFilePath, ErrorReports reports)
         {
             if (File.Exists(expectedFilePath))
             {
-                return new TextToken(TokenType.FilePath, expectedFilePath);
+                return new TextToken(TextTokenType.FilePath, expectedFilePath);
+            }
+            reports.AddError("Specified Text not valid.", Location.Parsing);
+            return new TextToken(TextTokenType.Error, expectedFilePath);
+        }
+
+        private static TextToken ParseNonFilePathToken(string tokenText, ErrorReports reports)
+        {
+            if (tokenText.StartsWith(ParameterSpecifier))
+            {
+                return new TextToken(TextTokenType.Parameter, tokenText);
+            }
+            else if (downloadArguments.Contains(tokenText))
+            {
+                return new TextToken(TextTokenType.Download, tokenText);
+            }
+            else if (helpArguments.Contains(tokenText))
+            { 
+                return new TextToken(TextTokenType.Help, tokenText);
             }
 
-            return new TextToken(TokenType.Error, expectedFilePath);
+            reports.AddError("Specified Text not valid.", Location.Parsing);
+            return new TextToken(TextTokenType.Error, tokenText);
         }
-    }
-
-    public enum TokenType
-    {
-        FilePath,
-        Argument,
-        Parameter,
-        Error
-    }
-
-    public class TextToken
-    {
-        public TokenType sort;
-        public string field;
-
-        public TextToken(TokenType type, string value)
-        { 
-            sort = type;
-            field = value;
-        }
-    }
+    }    
 }
