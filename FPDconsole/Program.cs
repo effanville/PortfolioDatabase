@@ -1,8 +1,8 @@
 ﻿using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
 using FinancialStructures.ReportingStructures;
 using System;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FPDconsole
 {
@@ -16,24 +16,32 @@ namespace FPDconsole
             }
         }
 
-        public static Portfolio portfolio = new Portfolio();
+        static void WriteReports(string message)
+        {
+            Console.WriteLine(message);
+        }
+
         static void Main(string[] args)
         {
+            Console.WriteLine("FPDconsole.exe - version 0.1");
             if (args.Length == 0)
             {
                 
             }
-            Console.WriteLine("Program Started");
             var reports = new ErrorReports();
-            portfolio.LoadPortfolio("", reports);
 
-            DoStuff(reports).Wait();
+            List<TextToken> values = ArgumentParser.Parse(args, reports);
+            if (reports.GetReports(Location.Parsing).Any())
+            {
+                WriteReports(reports);
+                Console.WriteLine("Errors in inputs. Try again");
+                Console.WriteLine("A more helpful message will soon be written.");
+                return;
+            }
+
+            ExecuteCommands.RunCommands(values, message => WriteReports(message), report => WriteReports(report), reports);
+
             Console.WriteLine("Program finished");
-        }
-
-        public static async Task DoStuff(ErrorReports reports)
-        {
-            await Download.DownloadSecurityLatest(new Security("hi", "low", "GBP", "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b2pljn71:gbx"), (reports) => WriteReports(reports), reports);
         }
     }
 }
