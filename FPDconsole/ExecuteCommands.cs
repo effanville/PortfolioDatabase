@@ -40,8 +40,7 @@ namespace FPDconsole
 
         private async static void RunDownloadRoutine(Portfolio portfolio, List<Sector> sectors, Action<ErrorReports> displayReports, ErrorReports reports)
         {
-            await Download.DownloadPortfolioLatest(portfolio, displayReports, reports);
-            await Download.DownloadBenchMarksLatest(sectors, displayReports, reports).ConfigureAwait(false);
+            await DataUpdater.Downloader(portfolio, sectors, displayReports, reports).ConfigureAwait(false);
         }
     }
 }
