@@ -6,9 +6,9 @@ using System;
 
 namespace FPDconsole
 {
-    public static class ExecuteCommands
+    internal static class ExecuteCommands
     {
-        public static void RunCommands(List<TextToken> tokens, Action<string> reportCallback, Action<ErrorReports> displayReports, ErrorReports reports)
+        internal static void RunCommands(List<TextToken> tokens, Action<string> reportCallback, Action<ErrorReports> displayReports, ErrorReports reports)
         {
             // first we must load the portfolio to edit. Find the text token specifying where to load.
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
@@ -33,14 +33,23 @@ namespace FPDconsole
             displayReports(reports);
         }
 
-        private static void DisplayHelp()
+        internal static void DisplayHelp()
         {
-            Console.WriteLine("I am showing you the help docs.");
+            Console.WriteLine("");
+            Console.WriteLine("Possible Commands:");
+            foreach (var command in Enum.GetValues(typeof(CommandType)))
+            {
+                Console.WriteLine(command.ToString());
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("Command Syntax:");
+            Console.WriteLine("FPDconsole.exe <<filePath>> <<command>> <<parameters>>");
         }
 
         private async static void RunDownloadRoutine(Portfolio portfolio, List<Sector> sectors, Action<ErrorReports> displayReports, ErrorReports reports)
         {
-            await DataUpdater.Downloader(portfolio, sectors, displayReports, reports).ConfigureAwait(false);
+            DataUpdater.Downloader(portfolio, sectors, displayReports, reports).Wait();
         }
     }
 }
