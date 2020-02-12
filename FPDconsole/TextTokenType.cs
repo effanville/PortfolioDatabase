@@ -8,4 +8,10 @@
         Help,
         Error
     }
+
+    public enum CommandType
+    {
+        Download,
+        Help
+    }
 }

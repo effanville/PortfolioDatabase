@@ -26,7 +26,8 @@ namespace FPDconsole
             Console.WriteLine("FPDconsole.exe - version 0.1");
             if (args.Length == 0)
             {
-                
+                ExecuteCommands.DisplayHelp();
+                return;
             }
             var reports = new ErrorReports();
 
@@ -34,8 +35,7 @@ namespace FPDconsole
             if (reports.GetReports(Location.Parsing).Any())
             {
                 WriteReports(reports);
-                Console.WriteLine("Errors in inputs. Try again");
-                Console.WriteLine("A more helpful message will soon be written.");
+                ExecuteCommands.DisplayHelp();
                 return;
             }
 
