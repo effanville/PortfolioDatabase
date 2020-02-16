@@ -6,10 +6,10 @@ namespace FPDconsole
 {
     public static class ArgumentParser
     {
-        private static string ParameterSpecifier ="--";
+        private static string ParameterSpecifier = "--";
 
-        private static HashSet<string> downloadArguments= new HashSet<string>() { "download", "d"};
-        private static HashSet<string> helpArguments = new HashSet<string>() {"help", "h" };
+        private static HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
+        private static HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
         public static List<TextToken> Parse(string[] args, ErrorReports reports)
         {
             List<TextToken> tokens = new List<TextToken>();
@@ -21,7 +21,7 @@ namespace FPDconsole
                     tokens.Add(ParseNonFilePathToken(args[index], reports));
                 }
             }
-            else 
+            else
             {
                 reports.AddError("Insufficient parameters specified for program to run.", Location.Parsing);
             }
@@ -50,12 +50,12 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.Download, tokenText);
             }
             else if (helpArguments.Contains(tokenText))
-            { 
+            {
                 return new TextToken(TextTokenType.Help, tokenText);
             }
 
             reports.AddError("Specified Text not valid.", Location.Parsing);
             return new TextToken(TextTokenType.Error, tokenText);
         }
-    }    
+    }
 }
