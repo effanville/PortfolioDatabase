@@ -1,8 +1,8 @@
-﻿using FinancialStructures.ReportingStructures;
-using FinancialStructures.Database;
-using System.Collections.Generic;
+﻿using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
+using FinancialStructures.ReportingStructures;
 using System;
+using System.Collections.Generic;
 
 namespace FPDconsole
 {
