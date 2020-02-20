@@ -47,7 +47,7 @@ namespace FPDconsole
             Console.WriteLine("FPDconsole.exe <<filePath>> <<command>> <<parameters>>");
         }
 
-        private async static void RunDownloadRoutine(Portfolio portfolio, List<Sector> sectors, Action<ErrorReports> displayReports, ErrorReports reports)
+        private static void RunDownloadRoutine(Portfolio portfolio, List<Sector> sectors, Action<ErrorReports> displayReports, ErrorReports reports)
         {
             DataUpdater.Downloader(portfolio, sectors, displayReports, reports).Wait();
         }
