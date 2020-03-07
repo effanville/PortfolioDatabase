@@ -1,4 +1,4 @@
-﻿using FinancialStructures.ReportingStructures;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,36 +10,36 @@ namespace FPDconsole
 
         private static HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
         private static HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
-        public static List<TextToken> Parse(string[] args, ErrorReports reports)
+        public static List<TextToken> Parse(string[] args, Action<string, string, string> reportLogger)
         {
             List<TextToken> tokens = new List<TextToken>();
             if (args.Length > 1)
             {
-                tokens.Add(PrepareFilePath(args[0], reports));
+                tokens.Add(PrepareFilePath(args[0], reportLogger));
                 for (int index = 1; index < args.Length; index++)
                 {
-                    tokens.Add(ParseNonFilePathToken(args[index], reports));
+                    tokens.Add(ParseNonFilePathToken(args[index], reportLogger));
                 }
             }
             else
             {
-                reports.AddError("Insufficient parameters specified for program to run.", Location.Parsing);
+                reportLogger("Error", "Parsing","Insufficient parameters specified for program to run.");
             }
 
             return tokens;
         }
 
-        private static TextToken PrepareFilePath(string expectedFilePath, ErrorReports reports)
+        private static TextToken PrepareFilePath(string expectedFilePath, Action<string, string, string> reportLogger)
         {
             if (File.Exists(expectedFilePath))
             {
                 return new TextToken(TextTokenType.FilePath, expectedFilePath);
             }
-            reports.AddError("Specified Text not valid.", Location.Parsing);
+            reportLogger("Error", "Parsing","Specified Text not valid.");
             return new TextToken(TextTokenType.Error, expectedFilePath);
         }
 
-        private static TextToken ParseNonFilePathToken(string tokenText, ErrorReports reports)
+        private static TextToken ParseNonFilePathToken(string tokenText, Action<string, string, string> reportLogger)
         {
             if (tokenText.StartsWith(ParameterSpecifier))
             {
@@ -54,7 +54,7 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.Help, tokenText);
             }
 
-            reports.AddError("Specified Text not valid.", Location.Parsing);
+            reportLogger("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, tokenText);
         }
     }
