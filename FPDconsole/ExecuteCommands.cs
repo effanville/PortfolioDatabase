@@ -1,5 +1,6 @@
 ﻿using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
+using FinancialStructures.PortfolioAPI;
 using System;
 using System.Collections.Generic;
 
@@ -47,7 +48,7 @@ namespace FPDconsole
 
         private static void RunDownloadRoutine(Portfolio portfolio, List<Sector> sectors, Action<string, string, string> reportLogger)
         {
-            DataUpdater.Downloader(portfolio, sectors, reportLogger).Wait();
+            PortfolioDataUpdater.Downloader(portfolio, sectors, reportLogger).Wait();
         }
     }
 }
