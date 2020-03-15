@@ -1,14 +1,13 @@
-﻿using FinancialStructures.Reporting;
+﻿using FinancialStructures.ReportLogging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FPDconsole
 {
     class Program
     {
-        static Action<string, string, string> ReportLogger => (type, location, message) => WriteReport(type, location, message);
-        static void WriteReport(string errorType, string location, string message)
+        static LogReporter ReportLogger = new LogReporter(WriteReport);
+        static void WriteReport(string detailLevel, string errorType, string location, string message)
         {
             Console.WriteLine(errorType + " - " + location + " - " + message);
         }

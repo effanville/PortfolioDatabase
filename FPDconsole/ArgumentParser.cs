@@ -1,4 +1,4 @@
-﻿using System;
+﻿using FinancialStructures.ReportLogging;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,7 +10,7 @@ namespace FPDconsole
 
         private static HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
         private static HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
-        public static List<TextToken> Parse(string[] args, Action<string, string, string> reportLogger)
+        public static List<TextToken> Parse(string[] args, LogReporter reportLogger)
         {
             List<TextToken> tokens = new List<TextToken>();
             if (args.Length > 1)
@@ -23,23 +23,23 @@ namespace FPDconsole
             }
             else
             {
-                reportLogger("Error", "Parsing","Insufficient parameters specified for program to run.");
+                reportLogger.Log("Error", "Parsing", "Insufficient parameters specified for program to run.");
             }
 
             return tokens;
         }
 
-        private static TextToken PrepareFilePath(string expectedFilePath, Action<string, string, string> reportLogger)
+        private static TextToken PrepareFilePath(string expectedFilePath, LogReporter reportLogger)
         {
             if (File.Exists(expectedFilePath))
             {
                 return new TextToken(TextTokenType.FilePath, expectedFilePath);
             }
-            reportLogger("Error", "Parsing","Specified Text not valid.");
+            reportLogger.Log("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, expectedFilePath);
         }
 
-        private static TextToken ParseNonFilePathToken(string tokenText, Action<string, string, string> reportLogger)
+        private static TextToken ParseNonFilePathToken(string tokenText, LogReporter reportLogger)
         {
             if (tokenText.StartsWith(ParameterSpecifier))
             {
@@ -54,7 +54,7 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.Help, tokenText);
             }
 
-            reportLogger("Error", "Parsing", "Specified Text not valid.");
+            reportLogger.Log("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, tokenText);
         }
     }
