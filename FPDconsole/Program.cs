@@ -1,4 +1,4 @@
-﻿using FinancialStructures.ReportLogging;
+﻿using FinancialStructures.Reporting;
 using System;
 using System.Collections.Generic;
 
@@ -6,14 +6,13 @@ namespace FPDconsole
 {
     class Program
     {
-        static LogReporter ReportLogger = new LogReporter(WriteReport);
-        static void WriteReport(string detailLevel, string errorType, string location, string message)
-        {
-            Console.WriteLine(errorType + " - " + location + " - " + message);
-        }
-
         static void Main(string[] args)
         {
+            void WriteReport(ReportSeverity detailLevel, ReportType errorType, ReportLocation location, string message)
+            {
+                Console.WriteLine(errorType + " - " + location + " - " + message);
+            }
+            LogReporter ReportLogger = new LogReporter(WriteReport);
             Console.WriteLine("FPDconsole.exe - version 0.1");
             if (args.Length == 0)
             {

@@ -1,6 +1,6 @@
 ﻿using FinancialStructures.Database;
 using FinancialStructures.PortfolioAPI;
-using FinancialStructures.ReportLogging;
+using FinancialStructures.Reporting;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +14,7 @@ namespace FPDconsole
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
             Portfolio portfolio = new Portfolio();
             portfolio.LoadPortfolio(filePath.Value, reportLogger);
-            reportLogger.Log("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
+            reportLogger.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
 
             foreach (var token in tokens)
             {
