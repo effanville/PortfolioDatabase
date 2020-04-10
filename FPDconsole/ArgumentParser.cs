@@ -1,4 +1,4 @@
-﻿using FinancialStructures.ReportLogging;
+﻿using FinancialStructures.Reporting;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,7 +23,7 @@ namespace FPDconsole
             }
             else
             {
-                reportLogger.Log("Error", "Parsing", "Insufficient parameters specified for program to run.");
+                reportLogger.LogUsefulWithStrings("Error", "Parsing", "Insufficient parameters specified for program to run.");
             }
 
             return tokens;
@@ -35,7 +35,7 @@ namespace FPDconsole
             {
                 return new TextToken(TextTokenType.FilePath, expectedFilePath);
             }
-            reportLogger.Log("Error", "Parsing", "Specified Text not valid.");
+            reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, expectedFilePath);
         }
 
@@ -54,7 +54,7 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.Help, tokenText);
             }
 
-            reportLogger.Log("Error", "Parsing", "Specified Text not valid.");
+            reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, tokenText);
         }
     }
