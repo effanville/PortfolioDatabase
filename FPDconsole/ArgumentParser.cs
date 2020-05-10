@@ -10,6 +10,7 @@ namespace FPDconsole
 
         private static HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
         private static HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
+
         public static List<TextToken> Parse(string[] args, LogReporter reportLogger)
         {
             List<TextToken> tokens = new List<TextToken>();
@@ -23,7 +24,7 @@ namespace FPDconsole
             }
             else
             {
-                reportLogger.LogUsefulWithStrings("Error", "Parsing", "Insufficient parameters specified for program to run.");
+                _ = reportLogger.LogUsefulWithStrings("Error", "Parsing", "Insufficient parameters specified for program to run.");
             }
 
             return tokens;
@@ -35,7 +36,8 @@ namespace FPDconsole
             {
                 return new TextToken(TextTokenType.FilePath, expectedFilePath);
             }
-            reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
+
+            _ = reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, expectedFilePath);
         }
 
@@ -54,7 +56,7 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.Help, tokenText);
             }
 
-            reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
+            _ = reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, tokenText);
         }
     }
