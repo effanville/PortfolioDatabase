@@ -2,7 +2,7 @@
   "profiles": {
     "FPDconsole": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\masdoc\\source\\financeData\\2020-matt-portfolio.xml download --all"
+      "commandLineArgs": "\"C:\\Users\\masdoc\\source\\repos\\Portfolio Analysis Database\\PAD_UnitTests\\Test-Databases\\Test-database.xml\" download --all"
     }
   }
 }

@@ -34,15 +34,21 @@ namespace FPDconsole
         internal static void DisplayHelp()
         {
             Console.WriteLine("");
+            Console.WriteLine("Syntax for query:");
+            Console.WriteLine("FPDconsole.exe <<filePath>> <<command>> <<parameters>>");
+            Console.WriteLine("");
+            Console.WriteLine("filepath   - Absolute path to the database xml file ");
+            Console.WriteLine("");
+            Console.WriteLine("command    - The specified instruction to carry out");
+            Console.WriteLine("");
             Console.WriteLine("Possible Commands:");
             foreach (var command in Enum.GetValues(typeof(CommandType)))
             {
                 Console.WriteLine(command.ToString());
             }
-
             Console.WriteLine("");
-            Console.WriteLine("Command Syntax:");
-            Console.WriteLine("FPDconsole.exe <<filePath>> <<command>> <<parameters>>");
+            Console.WriteLine("parameters - currently no parameters are implemented.");
+            Console.WriteLine("           - all parameters are ignored");
         }
 
         private static void RunDownloadRoutine(Portfolio portfolio, LogReporter reportLogger)
