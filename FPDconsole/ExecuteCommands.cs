@@ -1,7 +1,7 @@
 ﻿using FinancialStructures.Database;
 using FinancialStructures.DataStructures;
 using FinancialStructures.PortfolioAPI;
-using FinancialStructures.Reporting;
+using StructureCommon.Reporting;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.StringFunctions;

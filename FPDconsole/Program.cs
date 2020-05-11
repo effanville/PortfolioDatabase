@@ -1,4 +1,4 @@
-﻿using FinancialStructures.Reporting;
+﻿using StructureCommon.Reporting;
 using StructureCommon.StringFunctions;
 using System;
 using System.Collections.Generic;
