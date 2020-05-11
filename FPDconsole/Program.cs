@@ -1,5 +1,5 @@
 ﻿using FinancialStructures.Reporting;
-using StringFunctions;
+using StructureCommon.StringFunctions;
 using System;
 using System.Collections.Generic;
 using System.IO;
