@@ -4,7 +4,7 @@ using FinancialStructures.PortfolioAPI;
 using FinancialStructures.Reporting;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
-using StringFunctions;
+using StructureCommon.StringFunctions;
 using System;
 using System.Collections.Generic;
 
