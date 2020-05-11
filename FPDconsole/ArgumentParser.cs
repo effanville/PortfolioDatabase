@@ -4,33 +4,41 @@ using System.IO;
 
 namespace FPDconsole
 {
-    public static class ArgumentParser
+    public class ArgumentParser
     {
-        private static string ParameterSpecifier = "--";
+        private readonly LogReporter logReports;
 
-        private static HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
-        private static HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
+        private string ParameterSpecifier = "--";
 
-        public static List<TextToken> Parse(string[] args, LogReporter reportLogger)
+        private HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
+        private HashSet<string> downloadStatisticsArguments = new HashSet<string>() { "downloadUpdateStatistics", "u" };
+        private HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
+
+        public ArgumentParser(LogReporter reportLogger)
+        {
+            logReports = reportLogger;
+        }
+
+        public List<TextToken> Parse(string[] args)
         {
             List<TextToken> tokens = new List<TextToken>();
             if (args.Length > 1)
             {
-                tokens.Add(PrepareFilePath(args[0], reportLogger));
+                tokens.Add(PrepareFilePath(args[0], logReports));
                 for (int index = 1; index < args.Length; index++)
                 {
-                    tokens.Add(ParseNonFilePathToken(args[index], reportLogger));
+                    tokens.Add(ParseNonFilePathToken(args[index], logReports));
                 }
             }
             else
             {
-                _ = reportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Parsing, "Insufficient parameters specified for program to run.");
+                _ = logReports.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Parsing, "Insufficient parameters specified for program to run.");
             }
 
             return tokens;
         }
 
-        private static TextToken PrepareFilePath(string expectedFilePath, LogReporter reportLogger)
+        private TextToken PrepareFilePath(string expectedFilePath, LogReporter reportLogger)
         {
             if (File.Exists(expectedFilePath))
             {
@@ -41,7 +49,7 @@ namespace FPDconsole
             return new TextToken(TextTokenType.Error, expectedFilePath);
         }
 
-        private static TextToken ParseNonFilePathToken(string tokenText, LogReporter reportLogger)
+        private TextToken ParseNonFilePathToken(string tokenText, LogReporter reportLogger)
         {
             if (tokenText.StartsWith(ParameterSpecifier))
             {
@@ -50,6 +58,10 @@ namespace FPDconsole
             else if (downloadArguments.Contains(tokenText))
             {
                 return new TextToken(TextTokenType.Download, tokenText);
+            }
+            else if (downloadStatisticsArguments.Contains(tokenText))
+            {
+                return new TextToken(TextTokenType.DownloadUpdateStats, tokenText);
             }
             else if (helpArguments.Contains(tokenText))
             {
