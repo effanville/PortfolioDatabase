@@ -24,7 +24,7 @@ namespace FPDconsole
             }
             else
             {
-                _ = reportLogger.LogUsefulWithStrings("Error", "Parsing", "Insufficient parameters specified for program to run.");
+                _ = reportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Parsing, "Insufficient parameters specified for program to run.");
             }
 
             return tokens;
@@ -37,7 +37,7 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.FilePath, expectedFilePath);
             }
 
-            _ = reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
+            _ = reportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Parsing, "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, expectedFilePath);
         }
 
@@ -56,7 +56,7 @@ namespace FPDconsole
                 return new TextToken(TextTokenType.Help, tokenText);
             }
 
-            _ = reportLogger.LogUsefulWithStrings("Error", "Parsing", "Specified Text not valid.");
+            _ = reportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Parsing, "Specified Text not valid.");
             return new TextToken(TextTokenType.Error, tokenText);
         }
     }
