@@ -23,16 +23,18 @@ namespace FPDconsole
                 }
 
                 LogReporter ReportLogger = new LogReporter(WriteReport);
+                var commandRunner = new ExecuteCommands(ReportLogger, ReportWriter);
                 ReportWriter.Write("FPDconsole.exe - version 1");
                 if (args.Length == 0)
                 {
-                    ExecuteCommands.DisplayHelp(ReportWriter);
+                    commandRunner.DisplayHelp();
                     return;
                 }
 
-                List<TextToken> values = ArgumentParser.Parse(args, ReportLogger);
+                var parser = new ArgumentParser(ReportLogger);
+                List<TextToken> values = parser.Parse(args);
 
-                ExecuteCommands.RunCommands(values, ReportWriter, ReportLogger);
+                commandRunner.RunCommands(values);
 
                 TextToken filePath = values.Find(token => token.TokenType == TextTokenType.FilePath);
                 ReportWriter.filePath = Path.GetDirectoryName(filePath.Value) + "\\" + DateTime.Now.FileSuitableDateTimeValue() + "-" + Path.GetFileNameWithoutExtension(filePath.Value) + "-output.log";
