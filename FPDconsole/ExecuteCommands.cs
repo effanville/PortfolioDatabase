@@ -1,10 +1,10 @@
 ﻿using FinancialStructures.Database;
 using FinancialStructures.DataStructures;
 using FinancialStructures.PortfolioAPI;
-using StructureCommon.Reporting;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
+using StructureCommon.Reporting;
 using System;
 using System.Collections.Generic;
 
