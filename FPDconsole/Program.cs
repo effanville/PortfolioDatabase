@@ -1,5 +1,5 @@
 ﻿using StructureCommon.Reporting;
-using StructureCommon.StringFunctions;
+using StructureCommon.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
