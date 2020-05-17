@@ -1,15 +1,16 @@
-﻿using FinancialStructures.Reporting;
-using StringFunctions;
+﻿using StructureCommon.Extensions;
+using StructureCommon.Reporting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace FPDconsole
 {
-    class Program
+    internal class Program
     {
         public static ConsoleStreamWriter ReportWriter;
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             try
             {
