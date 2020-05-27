@@ -1,8 +1,8 @@
-﻿using StructureCommon.Extensions;
-using StructureCommon.Reporting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using StructureCommon.Extensions;
+using StructureCommon.Reporting;
 
 namespace FPDconsole
 {
@@ -24,7 +24,7 @@ namespace FPDconsole
                 }
 
                 LogReporter ReportLogger = new LogReporter(WriteReport);
-                var commandRunner = new ExecuteCommands(ReportLogger, ReportWriter);
+                ExecuteCommands commandRunner = new ExecuteCommands(ReportLogger, ReportWriter);
                 ReportWriter.Write("FPDconsole.exe - version 1");
                 if (args.Length == 0)
                 {
@@ -32,7 +32,7 @@ namespace FPDconsole
                     return;
                 }
 
-                var parser = new ArgumentParser(ReportLogger);
+                ArgumentParser parser = new ArgumentParser(ReportLogger);
                 List<TextToken> values = parser.Parse(args);
 
                 commandRunner.RunCommands(values);
