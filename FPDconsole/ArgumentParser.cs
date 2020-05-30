@@ -1,6 +1,6 @@
-﻿using StructureCommon.Reporting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using StructureCommon.Reporting;
 
 namespace FPDconsole
 {
@@ -8,11 +8,11 @@ namespace FPDconsole
     {
         private readonly LogReporter logReports;
 
-        private string ParameterSpecifier = "--";
+        private readonly string ParameterSpecifier = "--";
 
-        private HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
-        private HashSet<string> downloadStatisticsArguments = new HashSet<string>() { "downloadUpdateStatistics", "u" };
-        private HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
+        private readonly HashSet<string> downloadArguments = new HashSet<string>() { "download", "d" };
+        private readonly HashSet<string> downloadStatisticsArguments = new HashSet<string>() { "downloadUpdateStatistics", "u" };
+        private readonly HashSet<string> helpArguments = new HashSet<string>() { "help", "h" };
 
         public ArgumentParser(LogReporter reportLogger)
         {
