@@ -1,12 +1,12 @@
-﻿using FinancialStructures.Database;
+﻿using System;
+using System.Collections.Generic;
+using FinancialStructures.Database;
 using FinancialStructures.DataStructures;
 using FinancialStructures.PortfolioAPI;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
 using StructureCommon.Reporting;
-using System;
-using System.Collections.Generic;
 
 namespace FPDconsole
 {
@@ -28,7 +28,7 @@ namespace FPDconsole
             portfolio.LoadPortfolio(filePath.Value, fReporter);
             _ = fReporter.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
 
-            foreach (var token in tokens)
+            foreach (TextToken token in tokens)
             {
                 if (token.TokenType == TextTokenType.Help)
                 {
@@ -59,7 +59,7 @@ namespace FPDconsole
             consoleWriter.Write("command    - The specified instruction to carry out");
             consoleWriter.Write("");
             consoleWriter.Write("Possible Commands:");
-            foreach (var command in Enum.GetValues(typeof(CommandType)))
+            foreach (object command in Enum.GetValues(typeof(CommandType)))
             {
                 consoleWriter.Write(command.ToString());
             }
@@ -75,18 +75,18 @@ namespace FPDconsole
 
         private void RunUpdateStatsRoutine(Portfolio portfolio)
         {
-            var filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
+            string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
             UserOptions options = new UserOptions();
-            var BankNames = new DayValue_Named();
-            var props = BankNames.GetType().GetProperties();
-            foreach (var name in props)
+            DayValue_Named BankNames = new DayValue_Named();
+            System.Reflection.PropertyInfo[] props = BankNames.GetType().GetProperties();
+            foreach (System.Reflection.PropertyInfo name in props)
             {
                 options.BankAccDataToExport.Add(name.Name);
             }
 
-            var totals = new SecurityStatistics();
-            var properties = totals.GetType().GetProperties();
-            foreach (var name in properties)
+            SecurityStatistics totals = new SecurityStatistics();
+            System.Reflection.PropertyInfo[] properties = totals.GetType().GetProperties();
+            foreach (System.Reflection.PropertyInfo name in properties)
             {
                 options.SecurityDataToExport.Add(name.Name);
             }
