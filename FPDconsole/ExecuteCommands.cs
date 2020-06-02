@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FinancialStructures.Database;
 using FinancialStructures.DataStructures;
 using FinancialStructures.PortfolioAPI;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
+using StructureCommon.FileAccess;
 using StructureCommon.Reporting;
 
 namespace FPDconsole
@@ -78,20 +80,20 @@ namespace FPDconsole
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
             UserOptions options = new UserOptions();
             DayValue_Named BankNames = new DayValue_Named();
-            System.Reflection.PropertyInfo[] props = BankNames.GetType().GetProperties();
-            foreach (System.Reflection.PropertyInfo name in props)
+            PropertyInfo[] props = BankNames.GetType().GetProperties();
+            foreach (PropertyInfo name in props)
             {
                 options.BankAccDataToExport.Add(name.Name);
             }
 
             SecurityStatistics totals = new SecurityStatistics();
-            System.Reflection.PropertyInfo[] properties = totals.GetType().GetProperties();
-            foreach (System.Reflection.PropertyInfo name in properties)
+            PropertyInfo[] properties = totals.GetType().GetProperties();
+            foreach (PropertyInfo name in properties)
             {
                 options.SecurityDataToExport.Add(name.Name);
             }
-
-            _ = PortfolioStatsCreators.CreateHTMLPageCustom(portfolio, filePath, options);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio);
+            stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
     }
 }
