@@ -7,6 +7,7 @@ using FinancialStructures.PortfolioAPI;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
+using StructureCommon.FileAccess;
 using StructureCommon.Reporting;
 
 namespace FPDconsole
@@ -91,7 +92,7 @@ namespace FPDconsole
             {
                 options.SecurityDataToExport.Add(name.Name);
             }
-            var stats = new PortfolioStatistics(portfolio);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
     }
