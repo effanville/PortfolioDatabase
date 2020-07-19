@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using FinancialStructures.Database;
+using FinancialStructures.Database.Download;
 using FinancialStructures.DataStructures;
-using FinancialStructures.PortfolioAPI;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
