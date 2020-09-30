@@ -73,7 +73,7 @@ namespace FPDconsole
 
         private void RunDownloadRoutine(Portfolio portfolio)
         {
-            PortfolioDataUpdater.Download(AccountType.All, portfolio, null, fReporter).Wait();
+            PortfolioDataUpdater.Download(Account.All, portfolio, null, fReporter).Wait();
         }
 
         private void RunUpdateStatsRoutine(Portfolio portfolio)
