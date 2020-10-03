@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using FinancialStructures.Database;
+using FinancialStructures.Database.Download;
 using FinancialStructures.DataStructures;
-using FinancialStructures.PortfolioAPI;
+using FinancialStructures.FinanceInterfaces;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
@@ -72,7 +73,7 @@ namespace FPDconsole
 
         private void RunDownloadRoutine(Portfolio portfolio)
         {
-            PortfolioDataUpdater.Downloader(portfolio, fReporter).Wait();
+            PortfolioDataUpdater.Download(Account.All, portfolio, null, fReporter).Wait();
         }
 
         private void RunUpdateStatsRoutine(Portfolio portfolio)
