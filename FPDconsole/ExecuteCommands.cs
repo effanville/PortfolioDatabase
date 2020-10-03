@@ -1,22 +1,37 @@
-﻿using FinancialStructures.Database;
-using FinancialStructures.PortfolioAPI;
-using FinancialStructures.Reporting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using FinancialStructures.Database;
+using FinancialStructures.Database.Download;
+using FinancialStructures.DataStructures;
+using FinancialStructures.FinanceInterfaces;
+using FinancialStructures.StatisticStructures;
+using FinancialStructures.StatsMakers;
+using StructureCommon.Extensions;
+using StructureCommon.FileAccess;
+using StructureCommon.Reporting;
 
 namespace FPDconsole
 {
-    internal static class ExecuteCommands
+    internal class ExecuteCommands
     {
-        internal static void RunCommands(List<TextToken> tokens, LogReporter reportLogger)
+        private readonly LogReporter fReporter;
+        private readonly ConsoleStreamWriter consoleWriter;
+        public ExecuteCommands(LogReporter reporter, ConsoleStreamWriter writer)
+        {
+            fReporter = reporter;
+            consoleWriter = writer;
+        }
+
+        internal void RunCommands(List<TextToken> tokens)
         {
             // first we must load the portfolio to edit. Find the text token specifying where to load.
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
             Portfolio portfolio = new Portfolio();
-            portfolio.LoadPortfolio(filePath.Value, reportLogger);
-            reportLogger.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
+            portfolio.LoadPortfolio(filePath.Value, fReporter);
+            _ = fReporter.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
 
-            foreach (var token in tokens)
+            foreach (TextToken token in tokens)
             {
                 if (token.TokenType == TextTokenType.Help)
                 {
@@ -24,30 +39,62 @@ namespace FPDconsole
                 }
                 if (token.TokenType == TextTokenType.Download)
                 {
-                    RunDownloadRoutine(portfolio, reportLogger);
+                    RunDownloadRoutine(portfolio);
+                }
+                if (token.TokenType == TextTokenType.DownloadUpdateStats)
+                {
+                    RunDownloadRoutine(portfolio);
+                    RunUpdateStatsRoutine(portfolio);
                 }
             }
 
-            portfolio.SavePortfolio(filePath.Value, reportLogger);
+            portfolio.SavePortfolio(filePath.Value, fReporter);
         }
 
-        internal static void DisplayHelp()
+        internal void DisplayHelp()
         {
-            Console.WriteLine("");
-            Console.WriteLine("Possible Commands:");
-            foreach (var command in Enum.GetValues(typeof(CommandType)))
+            consoleWriter.Write("");
+            consoleWriter.Write("Syntax for query:");
+            consoleWriter.Write("FPDconsole.exe <<filePath>> <<command>> <<parameters>>");
+            consoleWriter.Write("");
+            consoleWriter.Write("filepath   - Absolute path to the database xml file ");
+            consoleWriter.Write("");
+            consoleWriter.Write("command    - The specified instruction to carry out");
+            consoleWriter.Write("");
+            consoleWriter.Write("Possible Commands:");
+            foreach (object command in Enum.GetValues(typeof(CommandType)))
             {
-                Console.WriteLine(command.ToString());
+                consoleWriter.Write(command.ToString());
+            }
+            consoleWriter.Write("");
+            consoleWriter.Write("parameters - currently no parameters are implemented.");
+            consoleWriter.Write("           - all parameters are ignored");
+        }
+
+        private void RunDownloadRoutine(Portfolio portfolio)
+        {
+            PortfolioDataUpdater.Download(Account.All, portfolio, null, fReporter).Wait();
+        }
+
+        private void RunUpdateStatsRoutine(Portfolio portfolio)
+        {
+            string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
+            UserOptions options = new UserOptions();
+            DayValue_Named BankNames = new DayValue_Named();
+            PropertyInfo[] props = BankNames.GetType().GetProperties();
+            foreach (PropertyInfo name in props)
+            {
+                options.BankAccDataToExport.Add(name.Name);
             }
 
-            Console.WriteLine("");
-            Console.WriteLine("Command Syntax:");
-            Console.WriteLine("FPDconsole.exe <<filePath>> <<command>> <<parameters>>");
-        }
-
-        private static void RunDownloadRoutine(Portfolio portfolio, LogReporter reportLogger)
-        {
-            PortfolioDataUpdater.Downloader(portfolio, reportLogger).Wait();
+            SecurityStatistics totals = new SecurityStatistics();
+            PropertyInfo[] properties = totals.GetType().GetProperties();
+            foreach (PropertyInfo name in properties)
+            {
+                options.SecurityDataToExport.Add(name.Name);
+            }
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio);
+            stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
     }
 }

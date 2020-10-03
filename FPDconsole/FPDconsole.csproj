@@ -4,31 +4,42 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <Platforms>AnyCPU;x64</Platforms>
+    <DefineConstants>TRACE</DefineConstants>
+    <Deterministic>false</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Release</Configurations>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE</DefineConstants>
-    <OutputPath>..\bin\Debug</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>TRACE</DefineConstants>
-    <OutputPath>..\bin\Debug</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE</DefineConstants>
-    <OutputPath>..\bin\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DefineConstants>TRACE</DefineConstants>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+  </ItemGroup>
+  
+    <ItemGroup>
+    <PackageReference Include="StructureCommon" Version="1.0.3" />
+    <PackageReference Include="UICommon" Version="1.0.2" />
+  </ItemGroup>
+
+ <!-- Alternative locations for dlls, if Nuget links cannot be generated
+ <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <Reference Include="StructureCommon">
+      <HintPath>..\..\Publish\netcoreapp3.1\StructureCommon.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="StructureCommon">
+      <HintPath>..\..\Publish\net48\StructureCommon.dll</HintPath>
+    </Reference>
+  </ItemGroup> -->
+
+  <ItemGroup>
+    <None Update="InsertScheduleDownloadTask.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="StockDownloadDaily.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

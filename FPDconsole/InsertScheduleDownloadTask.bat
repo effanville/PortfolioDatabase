@@ -1,0 +1,1 @@
+Schtasks /create /tn StockDownloadDaily /xml StockDownloadDaily.xml

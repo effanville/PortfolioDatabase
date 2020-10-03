@@ -1,30 +1,54 @@
-﻿using FinancialStructures.Reporting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using StructureCommon.Extensions;
+using StructureCommon.Reporting;
 
 namespace FPDconsole
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        public static ConsoleStreamWriter ReportWriter;
+
+        private static void Main(string[] args)
         {
-            void WriteReport(ReportSeverity detailLevel, ReportType errorType, ReportLocation location, string message)
+            try
             {
-                Console.WriteLine(errorType + " - " + location + " - " + message);
+                MemoryStream errorStream = new MemoryStream();
+                ReportWriter = new ConsoleStreamWriter(errorStream);
+
+                void WriteReport(ReportSeverity detailLevel, ReportType errorType, ReportLocation location, string message)
+                {
+                    string toOutput = errorType + " - " + location + " - " + message;
+                    ReportWriter.Write(toOutput);
+                }
+
+                LogReporter ReportLogger = new LogReporter(WriteReport);
+                ExecuteCommands commandRunner = new ExecuteCommands(ReportLogger, ReportWriter);
+                ReportWriter.Write("FPDconsole.exe - version 1");
+                if (args.Length == 0)
+                {
+                    commandRunner.DisplayHelp();
+                    return;
+                }
+
+                ArgumentParser parser = new ArgumentParser(ReportLogger);
+                List<TextToken> values = parser.Parse(args);
+
+                commandRunner.RunCommands(values);
+
+                TextToken filePath = values.Find(token => token.TokenType == TextTokenType.FilePath);
+                ReportWriter.filePath = Path.GetDirectoryName(filePath.Value) + "\\" + DateTime.Now.FileSuitableDateTimeValue() + "-" + Path.GetFileNameWithoutExtension(filePath.Value) + "-output.log";
             }
-            LogReporter ReportLogger = new LogReporter(WriteReport);
-            Console.WriteLine("FPDconsole.exe - version 0.1");
-            if (args.Length == 0)
+            catch (Exception ex)
             {
-                ExecuteCommands.DisplayHelp();
-                return;
+                ReportWriter.Write(ex.Message);
             }
-
-            List<TextToken> values = ArgumentParser.Parse(args, ReportLogger);
-
-            ExecuteCommands.RunCommands(values, ReportLogger);
-
-            Console.WriteLine("Program finished");
+            finally
+            {
+                ReportWriter.Write("Program finished");
+                ReportWriter.SaveToFile();
+            }
         }
     }
 }
