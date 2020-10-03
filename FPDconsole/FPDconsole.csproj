@@ -5,6 +5,8 @@
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <Platforms>AnyCPU;x64</Platforms>
     <DefineConstants>TRACE</DefineConstants>
+    <Deterministic>false</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Release</Configurations>
     <OutputPath>..\bin</OutputPath>
   </PropertyGroup>
