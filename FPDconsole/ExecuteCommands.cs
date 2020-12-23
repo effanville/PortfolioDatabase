@@ -5,6 +5,7 @@ using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceInterfaces;
+using FinancialStructures.Statistics;
 using FinancialStructures.StatisticStructures;
 using FinancialStructures.StatsMakers;
 using StructureCommon.Extensions;
@@ -84,16 +85,15 @@ namespace FPDconsole
             PropertyInfo[] props = BankNames.GetType().GetProperties();
             foreach (PropertyInfo name in props)
             {
-                options.BankAccDataToExport.Add(name.Name);
+                options.BankAccDataToExport.AddRange(AccountStatisticsHelpers.DefaultBankAccountStats());
             }
 
-            SecurityStatistics totals = new SecurityStatistics();
-            PropertyInfo[] properties = totals.GetType().GetProperties();
-            foreach (PropertyInfo name in properties)
+
+            foreach (var name in AccountStatisticsHelpers.AllStatistics())
             {
-                options.SecurityDataToExport.Add(name.Name);
+                options.SecurityDataToExport.Add(name);
             }
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
     }
