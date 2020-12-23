@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
-using FinancialStructures.DataStructures;
+using FinancialStructures.DataExporters;
+using FinancialStructures.DataExporters.ExportOptions;
 using FinancialStructures.FinanceInterfaces;
-using FinancialStructures.StatisticStructures;
-using FinancialStructures.StatsMakers;
+using FinancialStructures.Statistics;
+using StructureCommon.DisplayClasses;
 using StructureCommon.Extensions;
 using StructureCommon.FileAccess;
 using StructureCommon.Reporting;
@@ -79,21 +79,18 @@ namespace FPDconsole
         private void RunUpdateStatsRoutine(Portfolio portfolio)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
-            UserOptions options = new UserOptions();
-            DayValue_Named BankNames = new DayValue_Named();
-            PropertyInfo[] props = BankNames.GetType().GetProperties();
-            foreach (PropertyInfo name in props)
+
+            var dummyBankAccountStats = new List<Statistic>(AccountStatisticsHelpers.DefaultBankAccountStats());
+
+            var dummySecurityStats = new List<Statistic>();
+            foreach (var name in AccountStatisticsHelpers.AllStatistics())
             {
-                options.BankAccDataToExport.Add(name.Name);
+                dummySecurityStats.Add(name);
             }
 
-            SecurityStatistics totals = new SecurityStatistics();
-            PropertyInfo[] properties = totals.GetType().GetProperties();
-            foreach (PropertyInfo name in properties)
-            {
-                options.SecurityDataToExport.Add(name.Name);
-            }
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio);
+            UserDisplayOptions options = new UserDisplayOptions(dummySecurityStats, dummyBankAccountStats, new List<Statistic>(), new List<Selectable<string>>());
+
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
     }

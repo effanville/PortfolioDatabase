@@ -19,6 +19,7 @@ Public bool IsSecurity
 Public bool IsSector
 ……….
 }
+
 3. Editing events outputs event args specifying where the database has been edited. This enables updating of specific things listening based on what has changed:
     E.g. the security edit page only needs to update if changes in a security have been triggered. Bank account changes do not alter that page.
 4. Require wiring of these events at creation, I believe this is already done so sufficiently
@@ -46,46 +47,46 @@ do different things based on account type
 # Standardise Security Statistics and increase number
 
 1. Create a base class for a statistic from a security
-    Public SecurityStatistic : Statistic
+  ``  Public SecurityStatistic : Statistic
 {
     Public SecurityStatistic(Type)
 {}
 Public virtual Calculate(ISecurity security);
-}
-
+}``
 And then a statistic becomes e.g.
-Public LatestValue : SecurityStatistic
+`` Public LatestValue : SecurityStatistic
 {
 Public override Calculate(ISecurity security)
 {
     Value = security.LatestValue();
 }
-}
+}``
 
 2. This then allows for a custom collection of statistics on the security, e.g.
-    Public SecurityStatistics
-{
-Public NameData securityNameData
-{get;set;}
-    Public List<SecurityStatistic> statistics
-{
-    get;
-set;
-} = new List<SecurityStatistic>();
 
-Public SecurityStatistics(ISecurity security, StatisticTypes[] statsToGenerate )
-{
-    foreach(var stat in statsToGenerate)
-{
-    statistics.Add()
-}
-}
-}
+<code> Public SecurityStatistics<br>
+{<br>
+Public NameData securityNameData<br>
+{get;set;}<br><br>
+    Public List<SecurityStatistic> statistics<br>
+{<br>
+    get;<br>
+set;<br>
+} = new List<SecurityStatistic>();<br><br>
+Public SecurityStatistics(ISecurity security, StatisticTypes[] statsToGenerate )<br>
+{<br>
+    foreach(var stat in statsToGenerate)<br>
+{<br>
+    statistics.Add();<br>
+}<br>
+}<br>
+}</code>
 
 And then one can have the output of statistics based upon what is in them, and this can be customised based upon what is in the available list of statistics
 3. This system can be employed for all objects, so statistics types can be of this form.
+
 4. One could have a base class of a statistic general enough for all bank accounts, securities etc
-    Public Statistic
+    ``Public Statistic
 {
     Public StatisticType whatTheStatisticIs
 {
@@ -97,7 +98,7 @@ Public double Value
 Public get;
 Protected set;
 }
-}
+}``
 
 5. At some level (Statistic or SecurityStatistic) the type of the statistic should be recorded, and this type should be used, and the ToString method could return this type.
 6. Using this, reporting statistics would largely be the same
@@ -114,5 +115,3 @@ Q: do these statistics need the Security/account name somewhere?
 1. sector recent change not displayed
 2. update display a bit sketchy
 3. Changing database doesn't clear all data
-
-
