@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
-using FinancialStructures.DataStructures;
+using FinancialStructures.DataExporters;
+using FinancialStructures.DataExporters.ExportOptions;
 using FinancialStructures.FinanceInterfaces;
 using FinancialStructures.Statistics;
-using FinancialStructures.StatisticStructures;
-using FinancialStructures.StatsMakers;
+using StructureCommon.DisplayClasses;
 using StructureCommon.Extensions;
 using StructureCommon.FileAccess;
 using StructureCommon.Reporting;
@@ -80,19 +79,17 @@ namespace FPDconsole
         private void RunUpdateStatsRoutine(Portfolio portfolio)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
-            UserOptions options = new UserOptions();
-            DayValue_Named BankNames = new DayValue_Named();
-            PropertyInfo[] props = BankNames.GetType().GetProperties();
-            foreach (PropertyInfo name in props)
-            {
-                options.BankAccDataToExport.AddRange(AccountStatisticsHelpers.DefaultBankAccountStats());
-            }
 
+            var dummyBankAccountStats = new List<Statistic>(AccountStatisticsHelpers.DefaultBankAccountStats());
 
+            var dummySecurityStats = new List<Statistic>();
             foreach (var name in AccountStatisticsHelpers.AllStatistics())
             {
-                options.SecurityDataToExport.Add(name);
+                dummySecurityStats.Add(name);
             }
+
+            UserDisplayOptions options = new UserDisplayOptions(dummySecurityStats, dummyBankAccountStats, new List<Statistic>(), new List<Selectable<string>>());
+
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
