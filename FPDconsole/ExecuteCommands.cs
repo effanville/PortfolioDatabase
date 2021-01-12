@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.DataExporters;
@@ -78,17 +79,7 @@ namespace FPDconsole
         private void RunUpdateStatsRoutine(IPortfolio portfolio)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
-
-            var dummyBankAccountStats = new List<Statistic>(AccountStatisticsHelpers.DefaultBankAccountStats());
-
-            var dummySecurityStats = new List<Statistic>();
-            foreach (var name in AccountStatisticsHelpers.AllStatistics())
-            {
-                dummySecurityStats.Add(name);
-            }
-
-            UserDisplayOptions options = new UserDisplayOptions(dummySecurityStats, dummyBankAccountStats, new List<Statistic>(), new List<Selectable<string>>());
-
+            UserDisplayOptions options = new UserDisplayOptions(AccountStatisticsHelpers.AllStatistics().ToList(), AccountStatisticsHelpers.DefaultBankAccountStats().ToList(), new List<Statistic>(), new List<Selectable<string>>());
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
