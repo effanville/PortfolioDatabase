@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.DataExporters;
 using FinancialStructures.DataExporters.ExportOptions;
-using FinancialStructures.FinanceInterfaces;
 using FinancialStructures.Statistics;
 using StructureCommon.DisplayClasses;
 using StructureCommon.Extensions;
@@ -27,7 +27,7 @@ namespace FPDconsole
         {
             // first we must load the portfolio to edit. Find the text token specifying where to load.
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
-            Portfolio portfolio = new Portfolio();
+            IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             portfolio.LoadPortfolio(filePath.Value, fReporter);
             _ = fReporter.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
 
@@ -71,25 +71,15 @@ namespace FPDconsole
             consoleWriter.Write("           - all parameters are ignored");
         }
 
-        private void RunDownloadRoutine(Portfolio portfolio)
+        private void RunDownloadRoutine(IPortfolio portfolio)
         {
             PortfolioDataUpdater.Download(Account.All, portfolio, null, fReporter).Wait();
         }
 
-        private void RunUpdateStatsRoutine(Portfolio portfolio)
+        private void RunUpdateStatsRoutine(IPortfolio portfolio)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
-
-            var dummyBankAccountStats = new List<Statistic>(AccountStatisticsHelpers.DefaultBankAccountStats());
-
-            var dummySecurityStats = new List<Statistic>();
-            foreach (var name in AccountStatisticsHelpers.AllStatistics())
-            {
-                dummySecurityStats.Add(name);
-            }
-
-            UserDisplayOptions options = new UserDisplayOptions(dummySecurityStats, dummyBankAccountStats, new List<Statistic>(), new List<Selectable<string>>());
-
+            UserDisplayOptions options = new UserDisplayOptions(AccountStatisticsHelpers.AllStatistics().ToList(), AccountStatisticsHelpers.DefaultBankAccountStats().ToList(), new List<Statistic>(), new List<Selectable<string>>());
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
