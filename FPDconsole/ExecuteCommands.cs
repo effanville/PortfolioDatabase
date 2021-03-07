@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
@@ -25,10 +26,11 @@ namespace FPDconsole
 
         internal void RunCommands(List<TextToken> tokens)
         {
+            var fileSystem = new FileSystem();
             // first we must load the portfolio to edit. Find the text token specifying where to load.
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
-            portfolio.LoadPortfolio(filePath.Value, fReporter);
+            portfolio.LoadPortfolio(filePath.Value, fileSystem, fReporter);
             _ = fReporter.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
 
             foreach (TextToken token in tokens)
@@ -48,7 +50,7 @@ namespace FPDconsole
                 }
             }
 
-            portfolio.SavePortfolio(filePath.Value, fReporter);
+            portfolio.SavePortfolio(filePath.Value, fileSystem, fReporter);
         }
 
         internal void DisplayHelp()
