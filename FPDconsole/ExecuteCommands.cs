@@ -46,7 +46,7 @@ namespace FPDconsole
                 if (token.TokenType == TextTokenType.DownloadUpdateStats)
                 {
                     RunDownloadRoutine(portfolio);
-                    RunUpdateStatsRoutine(portfolio);
+                    RunUpdateStatsRoutine(portfolio, fileSystem);
                 }
             }
 
@@ -78,12 +78,12 @@ namespace FPDconsole
             PortfolioDataUpdater.Download(Account.All, portfolio, null, fReporter).Wait();
         }
 
-        private void RunUpdateStatsRoutine(IPortfolio portfolio)
+        private void RunUpdateStatsRoutine(IPortfolio portfolio, IFileSystem fileSystem)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
             UserDisplayOptions options = new UserDisplayOptions(AccountStatisticsHelpers.AllStatistics().ToList(), AccountStatisticsHelpers.DefaultBankAccountStats().ToList(), new List<Statistic>(), new List<Selectable<string>>());
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
-            stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
+            stats.ExportToFile(fileSystem, filePath, ExportType.Html, options, fReporter);
         }
     }
 }
