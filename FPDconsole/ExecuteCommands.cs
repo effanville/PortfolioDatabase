@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
-using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceInterfaces;
-using FinancialStructures.StatisticStructures;
-using FinancialStructures.StatsMakers;
+using FinancialStructures.DataExporters;
+using FinancialStructures.DataExporters.ExportOptions;
+using FinancialStructures.Statistics;
+using StructureCommon.DisplayClasses;
 using StructureCommon.Extensions;
 using StructureCommon.FileAccess;
 using StructureCommon.Reporting;
@@ -27,7 +27,7 @@ namespace FPDconsole
         {
             // first we must load the portfolio to edit. Find the text token specifying where to load.
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
-            Portfolio portfolio = new Portfolio();
+            IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             portfolio.LoadPortfolio(filePath.Value, fReporter);
             _ = fReporter.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
 
@@ -71,29 +71,16 @@ namespace FPDconsole
             consoleWriter.Write("           - all parameters are ignored");
         }
 
-        private void RunDownloadRoutine(Portfolio portfolio)
+        private void RunDownloadRoutine(IPortfolio portfolio)
         {
             PortfolioDataUpdater.Download(Account.All, portfolio, null, fReporter).Wait();
         }
 
-        private void RunUpdateStatsRoutine(Portfolio portfolio)
+        private void RunUpdateStatsRoutine(IPortfolio portfolio)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
-            UserOptions options = new UserOptions();
-            DayValue_Named BankNames = new DayValue_Named();
-            PropertyInfo[] props = BankNames.GetType().GetProperties();
-            foreach (PropertyInfo name in props)
-            {
-                options.BankAccDataToExport.Add(name.Name);
-            }
-
-            SecurityStatistics totals = new SecurityStatistics();
-            PropertyInfo[] properties = totals.GetType().GetProperties();
-            foreach (PropertyInfo name in properties)
-            {
-                options.SecurityDataToExport.Add(name.Name);
-            }
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio);
+            UserDisplayOptions options = new UserDisplayOptions(AccountStatisticsHelpers.AllStatistics().ToList(), AccountStatisticsHelpers.DefaultBankAccountStats().ToList(), new List<Statistic>(), new List<Selectable<string>>());
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(filePath, ExportType.Html, options, fReporter);
         }
     }
