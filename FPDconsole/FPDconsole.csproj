@@ -20,7 +20,7 @@
   </ItemGroup>
   
     <ItemGroup>
-    <PackageReference Include="UICommon" Version="1.0.5" />
+    <PackageReference Include="UICommon" Version="1.0.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +30,10 @@
     <None Update="StockDownloadDaily.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="StructureCommon" Version="1.0.8" />
   </ItemGroup>
 
 </Project>
