@@ -32,8 +32,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="StructureCommon" Version="1.0.8" />
-  </ItemGroup>
-
 </Project>
