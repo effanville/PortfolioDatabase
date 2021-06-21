@@ -31,7 +31,7 @@ namespace FPDconsole
             TextToken filePath = tokens.Find(token => token.TokenType == TextTokenType.FilePath);
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             portfolio.LoadPortfolio(filePath.Value, fileSystem, fReporter);
-            _ = fReporter.LogUsefulWithStrings("Report", "Loading", $"Successfully loaded portfolio from {filePath.Value}");
+            _ = fReporter.LogUseful(ReportType.Information, ReportLocation.Loading, $"Successfully loaded portfolio from {filePath.Value}");
 
             foreach (TextToken token in tokens)
             {
