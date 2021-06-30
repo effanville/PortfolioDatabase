@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
+using Common.Console;
+using Common.Console.Commands;
 using Common.Structure.Extensions;
 using Common.Structure.Reporting;
 
@@ -8,47 +10,49 @@ namespace FPDconsole
 {
     internal class Program
     {
-        public static ConsoleStreamWriter ReportWriter;
-
         private static void Main(string[] args)
         {
-            try
+            // Create the logger.
+            void reportAction(ReportSeverity severity, ReportType reportType, ReportLocation location, string text)
             {
-                MemoryStream errorStream = new MemoryStream();
-                ReportWriter = new ConsoleStreamWriter(errorStream);
-
-                void WriteReport(ReportSeverity detailLevel, ReportType errorType, ReportLocation location, string message)
+                string message = DateTime.Now + "(" + reportType.ToString() + ")" + text;
+                if (reportType == ReportType.Error)
                 {
-                    string toOutput = errorType + " - " + location + " - " + message;
-                    ReportWriter.Write(toOutput);
+                    writeError(message);
                 }
-
-                LogReporter ReportLogger = new LogReporter(WriteReport);
-                ExecuteCommands commandRunner = new ExecuteCommands(ReportLogger, ReportWriter);
-                ReportWriter.Write("FPDconsole.exe - version 1");
-                if (args.Length == 0)
+                else
                 {
-                    commandRunner.DisplayHelp();
-                    return;
+                    writeLine(message);
                 }
-
-                ArgumentParser parser = new ArgumentParser(ReportLogger);
-                List<TextToken> values = parser.Parse(args);
-
-                commandRunner.RunCommands(values);
-
-                TextToken filePath = values.Find(token => token.TokenType == TextTokenType.FilePath);
-                ReportWriter.filePath = Path.GetDirectoryName(filePath.Value) + "\\" + DateTime.Now.FileSuitableDateTimeValue() + "-" + Path.GetFileNameWithoutExtension(filePath.Value) + "-output.log";
             }
-            catch (Exception ex)
+            IReportLogger logger = new LogReporter(reportAction);
+
+            // Create the Console to write output.
+            void writeLine(string text) => Console.WriteLine(text);
+            void writeError(string text)
             {
-                ReportWriter.Write(ex.Message);
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(text);
+                Console.ForegroundColor = color;
             }
-            finally
+            IConsole console = new ConsoleInstance(writeError, writeLine);
+
+            IFileSystem fileSystem = new FileSystem();
+
+            // Define the acceptable commands for this program.
+            var validCommands = new List<ICommand>()
             {
-                ReportWriter.Write("Program finished");
-                ReportWriter.SaveToFile();
-            }
+                new DownloadCommand(fileSystem, logger),
+            };
+
+            _ = logger.Log(ReportSeverity.Useful, ReportType.Information, ReportLocation.Execution, "FPDconsole.exe - version 1");
+
+            // Generate the context, validate the arguments and execute.
+            ConsoleContext.SetAndExecute(args, console, logger, validCommands);
+            string logPath = $"{fileSystem.Directory.GetCurrentDirectory()}\\{DateTime.Now.FileSuitableDateTimeValue()}-consoleLog.log";
+            logger.WriteReportsToFile(logPath);
+            return;
         }
     }
 }
