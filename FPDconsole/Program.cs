@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using StructureCommon.Extensions;
-using StructureCommon.Reporting;
+using Common.Structure.Extensions;
+using Common.Structure.Reporting;
 
 namespace FPDconsole
 {
