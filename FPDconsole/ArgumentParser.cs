@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using StructureCommon.Reporting;
+using Common.Structure.Reporting;
 
 namespace FPDconsole
 {

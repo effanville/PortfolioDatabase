@@ -7,10 +7,10 @@ using FinancialStructures.Database.Download;
 using FinancialStructures.DataExporters;
 using FinancialStructures.DataExporters.ExportOptions;
 using FinancialStructures.Statistics;
-using StructureCommon.DisplayClasses;
-using StructureCommon.Extensions;
-using StructureCommon.FileAccess;
-using StructureCommon.Reporting;
+using Common.Structure.DisplayClasses;
+using Common.Structure.Extensions;
+using Common.Structure.FileAccess;
+using Common.Structure.Reporting;
 
 namespace FPDconsole
 {

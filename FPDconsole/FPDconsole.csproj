@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,13 +14,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
     <DocumentationFile>..\bin\Release\FPDconsole.xml</DocumentationFile>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
   </ItemGroup>
-  
+
     <ItemGroup>
-    <PackageReference Include="UICommon" Version="1.0.6" />
+    <PackageReference Include="Common.Console" Version="1.0.1" />
+    <PackageReference Include="Common.UI" Version="1.0.6" />
   </ItemGroup>
 
   <ItemGroup>
