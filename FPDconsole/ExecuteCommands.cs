@@ -80,9 +80,9 @@ namespace FPDconsole
 
         private void RunUpdateStatsRoutine(IPortfolio portfolio, IFileSystem fileSystem)
         {
-            string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
+            string filePath = portfolio.Directory(fileSystem) + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fileSystem) + ".html";
             UserDisplayOptions options = UserDisplayOptions.DefaultOptions();
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, options, fileSystem);
             stats.ExportToFile(fileSystem, filePath, ExportType.Html, options, fReporter);
         }
     }
