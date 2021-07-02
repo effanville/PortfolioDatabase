@@ -81,7 +81,7 @@ namespace FPDconsole
         private void RunUpdateStatsRoutine(IPortfolio portfolio, IFileSystem fileSystem)
         {
             string filePath = portfolio.Directory + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName + ".html";
-            UserDisplayOptions options = new UserDisplayOptions(AccountStatisticsHelpers.AllStatistics().ToList(), AccountStatisticsHelpers.DefaultBankAccountStats().ToList(), new List<Statistic>(), new List<Selectable<string>>());
+            UserDisplayOptions options = UserDisplayOptions.DefaultOptions();
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, options);
             stats.ExportToFile(fileSystem, filePath, ExportType.Html, options, fReporter);
         }
