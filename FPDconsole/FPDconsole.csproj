@@ -26,8 +26,7 @@
   </ItemGroup>
 
     <ItemGroup>
-    <PackageReference Include="Common.Console" Version="1.0.2" />
-    <PackageReference Include="Common.UI" Version="1.0.7" />
+    <PackageReference Include="Common.Console" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
