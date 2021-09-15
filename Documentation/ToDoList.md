@@ -2,34 +2,12 @@
 
 ## Bug issues
 
-
 ## Implementation Changes
-
-1. Separate out Edit Windows into multiple files
-	1.1 Make debugging easier as less in one place
-	1.2 Make flow of data a bit more complicated 
-	1.3 May enable reusing common code a bit more.
-2. Sorting of reports by various statistics
 
 ## Major Features
 
-4. More in depth portfolio analytics.
-5. Graphs of current status of portfolio, and displaying history. e.g 
-
-using System.Windows.Forms.DataVisualization.Charting;
-
-private void CreateChart()
-{
-    var series = new Series("Finance");
-    series.ChartType = SeriesChartType.Line;
-    // Frist parameter is X-Axis and Second is Collection of Y- Axis
-    series.Points.DataBindXY(new[] { 2001, 2002, 2003, 2004 }, new[] { 100, 200, 90, 150 });
-    chart1.Series.Add(series);
-
-}
-
-7. Stats creator tabs for the different options ( and for html reports)
-8. Method to clear data if have too much
+1. More in depth portfolio analytics.
+2. Provide help documentation.
 
 # Fixed issues/Completed Tasks
 
@@ -48,3 +26,10 @@ private void CreateChart()
 6. Use Tabs in various displays to collate different information
 3. Provide ability to create custom reports
 4. Reduce amount of spacing in reports.
+1. Separate out Edit Windows into multiple files
+	1.1 Make debugging easier as less in one place
+	1.2 Make flow of data a bit more complicated 
+	1.3 May enable reusing common code a bit more.
+2. Sorting of reports by various statistics
+5. Graphs of current status of portfolio, and displaying history. e.g 
+8. Method to clear data if have too much
