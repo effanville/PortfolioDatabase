@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
-using FinancialStructures.DataExporters;
-using FinancialStructures.DataExporters.ExportOptions;
-using FinancialStructures.Statistics;
-using Common.Structure.DisplayClasses;
 using Common.Structure.Extensions;
 using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
+using FinancialStructures.DataExporters.Statistics;
 
 namespace FPDconsole
 {
@@ -81,9 +77,8 @@ namespace FPDconsole
         private void RunUpdateStatsRoutine(IPortfolio portfolio, IFileSystem fileSystem)
         {
             string filePath = portfolio.Directory(fileSystem) + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fileSystem) + ".html";
-            UserDisplayOptions options = UserDisplayOptions.DefaultOptions();
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio, options, fileSystem);
-            stats.ExportToFile(fileSystem, filePath, ExportType.Html, options, fReporter);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, PortfolioStatisticsSettings.DefaultSettings(), fileSystem);
+            stats.ExportToFile(fileSystem, filePath, ExportType.Html, PortfolioStatisticsExportSettings.DefaultSettings(), fReporter);
         }
     }
 }
