@@ -13,14 +13,14 @@ using FinancialStructures.DataExporters.Statistics;
 
 namespace FPDconsole
 {
-    internal sealed class DownloadCommand : ICommand
+    internal sealed class StatisticsCommand : ICommand
     {
         private readonly IFileSystem fFileSystem;
         private readonly IReportLogger fLogger;
         private readonly CommandOption<string> fFilepathOption;
-        private readonly CommandOption<bool> fUpdateStatsOption;
+        private readonly CommandOption<string> fOutputPathOption;
 
-        public string Name => "download";
+        public string Name => "stats";
 
         /// <inheritdoc/>
         public IList<CommandOption> Options
@@ -34,15 +34,15 @@ namespace FPDconsole
             get;
         } = new List<ICommand>();
 
-        public DownloadCommand(IFileSystem fileSystem, IReportLogger logger)
+        public StatisticsCommand(IFileSystem fileSystem, IReportLogger logger)
         {
             fFileSystem = fileSystem;
             fLogger = logger;
             Func<string, bool> fileValidator = filepath => fileSystem.File.Exists(filepath);
             fFilepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
             Options.Add(fFilepathOption);
-            fUpdateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
-            Options.Add(fUpdateStatsOption);
+            fOutputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
+            Options.Add(fOutputPathOption);
         }
 
         /// <inheritdoc/>
@@ -52,18 +52,12 @@ namespace FPDconsole
             portfolio.LoadPortfolio(fFilepathOption.Value, fFileSystem, fLogger);
             _ = fLogger.LogUseful(ReportType.Information, ReportLocation.Loading, $"Successfully loaded portfolio from {fFilepathOption.Value}");
 
-            _ = PortfolioDataUpdater.Download(Account.All, portfolio, null, fLogger).ConfigureAwait(true);
-
-            if (fUpdateStatsOption.Value)
-            {
-                string filePath = portfolio.Directory(fFileSystem) + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fFileSystem) + ".html";
-                var settings = PortfolioStatisticsSettings.DefaultSettings();
-                PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, fFileSystem);
-                var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
-                stats.ExportToFile(fFileSystem, filePath, ExportType.Html, exportSettings, fLogger);
-            }
-
-            portfolio.SavePortfolio(fFilepathOption.Value, fFileSystem, fLogger);
+            string filePath = fOutputPathOption.Value ?? portfolio.Directory(fFileSystem) + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fFileSystem) + ".html";
+            var settings = PortfolioStatisticsSettings.DefaultSettings();
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, fFileSystem);
+            var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
+            stats.ExportToFile(fFileSystem, filePath, ExportType.Html, exportSettings, fLogger);
+            _ = fLogger.LogUseful(ReportType.Information, ReportLocation.StatisticsGeneration, $"Successfully generated statistics page {filePath}");
 
             return 0;
         }
