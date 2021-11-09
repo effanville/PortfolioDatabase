@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
+
 using Common.Console;
 using Common.Console.Commands;
 using Common.Console.Options;
+
 using Common.Structure.Extensions;
 using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
+
 using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.DataExporters.Statistics;
+using FinancialStructures.Database.Extensions;
+using FinancialStructures.Database.Export.Statistics;
 
 namespace FPDconsole
 {
