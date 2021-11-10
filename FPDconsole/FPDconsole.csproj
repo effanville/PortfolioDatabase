@@ -26,7 +26,7 @@
   </ItemGroup>
 
     <ItemGroup>
-    <PackageReference Include="Common.Console" Version="1.0.3" />
+    <PackageReference Include="Common.Console" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,4 +37,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+	
 </Project>
