@@ -32,6 +32,11 @@ namespace FPD.UI
         public static List<Statistic> SectorFieldNames => AccountStatisticsHelpers.DefaultSectorStats().ToList();
 
         /// <summary>
+        /// List of all applicable statistics for sectors.
+        /// </summary>
+        public static List<Statistic> AssetFieldNames => AccountStatisticsHelpers.DefaultAssetStats().ToList();
+
+        /// <summary>
         /// List of all possible sorting directions.
         /// </summary>
         public static List<SortDirection> SortDirections => Enum.GetValues(typeof(SortDirection)).Cast<SortDirection>().ToList();

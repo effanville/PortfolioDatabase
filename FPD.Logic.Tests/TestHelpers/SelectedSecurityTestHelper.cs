@@ -26,7 +26,7 @@ namespace FPD.Logic.Tests.TestHelpers
             set;
         }
 
-        protected SelectedSecurityViewModel ViewModel
+        protected AssetSecurityViewModel ViewModel
         {
             get;
             private set;

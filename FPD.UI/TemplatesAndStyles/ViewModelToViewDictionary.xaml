@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:view="clr-namespace:FPD.UI.Windows.Security"
                     xmlns:cview="clr-namespace:FPD.UI.Windows"
+                    xmlns:aview="clr-namespace:FPD.UI.Windows.Asset"
                     xmlns:vm="clr-namespace:FPD.Logic.ViewModels.Security;assembly=FPD.Logic"
+                    xmlns:vma="clr-namespace:FPD.Logic.ViewModels.Asset;assembly=FPD.Logic"
                     xmlns:cvm="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic">
 
     <DataTemplate DataType="{x:Type vm:SelectedSecurityViewModel}">
@@ -11,6 +13,10 @@
 
     <DataTemplate DataType="{x:Type cvm:DataNamesViewModel}">
         <cview:DataNamesView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vma:SelectedAssetViewModel}">
+        <aview:SelectedAssetView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type cvm:SelectedSingleDataViewModel}">

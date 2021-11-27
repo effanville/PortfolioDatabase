@@ -32,7 +32,7 @@ namespace FPD.Logic.Tests
             Assert.AreEqual("Total Securities: 1", dataView.SecurityTotalText);
             Assert.AreEqual("Total Bank Accounts: 1", dataView.BankAccountTotalText);
 
-            SecurityEditWindowViewModel securityView = ViewModel.SecurityWindow();
+            AssetEditWindowViewModel securityView = ViewModel.SecurityWindow();
             DataNamesViewModel securityNamesView = securityView.DataNames();
             Assert.AreEqual(1, securityNamesView.DataNames.Count);
 
@@ -45,7 +45,7 @@ namespace FPD.Logic.Tests
         [Test]
         public void AddingSecurityUpdatesSuccessfully()
         {
-            SecurityEditWindowViewModel securityViewModel = ViewModel.SecurityWindow();
+            AssetEditWindowViewModel securityViewModel = ViewModel.SecurityWindow();
             DataNamesViewModel securityNames = securityViewModel.Tabs[0] as DataNamesViewModel;
             SelectableEquatable<NameData> selectedInitialName = new SelectableEquatable<NameData>(new NameData(), false);
             securityNames.DataNames.Add(selectedInitialName);

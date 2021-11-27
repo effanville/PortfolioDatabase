@@ -60,7 +60,7 @@ namespace FPD.Logic.Tests.SecurityWindowTests
             Assert.AreEqual(2, ViewModel.Tabs.Count);
             DataNamesViewModel dataNames = DataNames;
             Assert.AreEqual(1, dataNames.DataNames.Count);
-            SelectedSecurityViewModel selected = SelectedViewModel(newData);
+            AssetSecurityViewModel selected = SelectedViewModel(newData);
             Assert.IsNotNull(selected);
             Assert.AreEqual(1, selected.TLVM.Valuations.Count);
         }

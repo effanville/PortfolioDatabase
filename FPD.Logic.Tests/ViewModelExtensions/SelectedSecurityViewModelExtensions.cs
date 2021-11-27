@@ -12,7 +12,7 @@ namespace FPD.Logic.Tests.ViewModelExtensions
     /// </summary>
     public static class SelectedSecurityViewModelExtensions
     {
-        public static SecurityTrade AddNewTrade(this SelectedSecurityViewModel viewModel)
+        public static SecurityTrade AddNewTrade(this AssetSecurityViewModel viewModel)
         {
             viewModel.SelectTrade(null);
             viewModel.Trades.Add(viewModel.DefaultTradeValue());
@@ -23,17 +23,17 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             return newItem;
         }
 
-        public static void SelectTrade(this SelectedSecurityViewModel viewModel, SecurityTrade valueToSelect)
+        public static void SelectTrade(this AssetSecurityViewModel viewModel, SecurityTrade valueToSelect)
         {
             viewModel.SelectionChangedCommand?.Execute(valueToSelect);
         }
 
-        public static void BeginEditTrade(this SelectedSecurityViewModel viewModel)
+        public static void BeginEditTrade(this AssetSecurityViewModel viewModel)
         {
             viewModel.PreEditCommand?.Execute(null);
         }
 
-        public static void CompleteEditTrade(this SelectedSecurityViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEditTrade(this AssetSecurityViewModel viewModel, IPortfolio portfolio)
         {
             viewModel.AddEditDataCommand?.Execute(null);
             viewModel.UpdateData(portfolio);
@@ -45,7 +45,7 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             viewModel.UpdateData(portfolio);
         }
 
-        public static DailyValuation AddNewUnitPrice(this SelectedSecurityViewModel viewModel)
+        public static DailyValuation AddNewUnitPrice(this AssetSecurityViewModel viewModel)
         {
             viewModel.SelectUnitPrice(null);
             viewModel.TLVM.Valuations.Add(new DailyValuation());
@@ -56,17 +56,17 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             return newItem;
         }
 
-        public static void SelectUnitPrice(this SelectedSecurityViewModel viewModel, DailyValuation valueToSelect)
+        public static void SelectUnitPrice(this AssetSecurityViewModel viewModel, DailyValuation valueToSelect)
         {
             viewModel.TLVM.SelectionChangedCommand?.Execute(valueToSelect);
         }
 
-        public static void BeginEdit(this SelectedSecurityViewModel viewModel)
+        public static void BeginEdit(this AssetSecurityViewModel viewModel)
         {
             viewModel.TLVM.PreEditCommand?.Execute(null);
         }
 
-        public static void CompleteEdit(this SelectedSecurityViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEdit(this AssetSecurityViewModel viewModel, IPortfolio portfolio)
         {
             viewModel.TLVM.AddEditDataCommand?.Execute(null);
             viewModel.UpdateData(portfolio);

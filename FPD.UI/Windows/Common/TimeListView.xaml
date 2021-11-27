@@ -48,7 +48,7 @@
                                 Width="Auto"
                                 Binding="{Binding Path=Value, UpdateSourceTrigger=LostFocus}">
                 <DataGridTextColumn.Header>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.ValueName }" />
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, AncestorLevel=1}, Path=DataContext.ValueName }" />
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
         </DataGrid.Columns>

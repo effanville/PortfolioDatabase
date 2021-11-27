@@ -28,7 +28,7 @@ namespace FPD.Logic.Tests.TestHelpers
             }
         }
 
-        protected SecurityEditWindowViewModel ViewModel
+        protected AssetEditWindowViewModel ViewModel
         {
             get;
             private set;
@@ -49,9 +49,9 @@ namespace FPD.Logic.Tests.TestHelpers
             }
         }
 
-        public SelectedSecurityViewModel SelectedViewModel(NameData name)
+        public AssetSecurityViewModel SelectedViewModel(NameData name)
         {
-            return (SelectedSecurityViewModel)ViewModel.Tabs.First(tab => tab is SelectedSecurityViewModel vm && vm.Header == name.ToString());
+            return (AssetSecurityViewModel)ViewModel.Tabs.First(tab => tab is AssetSecurityViewModel vm && vm.Header == name.ToString());
         }
 
 

@@ -7,20 +7,20 @@ using FinancialStructures.NamingStructures;
 namespace FPD.Logic.Tests.ViewModelExtensions
 {
     /// <summary>
-    /// Contains user like interaction behaviours with the <see cref="SecurityEditWindowViewModel"/>.
+    /// Contains user like interaction behaviours with the <see cref="AssetEditWindowViewModel"/>.
     /// </summary>
     public static class SecurityEditWindowViewModelExtensions
     {
-        public static DataNamesViewModel DataNames(this SecurityEditWindowViewModel viewModel)
+        public static DataNamesViewModel DataNames(this AssetEditWindowViewModel viewModel)
         {
             IEnumerable<object> desiredViewModel = viewModel.Tabs.Where(vm => vm is DataNamesViewModel svm);
             return desiredViewModel.First() as DataNamesViewModel;
         }
 
-        public static SelectedSecurityViewModel SelectedTab(this SecurityEditWindowViewModel viewModel, NameData name)
+        public static AssetSecurityViewModel SelectedTab(this AssetEditWindowViewModel viewModel, NameData name)
         {
-            IEnumerable<object> desiredViewModel = viewModel.Tabs.Where(vm => vm is SelectedSecurityViewModel svm && svm.SelectedName.Equals(name));
-            return desiredViewModel.First() as SelectedSecurityViewModel;
+            IEnumerable<object> desiredViewModel = viewModel.Tabs.Where(vm => vm is AssetSecurityViewModel svm && svm.SelectedName.Equals(name));
+            return desiredViewModel.First() as AssetSecurityViewModel;
         }
     }
 }
