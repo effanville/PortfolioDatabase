@@ -2,7 +2,7 @@
 using System.IO.Abstractions;
 using Common.UI;
 using Common.UI.Services;
-using FPD.Logic.ViewModels.Security;
+using FPD.Logic.ViewModels.Asset;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using Moq;
@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace FPD.Logic.Tests.TestHelpers
 {
-    public abstract class SelectedSecurityTestHelper
+    public abstract class SelectedAssetTestHelper
     {
         private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
 
@@ -26,7 +26,7 @@ namespace FPD.Logic.Tests.TestHelpers
             set;
         }
 
-        protected SelectedSecurityViewModel ViewModel
+        protected SelectedAssetViewModel ViewModel
         {
             get;
             private set;
@@ -38,10 +38,10 @@ namespace FPD.Logic.Tests.TestHelpers
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
             Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-            Name = new NameData("Fidelity", "China");
+            Name = new NameData("House", "MyHouse");
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);
-            ViewModel = new SelectedSecurityViewModel(Portfolio, DataUpdater, TestSetupHelper.DummyReportLogger, null, globals, Name);
+            ViewModel = new SelectedAssetViewModel(Portfolio, DataUpdater, TestSetupHelper.DummyReportLogger, null, globals, Name);
         }
 
         [TearDown]

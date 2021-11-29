@@ -4,7 +4,7 @@ using System.Linq;
 using Common.UI;
 using Common.UI.Services;
 using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
+using FPD.Logic.ViewModels.Asset;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using Moq;
@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace FPD.Logic.Tests.TestHelpers
 {
-    public abstract class SecurityWindowTestHelper
+    public abstract class AssetWindowTestHelper
     {
         private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
 
@@ -28,7 +28,7 @@ namespace FPD.Logic.Tests.TestHelpers
             }
         }
 
-        protected SecurityEditWindowViewModel ViewModel
+        protected AssetEditWindowViewModel ViewModel
         {
             get;
             private set;
@@ -49,9 +49,9 @@ namespace FPD.Logic.Tests.TestHelpers
             }
         }
 
-        public SelectedSecurityViewModel SelectedViewModel(NameData name)
+        public SelectedAssetViewModel SelectedViewModel(NameData name)
         {
-            return (SelectedSecurityViewModel)ViewModel.Tabs.First(tab => tab is SelectedSecurityViewModel vm && vm.Header == name.ToString());
+            return (SelectedAssetViewModel)ViewModel.Tabs.First(tab => tab is SelectedAssetViewModel vm && vm.Header == name.ToString());
         }
 
 
@@ -63,7 +63,7 @@ namespace FPD.Logic.Tests.TestHelpers
             Portfolio = TestSetupHelper.CreateEmptyDataBase();
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);
-            ViewModel = new SecurityEditWindowViewModel(globals, null, Portfolio, DataUpdater);
+            ViewModel = new AssetEditWindowViewModel(globals, null, Portfolio, DataUpdater);
         }
 
         [TearDown]

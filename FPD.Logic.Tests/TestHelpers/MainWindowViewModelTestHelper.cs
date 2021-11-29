@@ -9,8 +9,8 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class MainWindowViewModelTestHelper
     {
-
         protected IPortfolio Portfolio => ViewModel?.ProgramPortfolio;
+        protected MockFileSystem FileSystem;
 
         protected MainWindowViewModel ViewModel
         {
@@ -21,13 +21,14 @@ namespace FPD.Logic.Tests.TestHelpers
         [SetUp]
         public void Setup()
         {
-            MockFileSystem tempFileSystem = new MockFileSystem();
+            FileSystem = new MockFileSystem();
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
             string testPath = "c:/temp/database.xml";
+            string saveFilePath = "c:/temp/newDatabase.xml";
 
-            tempFileSystem.AddFile(testPath, new MockFileData(file));
+            FileSystem.AddFile(testPath, new MockFileData(file));
 
-            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
+            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
             ViewModel = new MainWindowViewModel(globals);
         }
 

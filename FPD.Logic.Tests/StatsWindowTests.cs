@@ -18,7 +18,7 @@ namespace FPD.Logic.Tests
         {
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(4, ViewModel.Stats.Count);
+                Assert.AreEqual(6, ViewModel.Stats.Count);
                 Assert.AreEqual(true, ViewModel.DisplayValueFunds);
             });
         }
@@ -30,7 +30,7 @@ namespace FPD.Logic.Tests
         [TestCase(true)]
         public void CanStoreConfig(bool valueFunds)
         {
-            Assert.AreEqual(4, ViewModel.Stats.Count);
+            Assert.AreEqual(6, ViewModel.Stats.Count);
             Assert.AreEqual(true, ViewModel.DisplayValueFunds);
 
             ViewModel.DisplayValueFunds = valueFunds;
@@ -39,7 +39,7 @@ namespace FPD.Logic.Tests
             ViewModel = new StatsViewModel(Globals, null, VMConfiguration, Portfolio);
 
             Assert.AreEqual(valueFunds, ViewModel.DisplayValueFunds);
-            Assert.AreEqual(4, ViewModel.Stats.Count);
+            Assert.AreEqual(6, ViewModel.Stats.Count);
         }
     }
 }

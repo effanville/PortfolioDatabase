@@ -38,6 +38,9 @@ namespace FPD.Logic.Tests
           <d2p1:KeyValueOfstringanyType>
             <d2p1:Key>ExportStatsViewModel</d2p1:Key>
             <d2p1:Value i:type=""ExportStatsConfiguration"">
+              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <AssetDirection>Ascending</AssetDirection>
+              <AssetSortingField>AccountType</AssetSortingField>
               <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>AccountType</BankSortingField>
@@ -219,6 +222,30 @@ namespace FPD.Logic.Tests
           <d2p1:KeyValueOfstringanyType>
             <d2p1:Key>ExportStatsViewModel</d2p1:Key>
             <d2p1:Value i:type=""ExportStatsConfiguration"">
+              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Company</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Name</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>LatestValue</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Sectors</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Notes</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+              </AssetColumnNames>
+              <AssetDirection>Ascending</AssetDirection>
+              <AssetSortingField>Company</AssetSortingField>
               <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>Company</d8p1:Instance>
@@ -230,6 +257,10 @@ namespace FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
@@ -266,6 +297,10 @@ namespace FPD.Logic.Tests
                 </d8p1:SelectableOfstring>
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>ShowBenchmarks</d8p1:Instance>
+                  <d8p1:Selected>false</d8p1:Selected>
+                </d8p1:SelectableOfstring>
+                <d8p1:SelectableOfstring>
+                  <d8p1:Instance>ShowAssets</d8p1:Instance>
                   <d8p1:Selected>false</d8p1:Selected>
                 </d8p1:SelectableOfstring>
               </DisplayConditions>

@@ -9,10 +9,10 @@ namespace FPD.Logic.Tests.ViewModelExtensions
     public static class MainWindowViewModelExtensions
     {
 
-        public static AssetEditWindowViewModel SecurityWindow(this MainWindowViewModel viewModel)
+        public static SecurityEditWindowViewModel SecurityWindow(this MainWindowViewModel viewModel)
         {
-            object securityView = viewModel.Tabs.First(view => view is AssetEditWindowViewModel);
-            return securityView as AssetEditWindowViewModel;
+            object securityView = viewModel.Tabs.First(view => view is SecurityEditWindowViewModel);
+            return securityView as SecurityEditWindowViewModel;
         }
 
         public static ValueListWindowViewModel Window(this MainWindowViewModel viewModel, Account account)

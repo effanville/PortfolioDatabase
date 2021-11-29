@@ -30,7 +30,7 @@ namespace FPD.Logic.ViewModels.Asset
         /// <summary>
         /// The name data of the security this window details.
         /// </summary>
-        private readonly NameData fSelectedName;
+        internal readonly NameData fSelectedName;
         private readonly Account fAccountType = Account.Asset;
         private readonly Action<Action<IPortfolio>> UpdateDataCallback;
         private readonly IReportLogger fReportLogger;
@@ -277,7 +277,7 @@ namespace FPD.Logic.ViewModels.Asset
                 IAmortisableAsset security = desired as IAmortisableAsset;
                 ValuesTLVM?.UpdateData(security.Values);
                 DebtTLVM?.UpdateData(security.Debt);
-                SecurityStats = dataToDisplay.GetStats(fAccountType, fSelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
+                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccountType, fSelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
                 Values = dataToDisplay.NumberData(fAccountType, fSelectedName, fReportLogger).ToList();
             }
         }

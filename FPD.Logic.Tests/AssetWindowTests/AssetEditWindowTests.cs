@@ -1,18 +1,18 @@
 ﻿using System.Linq;
 using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
+using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.Tests.TestHelpers;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using NUnit.Framework;
 
-namespace FPD.Logic.Tests.SecurityWindowTests
+namespace FPD.Logic.Tests.AssetWindowTests
 {
     /// <summary>
     /// Tests for window displaying security data.
     /// </summary>
     [TestFixture]
-    public class SecurityEditWindowTests : SecurityWindowTestHelper
+    public class AssetEditWindowTests : AssetWindowTestHelper
     {
         [Test]
         public void CanLoadSuccessfully()
@@ -54,15 +54,15 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         {
             Portfolio = TestSetupHelper.CreateBasicDataBase();
 
-            NameData newData = new NameData("Fidelity", "China");
+            NameData newData = new NameData("House", "MyHouse");
             ViewModel.LoadTabFunc(newData);
 
             Assert.AreEqual(2, ViewModel.Tabs.Count);
             DataNamesViewModel dataNames = DataNames;
             Assert.AreEqual(1, dataNames.DataNames.Count);
-            SelectedSecurityViewModel selected = SelectedViewModel(newData);
+            SelectedAssetViewModel selected = SelectedViewModel(newData);
             Assert.IsNotNull(selected);
-            Assert.AreEqual(1, selected.TLVM.Valuations.Count);
+            Assert.AreEqual(1, selected.ValuesTLVM.Valuations.Count);
         }
     }
 }
