@@ -10,7 +10,7 @@
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
 
-    <VersionPrefix>1.7.0</VersionPrefix>
+    <VersionPrefix>21.7.0</VersionPrefix>
     <VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
