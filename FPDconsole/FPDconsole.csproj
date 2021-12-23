@@ -1,11 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
-    <Platforms>AnyCPU;x64</Platforms>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <DefineConstants>TRACE</DefineConstants>
-    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyTitle>FPDConsole</AssemblyTitle>
+    <Product>FPDConsole</Product>
+
+    <VersionPrefix>21.7.0</VersionPrefix>
+    <VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
   <Import Project="..\Build\CommonProperties.Build.props" />
@@ -14,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
     <DocumentationFile>..\bin\Release\FPDconsole.xml</DocumentationFile>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
   </ItemGroup>
-  
+
     <ItemGroup>
-    <PackageReference Include="UICommon" Version="1.0.5" />
+    <PackageReference Include="Common.Console" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,5 +38,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+	
 </Project>
