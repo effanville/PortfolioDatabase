@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionPrefix>22.0.0.$([System.DateTime]::UtcNow.ToString(`MMdd`))</VersionPrefix>
+    <VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
+  </PropertyGroup>
+
+  <Import Project="..\Build\CommonProperties.Build.props" />
+
+  <PropertyGroup>
+    <DocumentationFile>..\bin\$(Configuration)\FPD.ViewModels.xml</DocumentationFile>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.0.90" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+		<PackageReference Include="System.IO.Abstractions" Version="13.2.47" />
+		<PackageReference Include="Common.UI" Version="1.0.9" />
+	</ItemGroup>
+	
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="System.Windows.Forms.DataVisualization" Version="1.0.0-prerelease.20110.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>FPD.Logic.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>
