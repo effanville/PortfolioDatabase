@@ -103,7 +103,7 @@ namespace FPD.Logic.ViewModels
             }
             if (result == MessageBoxResult.Yes)
             {
-                DataUpdateCallback(programPortfolio => PortfolioFactory.GenerateEmpty());
+                DataUpdateCallback(programPortfolio => programPortfolio.Clear(ReportLogger));
                 fUiGlobals.CurrentWorkingDirectory = "";
             }
         }
