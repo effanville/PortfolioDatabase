@@ -14,7 +14,7 @@
   <Import Project="..\Build\CommonProperties.Build.props" />
 
   <PropertyGroup>
-    <DocumentationFile>..\bin\$(Configuration)\FPD.ViewModels.xml</DocumentationFile>
+    <DocumentationFile>..\bin\$(Configuration)\$(Framework)\$(Runtime)\FPD.ViewModels.xml</DocumentationFile>
   </PropertyGroup>
 	
 	<ItemGroup>

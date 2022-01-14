@@ -23,7 +23,7 @@
   <Import Project="..\Build\CommonProperties.Build.props" />
 
   <PropertyGroup>
-    <DocumentationFile>..\bin\$(Configuration)\FPD.xml</DocumentationFile>
+    <DocumentationFile>..\bin\$(Configuration)\$(Framework)\$(Runtime)\FPD.UI.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
