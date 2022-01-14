@@ -22,11 +22,18 @@ using FPD.Logic.ViewModels.Common;
 
 namespace FPD.Logic.ViewModels
 {
+    /// <summary>
+    /// The homepage of the program, detailing main holdings in the portfolio.
+    /// </summary>
     public class BasicDataViewModel : DataDisplayViewModelBase
     {
         private readonly Action<Action<IPortfolio>> DataUpdateCallback;
 
         private string fPortfolioNameText;
+
+        /// <summary>
+        /// The name of the portfolio to display.
+        /// </summary>
         public string PortfolioNameText
         {
             get => fPortfolioNameText;
@@ -34,6 +41,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private bool fHasValues;
+
+        /// <summary>
+        /// Are any values present in the portfolio.
+        /// </summary>
         public bool HasValues
         {
             get => fHasValues;
@@ -48,9 +59,16 @@ namespace FPD.Logic.ViewModels
             }
         }
 
+        /// <summary>
+        /// The opposite of <see cref="HasValues"/>
+        /// </summary>
         public bool NoValues => !fHasValues;
 
         private string fSecurityTotalText;
+
+        /// <summary>
+        /// A string detailing the total number of securities.
+        /// </summary>
         public string SecurityTotalText
         {
             get => fSecurityTotalText;
@@ -60,6 +78,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private string fSecurityAmountText;
+
+        /// <summary>
+        /// A string detailing the total value of securities.
+        /// </summary>
         public string SecurityAmountText
         {
             get => fSecurityAmountText;
@@ -67,6 +89,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private List<Labelled<TwoName, DailyValuation>> fTopSecurities;
+
+        /// <summary>
+        /// The major security latest values.
+        /// </summary>
         public List<Labelled<TwoName, DailyValuation>> TopSecurities
         {
             get => fTopSecurities;
@@ -81,6 +107,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private string fBankAccountTotalText;
+
+        /// <summary>
+        /// The total number of bank accounts in the portfolio string.
+        /// </summary>
         public string BankAccountTotalText
         {
             get => fBankAccountTotalText;
@@ -88,6 +118,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private string fBankAccountAmountText;
+
+        /// <summary>
+        /// The total amount in bank accounts as a string.
+        /// </summary>
         public string BankAccountAmountText
         {
             get => fBankAccountAmountText;
@@ -95,6 +129,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private List<Labelled<TwoName, DailyValuation>> fTopBankAccounts;
+
+        /// <summary>
+        /// The major bank account values.
+        /// </summary>
         public List<Labelled<TwoName, DailyValuation>> TopBankAccounts
         {
             get => fTopBankAccounts;
@@ -102,6 +140,10 @@ namespace FPD.Logic.ViewModels
         }
 
         private List<Note> fNotes;
+
+        /// <summary>
+        /// The notes held in the portfolio.
+        /// </summary>
         public List<Note> Notes
         {
             get => fNotes;
@@ -110,6 +152,9 @@ namespace FPD.Logic.ViewModels
 
         private Note fSelectedNote;
 
+        /// <summary>
+        /// Construct an instance.
+        /// </summary>
         public BasicDataViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, Action<Action<IPortfolio>> updateData)
             : base(globals, styles, portfolio, "Overview", Account.All)
         {
@@ -119,6 +164,7 @@ namespace FPD.Logic.ViewModels
             UpdateData(portfolio);
         }
 
+        /// <inheritdoc/>
         public override void UpdateData(IPortfolio portfolio)
         {
             DataStore = portfolio;
@@ -178,6 +224,9 @@ namespace FPD.Logic.ViewModels
             }
         }
 
+        /// <summary>
+        /// Method to delete the selected note.
+        /// </summary>
         public void DeleteSelectedNote()
         {
             if (fSelectedNote != null)

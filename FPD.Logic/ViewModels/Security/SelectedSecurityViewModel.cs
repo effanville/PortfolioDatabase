@@ -201,7 +201,9 @@ namespace FPD.Logic.ViewModels.Security
                     {
                         if (objec is SecurityDayData view)
                         {
-                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditDataToSecurity(SelectedName, view.Date, view.Date, view.ShareNo, view.UnitPrice, view.NewInvestment, null, fReportLogger));
+                            var value = new DailyValuation(view.Date, view.UnitPrice);
+                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditData(Account.Security, SelectedName, value, value, fReportLogger));
+                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditTradeData(Account.Security, SelectedName, view.Trade, view.Trade, fReportLogger));
                         }
                         else
                         {
