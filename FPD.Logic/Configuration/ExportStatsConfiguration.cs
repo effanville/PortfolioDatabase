@@ -36,6 +36,13 @@ namespace FPD.Logic.Configuration
         [DataMember(EmitDefaultValue = false)]
         private List<Selectable<Statistic>> SectorColumnNames = new List<Selectable<Statistic>>();
 
+        [DataMember]
+        private Statistic AssetSortingField;
+        [DataMember]
+        private SortDirection AssetDirection;
+        [DataMember(EmitDefaultValue = false)]
+        private List<Selectable<Statistic>> AssetColumnNames = new List<Selectable<Statistic>>();
+
         /// <inheritdoc/>
         [DataMember]
         public bool HasLoaded
@@ -74,6 +81,9 @@ namespace FPD.Logic.Configuration
                 BankColumnNames = vm.BankColumnNames;
                 BankSortingField = vm.BankSortingField;
                 BankDirection = vm.BankDirection;
+                AssetColumnNames = vm.AssetColumnNames;
+                AssetSortingField = vm.AssetSortingField;
+                AssetDirection = vm.AssetDirection;
                 DisplayConditions = vm.DisplayConditions;
             }
         }
@@ -104,9 +114,20 @@ namespace FPD.Logic.Configuration
                 vm.BankSortingField = BankSortingField;
                 vm.BankDirection = BankDirection;
 
+                if (AssetColumnNames != null && AssetColumnNames.Any())
+                {
+                    vm.AssetColumnNames = AssetColumnNames;
+                }
+                vm.AssetSortingField = AssetSortingField;
+                vm.AssetDirection = AssetDirection;
+
                 if (DisplayConditions != null && DisplayConditions.Any())
                 {
-                    vm.DisplayConditions = DisplayConditions;
+                    foreach (var condition in DisplayConditions)
+                    {
+                        var displayedCond = vm.DisplayConditions.FirstOrDefault(cond => cond.Instance == condition.Instance);
+                        displayedCond.Selected = condition.Selected;
+                    }
                 }
             }
         }

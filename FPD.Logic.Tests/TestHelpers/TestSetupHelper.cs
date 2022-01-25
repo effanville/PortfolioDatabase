@@ -32,7 +32,7 @@ namespace FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static Mock<IDialogCreationService> CreateDialogMock(MessageBoxResult result = MessageBoxResult.OK)
+        public static Mock<IDialogCreationService> CreateDialogMock(MessageBoxResult result = MessageBoxResult.Yes)
         {
             Mock<IDialogCreationService> mockfileinteraction = new Mock<IDialogCreationService>();
             _ = mockfileinteraction.Setup(x => x.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>(), It.IsAny<MessageBoxImage>())).Returns(result);
@@ -83,6 +83,10 @@ namespace FPD.Logic.Tests.TestHelpers
             _ = portfolio.TryAdd(Account.Currency, new NameData(string.Empty, "GBP"), DummyReportLogger);
 
             _ = portfolio.TryAdd(Account.Benchmark, new NameData(string.Empty, "UK", string.Empty, "http://www.hi.com"), DummyReportLogger);
+
+            _ = portfolio.TryAdd(Account.Asset, new NameData("House", "MyHouse"), DummyReportLogger);
+            _ = portfolio.TryAddOrEditData(Account.Asset, new NameData("House", "MyHouse"), new DailyValuation(new DateTime(2020, 1, 1), 300000), new DailyValuation(new DateTime(2020, 1, 1), 300000), DummyReportLogger);
+            _ = portfolio.TryAddOrEditAssetDebt(Account.Asset, new NameData("House", "MyHouse"), new DailyValuation(new DateTime(2020, 1, 1), 150000), new DailyValuation(new DateTime(2020, 1, 1), 150000), DummyReportLogger);
         }
 
         public static IPortfolio CreateEmptyDataBase()

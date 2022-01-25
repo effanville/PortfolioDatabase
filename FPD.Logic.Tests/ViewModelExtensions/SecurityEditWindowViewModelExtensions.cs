@@ -7,7 +7,7 @@ using FinancialStructures.NamingStructures;
 namespace FPD.Logic.Tests.ViewModelExtensions
 {
     /// <summary>
-    /// Contains user like interaction behaviours with the <see cref="SecurityEditWindowViewModel"/>.
+    /// Contains user like interaction behaviours with the <see cref="AssetEditWindowViewModel"/>.
     /// </summary>
     public static class SecurityEditWindowViewModelExtensions
     {

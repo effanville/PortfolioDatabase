@@ -104,6 +104,7 @@ namespace FPD.Logic.Tests
             Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(1, portfolio.Assets.Count);
         }
 
         [Test]

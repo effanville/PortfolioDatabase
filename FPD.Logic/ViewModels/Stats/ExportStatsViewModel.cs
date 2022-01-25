@@ -34,6 +34,8 @@ namespace FPD.Logic.ViewModels.Stats
         private const string ShowBankAccounts = "ShowBankAccounts";
 
         private const string ShowSectors = "ShowSectors";
+
+        private const string ShowAssets = "ShowAssets";
         private const string ShowBenchmarks = "ShowBenchmarks";
         private const string ValueFunds = "DisplayValueFunds";
         private const string Colouring = "Colours";
@@ -148,6 +150,42 @@ namespace FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref fSectorColumnNames, value, nameof(SectorColumnNames));
         }
 
+
+        private Statistic fAssetSortingField;
+
+        /// <summary>
+        /// The statistic to sort the Asset data by.
+        /// </summary>
+        public Statistic AssetSortingField
+        {
+            get => fAssetSortingField;
+            set => SetAndNotify(ref fAssetSortingField, value, nameof(AssetSortingField));
+        }
+
+
+        private SortDirection fAssetDirection;
+
+        /// <summary>
+        /// The direction to sort the Asset data in.
+        /// </summary>
+        public SortDirection AssetDirection
+        {
+            get => fAssetDirection;
+            set => SetAndNotify(ref fAssetDirection, value, nameof(AssetDirection));
+        }
+
+        private List<Selectable<Statistic>> fAssetColumnNames = new List<Selectable<Statistic>>();
+
+        /// <summary>
+        /// The possible columns for Asset export, and which ones are selected.
+        /// </summary>
+        public List<Selectable<Statistic>> AssetColumnNames
+        {
+            get => fAssetColumnNames;
+            set => SetAndNotify(ref fAssetColumnNames, value, nameof(AssetColumnNames));
+        }
+
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -178,6 +216,13 @@ namespace FPD.Logic.ViewModels.Stats
 
             BankSortingField = Statistic.Company;
 
+            foreach (Statistic stat in AccountStatisticsHelpers.DefaultAssetStats())
+            {
+                AssetColumnNames.Add(new Selectable<Statistic>(stat, true));
+            }
+
+            AssetSortingField = Statistic.Company;
+
             DisplayConditions.Add(new Selectable<string>(ValueFunds, true));
             DisplayConditions.Add(new Selectable<string>(Spacing, true));
             DisplayConditions.Add(new Selectable<string>(Colouring, true));
@@ -185,6 +230,7 @@ namespace FPD.Logic.ViewModels.Stats
             DisplayConditions.Add(new Selectable<string>(ShowBankAccounts, true));
             DisplayConditions.Add(new Selectable<string>(ShowSectors, true));
             DisplayConditions.Add(new Selectable<string>(ShowBenchmarks, false));
+            DisplayConditions.Add(new Selectable<string>(ShowAssets, false));
 
             if (fUserConfiguration.HasLoaded)
             {
@@ -242,6 +288,15 @@ namespace FPD.Logic.ViewModels.Stats
                     }
                 }
 
+                List<Statistic> assetSelected = new List<Statistic>();
+                foreach (Selectable<Statistic> column in AssetColumnNames)
+                {
+                    if (column.Selected || column.Instance == Statistic.Company || column.Instance == Statistic.Name)
+                    {
+                        assetSelected.Add(column.Instance);
+                    }
+                }
+
                 PortfolioStatisticsSettings settings = new PortfolioStatisticsSettings(
                     DateTime.Today,
                     SelectableHelpers.GetData(DisplayConditions, ShowBenchmarks),
@@ -257,7 +312,11 @@ namespace FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowSectors),
                     SectorSortingField,
                     SectorDirection,
-                    sectorSelected);
+                    sectorSelected,
+                    SelectableHelpers.GetData(DisplayConditions, ShowAssets),
+                    AssetSortingField,
+                    AssetDirection,
+                    assetSelected);
 
                 PortfolioStatistics stats = new PortfolioStatistics(DataStore, settings, fUiGlobals.CurrentFileSystem);
                 string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');

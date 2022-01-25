@@ -5,6 +5,7 @@ using System.Reflection;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.ViewModelBases;
+using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
@@ -107,6 +108,7 @@ namespace FPD.Logic.ViewModels
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, UpdateDataCallback));
+            Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
             Tabs.Add(new StatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
             Tabs.Add(new StatisticsChartsViewModel(ProgramPortfolio, Styles));
             Tabs.Add(new StatsCreatorWindowViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio, AddObjectAsMainTab));

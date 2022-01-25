@@ -1,3 +1,4 @@
+﻿using System.IO.Abstractions.TestingHelpers;
 ﻿using FPD.Logic.Tests.TestHelpers;
 using NUnit.Framework;
 
@@ -14,7 +15,40 @@ namespace FPD.Logic.Tests
         [Test]
         public void CanSuccessfullyCreateMainViewModel()
         {
-            Assert.AreEqual(8, ViewModel.Tabs.Count);
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+        }
+
+        [Test]
+        public void CanSuccessfullyOpenNewPortfolio()
+        {
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+
+            ViewModel.OptionsToolbarCommands.NewDatabaseCommand.Execute(1);
+
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+        }
+
+        [Test]
+        public void CanSuccessfullyLoadPortfolio()
+        {
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+
+            ViewModel.OptionsToolbarCommands.LoadDatabaseCommand.Execute(1);
+
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+        }
+
+        [Test]
+        public void CanSuccessfullySavePortfolio()
+        {
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+
+            ViewModel.OptionsToolbarCommands.SaveDatabaseCommand.Execute(1);
+
+            Assert.AreEqual(9, ViewModel.Tabs.Count);
+
+            MockFileData savedFile = FileSystem.GetFile("c:/temp/newDatabase.xml");
+            Assert.IsNotEmpty(savedFile.TextContents);
         }
     }
 }
