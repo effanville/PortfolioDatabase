@@ -46,6 +46,11 @@
                                 DataPointStyle="{StaticResource InvisibleDataPointGreen}"
                                 IndependentValueBinding="{Binding Path=Date}"
                                 DependentValueBinding="{Binding Path=BankAccValue}"></cht:LineSeries>
+                <cht:LineSeries Title="Total Assets"
+                                ItemsSource="{Binding Path=HistoryStats}"
+                                DataPointStyle="{StaticResource InvisibleDataPointOrange}"
+                                IndependentValueBinding="{Binding Path=Date}"
+                                DependentValueBinding="{Binding Path=AssetValue}"></cht:LineSeries>
             </cht:Chart.Series>
         </cht:Chart>
         <ucdo:BindableChart x:Name="securityCarChart"

@@ -208,4 +208,11 @@
         <Setter Property="Template"
                 Value="{x:Null}" />
     </Style>
+    <Style x:Key="InvisibleDataPointOrange"
+           TargetType="{x:Type cht:DataPoint}">
+        <Setter Property="Background"
+                Value="Orange" />
+        <Setter Property="Template"
+                Value="{x:Null}" />
+    </Style>
 </ResourceDictionary>
