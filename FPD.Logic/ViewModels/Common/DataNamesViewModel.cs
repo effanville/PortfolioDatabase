@@ -120,7 +120,7 @@ namespace FPD.Logic.ViewModels.Common
             UpdateDataCallback = updateDataCallback;
             TypeOfAccount = accountType;
             ReportLogger = reportLogger;
-            DataNames = portfolio.NameData(accountType).Select(name => new SelectableEquatable<NameData>(name, IsUpdated(portfolio, name))).ToList();
+            DataNames = portfolio.NameDataForAccount(accountType).Select(name => new SelectableEquatable<NameData>(name, IsUpdated(portfolio, name))).ToList();
             DataNames.Sort();
 
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
@@ -156,7 +156,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             base.UpdateData(dataToDisplay);
 
-            List<SelectableEquatable<NameData>> values = dataToDisplay.NameData(TypeOfAccount).Select(name => new SelectableEquatable<NameData>(name, IsUpdated(dataToDisplay, name))).ToList();
+            List<SelectableEquatable<NameData>> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new SelectableEquatable<NameData>(name, IsUpdated(dataToDisplay, name))).ToList();
             DataNames = null;
             DataNames = values;
             DataNames.Sort((a, b) => a.Instance.CompareTo(b.Instance));
@@ -252,7 +252,7 @@ namespace FPD.Logic.ViewModels.Common
             if (SelectedName != null && SelectedName.Instance != null)
             {
                 NameData selectedInstance = SelectedName.Instance; //rowName.Instance;
-                if (!DataStore.NameData(TypeOfAccount).Any(item => item.Name == PreEditSelectedName?.Name && item.Company == PreEditSelectedName?.Company))
+                if (!DataStore.NameDataForAccount(TypeOfAccount).Any(item => item.Name == PreEditSelectedName?.Name && item.Company == PreEditSelectedName?.Company))
                 {
                     _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
                     NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
