@@ -7,6 +7,7 @@ using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Services;
 using FinancialStructures.Database;
+using FinancialStructures.Database.Extensions;
 using FinancialStructures.DataStructures;
 using FinancialStructures.NamingStructures;
 using Moq;
