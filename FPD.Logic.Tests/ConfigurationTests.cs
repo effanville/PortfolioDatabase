@@ -256,6 +256,10 @@ namespace FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Currency</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
@@ -375,6 +379,10 @@ namespace FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>Currency</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
@@ -384,6 +392,10 @@ namespace FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>NumberUnits</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>MeanSharePrice</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
@@ -427,11 +439,27 @@ namespace FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>DrawDown</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>MDD</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>FirstDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>LastInvestmentDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                  <d8p1:Instance>LastPurchaseDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticKZb_SPP6u>
                 <d8p1:SelectableOfStatisticKZb_SPP6u>

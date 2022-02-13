@@ -43,10 +43,10 @@ namespace FPD.UI.Windows.Stats
                 DataTable dt = new DataTable();
 
                 // First add the column header names from the statistics names.
-                List<IStatistic> stat = vm.Stats.First().Statistics;
-                foreach (IStatistic value in stat)
+                IReadOnlyList<Statistic> statisticNames = vm.Stats.First().StatisticNames;
+                foreach (Statistic statisticName in statisticNames)
                 {
-                    dt.Columns.Add(new DataColumn(value.StatType.ToString(), typeof(string)));
+                    dt.Columns.Add(new DataColumn(statisticName.ToString(), typeof(string)));
                 }
 
                 // Now add the statistics values.

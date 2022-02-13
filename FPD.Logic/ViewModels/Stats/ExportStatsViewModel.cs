@@ -18,6 +18,7 @@ using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Statistics;
 using FinancialStructures.Database.Export.Statistics;
+using System.Linq;
 
 namespace FPD.Logic.ViewModels.Stats
 {
@@ -299,8 +300,24 @@ namespace FPD.Logic.ViewModels.Stats
 
                 PortfolioStatisticsSettings settings = new PortfolioStatisticsSettings(
                     DateTime.Today,
-                    SelectableHelpers.GetData(DisplayConditions, ShowBenchmarks),
                     SelectableHelpers.GetData(DisplayConditions, ValueFunds),
+                    SelectableHelpers.GetData(DisplayConditions, ShowBenchmarks),
+                    SelectableHelpers.GetData(DisplayConditions, ShowSecurities),
+                    securitySelected.Union(new List<Statistic>() { SecuritySortingField }).ToList(),
+                    SelectableHelpers.GetData(DisplayConditions, ShowBankAccounts),
+                    BankSelected.Union(new List<Statistic>() { BankSortingField }).ToList(),
+                    SelectableHelpers.GetData(DisplayConditions, ShowSectors),
+                    sectorSelected.Union(new List<Statistic>() { SectorSortingField }).ToList(),
+                    SelectableHelpers.GetData(DisplayConditions, ShowAssets),
+                    assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList());
+
+                PortfolioStatistics stats = new PortfolioStatistics(DataStore, settings, fUiGlobals.CurrentFileSystem);
+                string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
+                ExportType type = extension.ToEnum<ExportType>();
+
+                PortfolioStatisticsExportSettings exportSettings = new PortfolioStatisticsExportSettings(
+                    SelectableHelpers.GetData(DisplayConditions, Spacing),
+                    SelectableHelpers.GetData(DisplayConditions, Colouring),
                     SelectableHelpers.GetData(DisplayConditions, ShowSecurities),
                     SecuritySortingField,
                     SecurityDirection,
@@ -318,11 +335,7 @@ namespace FPD.Logic.ViewModels.Stats
                     AssetDirection,
                     assetSelected);
 
-                PortfolioStatistics stats = new PortfolioStatistics(DataStore, settings, fUiGlobals.CurrentFileSystem);
-                string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
-                ExportType type = extension.ToEnum<ExportType>();
-
-                stats.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, type, new PortfolioStatisticsExportSettings(SelectableHelpers.GetData(DisplayConditions, Spacing), SelectableHelpers.GetData(DisplayConditions, Colouring)), ReportLogger);
+                stats.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
                 _ = ReportLogger.LogUseful(ReportType.Information, ReportLocation.StatisticsPage, "Created statistics page");
             }
