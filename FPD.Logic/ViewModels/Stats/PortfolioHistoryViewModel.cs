@@ -6,11 +6,19 @@ using FinancialStructures.Database.Export.History;
 
 namespace FPD.Logic.ViewModels.Stats
 {
+    /// <summary>
+    /// Contains settings and ability to generate a history of portfolio object.
+    /// </summary>
     public sealed class PortfolioHistoryViewModel : DataDisplayViewModelBase
     {
+        /// <inheritdoc/>
         public override bool Closable => true;
 
         private int fHistoryGapDays = 20;
+
+        /// <summary>
+        /// The number of days between history calculations.
+        /// </summary>
         public int HistoryGapDays
         {
             get => fHistoryGapDays;
@@ -22,6 +30,10 @@ namespace FPD.Logic.ViewModels.Stats
         }
 
         private List<PortfolioDaySnapshot> fHistoryStats;
+
+        /// <summary>
+        /// The store of the historical values.
+        /// </summary>
         public List<PortfolioDaySnapshot> HistoryStats
         {
             get => fHistoryStats;
@@ -32,17 +44,23 @@ namespace FPD.Logic.ViewModels.Stats
             }
         }
 
+        /// <summary>
+        /// Construct an instance.
+        /// </summary>
+        public PortfolioHistoryViewModel(IPortfolio portfolio, UiStyles styles)
+            : base(null, styles, portfolio, "History")
+        {
+            UpdateData(portfolio);
+        }
+
+        /// <summary>
+        /// Updates the data stored in the history.
+        /// </summary>
         public override void UpdateData(IPortfolio DataStore)
         {
             base.UpdateData(DataStore);
             PortfolioHistory history = new PortfolioHistory(DataStore, new PortfolioHistorySettings(snapshotIncrement: HistoryGapDays, generateSecurityRates: false, generateSectorRates: false));
             HistoryStats = history.Snapshots;
-        }
-
-        public PortfolioHistoryViewModel(IPortfolio portfolio, UiStyles styles)
-            : base(null, styles, portfolio, "History")
-        {
-            UpdateData(portfolio);
         }
     }
 }

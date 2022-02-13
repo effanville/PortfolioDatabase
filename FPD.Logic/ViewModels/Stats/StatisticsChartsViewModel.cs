@@ -13,9 +13,16 @@ using FinancialStructures.Database.Extensions.Values;
 
 namespace FPD.Logic.ViewModels.Stats
 {
+    /// <summary>
+    /// Contains data for chart display.
+    /// </summary>
     public sealed class StatisticsChartsViewModel : DataDisplayViewModelBase
     {
         private int fHistoryGapDays = 25;
+
+        /// <summary>
+        /// The number of days between points on the charts.
+        /// </summary>
         public int HistoryGapDays
         {
             get => fHistoryGapDays;
@@ -23,45 +30,60 @@ namespace FPD.Logic.ViewModels.Stats
         }
 
         private List<PortfolioDaySnapshot> fHistoryStats;
+
+        /// <summary>
+        /// The history information.
+        /// </summary>
         public List<PortfolioDaySnapshot> HistoryStats
         {
             get => fHistoryStats;
             set => SetAndNotify(ref fHistoryStats, value, nameof(HistoryStats));
         }
 
-        private Dictionary<string, decimal> fDistributionValues;
-        public Dictionary<string, decimal> SecurityValues
-        {
-            get => fDistributionValues;
-            set
-            {
-                fDistributionValues = value;
-                OnPropertyChanged();
-            }
-        }
+        /// <summary>
+        /// The current value of each security.
+        /// </summary>
+        public Dictionary<string, decimal> SecurityValues => HistoryStats?[HistoryStats.Count - 1].SecurityValues
+            .Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value)
+            ?? new Dictionary<string, decimal>();
 
-        private Dictionary<string, decimal> fDistributionValues2;
-        public Dictionary<string, decimal> BankAccountValues
-        {
-            get => fDistributionValues2;
-            set => SetAndNotify(ref fDistributionValues2, value, nameof(BankAccountValues));
-        }
+        /// <summary>
+        /// The current value of each bank account.
+        /// </summary>
+        public Dictionary<string, decimal> BankAccountValues => HistoryStats?[HistoryStats.Count - 1].BankAccValues
+            .Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value)
+            ?? new Dictionary<string, decimal>();
 
-        private Dictionary<string, decimal> fDistributionValues3;
-
-        public Dictionary<string, decimal> SectorValues
-        {
-            get => fDistributionValues3;
-            set => SetAndNotify(ref fDistributionValues3, value, nameof(SectorValues));
-        }
+        /// <summary>
+        /// The current value of each sector.
+        /// </summary>
+        public Dictionary<string, decimal> SectorValues => HistoryStats?[HistoryStats.Count - 1].SectorValues
+            .Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value)
+            ?? new Dictionary<string, decimal>();
 
         private ObservableCollection<LineSeries> fIRRlines = new ObservableCollection<LineSeries>();
+
+        /// <summary>
+        /// Specific line values for the rate of return chart.
+        /// </summary>
         public ObservableCollection<LineSeries> IRRLines
         {
             get => fIRRlines;
             set => SetAndNotify(ref fIRRlines, value, nameof(IRRLines));
         }
 
+        /// <summary>
+        /// Construct an instance.
+        /// </summary>
+        public StatisticsChartsViewModel(IPortfolio portfolio, UiStyles styles)
+            : base(null, styles, portfolio, "Charts", Account.All)
+        {
+            UpdateData(portfolio);
+        }
+
+        /// <summary>
+        /// Updates the data for display in the charts.
+        /// </summary>
         public override void UpdateData(IPortfolio portfolio)
         {
             if (portfolio != null)
@@ -84,18 +106,22 @@ namespace FPD.Logic.ViewModels.Stats
             int numDays = (lastDate - firstDate).Days;
             int snapshotGap = numDays / 100;
 
-            PortfolioHistory history = new PortfolioHistory(DataStore, new PortfolioHistorySettings(firstDate, lastDate, snapshotIncrement: snapshotGap, generateSecurityRates: false, generateSectorRates: true));
+            PortfolioHistory history = new PortfolioHistory(
+                DataStore,
+                new PortfolioHistorySettings(
+                    firstDate,
+                    lastDate,
+                    snapshotIncrement: snapshotGap,
+                    generateSecurityRates: false,
+                    generateSectorRates: true));
             HistoryStats = history.Snapshots.Where(stat => stat.Date > new DateTime(1000, 1, 1)).ToList();
-            if (HistoryStats.Any())
-            {
-                SecurityValues = HistoryStats[HistoryStats.Count - 1].SecurityValues.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
-                BankAccountValues = HistoryStats[HistoryStats.Count - 1].BankAccValues.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
-                SectorValues = HistoryStats[HistoryStats.Count - 1].SectorValues.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
-            }
 
             UpdateChart();
         }
 
+        /// <summary>
+        /// Updates the data for the rate of return chart.
+        /// </summary>
         public void UpdateChart()
         {
             var rnd = new Random(12345);
@@ -136,12 +162,6 @@ namespace FPD.Logic.ViewModels.Stats
 
                 IRRLines = newValues;
             }
-        }
-
-        public StatisticsChartsViewModel(IPortfolio portfolio, UiStyles styles)
-            : base(null, styles, portfolio, "Charts", Account.All)
-        {
-            UpdateData(portfolio);
         }
     }
 }

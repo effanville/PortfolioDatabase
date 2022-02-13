@@ -9,36 +9,41 @@ using FinancialStructures.Database;
 
 namespace FPD.Logic.ViewModels
 {
-    public class HtmlStatsViewerViewModel : DataDisplayViewModelBase
+    /// <summary>
+    /// Enables the display and selection of a html file in a closable tab.
+    /// </summary>
+    public sealed class HtmlStatsViewerViewModel : DataDisplayViewModelBase
     {
+        /// <inheritdoc />
         public override bool Closable => true;
 
         private Uri fDisplayStats;
 
+        /// <summary>
+        /// The uri path of the html file to display.
+        /// </summary>
         public Uri DisplayStats
         {
             get => fDisplayStats;
             set => SetAndNotify(ref fDisplayStats, value, nameof(DisplayStats));
         }
 
-        private string fStatsFilepath;
-
-        public string StatsFilepath
-        {
-            get => fStatsFilepath;
-            set
-            {
-                SetAndNotify(ref fStatsFilepath, value, nameof(StatsFilepath));
-                if (value != null)
-                {
-                    DisplayStats = new Uri(fStatsFilepath);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Command to select the path of the html file.
+        /// </summary>
         public ICommand FileSelect
         {
             get;
+        }
+
+        /// <summary>
+        /// Construct an instance.
+        /// </summary>
+        public HtmlStatsViewerViewModel(UiStyles styles, UiGlobals globals, string filePath)
+            : base(globals, styles, null, "Exported Stats", Account.All)
+        {
+            DisplayStats = new Uri(filePath);
+            FileSelect = new RelayCommand(ExecuteFileSelect);
         }
 
         private void ExecuteFileSelect()
@@ -46,15 +51,8 @@ namespace FPD.Logic.ViewModels
             FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
             if (result.Success)
             {
-                StatsFilepath = result.FilePath;
+                DisplayStats = new Uri(result.FilePath);
             }
-        }
-
-        public HtmlStatsViewerViewModel(UiStyles styles, UiGlobals globals, string filePath)
-            : base(globals, styles, null, "Exported Stats", Account.All)
-        {
-            StatsFilepath = filePath;
-            FileSelect = new RelayCommand(ExecuteFileSelect);
         }
     }
 }

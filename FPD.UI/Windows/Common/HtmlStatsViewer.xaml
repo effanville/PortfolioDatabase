@@ -36,7 +36,7 @@
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  VerticalContentAlignment="Center"
-                 Text="{Binding StatsFilepath}" />
+                 Text="{Binding DisplayStats}" />
         <WebBrowser Grid.Row="1"
                     Grid.Column="0"
                     Width="Auto"
