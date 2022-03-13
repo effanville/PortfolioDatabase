@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -171,15 +170,14 @@ namespace FPD.Logic.ViewModels
             PortfolioNameText = string.IsNullOrWhiteSpace(portfolio.DatabaseName(fUiGlobals.CurrentFileSystem)) ? "Unsaved database" : $"{portfolio.DatabaseName(fUiGlobals.CurrentFileSystem)}";
             HasValues = portfolio.NumberOf(Account.All) != 0;
             SecurityTotalText = $"Total Securities: {portfolio.NumberOf(Account.Security)}";
-            CultureInfo culture = CurrencyCultureHelpers.CurrencyCultureInfo(portfolio.BaseCurrency);
-            SecurityAmountText = $"Total Value: {portfolio.TotalValue(Totals.Security).ToString("C2", culture)}";
+            SecurityAmountText = $"Total Value: {portfolio.TotalValue(Totals.Security).WithCurrencySymbol(portfolio.BaseCurrency)}";
             List<ISecurity> securities = portfolio.FundsThreadSafe.ToList();
 
             securities.Sort((fund, otherFund) => fund.ValueComparison(otherFund, DateTime.Today));
             TopSecurities = securities.Take(5).Select(name => new Labelled<TwoName, DailyValuation>(new TwoName(name.Names.Company, name.Names.Name), name.Value(DateTime.Today))).ToList();
 
             BankAccountTotalText = $"Total Bank Accounts: {portfolio.NumberOf(Account.BankAccount)}";
-            BankAccountAmountText = $"Total Value: {portfolio.TotalValue(Totals.BankAccount).ToString("C2", culture)}";
+            BankAccountAmountText = $"Total Value: {portfolio.TotalValue(Totals.BankAccount).WithCurrencySymbol(portfolio.BaseCurrency)}";
             List<IExchangableValueList> bankAccounts = portfolio.BankAccountsThreadSafe.ToList();
             bankAccounts.Sort((bank, otherBank) => bank.ValueComparison(otherBank, DateTime.Today));
             TopBankAccounts = bankAccounts.Take(5).Select(name => new Labelled<TwoName, DailyValuation>(new TwoName(name.Names.Company, name.Names.Name), name.Value(DateTime.Today) ?? new DailyValuation(DateTime.Today, 0.0m))).ToList();

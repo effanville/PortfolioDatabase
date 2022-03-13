@@ -75,6 +75,7 @@ namespace FPD.Logic.Tests.TestHelpers
 
         public static void UpdatePortfolio(IPortfolio portfolio)
         {
+            portfolio.BaseCurrency = "GBP";
             portfolio.FilePath = "TestFilePath";
             _ = portfolio.TryAdd(Account.Security, new NameData("Fidelity", "China", "GBP", "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx", new HashSet<string>() { "Bonds", "UK" }), DummyReportLogger);
             var secName = new TwoName("Fidelity", "China");
