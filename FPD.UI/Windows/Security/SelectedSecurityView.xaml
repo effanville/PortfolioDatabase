@@ -123,24 +123,9 @@
                                             Binding="{Binding Path=TotalCost, UpdateSourceTrigger=LostFocus}" />
                     </DataGrid.Columns>
                 </DataGrid>
-                <DataGrid Grid.Row="1"
-                          Grid.Column="1"
-                          IsReadOnly="true"
-                          CanUserAddRows="false"
-                          CanUserDeleteRows="false"
-                          ItemsSource="{Binding SecurityStats.Statistics}"
-                          AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Statistic"
-                                            Width="Auto"
-                                            IsReadOnly="true"
-                                            Binding="{Binding Path=StatType}"/>
-                        <DataGridTextColumn Header="Value"
-                                            Width="Auto"
-                                            IsReadOnly="true"
-                                            Binding="{Binding Path=ValueAsObject}" />
-                    </DataGrid.Columns>
-                </DataGrid>
+                <ContentControl Grid.Row="1"
+                                Grid.Column="1"
+                                Content="{Binding SecurityStats}"/>
             </Grid>
         </Border>
         <Grid Grid.Row="1"
@@ -156,7 +141,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <cht:Chart Title="Holding History"
+            <cht:Chart Title="Value History"
                        Style="{StaticResource NoLegendChart}"
                        Height="Auto"
                        Width="Auto"
