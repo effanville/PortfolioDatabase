@@ -103,7 +103,6 @@ namespace FPD.Logic.ViewModels.Common
             UpdateData(portfolio);
 
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
-            Stats = portfolio.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
 
@@ -123,6 +122,7 @@ namespace FPD.Logic.ViewModels.Common
 
                 _ = dataToDisplay.TryGetAccount(TypeOfAccount, SelectedName, out IValueList desired);
                 TLVM?.UpdateData(desired.Values);
+                Stats = dataToDisplay.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
             }
         }
 
