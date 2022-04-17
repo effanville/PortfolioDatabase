@@ -44,12 +44,17 @@
                         Content="{Binding TLVM}" />
         <DataGrid Grid.Row="1"
                   Grid.Column="1"
+                  IsReadOnly="true"
+                  CanUserAddRows="false"
+                  CanUserDeleteRows="false"
                   ItemsSource="{Binding Stats.Statistics}"
                   AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Statistic"
+                                    IsReadOnly="true"
                                     Binding="{Binding Path=StatType}" />
                 <DataGridTextColumn Header="Value"
+                                    IsReadOnly="true"
                                     Binding="{Binding Path=ValueAsObject}" />
             </DataGrid.Columns>
         </DataGrid>

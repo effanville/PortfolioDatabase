@@ -125,14 +125,19 @@
                 </DataGrid>
                 <DataGrid Grid.Row="1"
                           Grid.Column="1"
+                          IsReadOnly="true"
+                          CanUserAddRows="false"
+                          CanUserDeleteRows="false"
                           ItemsSource="{Binding SecurityStats.Statistics}"
                           AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Statistic"
-                                    Width="Auto"
+                                            Width="Auto"
+                                            IsReadOnly="true"
                                             Binding="{Binding Path=StatType}"/>
                         <DataGridTextColumn Header="Value"
-                                    Width="Auto"
+                                            Width="Auto"
+                                            IsReadOnly="true"
                                             Binding="{Binding Path=ValueAsObject}" />
                     </DataGrid.Columns>
                 </DataGrid>
