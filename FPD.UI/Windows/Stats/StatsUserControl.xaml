@@ -45,6 +45,8 @@
                   Grid.Column="1"
                   SelectionUnit="FullRow"
                   CanUserAddRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserSortColumns="False"
                   Height="Auto"
                   IsReadOnly="True"
                   CanUserDeleteRows="False"
