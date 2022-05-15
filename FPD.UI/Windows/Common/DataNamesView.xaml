@@ -56,7 +56,7 @@
                   SelectionMode="Extended"
                   CanUserAddRows="True"
                   IsReadOnly="False"
-                  CanUserDeleteRows="False"
+                  CanUserDeleteRows="True"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding Path=DataNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DataContext="{Binding}"
@@ -88,6 +88,9 @@
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding Path=SelectionChangedCommand}"
                                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Mode=Default, Path=CurrentItem}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Delete">
+                    <i:InvokeCommandAction Command="{Binding DeleteCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <DataGrid.Columns>
