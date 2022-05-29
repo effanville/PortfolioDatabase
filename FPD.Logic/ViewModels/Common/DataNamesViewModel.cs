@@ -185,7 +185,7 @@ namespace FPD.Logic.ViewModels.Common
         }
         private void ExecuteDownloadCommand()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {TypeOfAccount}");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName.Instance} - a {TypeOfAccount}");
             if (SelectedName != null)
             {
                 NameData names = SelectedName.Instance;
