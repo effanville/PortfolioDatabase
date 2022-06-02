@@ -5,12 +5,12 @@ using Common.Console;
 using Common.Console.Commands;
 using Common.Console.Options;
 using Common.Structure.Extensions;
-using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Export.Statistics;
+using Common.Structure.ReportWriting;
 
 namespace FPDconsole
 {
@@ -61,7 +61,7 @@ namespace FPDconsole
                 var settings = PortfolioStatisticsSettings.DefaultSettings();
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, fFileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
-                stats.ExportToFile(fFileSystem, filePath, ExportType.Html, exportSettings, fLogger);
+                stats.ExportToFile(fFileSystem, filePath, DocumentType.Html, exportSettings, fLogger);
             }
 
             portfolio.SavePortfolio(fFilepathOption.Value, fFileSystem, fLogger);

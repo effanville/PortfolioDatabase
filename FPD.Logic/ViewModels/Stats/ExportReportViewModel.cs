@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Input;
-using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Commands;
@@ -11,6 +10,7 @@ using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Export.Report;
 using FinancialStructures.Database.Extensions;
+using Common.Structure.ReportWriting;
 
 namespace FPD.Logic.ViewModels.Stats
 {
@@ -63,7 +63,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteCreateReport()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(ExportType.Html.ToString().ToLower(), $"{DataStore.DatabaseName(fUiGlobals.CurrentFileSystem)}-report.html", DataStore.Directory(fUiGlobals.CurrentFileSystem), "Html file|*.html|All files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{DataStore.DatabaseName(fUiGlobals.CurrentFileSystem)}-report.html", DataStore.Directory(fUiGlobals.CurrentFileSystem), "Html file|*.html|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".html"))

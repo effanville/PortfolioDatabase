@@ -4,7 +4,6 @@ using System.Windows.Input;
 
 using Common.Structure.DisplayClasses;
 using Common.Structure.Extensions;
-using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Commands;
@@ -19,6 +18,7 @@ using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Statistics;
 using FinancialStructures.Database.Export.Statistics;
 using System.Linq;
+using Common.Structure.ReportWriting;
 
 namespace FPD.Logic.ViewModels.Stats
 {
@@ -255,7 +255,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteExportCommand()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(ExportType.Html.ToString().ToLower(), DataStore.DatabaseName(fUiGlobals.CurrentFileSystem), DataStore.Directory(fUiGlobals.CurrentFileSystem), "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), DataStore.DatabaseName(fUiGlobals.CurrentFileSystem), DataStore.Directory(fUiGlobals.CurrentFileSystem), "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)
@@ -313,7 +313,7 @@ namespace FPD.Logic.ViewModels.Stats
 
                 PortfolioStatistics stats = new PortfolioStatistics(DataStore, settings, fUiGlobals.CurrentFileSystem);
                 string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
-                ExportType type = extension.ToEnum<ExportType>();
+                DocumentType type = extension.ToEnum<DocumentType>();
 
                 PortfolioStatisticsExportSettings exportSettings = new PortfolioStatisticsExportSettings(
                     SelectableHelpers.GetData(DisplayConditions, Spacing),
