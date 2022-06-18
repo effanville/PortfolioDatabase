@@ -27,7 +27,7 @@
   </ItemGroup>
 
     <ItemGroup>
-    <PackageReference Include="Common.Console" Version="1.0.4" />
+    <PackageReference Include="Common.Console" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
