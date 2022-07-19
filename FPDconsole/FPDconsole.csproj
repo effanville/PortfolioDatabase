@@ -26,8 +26,8 @@
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
-    <PackageReference Include="Common.Console" Version="1.0.5" />
+  <ItemGroup>
+	<ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
   </ItemGroup>
 
   <ItemGroup>
