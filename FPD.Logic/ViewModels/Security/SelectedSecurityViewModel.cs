@@ -19,6 +19,7 @@ using FinancialStructures.Database.Statistics;
 using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
+using FinancialStructures;
 
 namespace FPD.Logic.ViewModels.Security
 {
@@ -78,6 +79,28 @@ namespace FPD.Logic.ViewModels.Security
             set => SetAndNotify(ref fTrades, value, nameof(Trades));
         }
 
+        private string fTradePriceHeader;
+
+        /// <summary>
+        /// The header for the Trade Price column.
+        /// </summary>
+        public string TradePriceHeader
+        {
+            get => fTradePriceHeader;
+            set => SetAndNotify(ref fTradePriceHeader, value, nameof(TradePriceHeader));
+        }
+
+        private string fTradeTotalCostHeader;
+
+        /// <summary>
+        /// The header for the Trade Price column.
+        /// </summary>
+        public string TradeTotalCostHeader
+        {
+            get => fTradeTotalCostHeader;
+            set => SetAndNotify(ref fTradeTotalCostHeader, value, nameof(TradeTotalCostHeader));
+        }
+
         private AccountStatistics fSecurityStats;
 
         /// <summary>
@@ -121,11 +144,17 @@ namespace FPD.Logic.ViewModels.Security
             if (portfolio.TryGetAccount(Account.Security, SelectedName, out IValueList desired))
             {
                 ISecurity security = desired as ISecurity;
-                TLVM = new TimeListViewModel(security.UnitPrice, "UnitPrice", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency ?? portfolio.BaseCurrency);
+                TradePriceHeader = $"Price({currencySymbol})";
+                TradeTotalCostHeader = $"Total Cost({currencySymbol})";
+                TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
             }
             else
             {
-                TLVM = new TimeListViewModel(null, "UnitPrice", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
+                TradePriceHeader = $"Price({currencySymbol})";
+                TradeTotalCostHeader = $"Total Cost({currencySymbol})";
+                TLVM = new TimeListViewModel(null, $"UnitPrice({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
             }
 
             UpdateData(portfolio, null);

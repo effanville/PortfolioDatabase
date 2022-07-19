@@ -62,7 +62,7 @@ namespace FPD.UI.Windows.Stats
 
         private SortDirection ConvertFromVisual(ListSortDirection sD)
         {
-            switch(sD)
+            switch (sD)
             {
                 case ListSortDirection.Ascending:
                     return SortDirection.Ascending;
@@ -74,7 +74,7 @@ namespace FPD.UI.Windows.Stats
 
         private ListSortDirection ConvertToVisual(SortDirection sD)
         {
-            switch(sD)
+            switch (sD)
             {
                 case SortDirection.Ascending:
                     return ListSortDirection.Ascending;
@@ -91,7 +91,7 @@ namespace FPD.UI.Windows.Stats
             SortDirection sortDirection = SortDirectionHelpers.Invert(ConvertFromVisual(previousVisualSortDirection ?? ListSortDirection.Descending));
             if (DataContext is StatsViewModel vm)
             {
-                vm.Stats.Sort((x,y) => x.CompareTo(y, sortColumnStatistic, sortDirection));
+                vm.Stats.Sort((x, y) => x.CompareTo(y, sortColumnStatistic, sortDirection));
             }
 
             UpdateDataGrid(null, null);
@@ -104,10 +104,10 @@ namespace FPD.UI.Windows.Stats
                     dgColumn.SortDirection = null;
                 }
             }
-            
+
             //Show the ascending icon when acending sort is done
             e.Column.SortDirection = ConvertToVisual(sortDirection);
-            if(sender is DataGrid dg)
+            if (sender is DataGrid dg)
             {
                 var sameColumn = dg.Columns.First(col => col.Header == e.Column.Header);
                 sameColumn.SortDirection = ConvertToVisual(sortDirection);

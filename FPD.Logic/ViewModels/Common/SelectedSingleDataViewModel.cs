@@ -16,6 +16,7 @@ using FinancialStructures.Database.Extensions.Statistics;
 using FinancialStructures.Database.Statistics;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
+using FinancialStructures;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -95,10 +96,16 @@ namespace FPD.Logic.ViewModels.Common
             UpdateDataCallback = updateDataCallback;
             SelectedName = selectedName;
             TypeOfAccount = accountType;
-
-            TLVM = portfolio.TryGetAccount(accountType, SelectedName, out IValueList desired)
-                ? new TimeListViewModel(desired.Values, "Value", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal))
-                : new TimeListViewModel(null, "Value", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+            if (portfolio.TryGetAccount(accountType, SelectedName, out IValueList valueList))
+            {
+                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
+                TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+            }
+            else
+            {
+                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
+                TLVM = new TimeListViewModel(null, $"Value({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+            }
 
             UpdateData(portfolio);
 

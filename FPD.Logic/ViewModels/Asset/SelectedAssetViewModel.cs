@@ -9,6 +9,7 @@ using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
 using Common.UI.ViewModelBases;
+using FinancialStructures;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions;
@@ -124,16 +125,18 @@ namespace FPD.Logic.ViewModels.Asset
 
             if (portfolio.TryGetAccount(fAccountType, fSelectedName, out IValueList desired))
             {
-                IAmortisableAsset security = desired as IAmortisableAsset;
-                ValuesTLVM = new TimeListViewModel(security.Values, "Values", value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
-                DebtTLVM = new TimeListViewModel(security.Debt, "Debt", value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
-                PaymentsTLVM = new TimeListViewModel(security.Payments, "Payments", value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
+                IAmortisableAsset asset = desired as IAmortisableAsset;
+                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency ?? portfolio.BaseCurrency);
+                ValuesTLVM = new TimeListViewModel(asset.Values, $"Values({currencySymbol})", value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
+                DebtTLVM = new TimeListViewModel(asset.Debt, $"Debt({currencySymbol})", value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
+                PaymentsTLVM = new TimeListViewModel(asset.Payments, $"Payments({currencySymbol})", value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
             }
             else
             {
-                ValuesTLVM = new TimeListViewModel(null, "Values", value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
-                DebtTLVM = new TimeListViewModel(null, "Debt", value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
-                PaymentsTLVM = new TimeListViewModel(null, "Payments", value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
+                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
+                ValuesTLVM = new TimeListViewModel(null, $"Values({currencySymbol})", value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
+                DebtTLVM = new TimeListViewModel(null, $"Debt({currencySymbol})", value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
+                PaymentsTLVM = new TimeListViewModel(null, $"Payments({currencySymbol})", value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
             }
 
             UpdateData(portfolio, null);
