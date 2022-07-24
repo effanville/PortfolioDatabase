@@ -142,6 +142,7 @@ namespace FPD.Logic.ViewModels
             if (result.Success)
             {
                 DataUpdateCallback(programPortfolio => programPortfolio.FillDetailsFromFile(fUiGlobals.CurrentFileSystem, result.FilePath, ReportLogger));
+                DataUpdateCallback(programPortfolio => programPortfolio.SavePortfolio($"{result.FilePath}.bak", fUiGlobals.CurrentFileSystem, ReportLogger));
                 fUiGlobals.CurrentWorkingDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
             }
         }
