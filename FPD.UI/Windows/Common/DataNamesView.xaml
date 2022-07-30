@@ -53,7 +53,7 @@
                   HorizontalAlignment="Left"
                   ToolTip="Lists all items currently in the database. Select one to edit data."
                   SelectionUnit="FullRow"
-                  SelectionMode="Extended"
+                  SelectionMode="Single"
                   CanUserAddRows="True"
                   IsReadOnly="False"
                   CanUserDeleteRows="True"
@@ -83,7 +83,8 @@
                     <i:InvokeCommandAction Command="{Binding PreEditCommand}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="RowEditEnding">
-                    <i:InvokeCommandAction Command="{Binding CreateCommand}" />
+                    <i:InvokeCommandAction Command="{Binding CreateCommand}"
+                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Mode=Default, Path=CurrentItem}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding Path=SelectionChangedCommand}"

@@ -1,7 +1,5 @@
 ﻿using System.Windows.Controls;
-using Common.Structure.DisplayClasses;
 using FPD.Logic.ViewModels.Common;
-using FinancialStructures.NamingStructures;
 
 namespace FPD.UI.Windows
 {
@@ -22,7 +20,7 @@ namespace FPD.UI.Windows
         {
             if (DataContext != null && DataContext is DataNamesViewModel vm && vm.DataNames != null)
             {
-                e.NewItem = new SelectableEquatable<NameData>(new NameData(), false);
+                e.NewItem = vm.DefaultRow();
             }
         }
     }

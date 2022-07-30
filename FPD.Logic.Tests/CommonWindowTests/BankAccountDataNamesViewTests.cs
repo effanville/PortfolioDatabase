@@ -7,6 +7,7 @@ using FPD.Logic.Tests.ViewModelExtensions;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using NUnit.Framework;
+using FPD.Logic.ViewModels.Common;
 
 namespace FPD.Logic.Tests.CommonWindowTests
 {
@@ -24,16 +25,15 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanCreateNew()
         {
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-            NameData newName = new NameData("company", "name", "GBP", "someUrl", new HashSet<string>())
-            {
-                Company = "Company"
-            };
+            ViewModel.SelectItem(null);
 
-            ViewModel.SelectItem(newName);
-            ViewModel.BeginEdit();
-
-            ViewModel.DataNames.Add(new SelectableEquatable<NameData>(newName, false));
-            ViewModel.CompleteEdit();
+            var newRowItem = ViewModel.AddNewItem();
+            var newItem = newRowItem.Instance;
+            newItem.Company = "Company";
+            newItem.Name = "name";
+            newItem.Currency = "GBP";
+            newItem.Url = "someUrl";
+            ViewModel.CompleteCreate(newRowItem);
             Assert.AreEqual(2, ViewModel.DataNames.Count);
             Assert.AreEqual(2, Portfolio.BankAccountsThreadSafe.Count);
         }
@@ -43,11 +43,12 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditName()
         {
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-            NameData item = ViewModel.DataNames[0].Instance;
+            var row = ViewModel.DataNames[0];
+            NameData item = row.Instance;
             ViewModel.SelectItem(item);
-            ViewModel.BeginEdit();
+            ViewModel.BeginRowEdit(row);
             item.Company = "NewCompany";
-            ViewModel.CompleteEdit();
+            ViewModel.CompleteEdit(row);
 
             Assert.AreEqual(1, ViewModel.DataNames.Count);
             Assert.AreEqual(1, Portfolio.BankAccountsThreadSafe.Count);

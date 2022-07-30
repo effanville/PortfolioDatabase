@@ -47,7 +47,7 @@ namespace FPD.Logic.Tests
         {
             SecurityEditWindowViewModel securityViewModel = ViewModel.SecurityWindow();
             DataNamesViewModel securityNames = securityViewModel.Tabs[0] as DataNamesViewModel;
-            SelectableEquatable<NameData> selectedInitialName = new SelectableEquatable<NameData>(new NameData(), false);
+            RowData selectedInitialName = new RowData(new NameData(), false, securityNames.TypeOfAccount, securityNames.UpdateDataCallback);
             securityNames.DataNames.Add(selectedInitialName);
             securityNames.SelectionChangedCommand.Execute(selectedInitialName);
 

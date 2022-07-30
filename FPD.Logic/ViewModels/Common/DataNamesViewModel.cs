@@ -13,9 +13,62 @@ using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions.Values;
 using FinancialStructures.NamingStructures;
+using System.ComponentModel;
 
 namespace FPD.Logic.ViewModels.Common
 {
+    public class RowData : SelectableEquatable<NameData>, IEditableObject
+    {
+        private readonly Account TypeOfAccount;
+        private NameData fPreEditSelectedName;
+        public bool IsNew
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Function which updates the main data store.
+        /// </summary>
+        private readonly Action<Action<IPortfolio>> UpdateDataCallback;
+
+        public RowData(NameData name, bool isThis, Account accType, Action<Action<IPortfolio>> update)
+            : base(name, isThis)
+        {
+            TypeOfAccount = accType;
+            UpdateDataCallback = update;
+        }
+
+        public RowData()
+        {
+        }
+
+
+        /// <inheritdoc/>
+        public void BeginEdit()
+        {
+            fPreEditSelectedName = Instance?.Copy();
+        }
+
+        /// <inheritdoc/>
+        public void CancelEdit()
+        {
+            fPreEditSelectedName = null;
+        }
+
+        /// <inheritdoc/>
+        public void EndEdit()
+        {
+            NameData selectedInstance = Instance; //rowName.Instance;
+
+            // maybe fired from editing stuff. Try that
+            if (!string.IsNullOrEmpty(selectedInstance.Name) || !string.IsNullOrEmpty(selectedInstance.Company))
+            {
+                NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
+                UpdateDataCallback(programPortfolio => programPortfolio.TryEditName(TypeOfAccount, fPreEditSelectedName, name, null));
+            }
+        }
+    }
+
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.
     /// </summary>
@@ -24,7 +77,7 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Function which updates the main data store.
         /// </summary>
-        private readonly Action<Action<IPortfolio>> UpdateDataCallback;
+        internal readonly Action<Action<IPortfolio>> UpdateDataCallback;
 
         /// <summary>
         /// Logs any possible issues in the routines here back to the user.
@@ -42,7 +95,7 @@ namespace FPD.Logic.ViewModels.Common
             set => SetAndNotify(ref fStyles, value, nameof(Styles));
         }
 
-        private readonly Account TypeOfAccount;
+        internal readonly Account TypeOfAccount;
 
         /// <summary>
         /// Whether a company column should be displayed.
@@ -52,36 +105,24 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Backing field for <see cref="DataNames"/>.
         /// </summary>
-        private List<SelectableEquatable<NameData>> fDataNames = new List<SelectableEquatable<NameData>>();
+        private List<RowData> fDataNames = new List<RowData>();
 
         /// <summary>
         /// Name data of the names to be displayed in this view.
         /// </summary>
-        public List<SelectableEquatable<NameData>> DataNames
+        public List<RowData> DataNames
         {
             get => fDataNames;
             set => SetAndNotify(ref fDataNames, value, nameof(DataNames));
         }
 
-        private NameData fPreEditSelectedName;
-
-        /// <summary>
-        /// The selected name at the start of selection.
-        /// Holds the data before any possible editing.
-        /// </summary>
-        public NameData PreEditSelectedName
-        {
-            get => fPreEditSelectedName;
-            set => SetAndNotify(ref fPreEditSelectedName, value, nameof(PreEditSelectedName));
-        }
-
-        private SelectableEquatable<NameData> fSelectedName;
+        private RowData fSelectedName;
 
         /// <summary>
         /// The selected name with any alterations made by the user.
         /// These alterations update the database when certain commands are executed.
         /// </summary>
-        public SelectableEquatable<NameData> SelectedName
+        public RowData SelectedName
         {
             get => fSelectedName;
             set
@@ -110,6 +151,14 @@ namespace FPD.Logic.ViewModels.Common
             set => SetAndNotify(ref fSelectedValueHistory, value, nameof(SelectedValueHistory));
         }
 
+        public RowData DefaultRow()
+        {
+            var thing = new RowData(new NameData(), false, TypeOfAccount, UpdateDataCallback);
+
+            thing.IsNew = true;
+            return thing;
+        }
+
         /// <summary>
         /// Construct an instance.
         /// </summary>
@@ -120,12 +169,11 @@ namespace FPD.Logic.ViewModels.Common
             UpdateDataCallback = updateDataCallback;
             TypeOfAccount = accountType;
             ReportLogger = reportLogger;
-            DataNames = portfolio.NameDataForAccount(accountType).Select(name => new SelectableEquatable<NameData>(name, IsUpdated(portfolio, name))).ToList();
+            DataNames = portfolio.NameDataForAccount(accountType).Select(name => new RowData(name, IsUpdated(portfolio, name), accountType, updateDataCallback)).ToList();
             DataNames.Sort();
 
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            CreateCommand = new RelayCommand(ExecuteCreateEdit);
-            PreEditCommand = new RelayCommand(ExecutePreEdit);
+            CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
             OpenTabCommand = new RelayCommand(() => LoadSelectedTab(SelectedName?.Instance));
@@ -156,7 +204,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             base.UpdateData(dataToDisplay);
 
-            List<SelectableEquatable<NameData>> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new SelectableEquatable<NameData>(name, IsUpdated(dataToDisplay, name))).ToList();
+            List<RowData> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(dataToDisplay, name), TypeOfAccount, UpdateDataCallback)).ToList();
             DataNames = null;
             DataNames = values;
             DataNames.Sort((a, b) => a.Instance.CompareTo(b.Instance));
@@ -204,7 +252,7 @@ namespace FPD.Logic.ViewModels.Common
 
         private void ExecuteSelectionChanged(object args)
         {
-            if (DataNames != null && args is SelectableEquatable<NameData> selectableName && selectableName.Instance != null)
+            if (DataNames != null && args is RowData selectableName && selectableName.Instance != null)
             {
                 SelectedName = selectableName;
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Current item is a name {SelectedName.Instance}");
@@ -222,21 +270,6 @@ namespace FPD.Logic.ViewModels.Common
         }
 
         /// <summary>
-        /// Called prior to an edit occurring in a row. This is used
-        /// to record the state of the row before editing.
-        /// </summary>
-        public ICommand PreEditCommand
-        {
-            get;
-            set;
-        }
-
-        private void ExecutePreEdit()
-        {
-            PreEditSelectedName = SelectedName?.Instance?.Copy();
-        }
-
-        /// <summary>
         /// Adds a new entry if the view has more than the repository, or edits an entry if these are the same.
         /// </summary>
         public ICommand CreateCommand
@@ -245,34 +278,16 @@ namespace FPD.Logic.ViewModels.Common
             set;
         }
 
-        private void ExecuteCreateEdit()
+        private void ExecuteCreateEdit(object obj)
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"ExecuteCreateEdit called.");
             bool edited = false;
-            if (SelectedName != null && SelectedName.Instance != null)
+            if (obj is RowData rowData && rowData != null && rowData.Instance != null && rowData.IsNew)
             {
-                NameData selectedInstance = SelectedName.Instance; //rowName.Instance;
-                if (!DataStore.NameDataForAccount(TypeOfAccount).Any(item => item.Name == PreEditSelectedName?.Name && item.Company == PreEditSelectedName?.Company))
-                {
-                    _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
-                    NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-                    UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger));
-                }
-                else
-                {
-                    // maybe fired from editing stuff. Try that
-                    if (!string.IsNullOrEmpty(selectedInstance.Name) || !string.IsNullOrEmpty(selectedInstance.Company))
-                    {
-                        _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.EditingData, $"Editing {PreEditSelectedName} to {selectedInstance} in the database");
-                        NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-                        UpdateDataCallback(programPortfolio => edited = programPortfolio.TryEditName(TypeOfAccount, PreEditSelectedName, name, ReportLogger));
-                    }
-                }
-            }
-
-            if (!edited)
-            {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, "Was not able to edit desired.");
+                NameData selectedInstance = rowData.Instance; //rowName.Instance;
+                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
+                NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
+                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger));
             }
         }
 

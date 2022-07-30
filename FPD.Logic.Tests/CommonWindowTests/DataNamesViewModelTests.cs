@@ -56,14 +56,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
             Portfolio = TestSetupHelper.CreateBasicDataBase();
 
             ViewModel.SelectItem(null);
-            NameData newItem = ViewModel.AddNewItem();
-
-            ViewModel.BeginEdit();
+            var newRowItem = ViewModel.AddNewItem();
+            var newItem = newRowItem.Instance;
             newItem.Company = "company";
             newItem.Name = "name";
             newItem.Currency = "GBP";
             newItem.Url = "someUrl";
-            ViewModel.CompleteEdit();
+            ViewModel.CompleteCreate(newRowItem);
             Assert.AreEqual(2, ViewModel.DataNames.Count, "Bot enough in the view.");
             Assert.AreEqual(2, Portfolio.FundsThreadSafe.Count, "Not enough in portfolio");
         }
@@ -72,11 +71,11 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditSecurityName()
         {
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-            NameData item = ViewModel.DataNames[0].Instance;
-            ViewModel.SelectItem(item);
-            ViewModel.BeginEdit();
-            item.Company = "NewCompany";
-            ViewModel.CompleteEdit();
+            var item = ViewModel.DataNames[0];
+            ViewModel.SelectItem(item.Instance);
+            ViewModel.BeginRowEdit(item);
+            item.Instance.Company = "NewCompany";
+            ViewModel.CompleteEdit(item);
 
             Assert.AreEqual(1, ViewModel.DataNames.Count);
             Assert.AreEqual(1, Portfolio.FundsThreadSafe.Count);
@@ -88,12 +87,12 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditSecurityNameAndUrl()
         {
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-            NameData item = ViewModel.DataNames[0].Instance;
-            ViewModel.SelectItem(item);
-            ViewModel.BeginEdit();
-            item.Company = "NewCompany";
-            item.Url = "NewUrl";
-            ViewModel.CompleteEdit();
+            var item = ViewModel.DataNames[0];
+            ViewModel.SelectItem(item.Instance);
+            ViewModel.BeginRowEdit(item);
+            item.Instance.Company = "NewCompany";
+            item.Instance.Url = "NewUrl";
+            ViewModel.CompleteEdit(item);
 
             Assert.AreEqual(1, ViewModel.DataNames.Count);
             Assert.AreEqual(1, Portfolio.FundsThreadSafe.Count);

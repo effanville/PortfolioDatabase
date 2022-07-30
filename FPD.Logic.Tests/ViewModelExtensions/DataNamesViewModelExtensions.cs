@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Windows.Controls;
-using Common.Structure.DisplayClasses;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.NamingStructures;
 
@@ -13,27 +11,32 @@ namespace FPD.Logic.Tests.ViewModelExtensions
     {
         public static void SelectItem(this DataNamesViewModel viewModel, NameData name)
         {
-            viewModel.SelectionChangedCommand?.Execute(new SelectableEquatable<NameData>(name, false));
+            viewModel.SelectionChangedCommand?.Execute(new RowData(name, false, viewModel.TypeOfAccount, viewModel.UpdateDataCallback));
         }
 
-        public static void BeginEdit(this DataNamesViewModel viewModel)
+        public static void BeginRowEdit(this DataNamesViewModel viewModel, RowData row)
         {
-            viewModel.PreEditCommand?.Execute(null);
-        }
-        public static void CompleteEdit(this DataNamesViewModel viewModel)
-        {
-            viewModel.CreateCommand?.Execute(null);
+            row.BeginEdit();
         }
 
-        public static NameData AddNewItem(this DataNamesViewModel viewModel)
+        public static void CompleteEdit(this DataNamesViewModel viewModel, RowData row)
+        {
+            viewModel.CreateCommand?.Execute(row);
+            row.EndEdit();
+        }
+
+        public static void CompleteCreate(this DataNamesViewModel viewModel, RowData row)
+        {
+            viewModel.CreateCommand?.Execute(row);
+        }
+
+        public static RowData AddNewItem(this DataNamesViewModel viewModel)
         {
             viewModel.SelectItem(null);
-            viewModel.DataNames.Add(new SelectableEquatable<NameData>(new NameData(), false));
-            SelectableEquatable<NameData> newItem = viewModel.DataNames.Last();
-            viewModel.SelectItem(newItem.Instance);
-            viewModel.BeginEdit();
-
-            return newItem.Instance;
+            var row = viewModel.DefaultRow();
+            viewModel.DataNames.Add(row);
+            viewModel.SelectItem(row.Instance);
+            return row;
         }
 
         public static void DownloadSelected(this DataNamesViewModel viewModel)

@@ -11,7 +11,7 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class DataNamesViewTestHelper
     {
-        private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
+        protected Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
 
         private IPortfolio fPortfolio;
 
