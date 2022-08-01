@@ -10,6 +10,7 @@ using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Export.History;
 using FinancialStructures.Database.Extensions.Values;
+using Common.UI;
 
 namespace FPD.Logic.ViewModels.Stats
 {
@@ -75,8 +76,8 @@ namespace FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public StatisticsChartsViewModel(IPortfolio portfolio, UiStyles styles)
-            : base(null, styles, portfolio, "Charts", Account.All)
+        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, UiStyles styles)
+            : base(uiGlobals, styles, portfolio, "Charts", Account.All)
         {
             UpdateData(portfolio);
         }
@@ -116,7 +117,7 @@ namespace FPD.Logic.ViewModels.Stats
                     generateSectorRates: true));
             HistoryStats = history.Snapshots.Where(stat => stat.Date > new DateTime(1000, 1, 1)).ToList();
 
-            UpdateChart();
+            fUiGlobals.CurrentDispatcher?.BeginInvoke(() => UpdateChart());
         }
 
         /// <summary>

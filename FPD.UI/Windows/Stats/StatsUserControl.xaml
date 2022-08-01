@@ -6,8 +6,6 @@
                                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                    xmlns:stats="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=FPD.Logic"
                                    d:DataContext="{d:DesignInstance Type=stats:StatsViewModel}"
-                                   xmlns:finStats="clr-namespace:FinancialStructures.Database.Statistics;assembly=FinancialStructures"
-   
                                    mc:Ignorable="d"
                                    VerticalAlignment="Stretch"
                                    FontFamily="{Binding Styles.FontFamily}"

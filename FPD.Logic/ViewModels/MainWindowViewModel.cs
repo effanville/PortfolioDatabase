@@ -12,6 +12,7 @@ using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Security;
 using FPD.Logic.ViewModels.Stats;
 using FinancialStructures.Database;
+using System.Threading.Tasks;
 
 namespace FPD.Logic.ViewModels
 {
@@ -110,7 +111,7 @@ namespace FPD.Logic.ViewModels
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, UpdateDataCallback));
             Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
             Tabs.Add(new StatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
-            Tabs.Add(new StatisticsChartsViewModel(ProgramPortfolio, Styles));
+            Tabs.Add(new StatisticsChartsViewModel(fUiGlobals, ProgramPortfolio, Styles));
             Tabs.Add(new StatsCreatorWindowViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio, AddObjectAsMainTab));
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
         }
@@ -136,13 +137,13 @@ namespace FPD.Logic.ViewModels
             fUserConfiguration.SaveConfiguration(filePath, fileSystem);
         }
 
-        private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
+        private async void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
             foreach (object tab in Tabs)
             {
                 if (tab is DataDisplayViewModelBase vm && e.ShouldUpdate(vm.DataType))
                 {
-                    fUiGlobals.CurrentDispatcher?.Invoke(() => vm.UpdateData(ProgramPortfolio));
+                    await Task.Run(() => vm.UpdateData(ProgramPortfolio));
                 }
             }
 

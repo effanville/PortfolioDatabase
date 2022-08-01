@@ -12,6 +12,7 @@ using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions.Statistics;
 using FinancialStructures.Database.Statistics;
+using System.Threading.Tasks;
 
 namespace FPD.Logic.ViewModels.Stats
 {
@@ -24,6 +25,11 @@ namespace FPD.Logic.ViewModels.Stats
 
         private bool fDisplayValueFunds = true;
         private List<Selectable<Statistic>> fStatisticNames;
+
+        /// <summary>
+        /// Event handler controlling property changed
+        /// </summary>
+        public event PropertyChangedEventHandler StatisticsChanged;
 
         /// <summary>
         /// Should statistics for funds with non zero value be displayed.
@@ -40,7 +46,11 @@ namespace FPD.Logic.ViewModels.Stats
         public List<AccountStatistics> Stats
         {
             get => fStats;
-            set => SetAndNotify(ref fStats, value, nameof(Stats));
+            set
+            {
+                SetAndNotify(ref fStats, value, nameof(Stats));
+                StatisticsChanged?.Invoke(null, new PropertyChangedEventArgs(nameof(Stats)));
+            }
         }
 
         /// <summary>
@@ -51,6 +61,8 @@ namespace FPD.Logic.ViewModels.Stats
             get => fStatisticNames;
             set => SetAndNotify(ref fStatisticNames, value, nameof(StatisticNames));
         }
+
+        private Statistic[] StatsToView;
 
         /// <summary>
         /// Default constructor.
@@ -71,6 +83,7 @@ namespace FPD.Logic.ViewModels.Stats
                 fUserConfiguration.HasLoaded = true;
             }
 
+            StatsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
             UpdateData(portfolio);
 
             StatisticNames.ForEach(stat => stat.SelectedChanged += OnSelectedChanged);
@@ -83,17 +96,19 @@ namespace FPD.Logic.ViewModels.Stats
         private void OnSelectedChanged(object sender, EventArgs e)
         {
             fUserConfiguration.StoreConfiguration(this);
+            StatsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
             UpdateData();
         }
+
         /// <summary>
         /// Update to regenerate the statistics displayed if required.
         /// </summary>
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(StatisticNames) || e.PropertyName == nameof(DisplayValueFunds))
             {
                 fUserConfiguration.StoreConfiguration(this);
-                UpdateData();
+                await Task.Run(() => UpdateData());
             }
         }
 
@@ -105,8 +120,12 @@ namespace FPD.Logic.ViewModels.Stats
                 base.UpdateData(dataToDisplay);
             }
 
-            Statistic[] statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
-            Stats = DataStore.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: statsToView);
+            var stats = DataStore.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: StatsToView);
+            fUiGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
+            void AssignStats(List<AccountStatistics> stats)
+            {
+                Stats = stats;
+            }
         }
     }
 }

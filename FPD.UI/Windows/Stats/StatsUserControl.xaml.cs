@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using Common.UI.DisplayObjects;
 using FPD.Logic.ViewModels.Stats;
 using FinancialStructures.Database.Statistics;
+using System.Threading.Tasks;
 
 namespace FPD.UI.Windows.Stats
 {
@@ -28,7 +29,7 @@ namespace FPD.UI.Windows.Stats
         {
             if (DataContext is StatsViewModel vm)
             {
-                vm.PropertyChanged += UpdateDataGrid;
+                vm.StatisticsChanged += UpdateDataGrid;
             }
 
             UpdateDataGrid(null, null);
@@ -37,23 +38,29 @@ namespace FPD.UI.Windows.Stats
         /// <summary>
         /// Updates the data displayed in the grid.
         /// </summary>
-        private void UpdateDataGrid(object sender, PropertyChangedEventArgs e)
+        private async void UpdateDataGrid(object sender, PropertyChangedEventArgs e)
         {
             if (DataContext is StatsViewModel vm)
             {
-                DataTable dt = new DataTable();
-
-                // First add the column header names from the statistics names.
-                IReadOnlyList<Statistic> statisticNames = vm.Stats.First().StatisticNames;
-                foreach (Statistic statisticName in statisticNames)
+                DataTable dt = await Task.Run(() => GetTable(vm.Stats));
+                DataTable GetTable(List<AccountStatistics> statistics)
                 {
-                    dt.Columns.Add(new DataColumn(statisticName.ToString(), typeof(string)));
-                }
+                    DataTable dt = new DataTable();
 
-                // Now add the statistics values.
-                foreach (AccountStatistics val in vm.Stats)
-                {
-                    _ = dt.Rows.Add(val.StatValuesAsObjects.ToArray());
+                    // First add the column header names from the statistics names.
+                    IReadOnlyList<Statistic> statisticNames = vm.Stats.First().StatisticNames;
+                    foreach (Statistic statisticName in statisticNames)
+                    {
+                        dt.Columns.Add(new DataColumn(statisticName.ToString(), typeof(string)));
+                    }
+
+                    // Now add the statistics values.
+                    foreach (AccountStatistics val in vm.Stats)
+                    {
+                        _ = dt.Rows.Add(val.StatValuesAsObjects.ToArray());
+                    }
+
+                    return dt;
                 }
 
                 StatsBox.ItemsSource = dt.DefaultView;
