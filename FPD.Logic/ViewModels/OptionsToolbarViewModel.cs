@@ -63,6 +63,7 @@ namespace FPD.Logic.ViewModels
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
             UpdateDataCommand = new RelayCommand(ExecuteUpdateData);
             CleanDataCommand = new RelayCommand(ExecuteCleanData);
+            RepriceResetCommand = new RelayCommand(ExecuteRepriceReset);
             RefreshCommand = new RelayCommand(ExecuteRefresh);
             CurrencyDropDownClosed = new RelayCommand(DropDownClosed);
         }
@@ -171,6 +172,19 @@ namespace FPD.Logic.ViewModels
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.EditingData, $"Execute clean database for database {fFileName} called.");
             DataUpdateCallback(programPortfolio => programPortfolio.CleanData());
+        }
+
+        /// <summary>
+        /// Command to replace old trade types from the database.
+        /// </summary>
+        public ICommand RepriceResetCommand
+        {
+            get;
+        }
+        private void ExecuteRepriceReset()
+        {
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.EditingData, $"Execute clean database for database {fFileName} called.");
+            DataUpdateCallback(programPortfolio => programPortfolio.MigrateRepriceToReset());
         }
 
         /// <summary>

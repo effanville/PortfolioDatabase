@@ -40,6 +40,9 @@
                     <Button Content="Clean Data"
                             Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                             Command="{Binding CleanDataCommand}" />
+                    <Button Content="Reprice-Reset"
+                            Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                            Command="{Binding RepriceResetCommand}" />
                     <Label Margin="5 5 5 5"
                            Foreground="{Binding Styles.ForegroundBrush}"
                            Content="Base Currency" />
