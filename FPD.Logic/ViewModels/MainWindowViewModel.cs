@@ -13,6 +13,8 @@ using FPD.Logic.ViewModels.Security;
 using FPD.Logic.ViewModels.Stats;
 using FinancialStructures.Database;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FPD.Logic.ViewModels
 {
@@ -25,7 +27,15 @@ namespace FPD.Logic.ViewModels
         /// The mechanism by which the data in <see cref="ProgramPortfolio"/> is updated. This includes a GUI update action.
         /// </summary>
         private Action<Action<IPortfolio>> UpdateDataCallback => action => action(ProgramPortfolio);
-        private Action<object> AddObjectAsMainTab => obj => Tabs.Add(obj);
+        private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
+
+        private void AddTabAction(object obj)
+        {
+            lock (TabsLock)
+            {
+                Tabs.Add(obj);
+            }
+        }
 
         private readonly UiGlobals fUiGlobals;
         internal UserConfiguration fUserConfiguration;
@@ -90,6 +100,16 @@ namespace FPD.Logic.ViewModels
             set;
         } = new ObservableCollection<object>();
 
+        private object TabsLock = new object();
+
+        public List<object> TabsShallowCopy()
+        {
+            lock (TabsLock)
+            {
+                return Tabs.ToList();
+            }
+        }
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -139,7 +159,8 @@ namespace FPD.Logic.ViewModels
 
         private async void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
-            foreach (object tab in Tabs)
+            var tabs = TabsShallowCopy();
+            foreach (object tab in tabs)
             {
                 if (tab is DataDisplayViewModelBase vm && e.ShouldUpdate(vm.DataType))
                 {
