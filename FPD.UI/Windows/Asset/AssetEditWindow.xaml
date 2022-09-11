@@ -107,7 +107,7 @@
                                                 Width="12"
                                                 Margin="2 2 0 0"
                                                 Click="CloseTabCommand">
-                                            <Image Source="/GUI/TemplatesAndStyles/close.png" />
+                                            <Image Source="/TemplatesAndStyles/close.png" />
                                         </Button>
                                     </StackPanel>
                                 </Border>
