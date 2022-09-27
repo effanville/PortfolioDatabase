@@ -7,12 +7,12 @@ using Common.Console.Commands;
 using Common.Console.Options;
 
 using Common.Structure.Extensions;
-using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
 
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Export.Statistics;
+using Common.Structure.ReportWriting;
 
 namespace FPDconsole
 {
@@ -41,7 +41,7 @@ namespace FPDconsole
         {
             fFileSystem = fileSystem;
             fLogger = logger;
-            Func<string, bool> fileValidator = filepath => fileSystem.File.Exists(filepath);
+            bool fileValidator(string filepath) => fileSystem.File.Exists(filepath);
             fFilepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
             Options.Add(fFilepathOption);
             fOutputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
@@ -59,7 +59,7 @@ namespace FPDconsole
             var settings = PortfolioStatisticsSettings.DefaultSettings();
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, fFileSystem);
             var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
-            stats.ExportToFile(fFileSystem, filePath, ExportType.Html, exportSettings, fLogger);
+            stats.ExportToFile(fFileSystem, filePath, DocumentType.Html, exportSettings, fLogger);
             _ = fLogger.LogUseful(ReportType.Information, ReportLocation.StatisticsGeneration, $"Successfully generated statistics page {filePath}");
 
             return 0;

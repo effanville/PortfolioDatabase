@@ -11,8 +11,8 @@
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
 
-    <VersionPrefix>21.7.0</VersionPrefix>
-    <VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
+    <VersionPrefix>22.9</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 
   <Import Project="..\Build\CommonProperties.Build.props" />
@@ -26,8 +26,8 @@
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
-    <PackageReference Include="Common.Console" Version="1.0.4" />
+  <ItemGroup>
+	<ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
   </ItemGroup>
 
   <ItemGroup>

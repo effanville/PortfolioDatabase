@@ -1,0 +1,11 @@
+﻿<Application x:Class="FPD.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Windows/MainWindow.xaml"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException"
+             Startup="Application_Startup">
+    <Application.Resources>
+        <ResourceDictionary Source="TemplatesAndStyles/Dictionaries.xaml" />
+    </Application.Resources>
+</Application>
+
