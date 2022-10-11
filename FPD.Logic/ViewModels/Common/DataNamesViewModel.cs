@@ -169,8 +169,7 @@ namespace FPD.Logic.ViewModels.Common
             UpdateDataCallback = updateDataCallback;
             TypeOfAccount = accountType;
             ReportLogger = reportLogger;
-            DataNames = portfolio.NameDataForAccount(accountType).Select(name => new RowData(name, IsUpdated(portfolio, name), accountType, updateDataCallback)).ToList();
-            DataNames.Sort();
+            UpdateData(portfolio);
 
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
@@ -207,6 +206,11 @@ namespace FPD.Logic.ViewModels.Common
             List<RowData> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(dataToDisplay, name), TypeOfAccount, UpdateDataCallback)).ToList();
             DataNames = null;
             DataNames = values;
+            if (DataNames == null)
+            {
+                DataNames = new List<RowData>();
+            }
+
             DataNames.Sort((a, b) => a.Instance.CompareTo(b.Instance));
             if (!DataNames.Contains(SelectedName))
             {
