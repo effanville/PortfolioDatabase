@@ -125,8 +125,9 @@ namespace FPD.Logic.ViewModels
 
             OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback);
             Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
-            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
+            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, UpdateDataCallback));
+            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, UpdateDataCallback));
             Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));

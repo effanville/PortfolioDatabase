@@ -10,6 +10,8 @@ namespace FPD.Logic.Tests
     [TestFixture]
     public class StatsWindowTests : StatsWindowTestHelper
     {
+        private const int fExpectedNumberTabs = 7;
+
         /// <summary>
         /// The defaults are loaded correctly.
         /// </summary>
@@ -18,7 +20,7 @@ namespace FPD.Logic.Tests
         {
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(6, ViewModel.Stats.Count);
+                Assert.AreEqual(fExpectedNumberTabs, ViewModel.Stats.Count);
                 Assert.AreEqual(true, ViewModel.DisplayValueFunds);
             });
         }
@@ -30,7 +32,7 @@ namespace FPD.Logic.Tests
         [TestCase(true)]
         public void CanStoreConfig(bool valueFunds)
         {
-            Assert.AreEqual(6, ViewModel.Stats.Count);
+            Assert.AreEqual(fExpectedNumberTabs, ViewModel.Stats.Count);
             Assert.AreEqual(true, ViewModel.DisplayValueFunds);
 
             ViewModel.DisplayValueFunds = valueFunds;
@@ -39,7 +41,7 @@ namespace FPD.Logic.Tests
             ViewModel = new StatsViewModel(Globals, null, VMConfiguration, Portfolio);
 
             Assert.AreEqual(valueFunds, ViewModel.DisplayValueFunds);
-            Assert.AreEqual(6, ViewModel.Stats.Count);
+            Assert.AreEqual(fExpectedNumberTabs, ViewModel.Stats.Count);
         }
     }
 }

@@ -182,6 +182,7 @@ namespace FPD.Logic.ViewModels.Stats
                 List<KeyValuePair<DateTime, double>> bankAccTotalValues = new List<KeyValuePair<DateTime, double>>();
                 List<KeyValuePair<DateTime, double>> secTotalValues = new List<KeyValuePair<DateTime, double>>();
                 List<KeyValuePair<DateTime, double>> assetTotalValues = new List<KeyValuePair<DateTime, double>>();
+                List<KeyValuePair<DateTime, double>> pensionTotalValues = new List<KeyValuePair<DateTime, double>>();
                 for (int time = 0; time < HistoryStats.Count; time++)
                 {
                     double bankAccTotal = decimal.ToDouble(HistoryStats[time].BankAccValue);
@@ -190,6 +191,8 @@ namespace FPD.Logic.ViewModels.Stats
                     secTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, secTotal));
                     double assetTotal = decimal.ToDouble(HistoryStats[time].AssetValue);
                     assetTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, assetTotal));
+                    double pensionTotal = decimal.ToDouble(HistoryStats[time].PensionValue);
+                    pensionTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, pensionTotal));
                 }
 
                 var bankAccSeries = new SeriesDefinition
@@ -206,6 +209,13 @@ namespace FPD.Logic.ViewModels.Stats
                     ItemsSource = secTotalValues,
                     Title = "Securities"
                 };
+                var pensionSeries = new SeriesDefinition
+                {
+                    DependentValuePath = "Value",
+                    IndependentValuePath = "Key",
+                    ItemsSource = pensionTotalValues,
+                    Title = "Pensions"
+                };
                 var assetSeries = new SeriesDefinition
                 {
                     DependentValuePath = "Value",
@@ -214,12 +224,13 @@ namespace FPD.Logic.ViewModels.Stats
                     Title = "Assets"
                 };
 
-                var secTotalLine = new StackedAreaSeries();
-                secTotalLine.SeriesDefinitions.Add(bankAccSeries);
-                secTotalLine.SeriesDefinitions.Add(secSeries);
-                secTotalLine.SeriesDefinitions.Add(assetSeries);
+                var stackedAreaSeries = new StackedAreaSeries();
+                stackedAreaSeries.SeriesDefinitions.Add(bankAccSeries);
+                stackedAreaSeries.SeriesDefinitions.Add(secSeries);
+                stackedAreaSeries.SeriesDefinitions.Add(pensionSeries);
+                stackedAreaSeries.SeriesDefinitions.Add(assetSeries);
 
-                newTotalValues.Add(secTotalLine);
+                newTotalValues.Add(stackedAreaSeries);
                 TotalLines = newTotalValues;
             }
         }
