@@ -119,7 +119,7 @@ namespace FPD.Logic.ViewModels.Stats
 
             PortfolioHistory history = new PortfolioHistory(
                 DataStore,
-                new PortfolioHistorySettings(
+                new PortfolioHistory.Settings(
                     firstDate,
                     lastDate,
                     snapshotIncrement: snapshotGap,

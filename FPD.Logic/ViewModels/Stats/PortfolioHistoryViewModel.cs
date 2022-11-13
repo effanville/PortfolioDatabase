@@ -59,7 +59,7 @@ namespace FPD.Logic.ViewModels.Stats
         public override void UpdateData(IPortfolio DataStore)
         {
             base.UpdateData(DataStore);
-            PortfolioHistory history = new PortfolioHistory(DataStore, new PortfolioHistorySettings(snapshotIncrement: HistoryGapDays, generateSecurityRates: false, generateSectorRates: false));
+            PortfolioHistory history = new PortfolioHistory(DataStore, new PortfolioHistory.Settings(snapshotIncrement: HistoryGapDays, generateSecurityRates: false, generateSectorRates: false));
             HistoryStats = history.Snapshots;
         }
     }
