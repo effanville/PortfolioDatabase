@@ -39,8 +39,8 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public HtmlStatsViewerViewModel(UiStyles styles, UiGlobals globals, string filePath)
-            : base(globals, styles, null, "Exported Stats", Account.All)
+        public HtmlStatsViewerViewModel(UiStyles styles, UiGlobals globals, string header, string filePath)
+            : base(globals, styles, null, header, Account.All)
         {
             DisplayStats = new Uri(filePath);
             FileSelect = new RelayCommand(ExecuteFileSelect);
