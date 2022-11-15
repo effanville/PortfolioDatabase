@@ -30,6 +30,10 @@
                                     Binding="{Binding SecurityValue}" />
                 <DataGridTextColumn Header="BankAccounts"
                                     Binding="{Binding BankAccValue}" />
+                <DataGridTextColumn Header="Assets"
+                                    Binding="{Binding AssetValue}" />
+                <DataGridTextColumn Header="Pensions"
+                                    Binding="{Binding PensionValue}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -42,11 +42,11 @@ namespace FPD.Logic.ViewModels.Security
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SecurityEditWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, Action<Action<IPortfolio>> updateData)
-            : base(globals, styles, portfolio, "Securities", Account.Security)
+        public SecurityEditWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, string header, Account account, Action<Action<IPortfolio>> updateData)
+            : base(globals, styles, portfolio, header, account)
         {
             UpdateDataAction = updateData;
-            Tabs.Add(new DataNamesViewModel(DataStore, updateData, ReportLogger, styles, (name) => LoadTabFunc(name), Account.Security));
+            Tabs.Add(new DataNamesViewModel(DataStore, updateData, ReportLogger, styles, (name) => LoadTabFunc(name), account));
             SelectedIndex = 0;
         }
 
