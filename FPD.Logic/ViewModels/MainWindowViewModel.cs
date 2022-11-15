@@ -26,7 +26,14 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The mechanism by which the data in <see cref="ProgramPortfolio"/> is updated. This includes a GUI update action.
         /// </summary>
-        private Action<Action<IPortfolio>> UpdateDataCallback => action => action(ProgramPortfolio);
+        private Action<Action<IPortfolio>> UpdateDataCallback
+        {
+            get
+            {
+                return action => Task.Run(() => action(ProgramPortfolio));
+            }
+        }
+
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
         private void AddTabAction(object obj)
