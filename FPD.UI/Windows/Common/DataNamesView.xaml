@@ -79,9 +79,6 @@
                 </Style>
             </DataGrid.RowStyle>
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="BeginningEdit">
-                    <i:InvokeCommandAction Command="{Binding PreEditCommand}" />
-                </i:EventTrigger>
                 <i:EventTrigger EventName="RowEditEnding">
                     <i:InvokeCommandAction Command="{Binding CreateCommand}"
                                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Mode=Default, Path=CurrentItem}" />
