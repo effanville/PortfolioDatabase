@@ -29,7 +29,7 @@ namespace FPD.Logic.Tests.TestHelpers
             FileSystem.AddFile(testPath, new MockFileData(file));
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
-            ViewModel = new MainWindowViewModel(globals);
+            ViewModel = new MainWindowViewModel(globals, new SynchronousPortfolioUpdater());
         }
 
         [TearDown]

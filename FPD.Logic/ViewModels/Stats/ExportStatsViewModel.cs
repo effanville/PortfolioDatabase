@@ -344,7 +344,7 @@ namespace FPD.Logic.ViewModels.Stats
                 _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage, "Was not able to create page in place specified.");
             }
 
-            CloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, path));
+            CloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, "Exported Stats", path));
         }
     }
 }

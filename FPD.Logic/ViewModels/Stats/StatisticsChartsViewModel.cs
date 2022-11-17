@@ -73,6 +73,16 @@ namespace FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref fIRRlines, value, nameof(IRRLines));
         }
 
+        private ObservableCollection<StackedAreaSeries> fTotallines = new ObservableCollection<StackedAreaSeries>();
+        /// <summary>
+        /// Specific line values for the rate of return chart.
+        /// </summary>
+        public ObservableCollection<StackedAreaSeries> TotalLines
+        {
+            get => fTotallines;
+            set => SetAndNotify(ref fTotallines, value, nameof(TotalLines));
+        }
+
         /// <summary>
         /// Construct an instance.
         /// </summary>
@@ -109,7 +119,7 @@ namespace FPD.Logic.ViewModels.Stats
 
             PortfolioHistory history = new PortfolioHistory(
                 DataStore,
-                new PortfolioHistorySettings(
+                new PortfolioHistory.Settings(
                     firstDate,
                     lastDate,
                     snapshotIncrement: snapshotGap,
@@ -162,6 +172,66 @@ namespace FPD.Logic.ViewModels.Stats
                 }
 
                 IRRLines = newValues;
+            }
+
+            // Now populate the total value chart.
+            TotalLines = null;
+            ObservableCollection<StackedAreaSeries> newTotalValues = new ObservableCollection<StackedAreaSeries>();
+            if (HistoryStats.Count > 1)
+            {
+                List<KeyValuePair<DateTime, double>> bankAccTotalValues = new List<KeyValuePair<DateTime, double>>();
+                List<KeyValuePair<DateTime, double>> secTotalValues = new List<KeyValuePair<DateTime, double>>();
+                List<KeyValuePair<DateTime, double>> assetTotalValues = new List<KeyValuePair<DateTime, double>>();
+                List<KeyValuePair<DateTime, double>> pensionTotalValues = new List<KeyValuePair<DateTime, double>>();
+                for (int time = 0; time < HistoryStats.Count; time++)
+                {
+                    double bankAccTotal = decimal.ToDouble(HistoryStats[time].BankAccValue);
+                    bankAccTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, bankAccTotal));
+                    double secTotal = decimal.ToDouble(HistoryStats[time].SecurityValue);
+                    secTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, secTotal));
+                    double assetTotal = decimal.ToDouble(HistoryStats[time].AssetValue);
+                    assetTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, assetTotal));
+                    double pensionTotal = decimal.ToDouble(HistoryStats[time].PensionValue);
+                    pensionTotalValues.Add(new KeyValuePair<DateTime, double>(HistoryStats[time].Date, pensionTotal));
+                }
+
+                var bankAccSeries = new SeriesDefinition
+                {
+                    ItemsSource = bankAccTotalValues,
+                    DependentValuePath = "Value",
+                    IndependentValuePath = "Key",
+                    Title = "Bank Accounts"
+                };
+                var secSeries = new SeriesDefinition
+                {
+                    DependentValuePath = "Value",
+                    IndependentValuePath = "Key",
+                    ItemsSource = secTotalValues,
+                    Title = "Securities"
+                };
+                var pensionSeries = new SeriesDefinition
+                {
+                    DependentValuePath = "Value",
+                    IndependentValuePath = "Key",
+                    ItemsSource = pensionTotalValues,
+                    Title = "Pensions"
+                };
+                var assetSeries = new SeriesDefinition
+                {
+                    DependentValuePath = "Value",
+                    IndependentValuePath = "Key",
+                    ItemsSource = assetTotalValues,
+                    Title = "Assets"
+                };
+
+                var stackedAreaSeries = new StackedAreaSeries();
+                stackedAreaSeries.SeriesDefinitions.Add(bankAccSeries);
+                stackedAreaSeries.SeriesDefinitions.Add(secSeries);
+                stackedAreaSeries.SeriesDefinitions.Add(pensionSeries);
+                stackedAreaSeries.SeriesDefinitions.Add(assetSeries);
+
+                newTotalValues.Add(stackedAreaSeries);
+                TotalLines = newTotalValues;
             }
         }
     }

@@ -24,35 +24,13 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <cht:Chart Title="Total Invested Over Time"
-                   Style="{StaticResource ChartStyle1}"
-                   Height="Auto"
-                   Width="Auto"
-                   Grid.Row="0"
-                   Grid.Column="0">
-            <cht:Chart.Series>
-                <cht:LineSeries Title="Total"
-                                ItemsSource="{Binding Path=HistoryStats}"
-                                DataPointStyle="{StaticResource InvisibleDataPointBlue}"
-                                IndependentValueBinding="{Binding Path=Date}"
-                                DependentValueBinding="{Binding Path=TotalValue}"></cht:LineSeries>
-                <cht:LineSeries Title="Total Securities"
-                                ItemsSource="{Binding Path=HistoryStats}"
-                                DataPointStyle="{StaticResource InvisibleDataPointRed}"
-                                IndependentValueBinding="{Binding Path=Date}"
-                                DependentValueBinding="{Binding Path=SecurityValue}"></cht:LineSeries>
-                <cht:LineSeries Title="Total BankAccounts"
-                                ItemsSource="{Binding Path=HistoryStats}"
-                                DataPointStyle="{StaticResource InvisibleDataPointGreen}"
-                                IndependentValueBinding="{Binding Path=Date}"
-                                DependentValueBinding="{Binding Path=BankAccValue}"></cht:LineSeries>
-                <cht:LineSeries Title="Total Assets"
-                                ItemsSource="{Binding Path=HistoryStats}"
-                                DataPointStyle="{StaticResource InvisibleDataPointOrange}"
-                                IndependentValueBinding="{Binding Path=Date}"
-                                DependentValueBinding="{Binding Path=AssetValue}"></cht:LineSeries>
-            </cht:Chart.Series>
-        </cht:Chart>
+        <ucdo:BindableChart Title="Total Value Over TIme"
+                            Style="{StaticResource ChartStyle1}"
+                            Height="Auto"
+                            Width="Auto"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            SeriesSource="{Binding TotalLines}" />
         <ucdo:BindableChart x:Name="securityCarChart"
                             Title="Sector IRR over time"
                             Style="{StaticResource ChartStyle1}"

@@ -26,7 +26,14 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The mechanism by which the data in <see cref="ProgramPortfolio"/> is updated. This includes a GUI update action.
         /// </summary>
-        private Action<Action<IPortfolio>> UpdateDataCallback => action => action(ProgramPortfolio);
+        private Action<Action<IPortfolio>> UpdateDataCallback
+        {
+            get
+            {
+                return action => fUpdater.PerformPortfolioAction(action, ProgramPortfolio);
+            }
+        }
+
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
         private void AddTabAction(object obj)
@@ -40,6 +47,7 @@ namespace FPD.Logic.ViewModels
         private readonly UiGlobals fUiGlobals;
         internal UserConfiguration fUserConfiguration;
         private string fConfigLocation;
+        private readonly IPortfolioUpdater fUpdater;
 
         /// <summary>
         /// The logging mechanism for the program.
@@ -113,20 +121,22 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals)
+        public MainWindowViewModel(UiGlobals globals, IPortfolioUpdater updater)
         {
             Styles = new UiStyles();
             ReportsViewModel = new ReportingWindowViewModel(globals.FileInteractionService, Styles);
             ReportLogger = new LogReporter(UpdateReport);
             fUiGlobals = globals;
             fUiGlobals.ReportLogger = ReportLogger;
+            fUpdater = updater;
 
             LoadConfig();
 
             OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback);
             Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
-            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
+            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, UpdateDataCallback));
+            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, UpdateDataCallback));
             Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));

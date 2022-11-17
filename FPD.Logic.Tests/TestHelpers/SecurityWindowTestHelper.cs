@@ -63,7 +63,7 @@ namespace FPD.Logic.Tests.TestHelpers
             Portfolio = TestSetupHelper.CreateEmptyDataBase();
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);
-            ViewModel = new SecurityEditWindowViewModel(globals, null, Portfolio, DataUpdater);
+            ViewModel = new SecurityEditWindowViewModel(globals, null, Portfolio, "Securities", Account.Security, DataUpdater);
         }
 
         [TearDown]

@@ -31,6 +31,7 @@ namespace FPD.Logic.ViewModels.Security
         private readonly Action<Action<IPortfolio>> UpdateDataCallback;
         private readonly IReportLogger fReportLogger;
         private readonly UiGlobals fUiGlobals;
+        private readonly Account fAccount;
 
         private UiStyles fStyles;
 
@@ -126,7 +127,7 @@ namespace FPD.Logic.ViewModels.Security
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SelectedSecurityViewModel(IPortfolio portfolio, Action<Action<IPortfolio>> updateData, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName)
+        public SelectedSecurityViewModel(IPortfolio portfolio, Action<Action<IPortfolio>> updateData, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName, Account account)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
         {
             fReportLogger = reportLogger;
@@ -140,8 +141,9 @@ namespace FPD.Logic.ViewModels.Security
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             UpdateDataCallback = updateData;
+            fAccount = account;
 
-            if (portfolio.TryGetAccount(Account.Security, SelectedName, out IValueList desired))
+            if (portfolio.TryGetAccount(fAccount, SelectedName, out IValueList desired))
             {
                 ISecurity security = desired as ISecurity;
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency ?? portfolio.BaseCurrency);
@@ -177,7 +179,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (name != null && value != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteData(Account.Security, name.ToTwoName(), value.Day, fReportLogger));
+                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteData(fAccount, name.ToTwoName(), value.Day, fReportLogger));
             }
             else
             {
@@ -195,11 +197,11 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteDownloadCommand()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {Account.Security}");
+            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {fAccount}");
             if (SelectedName != null)
             {
                 NameData names = SelectedName;
-                UpdateDataCallback(async programPortfolio => await PortfolioDataUpdater.Download(Account.Security, programPortfolio, names, fReportLogger).ConfigureAwait(false));
+                UpdateDataCallback(async programPortfolio => await PortfolioDataUpdater.Download(fAccount, programPortfolio, names, fReportLogger).ConfigureAwait(false));
             }
         }
 
@@ -218,7 +220,7 @@ namespace FPD.Logic.ViewModels.Security
             {
                 FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
                 List<object> outputs = null;
-                bool exists = DataStore.TryGetAccount(Account.Security, SelectedName, out IValueList account);
+                bool exists = DataStore.TryGetAccount(fAccount, SelectedName, out IValueList account);
                 if (result.Success && exists)
                 {
                     ISecurity security = account as ISecurity;
@@ -231,8 +233,8 @@ namespace FPD.Logic.ViewModels.Security
                         if (objec is SecurityDayData view)
                         {
                             var value = new DailyValuation(view.Date, view.UnitPrice);
-                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditData(Account.Security, SelectedName, value, value, fReportLogger));
-                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditTradeData(Account.Security, SelectedName, view.Trade, view.Trade, fReportLogger));
+                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditData(fAccount, SelectedName, value, value, fReportLogger));
+                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName, view.Trade, view.Trade, fReportLogger));
                         }
                         else
                         {
@@ -259,7 +261,7 @@ namespace FPD.Logic.ViewModels.Security
                 FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, DataStore.Directory(fUiGlobals.CurrentFileSystem), "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
-                    if (DataStore.TryGetAccount(Account.Security, SelectedName, out IValueList account))
+                    if (DataStore.TryGetAccount(fAccount, SelectedName, out IValueList account))
                     {
                         ISecurity security = account as ISecurity;
                         CsvReaderWriter.WriteToCSVFile(security, result.FilePath, fReportLogger);
@@ -292,19 +294,19 @@ namespace FPD.Logic.ViewModels.Security
             base.UpdateData(dataToDisplay);
             if (SelectedName != null)
             {
-                if (!dataToDisplay.Exists(Account.Security, SelectedName))
+                if (!dataToDisplay.Exists(fAccount, SelectedName))
                 {
                     removeTab?.Invoke(this);
                     return;
                 }
 
-                _ = dataToDisplay.TryGetAccount(Account.Security, SelectedName, out IValueList desired);
+                _ = dataToDisplay.TryGetAccount(fAccount, SelectedName, out IValueList desired);
 
                 ISecurity security = desired as ISecurity;
                 TLVM?.UpdateData(security.UnitPrice);
                 Trades = security.Trades.ToList();
-                SecurityStats = dataToDisplay.GetStats(DateTime.Today, Account.Security, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
-                Values = dataToDisplay.NumberData(Account.Security, SelectedName, fReportLogger).ToList();
+                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                Values = dataToDisplay.NumberData(fAccount, SelectedName, fReportLogger).ToList();
             }
         }
 
@@ -383,10 +385,10 @@ namespace FPD.Logic.ViewModels.Security
             if (SelectedTrade != null)
             {
                 bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditTradeData(Account.Security, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, fReportLogger));
+                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, fReportLogger));
                 if (!edited)
                 {
-                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, $"Was not able to add or edit {Account.Security} trade data.");
+                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, $"Was not able to add or edit {fAccount} trade data.");
                 }
             }
         }
@@ -398,7 +400,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedName != null && SelectedTrade != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteTradeData(Account.Security, SelectedName, SelectedTrade.Day, fReportLogger));
+                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteTradeData(fAccount, SelectedName, SelectedTrade.Day, fReportLogger));
             }
             else
             {
