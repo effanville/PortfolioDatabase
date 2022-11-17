@@ -277,9 +277,9 @@ namespace FPD.Logic.ViewModels.Asset
                     return;
                 }
 
-                IAmortisableAsset security = desired as IAmortisableAsset;
-                ValuesTLVM?.UpdateData(security.Values);
-                DebtTLVM?.UpdateData(security.Debt);
+                IAmortisableAsset asset = desired as IAmortisableAsset;
+                ValuesTLVM?.UpdateData(asset.Values);
+                DebtTLVM?.UpdateData(asset.Debt);
                 SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccountType, fSelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
                 Values = dataToDisplay.NumberData(fAccountType, fSelectedName, fReportLogger).ToList();
             }

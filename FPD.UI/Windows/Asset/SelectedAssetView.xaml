@@ -63,7 +63,7 @@
         <Border BorderBrush="DeepSkyBlue"
                 BorderThickness="1"
                 Grid.Column="1"
-                Grid.Row="1">
+                Grid.Row="2">
             <DataGrid Grid.Row="1"
                       Grid.Column="1"
                       ItemsSource="{Binding SecurityStats.Statistics}"
