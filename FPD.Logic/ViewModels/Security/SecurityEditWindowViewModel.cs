@@ -80,7 +80,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (obj is NameData name)
             {
-                Tabs.Add(new SelectedSecurityViewModel(DataStore, UpdateDataAction, ReportLogger, Styles, fUiGlobals, name));
+                Tabs.Add(new SelectedSecurityViewModel(DataStore, UpdateDataAction, ReportLogger, Styles, fUiGlobals, name, DataType));
             }
         }
     }
