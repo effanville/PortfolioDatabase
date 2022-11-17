@@ -41,7 +41,7 @@ namespace FPD.Logic.Tests.TestHelpers
             Name = new NameData("Fidelity", "China");
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);
-            ViewModel = new SelectedSecurityViewModel(Portfolio, DataUpdater, TestSetupHelper.DummyReportLogger, null, globals, Name);
+            ViewModel = new SelectedSecurityViewModel(Portfolio, DataUpdater, TestSetupHelper.DummyReportLogger, null, globals, Name, Account.Security);
         }
 
         [TearDown]

@@ -1,5 +1,7 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-﻿using FPD.Logic.Tests.TestHelpers;
+
+using FPD.Logic.Tests.TestHelpers;
+
 using NUnit.Framework;
 
 namespace FPD.Logic.Tests
