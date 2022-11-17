@@ -10,6 +10,7 @@ using Common.UI.Services;
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database.Extensions;
+using FinancialStructures.Database;
 
 namespace FPD.UI.Windows
 {
@@ -28,7 +29,7 @@ namespace FPD.UI.Windows
             FileInteractionService FileInteractionService = new FileInteractionService(this);
             DialogCreationService DialogCreationService = new DialogCreationService(this);
             fUiGlobals = new UiGlobals(null, new DispatcherInstance(), new FileSystem(), FileInteractionService, DialogCreationService, null);
-            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals);
+            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals, new BackgroundPortfolioUpdater());
             InitializeComponent();
 
             Assembly assembly = Assembly.GetExecutingAssembly();

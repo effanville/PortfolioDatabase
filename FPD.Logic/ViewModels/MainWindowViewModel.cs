@@ -30,7 +30,7 @@ namespace FPD.Logic.ViewModels
         {
             get
             {
-                return action => Task.Run(() => action(ProgramPortfolio));
+                return action => fUpdater.PerformPortfolioAction(action, ProgramPortfolio);
             }
         }
 
@@ -47,6 +47,7 @@ namespace FPD.Logic.ViewModels
         private readonly UiGlobals fUiGlobals;
         internal UserConfiguration fUserConfiguration;
         private string fConfigLocation;
+        private readonly IPortfolioUpdater fUpdater;
 
         /// <summary>
         /// The logging mechanism for the program.
@@ -120,13 +121,14 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals)
+        public MainWindowViewModel(UiGlobals globals, IPortfolioUpdater updater)
         {
             Styles = new UiStyles();
             ReportsViewModel = new ReportingWindowViewModel(globals.FileInteractionService, Styles);
             ReportLogger = new LogReporter(UpdateReport);
             fUiGlobals = globals;
             fUiGlobals.ReportLogger = ReportLogger;
+            fUpdater = updater;
 
             LoadConfig();
 

@@ -8,6 +8,7 @@ using FPD.Logic.ViewModels;
 using FPD.Logic.Tests.TestHelpers;
 using FinancialStructures.Database.Statistics;
 using NUnit.Framework;
+using FinancialStructures.Database;
 
 namespace FPD.Logic.Tests
 {
@@ -644,7 +645,7 @@ namespace FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            var vm = new MainWindowViewModel(globals);
+            var vm = new MainWindowViewModel(globals, new SynchronousPortfolioUpdater());
             vm.fUserConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
             string testConfigPath = "c:/temp/saved/user.config";
             vm.SaveConfig(testConfigPath, tempFileSystem);
