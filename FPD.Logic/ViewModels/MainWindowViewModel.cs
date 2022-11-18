@@ -110,7 +110,7 @@ namespace FPD.Logic.ViewModels
 
         private object TabsLock = new object();
 
-        public List<object> TabsShallowCopy()
+        private List<object> TabsShallowCopy()
         {
             lock (TabsLock)
             {
