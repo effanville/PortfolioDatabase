@@ -143,12 +143,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (name != null)
             {
-                bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, fReportLogger));
-                if (!edited)
-                {
-                    _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, "Was not able to add or edit data.");
-                }
+                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, fReportLogger));
             }
         }
 
@@ -234,7 +229,7 @@ namespace FPD.Logic.ViewModels.Common
                     }
                     else
                     {
-                        _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, "Could not find security.");
+                        _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Could not find {TypeOfAccount}.");
                     }
                 }
             }
