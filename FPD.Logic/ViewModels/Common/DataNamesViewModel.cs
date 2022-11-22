@@ -17,10 +17,17 @@ using System.ComponentModel;
 
 namespace FPD.Logic.ViewModels.Common
 {
-    public class RowData : SelectableEquatable<NameData>, IEditableObject
+    /// <summary>
+    /// Contains a row of <see cref="NameData"/> which can be edited and can be set as new.
+    /// </summary>
+    public sealed class RowData : SelectableEquatable<NameData>, IEditableObject
     {
         private readonly Account TypeOfAccount;
         private NameData fPreEditSelectedName;
+
+        /// <summary>
+        /// Is the row a new row.
+        /// </summary>
         public bool IsNew
         {
             get; set;
@@ -31,6 +38,9 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         private readonly Action<Action<IPortfolio>> UpdateDataCallback;
 
+        /// <summary>
+        /// Construct an instance.
+        /// </summary>
         public RowData(NameData name, bool isThis, Account accType, Action<Action<IPortfolio>> update)
             : base(name, isThis)
         {
@@ -38,6 +48,9 @@ namespace FPD.Logic.ViewModels.Common
             UpdateDataCallback = update;
         }
 
+        /// <summary>
+        /// Construct an empty instance.
+        /// </summary>
         public RowData()
         {
         }
@@ -151,12 +164,16 @@ namespace FPD.Logic.ViewModels.Common
             set => SetAndNotify(ref fSelectedValueHistory, value, nameof(SelectedValueHistory));
         }
 
+        /// <summary>
+        /// Calculate default RowData for a row in the Datanames table.
+        /// </summary>
+        /// <returns></returns>
         public RowData DefaultRow()
         {
-            var thing = new RowData(new NameData(), false, TypeOfAccount, UpdateDataCallback);
+            var defaultRow = new RowData(new NameData(), false, TypeOfAccount, UpdateDataCallback);
 
-            thing.IsNew = true;
-            return thing;
+            defaultRow.IsNew = true;
+            return defaultRow;
         }
 
         /// <summary>

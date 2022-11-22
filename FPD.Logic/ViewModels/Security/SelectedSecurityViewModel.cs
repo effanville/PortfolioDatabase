@@ -215,7 +215,7 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteAddCsvData()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected Security {SelectedName} adding data from csv.");
+            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} adding data from csv.");
             if (SelectedName != null)
             {
                 FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
@@ -255,7 +255,7 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteExportCsvData()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected Security {SelectedName} exporting data to csv.");
+            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} exporting data to csv.");
             if (SelectedName != null)
             {
                 FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, DataStore.Directory(fUiGlobals.CurrentFileSystem), "Csv Files|*.csv|All Files|*.*");
@@ -268,7 +268,7 @@ namespace FPD.Logic.ViewModels.Security
                     }
                     else
                     {
-                        _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, "Could not find security.");
+                        _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Could not find {fAccount}.");
                     }
                 }
             }
@@ -278,19 +278,14 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (newValue != null)
             {
-                bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditData(Account.Security, name.ToTwoName(), oldValue, newValue, fReportLogger));
-                if (!edited)
-                {
-                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, "Was not able to add or edit security data.");
-                }
+                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccount, name.ToTwoName(), oldValue, newValue, fReportLogger));
             }
         }
 
         /// <inheritdoc/>
         public override void UpdateData(IPortfolio dataToDisplay, Action<object> removeTab)
         {
-            _ = fReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected Security {SelectedName} updating data.");
+            _ = fReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} updating data.");
             base.UpdateData(dataToDisplay);
             if (SelectedName != null)
             {
@@ -384,12 +379,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedTrade != null)
             {
-                bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, fReportLogger));
-                if (!edited)
-                {
-                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, $"Was not able to add or edit {fAccount} trade data.");
-                }
+                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, fReportLogger));
             }
         }
 

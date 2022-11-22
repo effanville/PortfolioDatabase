@@ -229,12 +229,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
-                if (!edited)
-                {
-                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, $"Was not able to add or edit {fAccountType} data.");
-                }
+                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
             }
         }
 
@@ -242,12 +237,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
-                if (!edited)
-                {
-                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, $"Was not able to add or edit {fAccountType} data.");
-                }
+                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
             }
         }
 
@@ -255,12 +245,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
-                if (!edited)
-                {
-                    _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, $"Was not able to add or edit {fAccountType} data.");
-                }
+                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
             }
         }
 
