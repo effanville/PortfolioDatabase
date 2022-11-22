@@ -279,7 +279,7 @@ namespace FPD.Logic.ViewModels.Security
             if (newValue != null)
             {
                 bool edited = false;
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditData(Account.Security, name.ToTwoName(), oldValue, newValue, fReportLogger));
+                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAddOrEditData(fAccount, name.ToTwoName(), oldValue, newValue, fReportLogger));
                 if (!edited)
                 {
                     _ = fReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.EditingData, "Was not able to add or edit security data.");
