@@ -17,7 +17,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal"
@@ -45,8 +46,15 @@
         <ContentControl Grid.Row="1"
                         Grid.Column="1"
                         Content="{Binding Stats}"/>
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="2"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      ShowsPreview="True"
+                      Background="{Binding Styles.BackgroundSecondaryBrush}"
+                      Width="5"/>
         <Grid Grid.Row="1"
-              Grid.Column="2"
+              Grid.Column="3"
               Width="Auto"
               Height="Auto"
               VerticalAlignment="Stretch"
