@@ -20,9 +20,10 @@ namespace FPD.UI.Windows.Security
         private void CloseTabCommand(object sender, RoutedEventArgs e)
         {
             SecurityEditWindowViewModel VM = DataContext as SecurityEditWindowViewModel;
-            if (TabMain.SelectedIndex != 0)
+            var button = e.OriginalSource as System.Windows.Controls.Button;
+            if(button != null && VM != null)
             {
-                VM.Tabs.RemoveAt(TabMain.SelectedIndex);
+                _ = VM.RemoveTab(button.DataContext);
             }
         }
     }
