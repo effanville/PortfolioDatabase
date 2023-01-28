@@ -25,20 +25,25 @@ namespace FPD.UI.Windows.Stats
             DataContextChanged += OnDataContextChanged;
         }
 
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (DataContext is StatsViewModel vm)
             {
-                vm.StatisticsChanged += UpdateDataGrid;
+                vm.StatisticsChanged += UpdateGrid;
             }
 
-            UpdateDataGrid(null, null);
+            await UpdateDataGrid();
+        }
+
+        private async void UpdateGrid(object sender, PropertyChangedEventArgs e)
+        {
+            await UpdateDataGrid();
         }
 
         /// <summary>
         /// Updates the data displayed in the grid.
         /// </summary>
-        private async void UpdateDataGrid(object sender, PropertyChangedEventArgs e)
+        private async Task UpdateDataGrid()
         {
             if (DataContext is StatsViewModel vm)
             {
@@ -67,18 +72,6 @@ namespace FPD.UI.Windows.Stats
             }
         }
 
-        private SortDirection ConvertFromVisual(ListSortDirection sD)
-        {
-            switch (sD)
-            {
-                case ListSortDirection.Ascending:
-                    return SortDirection.Ascending;
-                case ListSortDirection.Descending:
-                default:
-                    return SortDirection.Descending;
-            }
-        }
-
         private ListSortDirection ConvertToVisual(SortDirection sD)
         {
             switch (sD)
@@ -91,33 +84,34 @@ namespace FPD.UI.Windows.Stats
             }
         }
 
-        private void dg_Sorting(object sender, DataGridSortingEventArgs e)
+        private async void dg_Sorting(object sender, DataGridSortingEventArgs e)
         {
-            Statistic sortColumnStatistic = System.Enum.Parse<Statistic>(e.Column.Header.ToString());
-            ListSortDirection? previousVisualSortDirection = e.Column.SortDirection;
-            SortDirection sortDirection = SortDirectionHelpers.Invert(ConvertFromVisual(previousVisualSortDirection ?? ListSortDirection.Descending));
-            if (DataContext is StatsViewModel vm)
+            if (sender is DataGrid dg && DataContext is StatsViewModel vm)
             {
-                vm.Stats.Sort((x, y) => x.CompareTo(y, sortColumnStatistic, sortDirection));
-            }
-
-            UpdateDataGrid(null, null);
-
-            // Remove sorting indicators from other columns
-            foreach (var dgColumn in StatsBox.Columns)
-            {
-                if (dgColumn.Header.ToString() != e.Column.Header.ToString())
-                {
-                    dgColumn.SortDirection = null;
-                }
-            }
-
-            //Show the ascending icon when acending sort is done
-            e.Column.SortDirection = ConvertToVisual(sortDirection);
-            if (sender is DataGrid dg)
-            {
+                Statistic sortColumnStatistic = System.Enum.Parse<Statistic>(e.Column.Header.ToString());
                 var sameColumn = dg.Columns.First(col => col.Header == e.Column.Header);
+
+                SortDirection sortDirection = SortDirectionHelpers.Invert(vm.CurrentSortedDirection ?? SortDirection.Descending);
+
+                vm.Stats.Sort((x, y) => x.CompareTo(y, sortColumnStatistic, sortDirection));
+
+
+                await UpdateDataGrid();
+
+                // Remove sorting indicators from other columns
+                foreach (var dgColumn in StatsBox.Columns)
+                {
+                    if (dgColumn.Header.ToString() != e.Column.Header.ToString())
+                    {
+                        dgColumn.SortDirection = null;
+                    }
+                }
+
+                //Show the ascending icon when acending sort is done
+                e.Column.SortDirection = ConvertToVisual(sortDirection);
                 sameColumn.SortDirection = ConvertToVisual(sortDirection);
+                vm.CurrentSortedDirection = sortDirection;
+                vm.CurrentSortedField = sameColumn.Header.ToString();
             }
 
             e.Handled = true;

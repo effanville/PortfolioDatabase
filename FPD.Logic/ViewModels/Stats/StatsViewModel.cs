@@ -64,6 +64,9 @@ namespace FPD.Logic.ViewModels.Stats
 
         private Statistic[] StatsToView;
 
+        public SortDirection? CurrentSortedDirection = null;
+        public string CurrentSortedField;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
