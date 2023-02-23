@@ -83,5 +83,13 @@ namespace FPD.Logic.ViewModels.Security
                 Tabs.Add(new SelectedSecurityViewModel(DataStore, UpdateDataAction, ReportLogger, Styles, fUiGlobals, name, DataType));
             }
         }
+
+        /// <summary>
+        /// Removes a tab from the collection of tabs controlled by this view model.
+        /// </summary>
+        public bool RemoveTab(object obj)
+        {
+            return Tabs.Remove(obj);
+        }
     }
 }

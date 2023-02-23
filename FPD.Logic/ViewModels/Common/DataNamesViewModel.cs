@@ -20,7 +20,7 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// Contains a row of <see cref="NameData"/> which can be edited and can be set as new.
     /// </summary>
-    public sealed class RowData : SelectableEquatable<NameData>, IEditableObject
+    public sealed class RowData : SelectableEquatable<NameData>, IEditableObject, IEquatable<RowData>
     {
         private readonly Account TypeOfAccount;
         private NameData fPreEditSelectedName;
@@ -79,6 +79,18 @@ namespace FPD.Logic.ViewModels.Common
                 NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
                 UpdateDataCallback(programPortfolio => programPortfolio.TryEditName(TypeOfAccount, fPreEditSelectedName, name, null));
             }
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(RowData other)
+        {
+            return base.Equals(other?.Instance);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as RowData);
         }
     }
 
@@ -229,7 +241,7 @@ namespace FPD.Logic.ViewModels.Common
             }
 
             DataNames.Sort((a, b) => a.Instance.CompareTo(b.Instance));
-            if (!DataNames.Contains(SelectedName))
+            if (SelectedName != null && !DataNames.Contains(SelectedName))
             {
                 SelectedName = null;
             }
@@ -273,6 +285,7 @@ namespace FPD.Logic.ViewModels.Common
 
         private void ExecuteSelectionChanged(object args)
         {
+            // object reference issue in following line
             if (DataNames != null && args is RowData selectableName && selectableName.Instance != null)
             {
                 SelectedName = selectableName;
