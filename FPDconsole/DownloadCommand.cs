@@ -53,11 +53,11 @@ namespace FPDconsole
             portfolio.LoadPortfolio(fFilepathOption.Value, fFileSystem, fLogger);
             _ = fLogger.LogUseful(ReportType.Information, ReportLocation.Loading, $"Successfully loaded portfolio from {fFilepathOption.Value}");
 
-            _ = PortfolioDataUpdater.Download(Account.All, portfolio, null, fLogger).ConfigureAwait(true);
+            PortfolioDataUpdater.Download(Account.All, portfolio, null, fLogger).Wait();
 
             if (fUpdateStatsOption.Value)
             {
-                string filePath = portfolio.Directory(fFileSystem) + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fFileSystem) + ".html";
+                string filePath = portfolio.Directory(fFileSystem) + "/" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fFileSystem) + ".html";
                 var settings = PortfolioStatisticsSettings.DefaultSettings();
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, fFileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();

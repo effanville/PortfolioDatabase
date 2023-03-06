@@ -50,7 +50,7 @@ namespace FPDconsole
 
             // Generate the context, validate the arguments and execute.
             ConsoleContext.SetAndExecute(args, console, logger, validCommands);
-            string logPath = $"{fileSystem.Directory.GetCurrentDirectory()}\\{DateTime.Now.FileSuitableDateTimeValue()}-consoleLog.log";
+            string logPath = fileSystem.Path.Combine(fileSystem.Directory.GetCurrentDirectory(), $"{DateTime.Now.FileSuitableDateTimeValue()}-consoleLog.log");
             logger.WriteReportsToFile(logPath);
             return;
         }
