@@ -49,10 +49,10 @@ namespace FinancialStructures.StockStructures.Implementation
         /// <summary>
         /// Constructor setting basic name information
         /// </summary>
-        public Stock(string ticker, string company, string name, string url)
+        public Stock(string ticker, string company, string name, string currency, string url)
         {
             Ticker = ticker;
-            Name = new NameData(company.Trim(), name.Trim(), "", url.Trim());
+            Name = new NameData(company.Trim(), name.Trim(), currency.Trim(), url.Trim());
             Valuations = new List<StockDay>();
         }
 
@@ -111,7 +111,7 @@ namespace FinancialStructures.StockStructures.Implementation
         /// </summary>
         public Stock Copy(DateTime date)
         {
-            var stock = new Stock(Ticker, Name.Company, Name.Name, Name.Url);
+            var stock = new Stock(Ticker, Name.Company, Name.Name, Name.Currency, Name.Url);
             foreach (var valuation in Valuations)
             {
                 if (valuation.Time < date)
