@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	<PublishSingleFile>false</PublishSingleFile>
 	<SelfContained>true</SelfContained>
@@ -33,7 +34,9 @@
   </ItemGroup>
 	
 	<ItemGroup>
-		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
+		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj">
+		  <ReferenceSourceTarget></ReferenceSourceTarget>
+		</ProjectReference>
 	</ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
@@ -41,8 +44,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
-    <ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

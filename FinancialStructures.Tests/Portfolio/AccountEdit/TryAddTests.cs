@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Common.Structure.Reporting;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Implementation;
@@ -18,9 +17,7 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void CanAddSecurity()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-
-            Portfolio database = constructor.Database;
+            Portfolio database = new DatabaseConstructor().GetInstance();
 
             _ = database.TryAdd(Account.Security, new NameData(BaseCompanyName, BaseName));
 
@@ -33,9 +30,7 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void CanAddSector()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-
-            Portfolio database = constructor.Database;
+            Portfolio database = new DatabaseConstructor().GetInstance();
 
             _ = database.TryAdd(Account.Benchmark, new NameData(BaseCompanyName, BaseName));
 
@@ -48,9 +43,7 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void CanAddBankAccount()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-
-            Portfolio database = constructor.Database;
+            Portfolio database = new DatabaseConstructor().GetInstance();
 
             _ = database.TryAdd(Account.BankAccount, new NameData(BaseCompanyName, BaseName));
 
@@ -63,9 +56,7 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void CanAddCurrency()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-
-            Portfolio database = constructor.Database;
+            Portfolio database = new DatabaseConstructor().GetInstance();
 
             _ = database.TryAdd(Account.Currency, new NameData(BaseCompanyName, BaseName));
 
@@ -78,17 +69,15 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void ReportsSecurityCorrect()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-            List<ErrorReport> reports = new List<ErrorReport>();
-            Portfolio database = constructor.Database;
-            IReportLogger logging = new LogReporter((a, b, c, d) => reports.Add(new ErrorReport(a, b, c, d)));
+            Portfolio database = new DatabaseConstructor().GetInstance();
+            IReportLogger logging = new LogReporter(null, saveInternally: true);
             _ = database.TryAdd(Account.Security, new NameData(BaseCompanyName, BaseName), logging);
 
-            Assert.AreEqual(1, reports.Count);
-
+            ErrorReports reports = logging.Reports;
+            Assert.AreEqual(1, reports.Count());
             ErrorReport report = reports.First();
             Assert.AreEqual(ReportType.Information, report.ErrorType);
-            Assert.AreEqual(ReportLocation.AddingData, report.ErrorLocation);
+            Assert.AreEqual("AddingData", report.ErrorLocation);
             Assert.AreEqual(ReportSeverity.Detailed, report.ErrorSeverity);
             Assert.AreEqual($"Security-{BaseCompanyName}-{BaseName} added to database.", report.Message);
         }
@@ -96,20 +85,18 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void AddingSecurityFailReports()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-
-            _ = constructor.WithSecurity(BaseCompanyName, BaseName);
-
-            List<ErrorReport> reports = new List<ErrorReport>();
-            Portfolio database = constructor.Database;
-            IReportLogger logging = new LogReporter((a, b, c, d) => reports.Add(new ErrorReport(a, b, c, d)));
+            Portfolio database = 
+                new DatabaseConstructor()
+                .WithSecurity(BaseCompanyName, BaseName)
+                .GetInstance();
+            IReportLogger logging = new LogReporter(null, saveInternally: true);
             _ = database.TryAdd(Account.Security, new NameData(BaseCompanyName, BaseName), logging);
 
-            Assert.AreEqual(1, reports.Count);
-
+            ErrorReports reports = logging.Reports;
+            Assert.AreEqual(1, reports.Count());
             ErrorReport report = reports.First();
             Assert.AreEqual(ReportType.Error, report.ErrorType);
-            Assert.AreEqual(ReportLocation.AddingData, report.ErrorLocation);
+            Assert.AreEqual("AddingData", report.ErrorLocation);
             Assert.AreEqual(ReportSeverity.Critical, report.ErrorSeverity);
             Assert.AreEqual($"Security-{BaseCompanyName}-{BaseName} already exists.", report.Message);
         }
@@ -117,17 +104,16 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void ReportSectorCorrect()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-            List<ErrorReport> reports = new List<ErrorReport>();
-            Portfolio database = constructor.Database;
-            IReportLogger logging = new LogReporter((a, b, c, d) => reports.Add(new ErrorReport(a, b, c, d)));
+            Portfolio database = new DatabaseConstructor().GetInstance();
+            IReportLogger logging = new LogReporter(null, saveInternally: true);
             _ = database.TryAdd(Account.Benchmark, new NameData(BaseCompanyName, BaseName), logging);
 
-            Assert.AreEqual(1, reports.Count);
+            ErrorReports reports = logging.Reports;
+            Assert.AreEqual(1, reports.Count());
 
             ErrorReport report = reports.First();
             Assert.AreEqual(ReportType.Information, report.ErrorType);
-            Assert.AreEqual(ReportLocation.AddingData, report.ErrorLocation);
+            Assert.AreEqual("AddingData", report.ErrorLocation);
             Assert.AreEqual(ReportSeverity.Detailed, report.ErrorSeverity);
             Assert.AreEqual($"Benchmark-{BaseCompanyName}-{BaseName} added to database.", report.Message);
         }
@@ -135,18 +121,18 @@ namespace FinancialStructures.Tests.Database.AccountEdit
         [Test]
         public void AddingSectorFailReports()
         {
-            DatabaseConstructor constructor = new DatabaseConstructor();
-            _ = constructor.WithSectorFromName(BaseCompanyName, BaseName);
-            List<ErrorReport> reports = new List<ErrorReport>();
-            Portfolio database = constructor.Database;
-            IReportLogger logging = new LogReporter((a, b, c, d) => reports.Add(new ErrorReport(a, b, c, d)));
+            Portfolio database = 
+                new DatabaseConstructor()
+                .WithSectorFromName(BaseCompanyName, BaseName)
+                .GetInstance();
+            IReportLogger logging = new LogReporter(null, saveInternally: true);
             _ = database.TryAdd(Account.Benchmark, new NameData(BaseCompanyName, BaseName), logging);
 
-            Assert.AreEqual(1, reports.Count);
-
+            ErrorReports reports = logging.Reports;
+            Assert.AreEqual(1, reports.Count());
             ErrorReport report = reports.First();
             Assert.AreEqual(ReportType.Error, report.ErrorType);
-            Assert.AreEqual(ReportLocation.AddingData, report.ErrorLocation);
+            Assert.AreEqual("AddingData", report.ErrorLocation);
             Assert.AreEqual(ReportSeverity.Critical, report.ErrorSeverity);
             Assert.AreEqual($"Benchmark-{BaseCompanyName}-{BaseName} already exists.", report.Message);
         }

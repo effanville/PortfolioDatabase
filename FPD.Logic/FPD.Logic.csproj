@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <UseWPF>true</UseWPF>
+    <!--<UseWPF>true</UseWPF>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,7 +25,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
+		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj">
+		  <ReferenceSourceTarget></ReferenceSourceTarget>
+		</ProjectReference>
 	</ItemGroup>
 	
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
@@ -32,7 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
