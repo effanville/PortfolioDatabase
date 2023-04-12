@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
-    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -14,19 +12,9 @@
 	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
-  <Import Project="..\Build\CommonProperties.Build.props" />
-
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
-    <DocumentationFile>..\bin\Release\FPDconsole.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-	<ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
+	  <ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
   </ItemGroup>
 
   <ItemGroup>

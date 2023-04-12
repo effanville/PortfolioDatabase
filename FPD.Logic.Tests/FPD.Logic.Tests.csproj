@@ -1,47 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <Import Project="..\Build\CommonProperties.Build.props" />
-
-  <ItemGroup>
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="nunit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.3" />
-  </ItemGroup>
-	
 	<ItemGroup>
-		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj">
-		  <ReferenceSourceTarget></ReferenceSourceTarget>
-		</ProjectReference>
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="nunit" Version="3.13.3" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+		<PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.3" />
 	</ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj">
-      <ReferenceSourceTarget></ReferenceSourceTarget>
-    </ProjectReference>
-    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj">
-      <ReferenceSourceTarget></ReferenceSourceTarget>
-    </ProjectReference>
-  </ItemGroup>
 
-  <ItemGroup>
-    <None Update="ExampleDatabases\BasicTestDatabase.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="ExampleDatabases\user.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-	
+	<ItemGroup>
+		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
+		<ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
+		<ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="ExampleDatabases\BasicTestDatabase.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="ExampleDatabases\user.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

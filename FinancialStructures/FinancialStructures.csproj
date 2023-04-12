@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>CopyUsed</TrimMode>
     <LangVersion>9.0</LangVersion>
@@ -14,17 +12,15 @@
 	  <VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
-  <Import Project="..\Build\CommonProperties.Build.props" />
-
-  <PropertyGroup>
-    <DocumentationFile>..\bin\$(Configuration)\$(Framework)\$(Runtime)\FinancialStructures.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
-
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Common\Common.Structure\Common.Structure.csproj" />
+	</ItemGroup>
+	
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
     <_Parameter1>FinancialStructures.Tests</_Parameter1>

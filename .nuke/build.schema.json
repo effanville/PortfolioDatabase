@@ -81,6 +81,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "Publish",
               "PublishExe",
               "PublishNuget",
               "Test"
@@ -99,6 +100,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "Publish",
               "PublishExe",
               "PublishNuget",
               "Test"
