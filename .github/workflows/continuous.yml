@@ -38,8 +38,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: bin
-          path: Publish/bin
+          path: .artifacts/bin
       - uses: actions/upload-artifact@v3
         with:
           name: package
-          path: Publish/package
+          path: .artifacts/package

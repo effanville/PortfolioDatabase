@@ -16,7 +16,6 @@ dotnet_diagnostic.IDE0005.severity = warning
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = suggestion
 
-
 #### Core EditorConfig Options ####
 
 # Indentation and spacing
