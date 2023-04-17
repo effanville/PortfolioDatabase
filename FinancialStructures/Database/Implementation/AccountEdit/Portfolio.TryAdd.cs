@@ -62,7 +62,7 @@ namespace FinancialStructures.Database.Implementation
                     break;
                 }
                 default:
-                    _ = reportLogger?.LogUseful(ReportType.Error, ReportLocation.AddingData, $"Adding an Unknown type to portfolio.");
+                    reportLogger?.Log(ReportType.Error, ReportLocation.AddingData.ToString(), $"Adding an Unknown type to portfolio.");
                     return false;
             }
 

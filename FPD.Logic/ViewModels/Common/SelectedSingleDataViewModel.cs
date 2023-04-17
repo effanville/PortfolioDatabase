@@ -201,7 +201,7 @@ namespace FPD.Logic.ViewModels.Common
                         }
                         else
                         {
-                            _ = fReportLogger.LogUseful(ReportType.Error, ReportLocation.StatisticsPage, "Have the wrong type of thing");
+                            fReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Have the wrong type of thing");
                         }
                     }
                 }

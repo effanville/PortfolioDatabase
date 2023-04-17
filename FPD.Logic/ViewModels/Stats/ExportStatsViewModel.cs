@@ -337,11 +337,11 @@ namespace FPD.Logic.ViewModels.Stats
 
                 stats.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
-                _ = ReportLogger.LogUseful(ReportType.Information, ReportLocation.StatisticsPage, "Created statistics page");
+                ReportLogger.Log(ReportType.Information, ReportLocation.StatisticsPage.ToString(), "Created statistics page");
             }
             else
             {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage, "Was not able to create page in place specified.");
+                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Was not able to create page in place specified.");
             }
 
             CloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, "Exported Stats", path));

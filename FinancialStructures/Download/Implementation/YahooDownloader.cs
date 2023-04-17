@@ -44,7 +44,7 @@ namespace FinancialStructures.Download.Implementation
             string webData = await DownloadHelper.GetWebData(url, reportLogger);
             if (string.IsNullOrEmpty(webData))
             {
-                _ = reportLogger?.LogUsefulError(ReportLocation.Downloading, $"Could not download data from {url}");
+                reportLogger?.Error(ReportLocation.Downloading.ToString(), $"Could not download data from {url}");
                 return false;
             }
 
@@ -68,7 +68,7 @@ namespace FinancialStructures.Download.Implementation
             string stockWebsite = await DownloadHelper.GetWebData(url, reportLogger);
             if (string.IsNullOrEmpty(stockWebsite))
             {
-                _ = reportLogger?.LogUsefulError(ReportLocation.Downloading, $"Could not download data from {url}");
+                reportLogger?.Error(ReportLocation.Downloading.ToString(), $"Could not download data from {url}");
                 return false;
             }
 
@@ -78,7 +78,7 @@ namespace FinancialStructures.Download.Implementation
             decimal? volume = FindAndGetSingleValue(stockWebsite, $"data-test=\"TD_VOLUME-value\"><fin-streamer data-symbol=\"{financialCode}\" data-field=\"regularMarketVolume\" data-trend=\"none\" data-pricehint=\"2\" data-dfield=\"longFmt\"", true);
 
             DateTime date = DateTime.Now.TimeOfDay > new DateTime(2010, 1, 1, 16, 30, 0).TimeOfDay ? DateTime.Today : DateTime.Today.AddDays(-1);
-            retrieveValueAction(new StockDay(date, open.Value, range.Item2, range.Item1, close.Value, volume.HasValue ? volume.Value : 0.0m));
+            retrieveValueAction(new StockDay(date, open.Value, range.Item2, range.Item1, close.Value, volume ?? 0.0m));
             return true;
         }
 
@@ -101,7 +101,7 @@ namespace FinancialStructures.Download.Implementation
             // data is of form {"date":1582907959,"open":150.4199981689453,"high":152.3000030517578,"low":146.60000610351562,"close":148.74000549316406,"volume":120763559,"adjclose":148.74000549316406}.
             // Iterate through these until stop.
             int numberEntriesAdded = 0;
-            var characters = dataLeft.Substring(0, 2);
+            string characters = dataLeft.Substring(0, 2);
             if (characters.Equals("[]"))
             {
                 getHistory(stock);
@@ -143,11 +143,11 @@ namespace FinancialStructures.Download.Implementation
             }
             catch (Exception ex)
             {
-                _ = reportLogger?.LogUsefulError(ReportLocation.Downloading, $"Error when downloading: {ex.Message}");
+                reportLogger?.Error(ReportLocation.Downloading.ToString(), $"Error when downloading: {ex.Message}");
                 return false;
             }
 
-            _ = reportLogger?.Log(ReportSeverity.Critical, ReportType.Information, ReportLocation.Downloading, $"Added {numberEntriesAdded} to stock {stock.Name}");
+            reportLogger?.Log(ReportSeverity.Critical, ReportType.Information, ReportLocation.Downloading.ToString(), $"Added {numberEntriesAdded} to stock {stock.Name}");
 
             stock.Sort();
             getHistory(stock);
@@ -205,14 +205,14 @@ namespace FinancialStructures.Download.Implementation
             return code;
         }
 
-        private decimal? FindAndGetSingleValue(string searchString, string findString, bool includeComma, int containedWithin = 50)
+        private static decimal? FindAndGetSingleValue(string searchString, string findString, bool includeComma, int containedWithin = 50)
         {
             int index = searchString.IndexOf(findString);
             int lengthToSearch = Math.Min(containedWithin, searchString.Length - index - findString.Length);
             return DownloadHelper.ParseDataIntoNumber(searchString, index, findString.Length, lengthToSearch, includeComma);
         }
 
-        private Tuple<decimal, decimal> FindAndGetDoubleValues(string searchString, string findString, int containedWithin = 50)
+        private static Tuple<decimal, decimal> FindAndGetDoubleValues(string searchString, string findString, int containedWithin = 50)
         {
             int index = searchString.IndexOf(findString);
             int lengthToSearch = Math.Min(containedWithin, searchString.Length - index - findString.Length);

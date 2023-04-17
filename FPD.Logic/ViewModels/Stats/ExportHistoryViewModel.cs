@@ -110,7 +110,7 @@ namespace FPD.Logic.ViewModels.Stats
             }
             else
             {
-                _ = ReportLogger.LogUseful(ReportType.Error, ReportLocation.StatisticsPage, $"Was not able to create Investment list page at {result.FilePath}");
+                ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
     }
