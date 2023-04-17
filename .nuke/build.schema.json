@@ -81,6 +81,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "DiagnosticPrint",
               "Publish",
               "PublishExe",
               "PublishNuget",
@@ -100,6 +101,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "DiagnosticPrint",
               "Publish",
               "PublishExe",
               "PublishNuget",
