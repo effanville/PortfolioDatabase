@@ -9,14 +9,18 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration GitHubActions_continuous --host GitHubActions
+#         nuke --generate-configuration GitHubActions_ReleaseBuild --host GitHubActions
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
 
-name: continuous
+name: ReleaseBuild
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - develop
+      - master
 
 jobs:
   windows-latest:
