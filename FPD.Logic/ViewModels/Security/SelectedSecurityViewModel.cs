@@ -291,7 +291,7 @@ namespace FPD.Logic.ViewModels.Security
             {
                 if (!dataToDisplay.Exists(fAccount, SelectedName))
                 {
-                    removeTab?.Invoke(this);
+                    fUiGlobals.CurrentDispatcher.BeginInvoke(() => removeTab?.Invoke(this));
                     return;
                 }
 
