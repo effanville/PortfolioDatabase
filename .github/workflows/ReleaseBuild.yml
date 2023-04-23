@@ -19,7 +19,6 @@ name: ReleaseBuild
 on:
   push:
     branches:
-      - develop
       - master
 
 jobs:
@@ -37,13 +36,13 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd Publish'
+      - name: Run './build.cmd Publish --profile release'
         run: ./build.cmd Publish
       - uses: actions/upload-artifact@v3
         with:
           name: bin
-          path: .artifacts/bin
+          path: Publish/bin
       - uses: actions/upload-artifact@v3
         with:
           name: package
-          path: .artifacts/package
+          path: Publish/package

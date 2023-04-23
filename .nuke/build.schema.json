@@ -8,7 +8,7 @@
       "properties": {
         "Configuration": {
           "type": "string",
-          "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
+          "description": "Configuration to build - Default is 'Debug'",
           "enum": [
             "Debug",
             "Release"
@@ -17,6 +17,13 @@
         "Continue": {
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
+        },
+        "ExecutablePublishProjects": {
+          "type": "array",
+          "description": "The projects to build as executables",
+          "items": {
+            "type": "string"
+          }
         },
         "Framework": {
           "type": "string",
@@ -47,9 +54,20 @@
             "VSCode"
           ]
         },
+        "IsProd": {
+          "type": "boolean",
+          "description": "Is this a production release"
+        },
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
+        },
+        "NugetPackageProjects": {
+          "type": "array",
+          "description": "The projects to build as nuget packages",
+          "items": {
+            "type": "string"
+          }
         },
         "Partition": {
           "type": "string",
