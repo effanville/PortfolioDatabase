@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
-		<ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+		<ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
 	</ItemGroup>
 
   <ItemGroup>
