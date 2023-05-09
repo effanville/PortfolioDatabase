@@ -92,6 +92,11 @@ namespace FPD.Logic.ViewModels.Common
         {
             return Equals(obj as RowData);
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), Instance);
+        }
     }
 
     /// <summary>
@@ -235,10 +240,7 @@ namespace FPD.Logic.ViewModels.Common
             List<RowData> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(dataToDisplay, name), TypeOfAccount, UpdateDataCallback)).ToList();
             DataNames = null;
             DataNames = values;
-            if (DataNames == null)
-            {
-                DataNames = new List<RowData>();
-            }
+            DataNames ??= new List<RowData>();
 
             DataNames.Sort((a, b) => a.Instance.CompareTo(b.Instance));
             if (SelectedName != null && !DataNames.Contains(SelectedName))

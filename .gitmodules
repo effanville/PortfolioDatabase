@@ -5,3 +5,6 @@
 [submodule "Common"]
 	path = Common
 	url = https://github.com/effanville/Common
+[submodule "FinancialStructures"]
+	path = FinancialStructures
+	url = ../FinancialStructures

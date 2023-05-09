@@ -186,7 +186,7 @@ namespace FPD.Logic.ViewModels
             }
         }
 
-        private void UpdateReport(ReportSeverity severity, ReportType type, ReportLocation location, string message)
+        private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
         {
             ReportsViewModel?.UpdateReport(severity, type, location, message);
         }

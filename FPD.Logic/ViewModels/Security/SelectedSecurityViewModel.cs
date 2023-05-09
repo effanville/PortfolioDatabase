@@ -238,7 +238,7 @@ namespace FPD.Logic.ViewModels.Security
                         }
                         else
                         {
-                            _ = fReportLogger.LogUseful(ReportType.Error, ReportLocation.StatisticsPage, "Have the wrong type of thing");
+                            fReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Have the wrong type of thing");
                         }
                     }
                 }
@@ -291,7 +291,7 @@ namespace FPD.Logic.ViewModels.Security
             {
                 if (!dataToDisplay.Exists(fAccount, SelectedName))
                 {
-                    removeTab?.Invoke(this);
+                    fUiGlobals.CurrentDispatcher.BeginInvoke(() => removeTab?.Invoke(this));
                     return;
                 }
 
@@ -321,10 +321,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             get
             {
-                if (fPreEditCommand == null)
-                {
-                    fPreEditCommand = new RelayCommand(PreEdit);
-                }
+                fPreEditCommand ??= new RelayCommand(PreEdit);
 
                 return fPreEditCommand;
             }
