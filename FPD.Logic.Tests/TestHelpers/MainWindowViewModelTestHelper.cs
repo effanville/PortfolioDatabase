@@ -23,7 +23,7 @@ namespace FPD.Logic.Tests.TestHelpers
         {
             FileSystem = new MockFileSystem();
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
-            string testPath = "c:/temp/database.xml";
+            string testPath = "c:/temp/saved.xml";
             string saveFilePath = "c:/temp/newDatabase.xml";
 
             FileSystem.AddFile(testPath, new MockFileData(file));

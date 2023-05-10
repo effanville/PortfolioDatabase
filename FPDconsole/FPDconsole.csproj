@@ -8,12 +8,12 @@
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
 
-	<VersionPrefix>22.10.0</VersionPrefix>
+	<VersionPrefix>23.05.0</VersionPrefix>
 	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
 	  <ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
   </ItemGroup>
 

@@ -14,7 +14,7 @@
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
     <Product>FinancePortfolioDatabase</Product>
-	<VersionPrefix>22.10.0</VersionPrefix>
+	<VersionPrefix>23.05.0</VersionPrefix>
 	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
@@ -26,7 +26,7 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
-		<ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
+		<ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
 		<ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
 	</ItemGroup>
 

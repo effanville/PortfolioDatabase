@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AllData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <MyFunds>
-    <FilePath>c:/temp/saved.xml</FilePath>
+  <MyFunds Name="saved">
     <Funds>
       <Security>
         <Names>

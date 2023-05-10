@@ -96,7 +96,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteCreateHistory()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + DataStore.DatabaseName(fUiGlobals.CurrentFileSystem) + "-History.csv", DataStore.Directory(fUiGlobals.CurrentFileSystem), "CSV file|*.csv|All files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + DataStore.Name + "-History.csv", filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))

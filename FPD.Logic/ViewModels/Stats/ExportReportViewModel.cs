@@ -63,7 +63,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteCreateReport()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{DataStore.DatabaseName(fUiGlobals.CurrentFileSystem)}-report.html", DataStore.Directory(fUiGlobals.CurrentFileSystem), "Html file|*.html|All files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{DataStore.Name}-report.html", filter: "Html file|*.html|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".html"))

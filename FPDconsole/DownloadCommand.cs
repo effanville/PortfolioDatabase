@@ -60,9 +60,10 @@ namespace FPDconsole
 
             if (_updateStatsOption.Value)
             {
+                string directory = _fileSystem.Path.GetDirectoryName(_filepathOption.Value);
                 string filePath = _fileSystem.Path.Combine(
-                    portfolio.Directory(_fileSystem),
-                    $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.DatabaseName(_fileSystem)}.html");
+                    directory,
+                    $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.Name}.html");
                 var settings = PortfolioStatisticsSettings.DefaultSettings();
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();

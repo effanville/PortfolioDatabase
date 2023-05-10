@@ -72,8 +72,7 @@ namespace FPD.Logic.ViewModels
         public override void UpdateData(IPortfolio portfolio)
         {
             base.UpdateData(portfolio);
-            fFileName = fUiGlobals.CurrentFileSystem.Path.GetFileName(portfolio.FilePath);
-            fDirectory = portfolio.Directory(fUiGlobals.CurrentFileSystem);
+            fFileName = portfolio.Name;
             Currencies = portfolio.Names(Account.Currency).Concat(portfolio.Companies(Account.Currency)).Distinct().ToList();
             if (!Currencies.Contains(portfolio.BaseCurrency))
             {
@@ -122,9 +121,12 @@ namespace FPD.Logic.ViewModels
             FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("xml", fFileName, fDirectory, "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                DataUpdateCallback(programPortfolio => programPortfolio.FilePath = result.FilePath);
+                fFileName = fUiGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+                fDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                DataUpdateCallback(programPortfolio => programPortfolio.Name = fUiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath));
                 DataUpdateCallback(programPortfolio => programPortfolio.SavePortfolio(result.FilePath, fUiGlobals.CurrentFileSystem, ReportLogger));
                 fUiGlobals.CurrentWorkingDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+
             }
         }
 
@@ -138,13 +140,17 @@ namespace FPD.Logic.ViewModels
 
         private void ExecuteLoadDatabase()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.Loading, $"Loading database called.");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.Loading, $"Loading database.");
             FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
                 DataUpdateCallback(programPortfolio => programPortfolio.FillDetailsFromFile(fUiGlobals.CurrentFileSystem, result.FilePath, ReportLogger));
                 DataUpdateCallback(programPortfolio => programPortfolio.SavePortfolio($"{result.FilePath}.bak", fUiGlobals.CurrentFileSystem, ReportLogger));
                 fUiGlobals.CurrentWorkingDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                fFileName = fUiGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+                fDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+
+                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.Loading, $"Loaded database {fFileName} successfully.");
             }
         }
 
@@ -208,9 +214,6 @@ namespace FPD.Logic.ViewModels
         {
             get;
         }
-        private void DropDownClosed()
-        {
-            DataUpdateCallback(portfolio => portfolio.BaseCurrency = BaseCurrency);
-        }
+        private void DropDownClosed() => DataUpdateCallback(portfolio => portfolio.BaseCurrency = BaseCurrency);
     }
 }
