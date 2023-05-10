@@ -76,7 +76,7 @@ namespace FPD.Logic.ViewModels.Stats
             }
             else
             {
-                _ = fUiGlobals.ReportLogger.LogUseful(ReportType.Error, ReportLocation.StatisticsPage, $"Was not able to create Investment list page at {result.FilePath}");
+                fUiGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
     }

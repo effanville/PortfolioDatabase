@@ -171,7 +171,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Updates the reports in the window.
         /// </summary>
-        public void UpdateReport(ReportSeverity severity, ReportType type, ReportLocation location, string message)
+        public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
         {
             Reports.AddErrorReport(severity, type, location, message);
             SyncReports();

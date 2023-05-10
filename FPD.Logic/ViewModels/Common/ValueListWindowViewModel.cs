@@ -66,7 +66,7 @@ namespace FPD.Logic.ViewModels.Common
                 {
                     foreach (object tab in removableTabs)
                     {
-                        _ = Tabs.Remove(tab);
+                        fUiGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
                     }
 
                     removableTabs.Clear();

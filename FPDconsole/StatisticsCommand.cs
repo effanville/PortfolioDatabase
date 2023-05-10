@@ -18,11 +18,12 @@ namespace FPDconsole
 {
     internal sealed class StatisticsCommand : ICommand
     {
-        private readonly IFileSystem fFileSystem;
-        private readonly IReportLogger fLogger;
-        private readonly CommandOption<string> fFilepathOption;
-        private readonly CommandOption<string> fOutputPathOption;
+        readonly IFileSystem _fileSystem;
+        readonly CommandOption<string> _filepathOption;
+        readonly CommandOption<string> _outputPathOption;
+        readonly CommandOption<DocumentType> _fileTypeOption;
 
+        /// <inheritdoc/>
         public string Name => "stats";
 
         /// <inheritdoc/>
@@ -37,30 +38,42 @@ namespace FPDconsole
             get;
         } = new List<ICommand>();
 
-        public StatisticsCommand(IFileSystem fileSystem, IReportLogger logger)
+        public StatisticsCommand(IFileSystem fileSystem)
         {
-            fFileSystem = fileSystem;
-            fLogger = logger;
+            _fileSystem = fileSystem;
             bool fileValidator(string filepath) => fileSystem.File.Exists(filepath);
-            fFilepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
-            Options.Add(fFilepathOption);
-            fOutputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
-            Options.Add(fOutputPathOption);
+            _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
+            Options.Add(_filepathOption);
+            _outputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
+            Options.Add(_outputPathOption);
+            _fileTypeOption = new CommandOption<DocumentType>("docType", "The type of the stats to output.", required: false);
+            Options.Add(_fileTypeOption);
         }
 
         /// <inheritdoc/>
         public int Execute(IConsole console, string[] args = null)
         {
-            IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
-            portfolio.LoadPortfolio(fFilepathOption.Value, fFileSystem, fLogger);
-            _ = fLogger.LogUseful(ReportType.Information, ReportLocation.Loading, $"Successfully loaded portfolio from {fFilepathOption.Value}");
+            return Execute(console, null, args);
+        }
 
-            string filePath = fOutputPathOption.Value ?? portfolio.Directory(fFileSystem) + "\\" + DateTime.Today.FileSuitableUKDateString() + portfolio.DatabaseName(fFileSystem) + ".html";
+        /// <inheritdoc/>
+        public int Execute(IConsole console, IReportLogger logger, string[] args = null)
+        {
+            IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
+            portfolio.LoadPortfolio(_filepathOption.Value, _fileSystem, logger);
+            logger.Log(ReportType.Information, "Loading", $"Successfully loaded portfolio from {_filepathOption.Value}");
+
+            DocumentType docType = _fileTypeOption.Value;
+
+            string filePath = _outputPathOption.Value ??
+                _fileSystem.Path.Combine(portfolio.Directory(_fileSystem),
+                $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.DatabaseName(_fileSystem)}.{docType}");
+
             var settings = PortfolioStatisticsSettings.DefaultSettings();
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, fFileSystem);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
             var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
-            stats.ExportToFile(fFileSystem, filePath, DocumentType.Html, exportSettings, fLogger);
-            _ = fLogger.LogUseful(ReportType.Information, ReportLocation.StatisticsGeneration, $"Successfully generated statistics page {filePath}");
+            stats.ExportToFile(_fileSystem, filePath, docType, exportSettings, logger);
+            logger.Log(ReportType.Information, "StatisticsGeneration", $"Successfully generated statistics page {filePath}");
 
             return 0;
         }
@@ -68,7 +81,13 @@ namespace FPDconsole
         /// <inheritdoc/>
         public bool Validate(IConsole console, string[] args)
         {
-            return CommandExtensions.Validate(this, args, console);
+            return Validate(console, null, args);
+        }
+
+        /// <inheritdoc/>
+        public bool Validate(IConsole console, IReportLogger logger, string[] args)
+        {
+            return CommandExtensions.Validate(this, args, console, logger);
         }
 
         /// <inheritdoc/>

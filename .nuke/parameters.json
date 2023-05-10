@@ -1,0 +1,14 @@
+{
+  "$schema": "./build.schema.json",
+  "Solution": "FinancePortfolioDatabase.sln",
+  "ExecutablePublishProjects": [
+    "FPD.UI",
+    "FPDconsole"
+  ],
+  "NugetPackageProjects": [
+    "FinancialStructures"
+  ],
+  "Configuration": "Release",
+  "Framework": "net6.0-windows",
+  "Runtime": "win-x64"
+}

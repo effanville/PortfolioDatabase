@@ -13,9 +13,9 @@ namespace FPDconsole
         private static void Main(string[] args)
         {
             // Create the logger.
-            void reportAction(ReportSeverity severity, ReportType reportType, ReportLocation location, string text)
+            void reportAction(ReportSeverity severity, ReportType reportType, string location, string text)
             {
-                string message = DateTime.Now + "(" + reportType.ToString() + ")" + text;
+                string message = $"[{DateTime.Now}]-({reportType}) - [{location}] - {text}";
                 if (reportType == ReportType.Error)
                 {
                     writeError(message);
@@ -43,14 +43,15 @@ namespace FPDconsole
             // Define the acceptable commands for this program.
             var validCommands = new List<ICommand>()
             {
-                new DownloadCommand(fileSystem, logger),
+                new DownloadCommand(fileSystem),
+                new StatisticsCommand(fileSystem),
             };
 
-            _ = logger.Log(ReportSeverity.Useful, ReportType.Information, ReportLocation.Execution, "FPDconsole.exe - version 1");
+            logger.Log(ReportSeverity.Useful, ReportType.Information, $"FPDConsole", "FPDconsole.exe - version 1");
 
             // Generate the context, validate the arguments and execute.
             ConsoleContext.SetAndExecute(args, console, logger, validCommands);
-            string logPath = $"{fileSystem.Directory.GetCurrentDirectory()}\\{DateTime.Now.FileSuitableDateTimeValue()}-consoleLog.log";
+            string logPath = fileSystem.Path.Combine(fileSystem.Directory.GetCurrentDirectory(), $"{DateTime.Now.FileSuitableDateTimeValue()}-consoleLog.log");
             logger.WriteReportsToFile(logPath);
             return;
         }

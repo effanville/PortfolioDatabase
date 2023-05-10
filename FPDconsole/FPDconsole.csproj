@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -12,22 +9,12 @@
     <Product>FPDConsole</Product>
 
 	<VersionPrefix>22.10.0</VersionPrefix>
-	<VersionSuffix></VersionSuffix>
-  </PropertyGroup>
-
-  <Import Project="..\Build\CommonProperties.Build.props" />
-
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
-    <DocumentationFile>..\bin\Release\FPDconsole.xml</DocumentationFile>
+	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-	<ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
+	  <ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
   </ItemGroup>
 
   <ItemGroup>
