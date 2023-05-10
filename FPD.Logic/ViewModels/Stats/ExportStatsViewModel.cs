@@ -255,7 +255,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteExportCommand()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), DataStore.DatabaseName(fUiGlobals.CurrentFileSystem), DataStore.Directory(fUiGlobals.CurrentFileSystem), "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), DataStore.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)

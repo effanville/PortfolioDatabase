@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Windows;
+
 using Common.Structure.DataStructures;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Services;
+
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;
 using FinancialStructures.DataStructures;
 using FinancialStructures.NamingStructures;
+
 using Moq;
 
 namespace FPD.Logic.Tests.TestHelpers
@@ -76,7 +79,7 @@ namespace FPD.Logic.Tests.TestHelpers
         public static void UpdatePortfolio(IPortfolio portfolio)
         {
             portfolio.BaseCurrency = "GBP";
-            portfolio.FilePath = "TestFilePath";
+            portfolio.Name = "TestFilePath";
             _ = portfolio.TryAdd(Account.Security, new NameData("Fidelity", "China", "GBP", "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx", new HashSet<string>() { "Bonds", "UK" }), DummyReportLogger);
             var secName = new TwoName("Fidelity", "China");
             _ = portfolio.TryAddOrEditTradeData(Account.Security, secName, new SecurityTrade(TradeType.Buy, secName, new DateTime(2000, 1, 1), 1, 1, 1), new SecurityTrade(TradeType.Buy, secName, new DateTime(2000, 1, 1), 1, 1, 2));
@@ -95,7 +98,7 @@ namespace FPD.Logic.Tests.TestHelpers
         public static IPortfolio CreateEmptyDataBase()
         {
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
-            portfolio.FilePath = "c:/temp/saved.xml";
+            portfolio.Name = "saved";
             return portfolio;
         }
     }

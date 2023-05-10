@@ -258,7 +258,7 @@ namespace FPD.Logic.ViewModels.Security
             _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} exporting data to csv.");
             if (SelectedName != null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, DataStore.Directory(fUiGlobals.CurrentFileSystem), "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
                     if (DataStore.TryGetAccount(fAccount, SelectedName, out IValueList account))

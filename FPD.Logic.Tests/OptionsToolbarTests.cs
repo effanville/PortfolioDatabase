@@ -26,7 +26,7 @@ namespace FPD.Logic.Tests
             viewModel.NewDatabaseCommand.Execute(1);
             //Check that data held is an empty database
 
-            Assert.AreEqual(null, portfolio.FilePath);
+            Assert.AreEqual(null, portfolio.Name);
             Assert.AreEqual(0, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(0, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(0, portfolio.BenchMarksThreadSafe.Count);
@@ -39,6 +39,7 @@ namespace FPD.Logic.Tests
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
             string testPath = "c:/temp/saved.xml";
 
+            string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
             tempFileSystem.AddFile(testPath, new MockFileData(file));
 
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
@@ -49,7 +50,7 @@ namespace FPD.Logic.Tests
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(testPath, portfolio.FilePath);
+            Assert.AreEqual(name, portfolio.Name);
             Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
@@ -64,6 +65,7 @@ namespace FPD.Logic.Tests
             string savePath = "c:/temp/saved.xml";
 
             tempFileSystem.AddFile(testPath, new MockFileData(file));
+            string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
 
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath, savePath);
             Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
@@ -73,7 +75,7 @@ namespace FPD.Logic.Tests
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(savePath, portfolio.FilePath);
+            Assert.AreEqual(name, portfolio.Name);
             Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
@@ -91,6 +93,7 @@ namespace FPD.Logic.Tests
             MockFileSystem tempFileSystem = new MockFileSystem();
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
             string testPath = "c:/temp/database.xml";
+            string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
 
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
@@ -100,7 +103,7 @@ namespace FPD.Logic.Tests
             viewModel.SaveDatabaseCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(testPath, portfolio.FilePath);
+            Assert.AreEqual(name, portfolio.Name);
             Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
@@ -121,7 +124,7 @@ namespace FPD.Logic.Tests
             viewModel.UpdateDataCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(testFilePath, portfolio.FilePath);
+            Assert.AreEqual(testFilePath, portfolio.Name);
             Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
@@ -139,7 +142,7 @@ namespace FPD.Logic.Tests
             viewModel.RefreshCommand.Execute(1);
             //Check that data held is an empty database
 
-            Assert.AreEqual("TestFilePath", portfolio.FilePath);
+            Assert.AreEqual("TestFilePath", portfolio.Name);
             Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
             Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);

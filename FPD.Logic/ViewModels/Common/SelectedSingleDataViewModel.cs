@@ -220,7 +220,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (fSelectedName != null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, DataStore.Directory(fUiGlobals.CurrentFileSystem), "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
                     if (DataStore.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account))

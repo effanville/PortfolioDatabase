@@ -79,10 +79,10 @@ namespace FPD.UI.Windows
 
             if (result == MessageBoxResult.Yes)
             {
-                FileInteractionResult savingResult = fUiGlobals.FileInteractionService.SaveFile("xml", fUiGlobals.CurrentFileSystem.Path.GetFileName(VM.ProgramPortfolio.FilePath), VM.ProgramPortfolio.Directory(fUiGlobals.CurrentFileSystem), "XML Files|*.xml|All Files|*.*");
+                FileInteractionResult savingResult = fUiGlobals.FileInteractionService.SaveFile("xml", VM.ProgramPortfolio.Name, filter: "XML Files|*.xml|All Files|*.*");
                 if (savingResult.Success)
                 {
-                    VM.ProgramPortfolio.FilePath = savingResult.FilePath;
+                    VM.ProgramPortfolio.Name = fUiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
                     MainWindowViewModel vm = DataContext as MainWindowViewModel;
                     vm.ProgramPortfolio.SavePortfolio(savingResult.FilePath, fUiGlobals.CurrentFileSystem, vm.ReportLogger);
                 }

@@ -28,7 +28,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             ViewModel.UpdateData(newData);
 
-            Assert.AreEqual("TestFilePath", ViewModel.DataStore.FilePath);
+            Assert.AreEqual("TestFilePath", ViewModel.DataStore.Name);
             Assert.AreEqual(1, ViewModel.DataStore.BankAccountsThreadSafe.Count);
         }
 
@@ -44,7 +44,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             ViewModel.UpdateData(newData);
             Assert.AreEqual(1, ViewModel.Tabs.Count);
-            Assert.AreEqual("TestFilePath", ViewModel.DataStore.FilePath);
+            Assert.AreEqual("TestFilePath", ViewModel.DataStore.Name);
             Assert.AreEqual(1, ViewModel.DataStore.BankAccountsThreadSafe.Count);
         }
 

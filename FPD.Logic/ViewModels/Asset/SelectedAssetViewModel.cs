@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+
 using Common.Structure.DataStructures;
 using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
@@ -9,6 +10,7 @@ using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
 using Common.UI.ViewModelBases;
+
 using FinancialStructures;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
@@ -18,6 +20,7 @@ using FinancialStructures.Database.Statistics;
 using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
@@ -209,7 +212,7 @@ namespace FPD.Logic.ViewModels.Asset
             _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {fSelectedName} exporting data to csv.");
             if (fSelectedName != null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, DataStore.Directory(fUiGlobals.CurrentFileSystem), "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
                     if (DataStore.TryGetAccount(fAccountType, fSelectedName, out IValueList account))

@@ -65,9 +65,10 @@ namespace FPDconsole
 
             DocumentType docType = _fileTypeOption.Value;
 
-            string filePath = _outputPathOption.Value ??
-                _fileSystem.Path.Combine(portfolio.Directory(_fileSystem),
-                $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.DatabaseName(_fileSystem)}.{docType}");
+            string directory = _fileSystem.Path.GetDirectoryName(_filepathOption.Value);
+            string filePath = _fileSystem.Path.Combine(
+                directory,
+                $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.Name}.{docType}");
 
             var settings = PortfolioStatisticsSettings.DefaultSettings();
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
