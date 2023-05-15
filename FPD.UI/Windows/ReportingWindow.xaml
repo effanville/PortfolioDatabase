@@ -7,7 +7,7 @@
           d:DataContext="{d:DesignInstance Type=viewmodels:ReportingWindowViewModel}"
           mc:Ignorable="d"
           MaxHeight="150"
-          Header="Error Reports"
+          Header="SysReports"
           FontWeight="Bold"
           IsExpanded="{Binding IsExpanded}"
           Foreground="{Binding Styles.ForegroundBrush}"
@@ -18,14 +18,14 @@
     <Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110" />
+            <ColumnDefinition Width="90" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid Background="{Binding Styles.BackgroundSecondaryBrush}"
               Grid.Column="0">
             <StackPanel VerticalAlignment="Top">
                 <Button Style="{StaticResource ResourceKey=defaultButton}"
-                        Content="Clear Reports"
+                        Content="Clear"
                         FontSize="{Binding Styles.SmallFontSize}"
                         Command="{Binding ClearReportsCommand}" />
                 <TextBlock Margin="2"
@@ -35,10 +35,13 @@
                            FontSize="{Binding Styles.SmallFontSize}" />
                 <ComboBox Margin="2"
                           FontWeight="Normal"
+                          VerticalAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          HorizontalContentAlignment="Center"
                           FontSize="{Binding Styles.SmallFontSize}"
                           ItemsSource="{Binding ReportSeverityValues}"
                           SelectedValue="{Binding Path=ReportingSeverity}" />
-                <Button Content="Export to File"
+                <Button Content="Export"
                         FontSize="{Binding Styles.SmallFontSize}"
                         Style="{StaticResource ResourceKey=defaultButton}"
                         Command="{Binding ExportReportsCommand}" />
