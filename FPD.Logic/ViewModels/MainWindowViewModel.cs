@@ -26,13 +26,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The mechanism by which the data in <see cref="ProgramPortfolio"/> is updated. This includes a GUI update action.
         /// </summary>
-        private Action<Action<IPortfolio>> UpdateDataCallback
-        {
-            get
-            {
-                return action => fUpdater.PerformPortfolioAction(action, ProgramPortfolio);
-            }
-        }
+        private Action<Action<IPortfolio>> UpdateDataCallback => action => fUpdater.PerformPortfolioAction(action, ProgramPortfolio);
 
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
@@ -108,7 +102,7 @@ namespace FPD.Logic.ViewModels
             set;
         } = new ObservableCollection<object>();
 
-        private object TabsLock = new object();
+        private readonly object TabsLock = new object();
 
         private List<object> TabsShallowCopy()
         {
@@ -157,15 +151,9 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Saves the user configuration to the local appData folder.
         /// </summary>
-        public void SaveConfig()
-        {
-            SaveConfig(fConfigLocation, fUiGlobals.CurrentFileSystem);
-        }
+        public void SaveConfig() => SaveConfig(fConfigLocation, fUiGlobals.CurrentFileSystem);
 
-        internal void SaveConfig(string filePath, IFileSystem fileSystem)
-        {
-            fUserConfiguration.SaveConfiguration(filePath, fileSystem);
-        }
+        internal void SaveConfig(string filePath, IFileSystem fileSystem) => fUserConfiguration.SaveConfiguration(filePath, fileSystem);
 
         private async void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
@@ -187,8 +175,6 @@ namespace FPD.Logic.ViewModels
         }
 
         private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
-        {
-            ReportsViewModel?.UpdateReport(severity, type, location, message);
-        }
+            => ReportsViewModel?.UpdateReport(severity, type, location, message);
     }
 }
