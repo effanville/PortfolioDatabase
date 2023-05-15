@@ -118,7 +118,7 @@ namespace FPD.Logic.ViewModels
         public MainWindowViewModel(UiGlobals globals, IPortfolioUpdater updater)
         {
             Styles = new UiStyles();
-            ReportsViewModel = new ReportingWindowViewModel(globals.FileInteractionService, Styles);
+            ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
             fUiGlobals = globals;
             fUiGlobals.ReportLogger = ReportLogger;

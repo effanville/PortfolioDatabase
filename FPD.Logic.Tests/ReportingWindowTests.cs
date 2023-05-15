@@ -5,6 +5,7 @@ using FPD.Logic.ViewModels;
 using FPD.Logic.Tests.TestHelpers;
 using Moq;
 using NUnit.Framework;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace FPD.Logic.Tests
 {
@@ -89,7 +90,8 @@ namespace FPD.Logic.Tests
         private static ReportingWindowViewModel CreateViewModel(string filepath, ReportSeverity reportingSeverity = ReportSeverity.Detailed)
         {
             Mock<IFileInteractionService> mockFileService = TestSetupHelper.CreateFileMock(filepath);
-            ReportingWindowViewModel viewModel = new ReportingWindowViewModel(mockFileService.Object, null)
+            var mockGlobals = TestSetupHelper.CreateGlobalsMock(new MockFileSystem(), mockFileService.Object, null, null);
+            ReportingWindowViewModel viewModel = new ReportingWindowViewModel(mockGlobals, null)
             {
                 ReportingSeverity = reportingSeverity
             };
