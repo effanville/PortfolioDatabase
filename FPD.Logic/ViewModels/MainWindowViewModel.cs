@@ -26,7 +26,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The mechanism by which the data in <see cref="ProgramPortfolio"/> is updated. This includes a GUI update action.
         /// </summary>
-        private Action<Action<IPortfolio>> UpdateDataCallback => action => fUpdater.PerformPortfolioAction(action, ProgramPortfolio);
+        private Action<Action<IPortfolio>> UpdateDataCallback => action => fUpdater.PerformUpdateAction(action, ProgramPortfolio);
 
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
@@ -41,7 +41,7 @@ namespace FPD.Logic.ViewModels
         private readonly UiGlobals fUiGlobals;
         internal UserConfiguration fUserConfiguration;
         private string fConfigLocation;
-        private readonly IPortfolioUpdater fUpdater;
+        private readonly IDatabaseUpdater<IPortfolio> fUpdater;
 
         /// <summary>
         /// The logging mechanism for the program.
@@ -115,7 +115,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals, IPortfolioUpdater updater)
+        public MainWindowViewModel(UiGlobals globals, IDatabaseUpdater<IPortfolio> updater)
         {
             Styles = new UiStyles();
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
