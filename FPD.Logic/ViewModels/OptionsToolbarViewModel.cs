@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using Common.Structure.Reporting;
 using Common.UI;
@@ -89,16 +88,16 @@ namespace FPD.Logic.ViewModels
         private void ExecuteNewDatabase()
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"ExecuteNewDatabase called.");
-            MessageBoxResult result;
+            MessageBoxOutcome result;
             if (DataStore.IsAlteredSinceSave)
             {
-                result = fUiGlobals.DialogCreationService.ShowMessageBox("Current database has unsaved alterations. Are you sure you want to load a new database?", "New Database?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                result = fUiGlobals.DialogCreationService.ShowMessageBox("Current database has unsaved alterations. Are you sure you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
             }
             else
             {
-                result = fUiGlobals.DialogCreationService.ShowMessageBox("Do you want to load a new database?", "New Database?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                result = fUiGlobals.DialogCreationService.ShowMessageBox("Do you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
             }
-            if (result == MessageBoxResult.Yes)
+            if (result == MessageBoxOutcome.Yes)
             {
                 DataUpdateCallback(programPortfolio => programPortfolio.Clear(ReportLogger));
                 fUiGlobals.CurrentWorkingDirectory = "";
@@ -116,8 +115,9 @@ namespace FPD.Logic.ViewModels
             if (result.Success)
             {
                 fFileName = fUiGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+
                 fDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                DataUpdateCallback(portfo => portfo.Name = fFileName);
+                DataUpdateCallback(portfo => portfo.Name = fUiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath));
                 DataUpdateCallback(portfo => portfo.SavePortfolio(result.FilePath, fUiGlobals.CurrentFileSystem, ReportLogger));
                 fUiGlobals.CurrentWorkingDirectory = fDirectory;
             }

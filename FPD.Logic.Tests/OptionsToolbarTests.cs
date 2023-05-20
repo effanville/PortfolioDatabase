@@ -2,7 +2,6 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Windows;
 using Common.UI.Services;
 using FPD.Logic.ViewModels;
 using FPD.Logic.Tests.TestHelpers;
@@ -19,7 +18,7 @@ namespace FPD.Logic.Tests
         {
             FileSystem fileSystem = new FileSystem();
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxResult.Yes);
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio, dataUpdater);
@@ -43,7 +42,7 @@ namespace FPD.Logic.Tests
             tempFileSystem.AddFile(testPath, new MockFileData(file));
 
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
             Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio, dataUpdater);
@@ -68,7 +67,7 @@ namespace FPD.Logic.Tests
             string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
 
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath, savePath);
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
             Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio, dataUpdater);
@@ -96,7 +95,7 @@ namespace FPD.Logic.Tests
             string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
 
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio, dataUpdater);
@@ -117,7 +116,7 @@ namespace FPD.Logic.Tests
             FileSystem fileSystem = new FileSystem();
             string testFilePath = TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml";
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testFilePath);
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
             Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio, dataUpdater);
@@ -135,7 +134,7 @@ namespace FPD.Logic.Tests
         {
             FileSystem fileSystem = new FileSystem();
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxResult.Yes);
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio, dataUpdater);

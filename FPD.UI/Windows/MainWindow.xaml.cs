@@ -7,10 +7,11 @@ using System.Windows;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Services;
+using Common.UI.Wpf.Services;
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;
-using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database;
+using Common.UI.Wpf;
 
 namespace FPD.UI.Windows
 {
@@ -73,11 +74,11 @@ namespace FPD.UI.Windows
         {
             MainWindowViewModel VM = DataContext as MainWindowViewModel;
             VM.SaveConfig();
-            MessageBoxResult result = VM.ProgramPortfolio.IsAlteredSinceSave
-                ? fUiGlobals.DialogCreationService.ShowMessageBox("Data has changed since last saved. Would you like to save changes before closing?", $"Closing {Title}.", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning)
-                : fUiGlobals.DialogCreationService.ShowMessageBox("There is a small chance that the data has changed since last save (due to neglect on my part). Would you like to save before closing?", $"Closing {Title}.", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            MessageBoxOutcome result = VM.ProgramPortfolio.IsAlteredSinceSave
+                ? fUiGlobals.DialogCreationService.ShowMessageBox("Data has changed since last saved. Would you like to save changes before closing?", $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning)
+                : fUiGlobals.DialogCreationService.ShowMessageBox("There is a small chance that the data has changed since last save (due to neglect on my part). Would you like to save before closing?", $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning);
 
-            if (result == MessageBoxResult.Yes)
+            if (result == MessageBoxOutcome.Yes)
             {
                 FileInteractionResult savingResult = fUiGlobals.FileInteractionService.SaveFile("xml", VM.ProgramPortfolio.Name, filter: "XML Files|*.xml|All Files|*.*");
                 if (savingResult.Success)
@@ -87,7 +88,7 @@ namespace FPD.UI.Windows
                     vm.ProgramPortfolio.SavePortfolio(savingResult.FilePath, fUiGlobals.CurrentFileSystem, vm.ReportLogger);
                 }
             }
-            if (result == MessageBoxResult.Cancel)
+            if (result == MessageBoxOutcome.Cancel)
             {
                 e.Cancel = true;
             }

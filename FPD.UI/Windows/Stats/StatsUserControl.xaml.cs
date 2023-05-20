@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Common.UI.DisplayObjects;
+using Common.UI.Wpf.Controls;
 using FPD.Logic.ViewModels.Stats;
 using FinancialStructures.Database.Statistics;
 using System.Threading.Tasks;

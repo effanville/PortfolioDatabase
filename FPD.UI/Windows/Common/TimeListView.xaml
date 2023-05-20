@@ -5,7 +5,7 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                xmlns:uic="clr-namespace:Common.UI.Converters;assembly=Common.UI"
+                xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Common.UI.Wpf"
                 d:DataContext="{d:DesignInstance Type=common:TimeListViewModel}"
                 mc:Ignorable="d"
                 d:DesignHeight="450"

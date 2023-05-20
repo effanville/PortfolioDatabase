@@ -1,4 +1,4 @@
-﻿using Common.UI.DisplayObjects;
+﻿using Common.UI.Wpf.Controls;
 
 namespace FPD.UI.Windows.Stats
 {

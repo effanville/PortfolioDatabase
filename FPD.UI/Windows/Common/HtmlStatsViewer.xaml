@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:wb="clr-namespace:Common.UI.DisplayObjects;assembly=Common.UI"
+             xmlns:wb="clr-namespace:Common.UI.Wpf.Controls;assembly=Common.UI.Wpf"
              xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
              d:DataContext="{d:DesignInstance Type=viewmodels:HtmlStatsViewerViewModel}"
              mc:Ignorable="d"
