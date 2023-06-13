@@ -32,6 +32,9 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Resource Include="self_drawn_icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="TemplatesAndStyles\close.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

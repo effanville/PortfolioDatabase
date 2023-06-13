@@ -8,5 +8,6 @@
         <ResourceDictionary Source="DataTemplates.xaml" />
         <ResourceDictionary Source="ViewModelToViewDictionary.xaml"/>
         <ResourceDictionary Source="MainWindowTemplates.xaml" />
+        <ResourceDictionary Source="MainWindowStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
