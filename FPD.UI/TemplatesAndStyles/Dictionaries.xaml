@@ -5,6 +5,7 @@
         <ResourceDictionary Source="DataGridStyles.xaml" />
         <ResourceDictionary Source="ChartStyles.xaml" />
         <ResourceDictionary Source="ScrollBarStyles.xaml" />
+        <ResourceDictionary Source="ComboBoxStyles.xaml" />
         <ResourceDictionary Source="DataTemplates.xaml" />
         <ResourceDictionary Source="ViewModelToViewDictionary.xaml"/>
         <ResourceDictionary Source="MainWindowTemplates.xaml" />

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+
 using Common.Structure.DataStructures;
 using Common.UI.Commands;
 using Common.UI.ViewModelBases;
+
+using FPD.Logic.TemplatesAndStyles;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -20,6 +23,17 @@ namespace FPD.Logic.ViewModels.Common
         internal DailyValuation SelectedValuation;
 
         private List<DailyValuation> fValuations = new List<DailyValuation>();
+
+        private UiStyles fStyles;
+
+        /// <summary>
+        /// The style object containing the style for the ui.
+        /// </summary>
+        public UiStyles Styles
+        {
+            get => fStyles;
+            set => SetAndNotify(ref fStyles, value, nameof(Styles));
+        }
 
         /// <summary>
         /// The list of values to display.
@@ -44,11 +58,17 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public TimeListViewModel(TimeList timeList, string valueName, Action<DailyValuation> deleteValueAction, Action<DailyValuation, DailyValuation> addEditValueAction)
+        public TimeListViewModel(
+            TimeList timeList,
+            string valueName,
+            UiStyles styles,
+            Action<DailyValuation> deleteValueAction,
+            Action<DailyValuation, DailyValuation> addEditValueAction)
         {
             DeleteValueAction = deleteValueAction;
             AddEditValueAction = addEditValueAction;
             ValueName = valueName;
+            Styles = styles;
             PreEditCommand = new RelayCommand(ExecutePreEdit);
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);

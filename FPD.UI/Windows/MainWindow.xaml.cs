@@ -14,6 +14,7 @@ using FinancialStructures.Database;
 using Common.UI.Wpf;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace FPD.UI.Windows
 {
@@ -22,6 +23,7 @@ namespace FPD.UI.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        bool ResizeInProcess = false;
         private readonly UiGlobals fUiGlobals;
 
         /// <summary>
@@ -29,10 +31,11 @@ namespace FPD.UI.Windows
         /// </summary>
         public MainWindow()
         {
+            bool isLightTheme = IsLightTheme();
             FileInteractionService FileInteractionService = new FileInteractionService(this);
             DialogCreationService DialogCreationService = new DialogCreationService(this);
             fUiGlobals = new UiGlobals(null, new DispatcherInstance(), new FileSystem(), FileInteractionService, DialogCreationService, null);
-            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals, new BackgroundPortfolioUpdater());
+            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals, new BackgroundPortfolioUpdater(), isLightTheme);
             InitializeComponent();
 
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -40,6 +43,13 @@ namespace FPD.UI.Windows
             Title = "Financial Database v" + informationVersion;
 
             DataContext = viewModel;
+        }
+
+        private static bool IsLightTheme()
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            object value = key?.GetValue("AppsUseLightTheme");
+            return value is int i && i > 0;
         }
 
         /// <summary>
@@ -107,32 +117,30 @@ namespace FPD.UI.Windows
                 }
             }
         }
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e) => App.Current.MainWindow.WindowState = WindowState.Minimized;
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
         private void MaximizeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (App.Current.MainWindow.WindowState == WindowState.Maximized)
+            if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
             {
-                App.Current.MainWindow.WindowState = WindowState.Normal;
+                Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
+                Application.Current.MainWindow.WindowState = WindowState.Normal;
             }
-            else if (App.Current.MainWindow.WindowState == WindowState.Normal)
+            else if (Application.Current.MainWindow.WindowState == WindowState.Normal)
             {
-                App.Current.MainWindow.WindowState = WindowState.Maximized;
+                Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+                Application.Current.MainWindow.WindowState = WindowState.Maximized;
+                Application.Current.MainWindow.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - 13;
             }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow.Close();
 
-        private void UserControl_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            App.Current.MainWindow.DragMove();
-        }
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e) => Application.Current.MainWindow.DragMove();
 
-        bool ResizeInProcess = false;
         private void Resize_Init(object sender, MouseButtonEventArgs e)
         {
-            Rectangle senderRect = sender as Rectangle;
-            if (senderRect != null)
+            if (sender is Rectangle senderRect)
             {
                 ResizeInProcess = true;
                 senderRect.CaptureMouse();
@@ -141,8 +149,7 @@ namespace FPD.UI.Windows
 
         private void Resize_End(object sender, MouseButtonEventArgs e)
         {
-            Rectangle senderRect = sender as Rectangle;
-            if (senderRect != null)
+            if (sender is Rectangle senderRect)
             {
                 ResizeInProcess = false; ;
                 senderRect.ReleaseMouseCapture();
@@ -153,7 +160,7 @@ namespace FPD.UI.Windows
         {
             if (ResizeInProcess)
             {
-                double temp = 0;
+                double temp;
                 Rectangle senderRect = sender as Rectangle;
                 Window mainWindow = senderRect.Tag as Window;
                 if (senderRect != null)

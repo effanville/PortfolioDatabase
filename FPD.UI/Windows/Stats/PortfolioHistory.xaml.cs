@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+
+using FPD.Logic.ViewModels.Stats;
 
 namespace FPD.UI.Windows.Stats
 {
@@ -13,6 +16,16 @@ namespace FPD.UI.Windows.Stats
         public PortfolioHistory()
         {
             InitializeComponent();
+        }
+        private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is PortfolioHistoryViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
+            }
         }
     }
 }

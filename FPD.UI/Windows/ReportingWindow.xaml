@@ -4,17 +4,24 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
+          xmlns:fpdui="clr-namespace:FPD.UI"
           d:DataContext="{d:DesignInstance Type=viewmodels:ReportingWindowViewModel}"
           mc:Ignorable="d"
           MaxHeight="150"
           Header="SysReports"
           FontWeight="Bold"
           IsExpanded="{Binding IsExpanded}"
+          Background="{Binding Styles.BackgroundBrush}"
           Foreground="{Binding Styles.ForegroundBrush}"
           FontSize="{Binding Styles.MediumFontSize}"
           FontFamily="{Binding Styles.FontFamily}"
           HorizontalAlignment="Stretch"
+          DataContextChanged="UC_DataContextChanged"
           VerticalAlignment="Stretch">
+    <Expander.Resources>
+        <fpdui:Bridge x:Key="bridge"
+                      Styles="{Binding Styles}" />
+    </Expander.Resources>
     <Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
@@ -48,17 +55,51 @@
             </StackPanel>
         </Grid>
         <DataGrid SelectionUnit="FullRow"
-                  CanUserAddRows="True"
-                  CanUserDeleteRows="False"
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   FontWeight="Normal"
                   FontSize="{Binding Styles.MediumFontSize}"
-                  GridLinesVisibility="None"
-                  ItemsSource="{Binding ReportsToView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedIndex="{Binding IndexToDelete}"
+                  DataContext="{Binding}"
+                  ItemsSource="{Binding ReportsToView, Mode=TwoWay}"
                   PreviewKeyDown="DataGrid_PreviewKeyDown"
                   Grid.Column="1"
                   Margin="5 -15 5 5"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}"
+                       BasedOn="{StaticResource DGR_Style}">
+                    <Setter Property="Background"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                    <Setter Property="Foreground"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}"
+                       BasedOn="{StaticResource DGC_Style}">
+                    <Setter Property="Foreground"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                    <Setter Property="Background"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Severity"
+                                    MinWidth="50"
+                                    Width="Auto"
+                                    Binding="{Binding Path=ErrorSeverity, UpdateSourceTrigger=LostFocus}" />
+                <DataGridTextColumn Header="Type"
+                                    MinWidth="50"
+                                    Width="Auto"
+                                    Binding="{Binding Path=ErrorType, UpdateSourceTrigger=LostFocus}" />
+                <DataGridTextColumn Header="Location"
+                                    MinWidth="50"
+                                    Width="Auto"
+                                    Binding="{Binding Path=ErrorLocation, UpdateSourceTrigger=LostFocus}" />
+                <DataGridTextColumn Header="Message"
+                                    MinWidth="50"
+                                    Width="Auto"
+                                    Binding="{Binding Path=Message, UpdateSourceTrigger=LostFocus}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Expander>

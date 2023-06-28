@@ -20,7 +20,7 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class ReportingWindowViewModel : PropertyChangedBase
     {
-        private ErrorReports fReportsToView;
+        private List<ErrorReport> fReportsToView = new List<ErrorReport>();
         private readonly UiGlobals fUiGlobals;
 
         private UiStyles fStyles;
@@ -37,7 +37,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The reports to display in the control. This is a sublist of <see cref="Reports"/> filtered by <see cref="ReportingSeverity"/>.
         /// </summary>
-        public ErrorReports ReportsToView
+        public List<ErrorReport> ReportsToView
         {
             get => fReportsToView;
             set => SetAndNotify(ref fReportsToView, value, nameof(ReportsToView));
@@ -92,7 +92,6 @@ namespace FPD.Logic.ViewModels
             IsExpanded = false;
             fUiGlobals = uiGlobals;
             Reports = new ErrorReports();
-            ReportsToView = new ErrorReports();
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
             SyncReports();
@@ -101,7 +100,7 @@ namespace FPD.Logic.ViewModels
         internal void SyncReports()
         {
             ReportsToView = null;
-            ReportsToView = new ErrorReports(Reports.GetReports(ReportingSeverity));
+            ReportsToView = Reports.GetReports(ReportingSeverity).ToList();
             if (ReportsToView != null && (ReportsToView?.Any() ?? false))
             {
                 IsExpanded = true;

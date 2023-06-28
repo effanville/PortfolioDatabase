@@ -7,7 +7,7 @@
              xmlns:cs="clr-namespace:Common.Structure.NamingStructures;assembly=Common.Structure"
              xmlns:ns="clr-namespace:FinancialStructures.NamingStructures;assembly=FinancialStructures"
              xmlns:ds="clr-namespace:Common.Structure.DataStructures;assembly=Common.Structure"
-             xmlns:fpd="clr-namespace:FPD.UI"
+             xmlns:fpdui="clr-namespace:FPD.UI"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -16,7 +16,12 @@
              HorizontalAlignment="Stretch"
              ScrollViewer.VerticalScrollBarVisibility="Visible"
              Background="{Binding Styles.BackgroundBrush}"
-             Foreground="{Binding Styles.ForegroundBrush}">
+             Foreground="{Binding Styles.ForegroundBrush}"
+             DataContextChanged="UC_DataContextChanged">
+    <UserControl.Resources>
+        <fpdui:Bridge x:Key="bridge"
+                      Styles="{Binding Styles}" />
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <uic:StringToUKDateConverter x:Key="StringToUKDate" />
@@ -26,9 +31,9 @@
                 <x:Type TypeName="ns:TwoName" />
                 <x:Type TypeName="ds:DailyValuation" />
             </x:Array>
-            <fpd:GenericType BaseType="{x:Type TypeName=cs:Labelled`2}"
-                                                  InnerTypes="{StaticResource ListWithTwoStringTypes}"
-                                                  x:Key="DictionaryStringString" />
+            <fpdui:GenericType BaseType="{x:Type TypeName=cs:Labelled`2}"
+                               InnerTypes="{StaticResource ListWithTwoStringTypes}"
+                               x:Key="DictionaryStringString" />
             <DataTemplate DataType="{StaticResource DictionaryStringString}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -66,12 +71,14 @@
                            Grid.Column="0"
                            Margin="5"
                            FontWeight="DemiBold"
+                           Foreground="{Binding Styles.ForegroundBrush}"
                            Text="Portfolio Overview:" />
                 <TextBlock Grid.Row="0"
                            Grid.Column="1"
                            Margin="5"
                            HorizontalAlignment="Left"
                            FontWeight="DemiBold"
+                           Foreground="{Binding Styles.ForegroundBrush}"
                            Text="{Binding PortfolioNameText}" />
                 <Grid Grid.Row="1"
                       Grid.Column="0"
@@ -94,14 +101,18 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
                                    Margin="10 5 10 5"
+                                   Foreground="{Binding Styles.ForegroundBrush}"
                                    Text="{Binding SecurityTotalText}" />
                         <TextBlock Grid.Row="1"
                                    Margin="10 5 10 5"
+                                   Foreground="{Binding Styles.ForegroundBrush}"
                                    Text="{Binding SecurityAmountText}" />
                         <TextBlock Grid.Row="2"
                                    Margin="10 5 10 5"
+                                   Foreground="{Binding Styles.ForegroundBrush}"
                                    Text="Top Securities:" />
                         <ItemsControl Grid.Row="3"
+                                      Foreground="{Binding Styles.ForegroundBrush}"
                                       ItemsSource="{Binding TopSecurities}"
                                       Margin="10 5 10 5" />
                     </Grid>
@@ -114,14 +125,18 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
                                    Margin="10 5 10 5"
+                                   Foreground="{Binding Styles.ForegroundBrush}"
                                    Text="{Binding BankAccountTotalText, StringFormat=C2}" />
                         <TextBlock Grid.Row="1"
                                    Margin="10 5 10 5"
+                                   Foreground="{Binding Styles.ForegroundBrush}"
                                    Text="{Binding BankAccountAmountText, StringFormat=C2}" />
                         <TextBlock Grid.Row="2"
                                    Margin="10 5 10 5"
+                                   Foreground="{Binding Styles.ForegroundBrush}"
                                    Text="Top Securities:" />
                         <ItemsControl Grid.Row="3"
+                                      Foreground="{Binding Styles.ForegroundBrush}"
                                       ItemsSource="{Binding TopBankAccounts}"
                                       Margin="10 5 10 5" />
                     </Grid>
@@ -142,6 +157,7 @@
                            FontWeight="DemiBold"
                            Text="Portfolio Notes:" />
                 <DataGrid Grid.Row="1"
+                          Foreground="{Binding Styles.ForegroundBrush}"
                           FontSize="{Binding Styles.SmallFontSize}"
                           Margin="5"
                           MinWidth="600"
@@ -168,9 +184,28 @@
                                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Mode=Default, Path=CurrentItem}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}"
+                               BasedOn="{StaticResource DGR_Style}">
+                            <Setter Property="Background"
+                                    Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            <Setter Property="Foreground"
+                                    Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}"
+                               BasedOn="{StaticResource DGC_Style}">
+                            <Setter Property="Foreground"
+                                    Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            <Setter Property="Background"
+                                    Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="TimeStamp"
                                             MinWidth="100"
+                                            Foreground="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}"
                                             Binding="{Binding Path=TimeStamp, Converter={StaticResource StringToUKDate}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <DataGridTextColumn Header="Note"
                                             MinWidth="600"

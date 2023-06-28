@@ -4,13 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:stats="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=FPD.Logic"
+             xmlns:fpdui="clr-namespace:FPD.UI"
              d:DataContext="{d:DesignInstance Type=stats:PortfolioHistoryViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              FontFamily="{Binding Styles.FontFamily}"
              Background="{Binding Styles.BackgroundBrush}"
-             d:DesignWidth="800">
-    <Grid VerticalAlignment="Stretch">
+             d:DesignWidth="800"
+             DataContextChanged="UC_DataContextChanged">
+    <UserControl.Resources>
+        <fpdui:Bridge x:Key="bridge"
+                      Styles="{Binding Styles}" />
+    </UserControl.Resources>
+    <Grid VerticalAlignment="Stretch"
+          HorizontalAlignment="Left">
         <DataGrid Name="HistoryStatsBox"
                   Margin="5"
                   SelectionUnit="FullRow"
@@ -18,9 +25,26 @@
                   CanUserDeleteRows="False"
                   IsReadOnly="True"
                   AutoGenerateColumns="False"
-                  GridLinesVisibility="None"
                   ItemsSource="{Binding HistoryStats}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}"
+                       BasedOn="{StaticResource DGC_Style}">
+                    <Setter Property="Background"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                    <Setter Property="Foreground"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}"
+                       BasedOn="{StaticResource DGR_Style}">
+                    <Setter Property="Background"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                    <Setter Property="Foreground"
+                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date"
                                     Binding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" />

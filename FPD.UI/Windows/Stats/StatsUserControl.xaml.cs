@@ -31,10 +31,15 @@ namespace FPD.UI.Windows.Stats
             {
                 vm.StatisticsChanged += UpdateDataGrid;
             }
-
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is StatsViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
+            }
             UpdateDataGrid(null, null);
         }
-
         /// <summary>
         /// Updates the data displayed in the grid.
         /// </summary>

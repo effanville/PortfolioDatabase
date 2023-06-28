@@ -1,23 +1,23 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-using FPD.Logic.ViewModels.Security;
+using FPD.Logic.ViewModels.Common;
+using FPD.Logic.ViewModels.Stats;
 
-namespace FPD.UI.Windows.Security
+namespace FPD.UI.Windows
 {
     /// <summary>
-    /// Interaction logic for SelectedSecurityView.xaml
+    /// Interaction logic for TimeListView.xaml
     /// </summary>
-    public partial class SelectedSecurityView : UserControl
+    public partial class AccountStatsControl : ContentControl
     {
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public SelectedSecurityView()
+        public AccountStatsControl()
         {
             InitializeComponent();
         }
-
 
         private void DataGrid_KeyDown(object sender, KeyEventArgs e)
         {
@@ -25,9 +25,9 @@ namespace FPD.UI.Windows.Security
             {
                 if (e.OriginalSource is DataGridCell)
                 {
-                    if (DataContext is SelectedSecurityViewModel vm)
+                    if (DataContext != null && DataContext is TimeListViewModel vm)
                     {
-                        vm.DeleteTrade();
+                        vm.DeleteValuation();
                     }
                 }
             }
@@ -35,9 +35,9 @@ namespace FPD.UI.Windows.Security
 
         private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
-            if (DataContext is SelectedSecurityViewModel vm)
+            if (DataContext != null && DataContext is TimeListViewModel vm)
             {
-                e.NewItem = vm.DefaultTradeValue();
+                e.NewItem = vm.DefaultNewItem();
             }
         }
 
@@ -45,7 +45,7 @@ namespace FPD.UI.Windows.Security
         {
             string bridgeName = "bridge";
             if (Resources.Contains(bridgeName)
-                && DataContext is SelectedSecurityViewModel dc
+                && DataContext is AccountStatsViewModel dc
                 && Resources[bridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;

@@ -1,4 +1,6 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Data;
+
 using FPD.Logic.ViewModels.Common;
 
 namespace FPD.UI.Windows

@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 using FPD.Logic.ViewModels.Common;
+using System.Windows;
 
 namespace FPD.UI.Windows
 {
@@ -36,6 +37,17 @@ namespace FPD.UI.Windows
             if (DataContext != null && DataContext is TimeListViewModel vm)
             {
                 e.NewItem = vm.DefaultNewItem();
+            }
+        }
+
+        private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is TimeListViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
             }
         }
     }

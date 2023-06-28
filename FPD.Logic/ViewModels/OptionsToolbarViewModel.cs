@@ -11,6 +11,7 @@ using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions;
+using System.ComponentModel;
 
 namespace FPD.Logic.ViewModels
 {
@@ -48,6 +49,18 @@ namespace FPD.Logic.ViewModels
             set => SetAndNotify(ref fCurrencies, value, nameof(Currencies));
         }
 
+        private bool fIsLightTheme;
+        public bool IsLightTheme
+        {
+            get => fIsLightTheme;
+            set => SetAndNotify(ref fIsLightTheme, value, nameof(IsLightTheme));
+        }
+
+        private void UpdateColours(object sender, PropertyChangedEventArgs e)
+        {
+            Styles.UpdateTheme(IsLightTheme);
+        }
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -65,6 +78,7 @@ namespace FPD.Logic.ViewModels
             RepriceResetCommand = new RelayCommand(ExecuteRepriceReset);
             RefreshCommand = new RelayCommand(ExecuteRefresh);
             CurrencyDropDownClosed = new RelayCommand(DropDownClosed);
+            PropertyChanged += UpdateColours;
         }
 
         /// <inheritdoc/>

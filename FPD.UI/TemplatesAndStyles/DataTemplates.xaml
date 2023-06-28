@@ -28,7 +28,7 @@
         </DataGrid>
     </DataTemplate>
     <DataTemplate DataType="{x:Type stats:IStatistic}">
-    <TextBlock Text="{Binding ValueAsObject}"
+        <TextBlock Text="{Binding ValueAsObject}"
     Foreground="Black"/>
     </DataTemplate> 
 </ResourceDictionary>

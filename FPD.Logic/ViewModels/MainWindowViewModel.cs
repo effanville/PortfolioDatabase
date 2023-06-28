@@ -115,9 +115,9 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals, IDatabaseUpdater<IPortfolio> updater)
+        public MainWindowViewModel(UiGlobals globals, IDatabaseUpdater<IPortfolio> updater, bool isLightTheme = true)
         {
-            Styles = new UiStyles();
+            Styles = new UiStyles(isLightTheme);
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
             fUiGlobals = globals;
@@ -127,6 +127,7 @@ namespace FPD.Logic.ViewModels
             LoadConfig();
 
             OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback);
+            OptionsToolbarCommands.IsLightTheme = isLightTheme;
             Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
             Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security, UpdateDataCallback));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, UpdateDataCallback));

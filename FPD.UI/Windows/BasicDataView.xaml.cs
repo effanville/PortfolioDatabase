@@ -40,5 +40,16 @@ namespace FPD.UI.Windows
                 TimeStamp = DateTime.Today
             };
         }
+
+        private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is BasicDataViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
+            }
+        }
     }
 }
