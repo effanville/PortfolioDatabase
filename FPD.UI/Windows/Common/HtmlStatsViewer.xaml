@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wb="clr-namespace:Common.UI.Wpf.Controls;assembly=Common.UI.Wpf"
              xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
+             xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              d:DataContext="{d:DesignInstance Type=viewmodels:HtmlStatsViewerViewModel}"
              mc:Ignorable="d"
              FontFamily="{Binding Styles.FontFamily}"
@@ -37,12 +38,11 @@
                  VerticalAlignment="Stretch"
                  VerticalContentAlignment="Center"
                  Text="{Binding DisplayStats}" />
-        <WebBrowser Grid.Row="1"
-                    Grid.Column="0"
-                    Width="Auto"
-                    Height="Auto"
-                    Grid.ColumnSpan="2"
-                    x:Name="webBrowser"
-                    wb:WebBrowserBehaviours.BindableSource="{Binding DisplayStats}" />
+        <wpf:WebView2 Grid.Row="1"
+                      Grid.Column="0"
+                      Width="Auto"
+                      Height="Auto"
+                      Grid.ColumnSpan="2"
+                      wb:WebBrowserBehaviours.BindableSource="{Binding DisplayStats}"/>
     </Grid>
 </UserControl>

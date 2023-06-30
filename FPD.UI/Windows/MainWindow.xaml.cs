@@ -29,7 +29,6 @@ namespace FPD.UI.Windows
         /// </summary>
         public MainWindow()
         {
-            bool isLightTheme = true;
             FileInteractionService FileInteractionService = new FileInteractionService(this);
             DialogCreationService DialogCreationService = new DialogCreationService(this);
             fUiGlobals = new UiGlobals(null, new DispatcherInstance(), new FileSystem(), FileInteractionService, DialogCreationService, null);
@@ -166,7 +165,9 @@ namespace FPD.UI.Windows
                     {
                         width += 5;
                         if (width > 0)
+                        {
                             mainWindow.Width = width;
+                        }
                     }
                     if (senderRect.Name.Contains("left", StringComparison.OrdinalIgnoreCase))
                     {
@@ -182,7 +183,9 @@ namespace FPD.UI.Windows
                     {
                         height += 5;
                         if (height > 0)
+                        {
                             mainWindow.Height = height;
+                        }
                     }
                     if (senderRect.Name.ToLower().Contains("top", StringComparison.OrdinalIgnoreCase))
                     {
