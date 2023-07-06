@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:uic="clr-namespace:Common.UI.Converters;assembly=Common.UI"
-             xmlns:commonui="clr-namespace:Common.UI;assembly=Common.UI"
-             xmlns:cl="clr-namespace:FPD.Logic.TemplatesAndStyles;assembly=FPD.Logic"
+             xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Common.UI.Wpf"
+             xmlns:commonui="clr-namespace:Common.UI.Wpf.Controls;assembly=Common.UI.Wpf"
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
              d:DataContext="{d:DesignInstance Type=common:DataNamesViewModel}"
@@ -65,10 +64,30 @@
                   AddingNewItem="DataGrid_AddingNewItem">
             <DataGrid.Resources>
                 <commonui:BindingProxy x:Key="proxy"
-                                    Data="{Binding}" />
+                                       Data="{Binding}" />
             </DataGrid.Resources>
             <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
+                <Style TargetType="{x:Type DataGridRow}"
+                       BasedOn="{StaticResource DGR_Style}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Selected}"
+                                     Value="False">
+                            <Setter Property="Background"
+                                    Value="#FF5555"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}"
+                                     Value="{x:Static CollectionView.NewItemPlaceholder}">
+                            <Setter Property="Background"
+                                    Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.BackgroundBrush}" />
+                            <Setter Property="Foreground"
+                                    Value="{Binding Styles.ForegroundBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}"
+                       BasedOn="{StaticResource DGC_Style}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Selected}"
                                      Value="False">
@@ -77,7 +96,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </DataGrid.RowStyle>
+            </DataGrid.CellStyle>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="RowEditEnding">
                     <i:InvokeCommandAction Command="{Binding CreateCommand}"
@@ -97,11 +116,12 @@
                         <DataTemplate>
                             <StackPanel DataContext="{Binding}">
                                 <Button Content="View Data"
+                                        DataContext="{Binding}"
                                         BorderThickness="0"
                                         Margin="0.5"
                                         Padding="3"
-                                        Foreground="{Binding Source={x:Static cl:Colours.ForegroundBrush}}"
-                                        Background="{Binding Source={x:Static cl:Colours.DefaultButtonBrush}}"
+                                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.ForegroundBrush}"
+                                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.DefaultButtonBrush}"
                                         Command="{Binding Path=DataContext.OpenTabCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
                             </StackPanel>
                         </DataTemplate>

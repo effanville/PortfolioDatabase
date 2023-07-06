@@ -11,7 +11,7 @@ namespace FPD.Logic.Tests.ViewModelExtensions
     {
         public static void SelectItem(this DataNamesViewModel viewModel, NameData name)
         {
-            viewModel.SelectionChangedCommand?.Execute(new RowData(name, false, viewModel.TypeOfAccount, viewModel.UpdateDataCallback));
+            viewModel.SelectionChangedCommand?.Execute(new RowData(name, false, viewModel.TypeOfAccount, viewModel.UpdateDataCallback, null));
         }
 
         public static void BeginRowEdit(this DataNamesViewModel viewModel, RowData row)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Windows;
 
 using Common.Structure.DataStructures;
 using Common.Structure.Reporting;
@@ -36,10 +35,10 @@ namespace FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static Mock<IDialogCreationService> CreateDialogMock(MessageBoxResult result = MessageBoxResult.Yes)
+        public static Mock<IBaseDialogCreationService> CreateDialogMock(MessageBoxOutcome result = MessageBoxOutcome.Yes)
         {
-            Mock<IDialogCreationService> mockfileinteraction = new Mock<IDialogCreationService>();
-            _ = mockfileinteraction.Setup(x => x.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>(), It.IsAny<MessageBoxImage>())).Returns(result);
+            Mock<IBaseDialogCreationService> mockfileinteraction = new Mock<IBaseDialogCreationService>();
+            _ = mockfileinteraction.Setup(x => x.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<BoxButton>(), It.IsAny<BoxImage>())).Returns(result);
             return mockfileinteraction;
         }
 
@@ -48,7 +47,7 @@ namespace FPD.Logic.Tests.TestHelpers
             return action => action(portfolio);
         }
 
-        public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IDialogCreationService dialogCreationService, IReportLogger logger = null)
+        public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IBaseDialogCreationService dialogCreationService, IReportLogger logger = null)
         {
             return new UiGlobals(null, DispatcherSetup().Object, fileSystem, fileService, dialogCreationService, logger ?? DummyReportLogger);
         }

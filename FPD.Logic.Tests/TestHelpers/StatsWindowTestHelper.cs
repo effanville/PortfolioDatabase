@@ -39,7 +39,7 @@ namespace FPD.Logic.Tests.TestHelpers
         public void Setup()
         {
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
-            Mock<IDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             Portfolio = TestSetupHelper.CreateBasicDataBase();
 
             Globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);

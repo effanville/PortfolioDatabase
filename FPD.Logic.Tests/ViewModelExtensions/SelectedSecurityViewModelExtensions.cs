@@ -16,7 +16,7 @@ namespace FPD.Logic.Tests.ViewModelExtensions
         {
             viewModel.SelectTrade(null);
             viewModel.Trades.Add(viewModel.DefaultTradeValue());
-            SecurityTrade newItem = viewModel.Trades.Last();
+            var newItem = viewModel.Trades.Last();
             viewModel.SelectTrade(newItem);
             viewModel.BeginEdit();
 

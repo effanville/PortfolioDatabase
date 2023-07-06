@@ -5,7 +5,7 @@ namespace FPD.Logic.TemplatesAndStyles
     /// <summary>
     /// Stores the colours and brushes used in the program.
     /// </summary>
-    public static class Colours
+    public static class DarkThemeColours
     {
         /// <summary>
         /// A brush to be used for background.
@@ -14,7 +14,7 @@ namespace FPD.Logic.TemplatesAndStyles
         {
             get;
             set;
-        } = new SolidColorBrush(Colors.AliceBlue);
+        } = new SolidColorBrush(Color.FromRgb(30, 30, 30));
 
         /// <summary>
         /// A brush for secondary background colours.
@@ -23,7 +23,7 @@ namespace FPD.Logic.TemplatesAndStyles
         {
             get;
             set;
-        } = new SolidColorBrush(Colors.LightBlue);
+        } = new SolidColorBrush(Color.FromRgb(60, 60, 60));
 
         /// <summary>
         /// A brush with the colour for buttons.
@@ -32,7 +32,7 @@ namespace FPD.Logic.TemplatesAndStyles
         {
             get;
             set;
-        } = new SolidColorBrush(Colors.Lavender);
+        } = new SolidColorBrush(Color.FromRgb(100, 100, 100));
 
         /// <summary>
         /// A brush for any highlights.
@@ -41,7 +41,7 @@ namespace FPD.Logic.TemplatesAndStyles
         {
             get;
             set;
-        } = new SolidColorBrush(Colors.DarkGray);
+        } = new SolidColorBrush(Colors.Gray);
 
         /// <summary>
         /// A brush for any highlights.
@@ -50,6 +50,31 @@ namespace FPD.Logic.TemplatesAndStyles
         {
             get;
             set;
-        } = new SolidColorBrush(Colors.Black);
+        } = new SolidColorBrush(Colors.White);
+
+        public static Brush ChartLine1Brush
+        {
+            get;
+        } = new SolidColorBrush(Colors.LightBlue);
+
+        public static Brush ChartLine2Brush
+        {
+            get;
+        } = new SolidColorBrush(Colors.LightPink);
+
+        public static Brush ChartLine3Brush
+        {
+            get;
+        } = new SolidColorBrush(Colors.LightGreen);
+
+        public static Brush ChartLine4Brush
+        {
+            get;
+        } = new SolidColorBrush(Colors.Orange);
+
+        public static Brush ChartLine5Brush
+        {
+            get;
+        } = new SolidColorBrush(Colors.Purple);
     }
 }

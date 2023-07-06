@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Common.UI.DisplayObjects;
+using Common.UI.Wpf.Controls;
 using FPD.Logic.ViewModels.Stats;
 using FinancialStructures.Database.Statistics;
 using System.Threading.Tasks;
@@ -31,10 +31,15 @@ namespace FPD.UI.Windows.Stats
             {
                 vm.StatisticsChanged += UpdateDataGrid;
             }
-
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is StatsViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
+            }
             UpdateDataGrid(null, null);
         }
-
         /// <summary>
         /// Updates the data displayed in the grid.
         /// </summary>

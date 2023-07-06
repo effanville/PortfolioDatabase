@@ -11,7 +11,6 @@ using Common.UI.Commands;
 
 using FinancialStructures;
 using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Extensions.Values;
 using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
@@ -72,9 +71,7 @@ namespace FPD.Logic.ViewModels
         public string SecurityTotalText
         {
             get => fSecurityTotalText;
-
             set => SetAndNotify(ref fSecurityTotalText, value, nameof(SecurityTotalText));
-
         }
 
         private string fSecurityAmountText;
@@ -188,11 +185,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Enacts the selected item in the datagrid has changed.
         /// </summary>
-        public ICommand SelectionChangedCommand
-        {
-            get;
-            set;
-        }
+        public ICommand SelectionChangedCommand { get; set; }
 
         private void ExecuteSelectionChanged(object args)
         {
@@ -209,11 +202,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Adds a new entry if the view has more than the repository, or edits an entry if these are the same.
         /// </summary>
-        public ICommand CreateCommand
-        {
-            get;
-            set;
-        }
+        public ICommand CreateCommand { get; set; }
 
         private void ExecuteCreateEdit()
         {

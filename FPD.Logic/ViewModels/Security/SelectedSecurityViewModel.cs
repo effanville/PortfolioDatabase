@@ -20,6 +20,7 @@ using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 using FinancialStructures;
+using FPD.Logic.ViewModels.Stats;
 
 namespace FPD.Logic.ViewModels.Security
 {
@@ -102,12 +103,12 @@ namespace FPD.Logic.ViewModels.Security
             set => SetAndNotify(ref fTradeTotalCostHeader, value, nameof(TradeTotalCostHeader));
         }
 
-        private AccountStatistics fSecurityStats;
+        private AccountStatsViewModel fSecurityStats;
 
         /// <summary>
         /// The statistics for the security.
         /// </summary>
-        public AccountStatistics SecurityStats
+        public AccountStatsViewModel SecurityStats
         {
             get => fSecurityStats;
             set => SetAndNotify(ref fSecurityStats, value, nameof(SecurityStats));
@@ -149,15 +150,19 @@ namespace FPD.Logic.ViewModels.Security
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency ?? portfolio.BaseCurrency);
                 TradePriceHeader = $"Price({currencySymbol})";
                 TradeTotalCostHeader = $"Total Cost({currencySymbol})";
-                TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                var securityStats = portfolio.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                SecurityStats = new AccountStatsViewModel(securityStats, Styles);
             }
             else
             {
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
                 TradePriceHeader = $"Price({currencySymbol})";
                 TradeTotalCostHeader = $"Total Cost({currencySymbol})";
-                TLVM = new TimeListViewModel(null, $"UnitPrice({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                TLVM = new TimeListViewModel(null, $"UnitPrice({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                SecurityStats = new AccountStatsViewModel(null, Styles);
             }
+
 
             UpdateData(portfolio, null);
         }
@@ -300,7 +305,8 @@ namespace FPD.Logic.ViewModels.Security
                 ISecurity security = desired as ISecurity;
                 TLVM?.UpdateData(security.UnitPrice);
                 Trades = security.Trades.ToList();
-                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                var securityStats = dataToDisplay.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                SecurityStats.UpdateData(securityStats);
                 Values = dataToDisplay.NumberData(fAccount, SelectedName, fReportLogger).ToList();
             }
         }
@@ -357,9 +363,9 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteSelectionChanged(object obj)
         {
-            if (Trades != null && obj is SecurityTrade data)
+            if (Trades != null && obj is SecurityTrade trade)
             {
-                SelectedTrade = data;
+                SelectedTrade = trade;
             }
         }
 

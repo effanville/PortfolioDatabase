@@ -17,6 +17,7 @@ using FinancialStructures.Database.Statistics;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 using FinancialStructures;
+using FPD.Logic.ViewModels.Stats;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -67,12 +68,12 @@ namespace FPD.Logic.ViewModels.Common
             set => SetAndNotify(ref fTLVM, value, nameof(TLVM));
         }
 
-        private AccountStatistics fStats;
+        private AccountStatsViewModel fStats;
 
         /// <summary>
         /// The statistics for the account.
         /// </summary>
-        public AccountStatistics Stats
+        public AccountStatsViewModel Stats
         {
             get => fStats;
             set => SetAndNotify(ref fStats, value, nameof(Stats));
@@ -99,12 +100,16 @@ namespace FPD.Logic.ViewModels.Common
             if (portfolio.TryGetAccount(accountType, SelectedName, out IValueList valueList))
             {
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
-                TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+                TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+                var stats = portfolio.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+
+                Stats = new AccountStatsViewModel(stats, Styles);
             }
             else
             {
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
-                TLVM = new TimeListViewModel(null, $"Value({currencySymbol})", value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+                TLVM = new TimeListViewModel(null, $"Value({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+                Stats = new AccountStatsViewModel(null, Styles);
             }
 
             UpdateData(portfolio);
@@ -129,7 +134,8 @@ namespace FPD.Logic.ViewModels.Common
 
                 _ = dataToDisplay.TryGetAccount(TypeOfAccount, SelectedName, out IValueList desired);
                 TLVM?.UpdateData(desired.Values);
-                Stats = dataToDisplay.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                var stats = dataToDisplay.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                Stats.UpdateData(stats);
             }
         }
 

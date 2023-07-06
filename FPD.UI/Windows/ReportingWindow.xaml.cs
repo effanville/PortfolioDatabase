@@ -27,5 +27,16 @@ namespace FPD.UI.Windows
                 }
             }
         }
+
+        private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is ReportingWindowViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
+            }
+        }
     }
 }

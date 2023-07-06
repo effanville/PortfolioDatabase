@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+
 using Common.Structure.Reporting;
+using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
 using Common.UI.ViewModelBases;
+
 using FPD.Logic.TemplatesAndStyles;
 
 namespace FPD.Logic.ViewModels
@@ -16,8 +20,8 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class ReportingWindowViewModel : PropertyChangedBase
     {
-        private ErrorReports fReportsToView;
-        private readonly IFileInteractionService fFileInteractionService;
+        private List<ErrorReport> fReportsToView = new List<ErrorReport>();
+        private readonly UiGlobals fUiGlobals;
 
         private UiStyles fStyles;
 
@@ -33,7 +37,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The reports to display in the control. This is a sublist of <see cref="Reports"/> filtered by <see cref="ReportingSeverity"/>.
         /// </summary>
-        public ErrorReports ReportsToView
+        public List<ErrorReport> ReportsToView
         {
             get => fReportsToView;
             set => SetAndNotify(ref fReportsToView, value, nameof(ReportsToView));
@@ -52,20 +56,12 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Complete list of all reports stored.
         /// </summary>
-        public ErrorReports Reports
-        {
-            get;
-            set;
-        }
+        public ErrorReports Reports { get; set; }
 
         /// <summary>
         /// Selected index of the reports.
         /// </summary>
-        public int IndexToDelete
-        {
-            get;
-            set;
-        }
+        public int IndexToDelete { get; set; }
 
         private ReportSeverity fReportingSeverity;
 
@@ -90,13 +86,12 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ReportingWindowViewModel(IFileInteractionService fileInteractionService, UiStyles styles)
+        public ReportingWindowViewModel(UiGlobals uiGlobals, UiStyles styles)
         {
             Styles = styles;
             IsExpanded = false;
-            fFileInteractionService = fileInteractionService;
+            fUiGlobals = uiGlobals;
             Reports = new ErrorReports();
-            ReportsToView = new ErrorReports();
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
             SyncReports();
@@ -105,7 +100,7 @@ namespace FPD.Logic.ViewModels
         internal void SyncReports()
         {
             ReportsToView = null;
-            ReportsToView = new ErrorReports(Reports.GetReports(ReportingSeverity));
+            ReportsToView = Reports.GetReports(ReportingSeverity).ToList();
             if (ReportsToView != null && (ReportsToView?.Any() ?? false))
             {
                 IsExpanded = true;
@@ -115,10 +110,7 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Command to clear all reports in the control.
         /// </summary>
-        public ICommand ClearReportsCommand
-        {
-            get;
-        }
+        public ICommand ClearReportsCommand { get; }
 
         private void ExecuteClearReports()
         {
@@ -129,30 +121,30 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Command to export reports to a csv.
         /// </summary>
-        public ICommand ExportReportsCommand
-        {
-            get;
-        }
+        public ICommand ExportReportsCommand { get; }
+        private void ExecuteExportReportsCommand() => _ = Task.Factory.StartNew(() => ExecuteExportReports());
 
-        private void ExecuteExportReportsCommand()
+        private void ExecuteExportReports()
         {
             try
             {
-                FileInteractionResult result = fFileInteractionService.SaveFile(".csv", "errorReports.csv");
+                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", "errorReports.csv");
                 if (result.Success)
                 {
-                    StreamWriter writer = new StreamWriter(result.FilePath);
-                    writer.WriteLine("Severity,ErrorType,Location,Message");
-                    foreach (ErrorReport report in Reports.GetReports())
+                    using (StreamWriter writer = new StreamWriter(result.FilePath))
                     {
-                        writer.WriteLine(report.ErrorSeverity.ToString() + "," + report.ErrorType + "," + report.ErrorLocation.ToString() + "," + report.Message);
+                        writer.WriteLine("Severity,ErrorType,Location,Message");
+                        foreach (ErrorReport report in Reports.GetReports())
+                        {
+                            writer.WriteLine($"{report.ErrorSeverity},{report.ErrorType},{report.ErrorLocation},{report.Message}");
+                        }
                     }
-
-                    writer.Close();
                 }
             }
-            catch (IOException)
+            catch (IOException ex)
             {
+
+                fUiGlobals.CurrentDispatcher.Invoke(() => Reports.AddErrorReport(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Error when saving reports: {ex.Message}"));
             }
         }
 

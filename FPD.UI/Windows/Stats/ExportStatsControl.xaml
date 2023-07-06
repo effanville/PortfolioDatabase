@@ -32,6 +32,7 @@
                    TextWrapping="Wrap" />
         <ItemsControl Grid.Column="0"
                       Grid.Row="1"
+                      DataContext="{Binding}"
                       ItemsSource="{Binding DisplayConditions}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -39,6 +40,8 @@
                                 Margin="3">
                         <CheckBox IsChecked="{Binding Selected}">
                             <TextBlock Text="{Binding Instance}"
+                                       Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundBrush}"
+                                       Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
                                        TextWrapping="Wrap"/>
                         </CheckBox>
                     </StackPanel>

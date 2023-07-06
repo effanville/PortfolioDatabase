@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:stats="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=FPD.Logic"
              d:DataContext="{d:DesignInstance Type=stats:ExportReportViewModel}"
+             Background="{Binding Styles.BackgroundBrush}"
+             Foreground="{Binding Styles.ForegroundBrush}"
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,6 +25,7 @@
             </Grid.RowDefinitions>
             <CheckBox Grid.Column="0"
                       Grid.Row="0"
+                      Foreground="{Binding Styles.ForegroundBrush}"
                       IsChecked="{Binding DisplayValueFunds}">Display funds with value.</CheckBox>
         </Grid>
         <Button Grid.Column="2"
