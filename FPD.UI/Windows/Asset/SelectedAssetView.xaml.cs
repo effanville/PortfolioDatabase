@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using FPD.Logic.ViewModels.Asset;
 
 namespace FPD.UI.Windows.Asset
 {
@@ -13,6 +14,16 @@ namespace FPD.UI.Windows.Asset
         public SelectedAssetView()
         {
             InitializeComponent();
+        }
+        private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            string bridgeName = "bridge";
+            if (Resources.Contains(bridgeName)
+                && DataContext is SelectedAssetViewModel dc
+                && Resources[bridgeName] is Bridge bridge)
+            {
+                bridge.Styles = dc.Styles;
+            }
         }
     }
 }

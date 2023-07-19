@@ -6,16 +6,19 @@
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Common.UI.Wpf"
              xmlns:asset="clr-namespace:FPD.Logic.ViewModels.Asset;assembly=FPD.Logic"
-             xmlns:gui="clr-namespace:FPD.UI"
+             xmlns:fpdui="clr-namespace:FPD.UI"
              d:DataContext="{d:DesignInstance Type=asset:SelectedAssetViewModel}"
              Background="{Binding Styles.BackgroundBrush}"
              mc:Ignorable="d"
-             x:Name="proxyProxy"
              d:DesignHeight="450"
+             DataContextChanged="UC_DataContextChanged"
              d:DesignWidth="800">
     <UserControl.Resources>
         <uic:StringToUKDateConverter x:Key="StringToUKDate" />
-        <gui:DisplayConstants x:Key="Consts" />
+        <fpdui:DisplayConstants x:Key="Consts" />
+        <fpdui:Bridge x:Key="bridge"
+                      x:Name="bridge"
+                      Styles="{Binding Styles}" />
     </UserControl.Resources>
     <Grid Width="Auto">
         <Grid.RowDefinitions>
@@ -39,7 +42,7 @@
                     Command="{Binding ExportCsvData}"
                     ToolTip="Exports data from the selected security to a csv file." />
         </StackPanel>
-        <Border BorderBrush="DeepSkyBlue"
+        <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                 BorderThickness="1"
                 Grid.Column="0"
                 Grid.Row="1">
@@ -60,7 +63,7 @@
                                 Grid.Column="2" />
             </Grid>
         </Border>
-        <Border BorderBrush="DeepSkyBlue"
+        <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                 BorderThickness="1"
                 Grid.Column="1"
                 Grid.Row="2">
@@ -68,6 +71,24 @@
                       Grid.Column="1"
                       ItemsSource="{Binding SecurityStats.Statistics}"
                       AutoGenerateColumns="False">
+                <DataGrid.RowStyle>
+                    <Style TargetType="{x:Type DataGridRow}"
+                           BasedOn="{StaticResource DGR_Style}">
+                        <Setter Property="Background"
+                                Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                        <Setter Property="Foreground"
+                                Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="{x:Type DataGridCell}"
+                           BasedOn="{StaticResource DGC_Style}">
+                        <Setter Property="Foreground"
+                                Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                        <Setter Property="Background"
+                                Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                    </Style>
+                </DataGrid.CellStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Statistic"
                                         Width="Auto"
