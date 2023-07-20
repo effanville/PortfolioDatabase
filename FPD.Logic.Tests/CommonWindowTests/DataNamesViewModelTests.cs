@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.Tests.TestHelpers;
@@ -36,8 +35,9 @@ namespace FPD.Logic.Tests.CommonWindowTests
         {
             IPortfolio output = TestSetupHelper.CreateBasicDataBase();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
-            DataNamesViewModel viewModel = new DataNamesViewModel(output, dataUpdater, TestSetupHelper.DummyReportLogger, null, TestSetupHelper.DummyOpenTab, Account.Security);
+            var dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            DataNamesViewModel viewModel = new DataNamesViewModel(output, TestSetupHelper.DummyReportLogger, null, dataUpdater, TestSetupHelper.DummyOpenTab, Account.Security);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             Assert.AreEqual(1, viewModel.DataNames.Count);
         }
 
@@ -54,7 +54,6 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanCreateNewSecurity()
         {
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-
             ViewModel.SelectItem(null);
             var newRowItem = ViewModel.AddNewItem();
             var newItem = newRowItem.Instance;
@@ -63,7 +62,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
             newItem.Currency = "GBP";
             newItem.Url = "someUrl";
             ViewModel.CompleteCreate(newRowItem);
-            Assert.AreEqual(2, ViewModel.DataNames.Count, "Bot enough in the view.");
+            Assert.AreEqual(2, ViewModel.DataNames.Count, "Not enough in the view.");
             Assert.AreEqual(2, Portfolio.FundsThreadSafe.Count, "Not enough in portfolio");
         }
 

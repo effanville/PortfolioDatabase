@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Linq;
 using Common.UI;
 using Common.UI.Services;
@@ -14,8 +13,6 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class AssetWindowTestHelper
     {
-        private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
-
         private IPortfolio fPortfolio;
 
         protected IPortfolio Portfolio
@@ -40,11 +37,7 @@ namespace FPD.Logic.Tests.TestHelpers
         {
             get
             {
-                if (fDataNames == null)
-                {
-                    fDataNames = (DataNamesViewModel)ViewModel.Tabs.First(tab => tab is DataNamesViewModel);
-                }
-
+                fDataNames ??= (DataNamesViewModel)ViewModel.Tabs.First(tab => tab is DataNamesViewModel);
                 return fDataNames;
             }
         }
@@ -63,7 +56,9 @@ namespace FPD.Logic.Tests.TestHelpers
             Portfolio = TestSetupHelper.CreateEmptyDataBase();
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);
-            ViewModel = new AssetEditWindowViewModel(globals, null, Portfolio, DataUpdater);
+
+            var dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
+            ViewModel = new AssetEditWindowViewModel(globals, null, Portfolio, dataUpdater);
         }
 
         [TearDown]

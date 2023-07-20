@@ -18,6 +18,7 @@ using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 using FinancialStructures;
 using FPD.Logic.ViewModels.Stats;
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -28,7 +29,6 @@ namespace FPD.Logic.ViewModels.Common
     {
         private readonly UiGlobals fUiGlobals;
         private readonly Account TypeOfAccount;
-        private readonly Action<Action<IPortfolio>> UpdateDataCallback;
         private readonly IReportLogger fReportLogger;
 
         private UiStyles fStyles;
@@ -84,31 +84,32 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public SelectedSingleDataViewModel(
             IPortfolio portfolio,
-            Action<Action<IPortfolio>> updateDataCallback,
             UiStyles styles,
             UiGlobals globals,
             NameData selectedName,
-            Account accountType)
+            Account accountType,
+            IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
         {
             fUiGlobals = globals;
             Styles = styles;
             fReportLogger = fUiGlobals.ReportLogger;
-            UpdateDataCallback = updateDataCallback;
             SelectedName = selectedName;
             TypeOfAccount = accountType;
+            UpdateRequest += dataUpdater.PerformUpdate;
             if (portfolio.TryGetAccount(accountType, SelectedName, out IValueList valueList))
             {
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
                 TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
                 var stats = portfolio.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
-
                 Stats = new AccountStatsViewModel(stats, Styles);
             }
             else
             {
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
                 TLVM = new TimeListViewModel(null, $"Value({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
                 Stats = new AccountStatsViewModel(null, Styles);
             }
 
@@ -140,16 +141,13 @@ namespace FPD.Logic.ViewModels.Common
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay)
-        {
-            UpdateData(dataToDisplay, null);
-        }
+        public override void UpdateData(IPortfolio dataToDisplay) => UpdateData(dataToDisplay, null);
 
         private void ExecuteAddEditData(NameData name, DailyValuation oldValue, DailyValuation newValue)
         {
             if (name != null)
             {
-                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, fReportLogger)));
             }
         }
 
@@ -161,16 +159,13 @@ namespace FPD.Logic.ViewModels.Common
             get;
         }
 
-        private void ExecuteDeleteValuation()
-        {
-            DeleteValue(SelectedName, TLVM.SelectedValuation);
-        }
+        private void ExecuteDeleteValuation() => DeleteValue(SelectedName, TLVM.SelectedValuation);
 
         private void DeleteValue(NameData name, DailyValuation value)
         {
             if (name != null && value != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteData(TypeOfAccount, name, value.Day, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteData(TypeOfAccount, name, value.Day, fReportLogger)));
             }
             else
             {
@@ -203,7 +198,7 @@ namespace FPD.Logic.ViewModels.Common
                     {
                         if (objec is DailyValuation view)
                         {
-                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditData(TypeOfAccount, SelectedName, view, view, fReportLogger));
+                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAddOrEditData(TypeOfAccount, SelectedName, view, view, fReportLogger)));
                         }
                         else
                         {

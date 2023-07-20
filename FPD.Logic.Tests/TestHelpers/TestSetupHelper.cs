@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 
+using Common.Structure.DataEdit;
 using Common.Structure.DataStructures;
 using Common.Structure.Reporting;
 using Common.UI;
@@ -42,10 +43,8 @@ namespace FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static Action<Action<IPortfolio>> CreateDataUpdater(IPortfolio portfolio)
-        {
-            return action => action(portfolio);
-        }
+        public static IUpdater<IPortfolio> CreateUpdater(IPortfolio portfolio)
+            => new SynchronousUpdater<IPortfolio>() { Database = portfolio };
 
         public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IBaseDialogCreationService dialogCreationService, IReportLogger logger = null)
         {

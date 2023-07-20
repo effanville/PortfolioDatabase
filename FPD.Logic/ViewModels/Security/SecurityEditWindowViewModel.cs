@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Common.UI;
@@ -8,6 +7,7 @@ using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Security
 {
@@ -16,6 +16,7 @@ namespace FPD.Logic.ViewModels.Security
     /// </summary>
     public class SecurityEditWindowViewModel : DataDisplayViewModelBase
     {
+        private readonly IUpdater<IPortfolio> _dataUpdater;
         /// <summary>
         /// The tabs to display, with the Security names, and
         /// selected security data.
@@ -26,27 +27,32 @@ namespace FPD.Logic.ViewModels.Security
             set;
         } = new ObservableCollection<object>();
 
-        private int fSelectedIndex;
+        private int _selectedIndex;
 
         /// <summary>
         /// Index of the selected tab.
         /// </summary>
         public int SelectedIndex
         {
-            get => fSelectedIndex;
-            set => SetAndNotify(ref fSelectedIndex, value, nameof(SelectedIndex));
+            get => _selectedIndex;
+            set => SetAndNotify(ref _selectedIndex, value, nameof(SelectedIndex));
         }
-
-        private readonly Action<Action<IPortfolio>> UpdateDataAction;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SecurityEditWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, string header, Account account, Action<Action<IPortfolio>> updateData)
+        public SecurityEditWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, string header, Account account, IUpdater<IPortfolio> dataUpdater)
             : base(globals, styles, portfolio, header, account)
         {
-            UpdateDataAction = updateData;
-            Tabs.Add(new DataNamesViewModel(DataStore, updateData, ReportLogger, styles, (name) => LoadTabFunc(name), account));
+            _dataUpdater = dataUpdater;
+            Tabs.Add(new DataNamesViewModel(DataStore, ReportLogger, styles, dataUpdater, (name) => LoadTabFunc(name), account));
+            foreach (object tab in Tabs)
+            {
+                if (tab is ViewModelBase<IPortfolio> vmb)
+                {
+                    vmb.UpdateRequest += dataUpdater.PerformUpdate;
+                }
+            }
             SelectedIndex = 0;
         }
 
@@ -80,16 +86,15 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (obj is NameData name)
             {
-                Tabs.Add(new SelectedSecurityViewModel(DataStore, UpdateDataAction, ReportLogger, Styles, fUiGlobals, name, DataType));
+                var newVM = new SelectedSecurityViewModel(DataStore, ReportLogger, Styles, fUiGlobals, name, DataType);
+                newVM.UpdateRequest += _dataUpdater.PerformUpdate;
+                Tabs.Add(newVM);
             }
         }
 
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>
-        public bool RemoveTab(object obj)
-        {
-            return Tabs.Remove(obj);
-        }
+        public bool RemoveTab(object obj) => Tabs.Remove(obj);
     }
 }

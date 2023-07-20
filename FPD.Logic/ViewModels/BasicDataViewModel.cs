@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 
+using Common.Structure.DataEdit;
 using Common.Structure.DataStructures;
 using Common.Structure.NamingStructures;
 using Common.UI;
@@ -26,8 +27,6 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class BasicDataViewModel : DataDisplayViewModelBase
     {
-        private readonly Action<Action<IPortfolio>> DataUpdateCallback;
-
         private string fPortfolioNameText;
 
         /// <summary>
@@ -152,12 +151,11 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public BasicDataViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, Action<Action<IPortfolio>> updateData)
+        public BasicDataViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Overview", Account.All)
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand(ExecuteCreateEdit);
-            DataUpdateCallback = updateData;
             UpdateData(portfolio);
         }
 
@@ -208,7 +206,7 @@ namespace FPD.Logic.ViewModels
         {
             if (fSelectedNote != null && !DataStore.Notes.Contains(fSelectedNote))
             {
-                DataUpdateCallback(portfolio => portfolio.AddNote(fSelectedNote.TimeStamp, fSelectedNote.Text));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(fSelectedNote.TimeStamp, fSelectedNote.Text)));
             }
         }
 
@@ -219,7 +217,7 @@ namespace FPD.Logic.ViewModels
         {
             if (fSelectedNote != null)
             {
-                DataUpdateCallback(portfolio => portfolio.RemoveNote(fSelectedNote));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.RemoveNote(fSelectedNote)));
             }
         }
     }

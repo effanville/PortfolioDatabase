@@ -35,8 +35,10 @@ namespace FPD.Logic.Tests.TestHelpers
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             Portfolio = TestSetupHelper.CreateEmptyDataBase();
 
+            var dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object, TestSetupHelper.DummyReportLogger);
-            ViewModel = new BasicDataViewModel(globals, null, Portfolio, TestSetupHelper.CreateDataUpdater(Portfolio));
+            ViewModel = new BasicDataViewModel(globals, null, Portfolio);
+            ViewModel.UpdateRequest += dataUpdater.PerformUpdate;
         }
 
         [TearDown]

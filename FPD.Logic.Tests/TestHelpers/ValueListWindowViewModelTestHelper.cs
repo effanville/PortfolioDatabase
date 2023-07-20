@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using Common.UI;
 using Common.UI.Services;
 using FPD.Logic.ViewModels.Common;
@@ -11,8 +10,6 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class ValueListWindowViewModelTestHelper
     {
-        private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
-
         private IPortfolio fPortfolio;
 
         protected IPortfolio Portfolio
@@ -44,8 +41,9 @@ namespace FPD.Logic.Tests.TestHelpers
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             Portfolio = TestSetupHelper.CreateEmptyDataBase();
 
+            var dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object, TestSetupHelper.DummyReportLogger);
-            ViewModel = new ValueListWindowViewModel(globals, null, Portfolio, "Title", AccountType, DataUpdater);
+            ViewModel = new ValueListWindowViewModel(globals, null, Portfolio, "Title", AccountType, dataUpdater);
         }
 
         [TearDown]

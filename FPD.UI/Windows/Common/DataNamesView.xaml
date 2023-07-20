@@ -61,6 +61,8 @@
                   DataContext="{Binding}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  KeyDown="DataGrid_KeyDown"
+                  PreviewKeyDown="DataGrid_KeyDown"
                   AddingNewItem="DataGrid_AddingNewItem">
             <DataGrid.Resources>
                 <commonui:BindingProxy x:Key="proxy"

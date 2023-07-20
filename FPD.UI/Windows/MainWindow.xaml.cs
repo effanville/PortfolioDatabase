@@ -35,7 +35,7 @@ namespace FPD.UI.Windows
             FileInteractionService FileInteractionService = new FileInteractionService(this);
             DialogCreationService DialogCreationService = new DialogCreationService(this);
             fUiGlobals = new UiGlobals(null, new DispatcherInstance(), new FileSystem(), FileInteractionService, DialogCreationService, null);
-            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals, new BackgroundPortfolioUpdater(), isLightTheme);
+            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals, new BackgroundUpdater<IPortfolio>(), isLightTheme);
             InitializeComponent();
 
             Assembly assembly = Assembly.GetExecutingAssembly();

@@ -21,6 +21,7 @@ using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 using FinancialStructures;
 using FPD.Logic.ViewModels.Stats;
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Security
 {
@@ -29,7 +30,6 @@ namespace FPD.Logic.ViewModels.Security
     /// </summary>
     public class SelectedSecurityViewModel : TabViewModelBase<IPortfolio>
     {
-        private readonly Action<Action<IPortfolio>> UpdateDataCallback;
         private readonly IReportLogger fReportLogger;
         private readonly UiGlobals fUiGlobals;
         private readonly Account fAccount;
@@ -128,7 +128,7 @@ namespace FPD.Logic.ViewModels.Security
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SelectedSecurityViewModel(IPortfolio portfolio, Action<Action<IPortfolio>> updateData, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName, Account account)
+        public SelectedSecurityViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName, Account account)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
         {
             fReportLogger = reportLogger;
@@ -141,7 +141,6 @@ namespace FPD.Logic.ViewModels.Security
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            UpdateDataCallback = updateData;
             fAccount = account;
 
             if (portfolio.TryGetAccount(fAccount, SelectedName, out IValueList desired))
@@ -163,7 +162,6 @@ namespace FPD.Logic.ViewModels.Security
                 SecurityStats = new AccountStatsViewModel(null, Styles);
             }
 
-
             UpdateData(portfolio, null);
         }
 
@@ -175,16 +173,13 @@ namespace FPD.Logic.ViewModels.Security
             get;
         }
 
-        private void ExecuteDeleteValuation()
-        {
-            DeleteValue(SelectedName, TLVM.SelectedValuation);
-        }
+        private void ExecuteDeleteValuation() => DeleteValue(SelectedName, TLVM.SelectedValuation);
 
         private void DeleteValue(NameData name, DailyValuation value)
         {
             if (name != null && value != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteData(fAccount, name.ToTwoName(), value.Day, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, programPortfolio => programPortfolio.TryDeleteData(fAccount, name.ToTwoName(), value.Day, fReportLogger)));
             }
             else
             {
@@ -206,7 +201,7 @@ namespace FPD.Logic.ViewModels.Security
             if (SelectedName != null)
             {
                 NameData names = SelectedName;
-                UpdateDataCallback(async programPortfolio => await PortfolioDataUpdater.Download(fAccount, programPortfolio, names, fReportLogger).ConfigureAwait(false));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccount, programPortfolio, names, fReportLogger).ConfigureAwait(false)));
             }
         }
 
@@ -238,8 +233,8 @@ namespace FPD.Logic.ViewModels.Security
                         if (objec is SecurityDayData view)
                         {
                             var value = new DailyValuation(view.Date, view.UnitPrice);
-                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditData(fAccount, SelectedName, value, value, fReportLogger));
-                            UpdateDataCallback(programPortfolio => programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName, view.Trade, view.Trade, fReportLogger));
+                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAddOrEditData(fAccount, SelectedName, value, value, fReportLogger)));
+                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName, view.Trade, view.Trade, fReportLogger)));
                         }
                         else
                         {
@@ -283,7 +278,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (newValue != null)
             {
-                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccount, name.ToTwoName(), oldValue, newValue, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccount, name.ToTwoName(), oldValue, newValue, fReportLogger)));
             }
         }
 
@@ -312,10 +307,7 @@ namespace FPD.Logic.ViewModels.Security
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay)
-        {
-            UpdateData(dataToDisplay, null);
-        }
+        public override void UpdateData(IPortfolio dataToDisplay) => UpdateData(dataToDisplay, null);
 
         private RelayCommand fPreEditCommand;
 
@@ -333,10 +325,7 @@ namespace FPD.Logic.ViewModels.Security
             }
         }
 
-        private void PreEdit()
-        {
-            fOldSelectedTrade = SelectedTrade?.Copy();
-        }
+        private void PreEdit() => fOldSelectedTrade = SelectedTrade?.Copy();
 
         /// <summary>
         /// Retrieve the default value for a new trade.
@@ -382,7 +371,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedTrade != null)
             {
-                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, fReportLogger)));
             }
         }
 
@@ -393,7 +382,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedName != null && SelectedTrade != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteTradeData(fAccount, SelectedName, SelectedTrade.Day, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteTradeData(fAccount, SelectedName, SelectedTrade.Day, fReportLogger)));
             }
             else
             {

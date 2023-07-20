@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using Common.UI;
 using Common.UI.Services;
 using FPD.Logic.ViewModels.Common;
@@ -12,8 +11,6 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class SelectedSingleDataViewModelHelper
     {
-        private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
-
         private IPortfolio fPortfolio;
 
         protected IPortfolio Portfolio
@@ -49,9 +46,9 @@ namespace FPD.Logic.Tests.TestHelpers
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             Portfolio = TestSetupHelper.CreateBasicDataBase();
-
+            var dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object, TestSetupHelper.DummyReportLogger);
-            ViewModel = new SelectedSingleDataViewModel(Portfolio, DataUpdater, null, globals, new NameData("Barclays", "currentAccount"), AccountType);
+            ViewModel = new SelectedSingleDataViewModel(Portfolio, null, globals, new NameData("Barclays", "currentAccount"), AccountType, dataUpdater);
         }
 
         [TearDown]

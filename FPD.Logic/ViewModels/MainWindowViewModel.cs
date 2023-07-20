@@ -15,6 +15,7 @@ using FinancialStructures.Database;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels
 {
@@ -23,11 +24,6 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class MainWindowViewModel : PropertyChangedBase
     {
-        /// <summary>
-        /// The mechanism by which the data in <see cref="ProgramPortfolio"/> is updated. This includes a GUI update action.
-        /// </summary>
-        private Action<Action<IPortfolio>> UpdateDataCallback => action => fUpdater.PerformUpdateAction(action, ProgramPortfolio);
-
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
         private void AddTabAction(object obj)
@@ -41,7 +37,7 @@ namespace FPD.Logic.ViewModels
         private readonly UiGlobals fUiGlobals;
         internal UserConfiguration fUserConfiguration;
         private string fConfigLocation;
-        private readonly IDatabaseUpdater<IPortfolio> fUpdater;
+        private readonly IUpdater<IPortfolio> _updater;
 
         /// <summary>
         /// The logging mechanism for the program.
@@ -115,29 +111,39 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals, IDatabaseUpdater<IPortfolio> updater, bool isLightTheme = true)
+        public MainWindowViewModel(UiGlobals globals, IUpdater<IPortfolio> updater, bool isLightTheme = true)
         {
             Styles = new UiStyles(isLightTheme);
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
             fUiGlobals = globals;
             fUiGlobals.ReportLogger = ReportLogger;
-            fUpdater = updater;
+            _updater = updater;
+            _updater.Database = ProgramPortfolio;
 
             LoadConfig();
 
-            OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback);
+            OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio);
+            OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = isLightTheme;
-            Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
-            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security, UpdateDataCallback));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, UpdateDataCallback));
-            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension, UpdateDataCallback));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark, UpdateDataCallback));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, UpdateDataCallback));
-            Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, UpdateDataCallback));
+            Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio));
+            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security, _updater));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, _updater));
+            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension, _updater));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark, _updater));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, _updater));
+            Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, _updater));
             Tabs.Add(new StatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
             Tabs.Add(new StatisticsChartsViewModel(fUiGlobals, ProgramPortfolio, Styles));
             Tabs.Add(new StatsCreatorWindowViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio, AddObjectAsMainTab));
+
+            foreach (object tab in Tabs)
+            {
+                if (tab is DataDisplayViewModelBase vmb)
+                {
+                    vmb.UpdateRequest += _updater.PerformUpdate;
+                }
+            }
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
         }
 

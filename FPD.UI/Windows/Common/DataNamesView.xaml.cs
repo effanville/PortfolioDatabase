@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows.Input;
 
 using FPD.Logic.ViewModels.Common;
 
@@ -23,6 +23,20 @@ namespace FPD.UI.Windows
             if (DataContext != null && DataContext is DataNamesViewModel vm && vm.DataNames != null)
             {
                 e.NewItem = vm.DefaultRow();
+            }
+        }
+
+        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete || e.Key == Key.Back)
+            {
+                if (e.OriginalSource is DataGridCell)
+                {
+                    if (DataContext != null && DataContext is DataNamesViewModel vm)
+                    {
+                        vm.ExecuteDelete();
+                    }
+                }
             }
         }
     }

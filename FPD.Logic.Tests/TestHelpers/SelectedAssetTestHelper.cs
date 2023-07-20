@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using Common.UI;
 using Common.UI.Services;
 using FPD.Logic.ViewModels.Asset;
@@ -7,13 +6,13 @@ using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using Moq;
 using NUnit.Framework;
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class SelectedAssetTestHelper
     {
-        private Action<Action<IPortfolio>> DataUpdater => action => action(Portfolio);
-
+        private IUpdater<IPortfolio> _dataUpdater;
         protected IPortfolio Portfolio
         {
             get;
@@ -40,8 +39,10 @@ namespace FPD.Logic.Tests.TestHelpers
             Portfolio = TestSetupHelper.CreateBasicDataBase();
             Name = new NameData("House", "MyHouse");
 
+            _dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(new FileSystem(), fileMock.Object, dialogMock.Object);
-            ViewModel = new SelectedAssetViewModel(Portfolio, DataUpdater, TestSetupHelper.DummyReportLogger, null, globals, Name);
+            ViewModel = new SelectedAssetViewModel(Portfolio, TestSetupHelper.DummyReportLogger, null, globals, Name);
+            ViewModel.UpdateRequest += _dataUpdater.PerformUpdate;
         }
 
         [TearDown]
