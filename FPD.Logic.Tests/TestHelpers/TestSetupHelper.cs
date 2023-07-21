@@ -43,8 +43,8 @@ namespace FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static IUpdater<IPortfolio> CreateUpdater(IPortfolio portfolio)
-            => new SynchronousUpdater<IPortfolio>() { Database = portfolio };
+        public static IUpdater<TDataStore> CreateUpdater<TDataStore>(TDataStore portfolio) where TDataStore : class
+            => new SynchronousUpdater<TDataStore>() { Database = portfolio };
 
         public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IBaseDialogCreationService dialogCreationService, IReportLogger logger = null)
         {

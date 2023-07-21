@@ -9,8 +9,7 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class MainWindowViewModelTestHelper
     {
-        protected IPortfolio Portfolio => ViewModel?.ProgramPortfolio;
-        protected MockFileSystem FileSystem;
+        protected MockFileSystem FileSystem { get; set; }
 
         protected MainWindowViewModel ViewModel
         {

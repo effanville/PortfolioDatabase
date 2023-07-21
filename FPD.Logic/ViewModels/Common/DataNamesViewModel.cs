@@ -117,8 +117,8 @@ namespace FPD.Logic.ViewModels.Common
             Styles = styles;
             TypeOfAccount = accountType;
             ReportLogger = reportLogger;
-            UpdateData(portfolio);
             _updater = dataUpdater;
+            UpdateData(portfolio);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
