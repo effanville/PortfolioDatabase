@@ -25,7 +25,7 @@ namespace FPDconsole
                     writeLine(message);
                 }
             }
-            IReportLogger logger = new LogReporter(reportAction);
+            IReportLogger logger = new LogReporter(reportAction, saveInternally: true);
 
             // Create the Console to write output.
             void writeLine(string text) => Console.WriteLine(text);
