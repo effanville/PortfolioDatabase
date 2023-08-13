@@ -2,7 +2,7 @@
   "profiles": {
     "FPDconsole": {
       "commandName": "Project",
-      "commandLineArgs": "download --filepath \"C:\\Data\\Source\\PortfolioDatabase\\FinancePortfolioDatabase.Tests\\ExampleDatabases\\BasicTestDatabase.xml\""
+      "commandLineArgs": "download --filepath \"../database/url-address.xml\""
     }
   }
 }
