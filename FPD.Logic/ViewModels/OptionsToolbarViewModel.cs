@@ -69,6 +69,7 @@ namespace FPD.Logic.ViewModels
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
             UpdateDataCommand = new RelayCommand(ExecuteUpdateData);
+            ImportFromOtherDatabaseCommand = new RelayCommand(ImportFromOtherDatabase);
             CleanDataCommand = new RelayCommand(ExecuteCleanData);
             RepriceResetCommand = new RelayCommand(ExecuteRepriceReset);
             RefreshCommand = new RelayCommand(ExecuteRefresh);
@@ -159,8 +160,23 @@ namespace FPD.Logic.ViewModels
         public ICommand UpdateDataCommand { get; }
         private void ExecuteUpdateData()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Downloading", $"Execute update data for  database {fFileName} called.");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Downloading", $"Execute update data for database {fFileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(Account.All, programPortfolio, null, ReportLogger).ConfigureAwait(false)));
+        }
+
+        /// <summary>
+        /// Command to import data from another database.
+        /// </summary>
+        public ICommand ImportFromOtherDatabaseCommand { get; }
+        private void ImportFromOtherDatabase()
+        {
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Importing", $"Execute import data for database {fFileName} called.");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
+            if (result.Success)
+            {
+                IPortfolio otherPortfolio = PortfolioFactory.CreateFromFile(fUiGlobals.CurrentFileSystem, result.FilePath, ReportLogger);
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.ImportValuesFrom(otherPortfolio, ReportLogger)));
+            }
         }
 
         /// <summary>

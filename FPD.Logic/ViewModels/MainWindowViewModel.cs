@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using Common.Structure.DataEdit;
+using System.Timers;
 
 namespace FPD.Logic.ViewModels
 {
@@ -24,6 +25,10 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class MainWindowViewModel : PropertyChangedBase
     {
+        private readonly Timer _timer = new Timer(100);
+
+        private PortfolioEventArgs AggEventArgs = new PortfolioEventArgs();
+
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
         private void AddTabAction(object obj)
@@ -145,6 +150,8 @@ namespace FPD.Logic.ViewModels
                 }
             }
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.Start();
         }
 
         private void LoadConfig()
@@ -162,8 +169,22 @@ namespace FPD.Logic.ViewModels
 
         internal void SaveConfig(string filePath, IFileSystem fileSystem) => fUserConfiguration.SaveConfiguration(filePath, fileSystem);
 
-        private async void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
+        private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
+            var changeType = AggEventArgs.ChangedAccount == Account.All || AggEventArgs.ChangedAccount != e.ChangedAccount ? Account.All : e.ChangedAccount;
+            AggEventArgs = e.ChangedPortfolio
+                ? new PortfolioEventArgs(Account.All, e.UserInitiated)
+                : new PortfolioEventArgs(changeType, e.UserInitiated);
+        }
+
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e) => UpdateChildViewModels(AggEventArgs);
+
+        private async void UpdateChildViewModels(PortfolioEventArgs e)
+        {
+            if (e.ChangedAccount == Account.Unknown)
+            {
+                return;
+            }
             var tabs = TabsShallowCopy();
             foreach (object tab in tabs)
             {
@@ -179,6 +200,8 @@ namespace FPD.Logic.ViewModels
             {
                 ReportsViewModel?.ClearReportsCommand.Execute(null);
             }
+
+            AggEventArgs = new PortfolioEventArgs(Account.Unknown);
         }
 
         private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
