@@ -7,6 +7,8 @@ using Common.Structure.DataStructures;
 using Common.UI.Commands;
 using Common.UI.ViewModelBases;
 
+using FinancialStructures.Database;
+
 using FPD.Logic.TemplatesAndStyles;
 
 namespace FPD.Logic.ViewModels.Common
@@ -14,7 +16,7 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model for displaying a <see cref="TimeList"/>
     /// </summary>
-    public sealed class TimeListViewModel : PropertyChangedBase
+    public sealed class TimeListViewModel : ViewModelBase<IPortfolio>
     {
         private readonly Action<DailyValuation> DeleteValueAction;
         private readonly Action<DailyValuation, DailyValuation> AddEditValueAction;
@@ -64,6 +66,7 @@ namespace FPD.Logic.ViewModels.Common
             UiStyles styles,
             Action<DailyValuation> deleteValueAction,
             Action<DailyValuation, DailyValuation> addEditValueAction)
+            : base("TLVM", null)
         {
             DeleteValueAction = deleteValueAction;
             AddEditValueAction = addEditValueAction;
@@ -129,10 +132,7 @@ namespace FPD.Logic.ViewModels.Common
             set;
         }
 
-        private void ExecutePreEdit()
-        {
-            fOldSelectedValuation = SelectedValuation?.Copy();
-        }
+        private void ExecutePreEdit() => fOldSelectedValuation = SelectedValuation?.Copy();
 
         /// <summary>
         /// Command to add or edit data to the <see cref="TimeList"/>

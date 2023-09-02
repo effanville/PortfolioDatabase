@@ -7,6 +7,7 @@ using FPD.Logic.Tests.ViewModelExtensions;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using NUnit.Framework;
+using FPD.Logic.Tests.UserInteractions;
 
 namespace FPD.Logic.Tests
 {
@@ -33,11 +34,11 @@ namespace FPD.Logic.Tests
             Assert.AreEqual("Total Bank Accounts: 1", dataView.BankAccountTotalText);
 
             SecurityEditWindowViewModel securityView = ViewModel.SecurityWindow();
-            DataNamesViewModel securityNamesView = securityView.DataNames();
+            DataNamesViewModel securityNamesView = securityView.GetDataNamesViewModel();
             Assert.AreEqual(1, securityNamesView.DataNames.Count);
 
-            ValueListWindowViewModel bankAccView = ViewModel.Window(Account.BankAccount);
-            DataNamesViewModel bankAccNamesView = bankAccView.DataNames();
+            ViewModels.Common.ValueListWindowViewModel bankAccView = ViewModel.Window(Account.BankAccount);
+            DataNamesViewModel bankAccNamesView = bankAccView.GetDataNamesViewModel();
             Assert.AreEqual(1, bankAccNamesView.DataNames.Count);
         }
 
@@ -47,7 +48,7 @@ namespace FPD.Logic.Tests
         {
             SecurityEditWindowViewModel securityViewModel = ViewModel.SecurityWindow();
             DataNamesViewModel securityNames = securityViewModel.Tabs[0] as DataNamesViewModel;
-            RowData selectedInitialName = new RowData(new NameData(), false, securityNames.TypeOfAccount, securityNames.UpdateDataCallback, null);
+            RowData selectedInitialName = new RowData(new NameData(), false, securityNames.TypeOfAccount, securityNames._updater, null);
             securityNames.DataNames.Add(selectedInitialName);
             securityNames.SelectionChangedCommand.Execute(selectedInitialName);
 

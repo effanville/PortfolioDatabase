@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FPD.Logic.ViewModels.Common;
+﻿using FPD.Logic.ViewModels.Common;
 using FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.Tests.ViewModelExtensions
@@ -11,7 +10,7 @@ namespace FPD.Logic.Tests.ViewModelExtensions
     {
         public static void SelectItem(this DataNamesViewModel viewModel, NameData name)
         {
-            viewModel.SelectionChangedCommand?.Execute(new RowData(name, false, viewModel.TypeOfAccount, viewModel.UpdateDataCallback, null));
+            viewModel.SelectionChangedCommand?.Execute(new RowData(name, false, viewModel.TypeOfAccount, viewModel._updater, null));
         }
 
         public static void BeginRowEdit(this DataNamesViewModel viewModel, RowData row)

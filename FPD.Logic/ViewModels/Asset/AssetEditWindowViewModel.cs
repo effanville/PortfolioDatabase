@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
+using Common.Structure.DataEdit;
 using Common.UI;
 using Common.UI.ViewModelBases;
+
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
@@ -16,6 +19,8 @@ namespace FPD.Logic.ViewModels.Asset
     /// </summary>
     public class AssetEditWindowViewModel : DataDisplayViewModelBase
     {
+        private readonly IUpdater<IPortfolio> _dataUpdater;
+
         /// <summary>
         /// The tabs to display, with the Security names, and
         /// selected security data.
@@ -37,16 +42,21 @@ namespace FPD.Logic.ViewModels.Asset
             set => SetAndNotify(ref fSelectedIndex, value, nameof(SelectedIndex));
         }
 
-        private readonly Action<Action<IPortfolio>> UpdateDataAction;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public AssetEditWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, Action<Action<IPortfolio>> updateData)
+        public AssetEditWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, IUpdater<IPortfolio> dataUpdater)
             : base(globals, styles, portfolio, "Assets", Account.Asset)
         {
-            UpdateDataAction = updateData;
-            Tabs.Add(new DataNamesViewModel(DataStore, updateData, ReportLogger, styles, (name) => LoadTabFunc(name), DataType));
+            _dataUpdater = dataUpdater;
+            Tabs.Add(new DataNamesViewModel(DataStore, ReportLogger, styles, dataUpdater, (name) => LoadTabFunc(name), DataType));
+            foreach (var tab in Tabs)
+            {
+                if (tab is DataDisplayViewModelBase vmb)
+                {
+                    vmb.UpdateRequest += _dataUpdater.PerformUpdate;
+                }
+            }
             SelectedIndex = 0;
         }
 
@@ -80,16 +90,15 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (obj is NameData name)
             {
-                Tabs.Add(new SelectedAssetViewModel(DataStore, UpdateDataAction, ReportLogger, Styles, fUiGlobals, name));
+                var newVM = new SelectedAssetViewModel(DataStore, ReportLogger, Styles, fUiGlobals, name);
+                newVM.UpdateRequest += _dataUpdater.PerformUpdate;
+                Tabs.Add(newVM);
             }
         }
 
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>
-        public bool RemoveTab(object obj)
-        {
-            return Tabs.Remove(obj);
-        }
+        public bool RemoveTab(object obj) => Tabs.Remove(obj);
     }
 }

@@ -1,5 +1,14 @@
-﻿using FPD.Logic.Tests.TestHelpers;
+﻿using System;
+
+using Common.Structure.DataEdit;
+using Common.UI;
+
 using FinancialStructures.Database;
+using FinancialStructures.NamingStructures;
+
+using FPD.Logic.Tests.TestHelpers;
+using FPD.Logic.ViewModels;
+
 using NUnit.Framework;
 
 namespace FPD.Logic.Tests
@@ -8,20 +17,28 @@ namespace FPD.Logic.Tests
     /// Tests for the default data window.
     /// </summary>
     [TestFixture]
-    internal class BasicDataViewWindowTests : BasicDataWindowTestHelper
+    internal class BasicDataViewWindowTests
     {
+        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, BasicDataViewModel> _viewModelFactory
+            = (globals, portfolio, name, dataUpdater) => new BasicDataViewModel(globals, null, portfolio);
+
         /// <summary>
         /// Ensures the window displays data if the underlying database is modified.
         /// </summary>
         [Test]
         public void EmptyPortfolioHasEmptyData()
         {
-            Portfolio = PortfolioFactory.GenerateEmpty();
+            var portfolio = PortfolioFactory.GenerateEmpty();
+            var context = new ViewModelTestContext<BasicDataViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+
             Assert.Multiple(() =>
             {
-                Assert.IsFalse(ViewModel.HasValues);
-                Assert.AreEqual(ViewModel.PortfolioNameText, "Unsaved database");
-                Assert.AreEqual(0, ViewModel.Notes.Count);
+                Assert.IsFalse(context.ViewModel.HasValues);
+                Assert.AreEqual("Unsaved database", context.ViewModel.PortfolioNameText);
+                Assert.AreEqual(0, context.ViewModel.Notes.Count);
             });
         }
 
@@ -31,17 +48,21 @@ namespace FPD.Logic.Tests
         [Test]
         public void CanViewData()
         {
-            Portfolio = TestSetupHelper.CreateBasicDataBase();
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<BasicDataViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(ViewModel.HasValues);
-                Assert.AreEqual("TestFilePath", ViewModel.PortfolioNameText);
-                Assert.AreEqual("Total Securities: 1", ViewModel.SecurityTotalText);
-                Assert.AreEqual("Total Value: £1.00", ViewModel.SecurityAmountText);
+                Assert.IsTrue(context.ViewModel.HasValues);
+                Assert.AreEqual("TestFilePath", context.ViewModel.PortfolioNameText);
+                Assert.AreEqual("Total Securities: 1", context.ViewModel.SecurityTotalText);
+                Assert.AreEqual("Total Value: £1.00", context.ViewModel.SecurityAmountText);
 
-                Assert.AreEqual("Total Bank Accounts: 1", ViewModel.BankAccountTotalText);
-                Assert.AreEqual("Total Value: £1.00", ViewModel.BankAccountAmountText);
-                Assert.AreEqual(0, ViewModel.Notes.Count);
+                Assert.AreEqual("Total Bank Accounts: 1", context.ViewModel.BankAccountTotalText);
+                Assert.AreEqual("Total Value: £1.00", context.ViewModel.BankAccountAmountText);
+                Assert.AreEqual(0, context.ViewModel.Notes.Count);
             });
         }
 
@@ -51,22 +72,27 @@ namespace FPD.Logic.Tests
         [Test]
         public void CanUpdateData()
         {
-            Assert.IsFalse(ViewModel.HasValues);
+            var portfolio = TestSetupHelper.CreateEmptyDataBase();
+            var context = new ViewModelTestContext<BasicDataViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+            Assert.IsFalse(context.ViewModel.HasValues);
 
             // Now update that data.
-            TestSetupHelper.UpdatePortfolio(Portfolio);
-            ViewModel.UpdateData(Portfolio);
+            TestSetupHelper.UpdatePortfolio(context.Portfolio);
+            context.ViewModel.UpdateData(context.Portfolio);
 
             // Ensure new data has been displayed correctly.
             Assert.Multiple(() =>
             {
 
-                Assert.IsTrue(ViewModel.HasValues);
-                Assert.AreEqual("Total Securities: 1", ViewModel.SecurityTotalText);
-                Assert.AreEqual("Total Value: £1.00", ViewModel.SecurityAmountText);
+                Assert.IsTrue(context.ViewModel.HasValues);
+                Assert.AreEqual("Total Securities: 1", context.ViewModel.SecurityTotalText);
+                Assert.AreEqual("Total Value: £1.00", context.ViewModel.SecurityAmountText);
 
-                Assert.AreEqual("Total Bank Accounts: 1", ViewModel.BankAccountTotalText);
-                Assert.AreEqual("Total Value: £1.00", ViewModel.BankAccountAmountText);
+                Assert.AreEqual("Total Bank Accounts: 1", context.ViewModel.BankAccountTotalText);
+                Assert.AreEqual("Total Value: £1.00", context.ViewModel.BankAccountAmountText);
             });
         }
     }

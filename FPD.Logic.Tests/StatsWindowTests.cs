@@ -1,5 +1,15 @@
-﻿using FPD.Logic.ViewModels.Stats;
+﻿using System;
+
+using Common.Structure.DataEdit;
+using Common.UI;
+
+using FinancialStructures.Database;
+using FinancialStructures.NamingStructures;
+
+using FPD.Logic.Configuration;
 using FPD.Logic.Tests.TestHelpers;
+using FPD.Logic.ViewModels.Stats;
+
 using NUnit.Framework;
 
 namespace FPD.Logic.Tests
@@ -8,8 +18,16 @@ namespace FPD.Logic.Tests
     /// Tests to ensure that the stats window displays what it should do.
     /// </summary>
     [TestFixture]
-    public class StatsWindowTests : StatsWindowTestHelper
+    public class StatsWindowTests
     {
+        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, IConfiguration, StatsViewModel> _viewModelFactory
+            = (globals, portfolio, name, dataUpdater, config) => new StatsViewModel(
+                globals,
+                null,
+                config,
+                portfolio,
+                Account.All);
+
         private const int fExpectedNumberTabs = 7;
 
         /// <summary>
@@ -18,10 +36,15 @@ namespace FPD.Logic.Tests
         [Test]
         public void CanLoadWithNames()
         {
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<StatsViewModel>(
+            null,
+            portfolio,
+            (globals, portfolio, name, dataUpdater) => _viewModelFactory(globals, portfolio, name, dataUpdater, new StatsDisplayConfiguration()));
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(fExpectedNumberTabs, ViewModel.Stats.Count);
-                Assert.AreEqual(true, ViewModel.DisplayValueFunds);
+                Assert.AreEqual(fExpectedNumberTabs, context.ViewModel.Stats.Count);
+                Assert.AreEqual(true, context.ViewModel.DisplayValueFunds);
             });
         }
 
@@ -32,16 +55,23 @@ namespace FPD.Logic.Tests
         [TestCase(true)]
         public void CanStoreConfig(bool valueFunds)
         {
-            Assert.AreEqual(fExpectedNumberTabs, ViewModel.Stats.Count);
-            Assert.AreEqual(true, ViewModel.DisplayValueFunds);
+            var configuration = new StatsDisplayConfiguration();
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<StatsViewModel>(
+            null,
+            portfolio,
+            (globals, portfolio, name, dataUpdater) => _viewModelFactory(globals, portfolio, name, dataUpdater, configuration));
 
-            ViewModel.DisplayValueFunds = valueFunds;
-            Assert.AreEqual(valueFunds, ViewModel.DisplayValueFunds);
+            Assert.AreEqual(fExpectedNumberTabs, context.ViewModel.Stats.Count);
+            Assert.AreEqual(true, context.ViewModel.DisplayValueFunds);
 
-            ViewModel = new StatsViewModel(Globals, null, VMConfiguration, Portfolio);
+            context.ViewModel.DisplayValueFunds = valueFunds;
+            Assert.AreEqual(valueFunds, context.ViewModel.DisplayValueFunds);
 
-            Assert.AreEqual(valueFunds, ViewModel.DisplayValueFunds);
-            Assert.AreEqual(fExpectedNumberTabs, ViewModel.Stats.Count);
+            context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration, context.Portfolio));
+
+            Assert.AreEqual(valueFunds, context.ViewModel.DisplayValueFunds);
+            Assert.AreEqual(fExpectedNumberTabs, context.ViewModel.Stats.Count);
         }
     }
 }

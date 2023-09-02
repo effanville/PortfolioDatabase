@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
+using Common.Structure.DataEdit;
 using Common.Structure.DataStructures;
 using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
@@ -36,7 +37,6 @@ namespace FPD.Logic.ViewModels.Asset
         /// </summary>
         internal readonly NameData fSelectedName;
         private readonly Account fAccountType = Account.Asset;
-        private readonly Action<Action<IPortfolio>> UpdateDataCallback;
         private readonly IReportLogger fReportLogger;
         private readonly UiGlobals fUiGlobals;
 
@@ -115,7 +115,7 @@ namespace FPD.Logic.ViewModels.Asset
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SelectedAssetViewModel(IPortfolio portfolio, Action<Action<IPortfolio>> updateData, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName)
+        public SelectedAssetViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
         {
             fReportLogger = reportLogger;
@@ -124,7 +124,6 @@ namespace FPD.Logic.ViewModels.Asset
             fSelectedName = selectedName;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-            UpdateDataCallback = updateData;
 
             if (portfolio.TryGetAccount(fAccountType, fSelectedName, out IValueList desired))
             {
@@ -149,7 +148,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (name != null && value != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteData(fAccountType, name.ToTwoName(), value.Day, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteData(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
             }
             else
             {
@@ -161,7 +160,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (name != null && value != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteAssetDebt(fAccountType, name.ToTwoName(), value.Day, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetDebt(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
             }
             else
             {
@@ -173,7 +172,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (name != null && value != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryDeleteAssetPayment(fAccountType, name.ToTwoName(), value.Day, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetPayment(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
             }
             else
             {
@@ -195,7 +194,7 @@ namespace FPD.Logic.ViewModels.Asset
             if (fSelectedName != null)
             {
                 NameData names = fSelectedName;
-                UpdateDataCallback(async programPortfolio => await PortfolioDataUpdater.Download(fAccountType, programPortfolio, names, fReportLogger).ConfigureAwait(false));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccountType, programPortfolio, names, fReportLogger).ConfigureAwait(false)));
             }
         }
 
@@ -232,7 +231,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
             }
         }
 
@@ -240,7 +239,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
             }
         }
 
@@ -248,7 +247,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                UpdateDataCallback(programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
             }
         }
 

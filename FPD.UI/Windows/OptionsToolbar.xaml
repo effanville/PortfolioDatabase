@@ -36,6 +36,9 @@
             <Button Content="Update Data"
                     Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                     Command="{Binding UpdateDataCommand}" />
+            <Button Content="Import Data"
+                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Command="{Binding ImportFromOtherDatabaseCommand}" />
             <Button Content="Clean Data"
                     Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
                     Command="{Binding CleanDataCommand}" />

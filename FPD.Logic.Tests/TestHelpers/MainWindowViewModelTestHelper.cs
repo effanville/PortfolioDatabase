@@ -9,8 +9,7 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public abstract class MainWindowViewModelTestHelper
     {
-        protected IPortfolio Portfolio => ViewModel?.ProgramPortfolio;
-        protected MockFileSystem FileSystem;
+        protected MockFileSystem FileSystem { get; set; }
 
         protected MainWindowViewModel ViewModel
         {
@@ -29,7 +28,7 @@ namespace FPD.Logic.Tests.TestHelpers
             FileSystem.AddFile(testPath, new MockFileData(file));
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
-            ViewModel = new MainWindowViewModel(globals, new SynchronousPortfolioUpdater());
+            ViewModel = new MainWindowViewModel(globals, new SynchronousUpdater<IPortfolio>());
         }
 
         [TearDown]

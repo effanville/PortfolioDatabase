@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.Tests.TestHelpers;
@@ -7,124 +6,175 @@ using FPD.Logic.Tests.ViewModelExtensions;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using NUnit.Framework;
+using Common.Structure.DataEdit;
+using Common.UI;
+using System;
 
 namespace FPD.Logic.Tests.CommonWindowTests
 {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
-    public partial class DataNamesViewModelTests : DataNamesViewTestHelper
+    public partial class DataNamesViewModelTests
     {
+        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
+            = (globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
+                portfolio,
+                TestSetupHelper.DummyReportLogger,
+                null,
+                dataUpdater,
+                obj => { },
+                Account.Security);
+
         [Test]
         public void CanOpen()
         {
-            Portfolio = TestSetupHelper.CreateBasicDataBase();
-            Assert.AreEqual(1, ViewModel.DataNames.Count);
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+            Assert.AreEqual(1, context.ViewModel.DataNames.Count);
         }
 
         [Test]
         public void CanUpdateData()
         {
+            var portfolio = TestSetupHelper.CreateEmptyDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
 
-            ViewModel.UpdateData(newData);
+            context.ViewModel.UpdateData(newData);
 
-            Assert.AreEqual(1, ViewModel.DataNames.Count);
+            Assert.AreEqual(1, context.ViewModel.DataNames.Count);
         }
 
         [Test]
         public void CanOpenSecurity()
         {
+            var portfolio = TestSetupHelper.CreateEmptyDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
             IPortfolio output = TestSetupHelper.CreateBasicDataBase();
-            IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            Action<Action<IPortfolio>> dataUpdater = TestSetupHelper.CreateDataUpdater(portfolio);
-            DataNamesViewModel viewModel = new DataNamesViewModel(output, dataUpdater, TestSetupHelper.DummyReportLogger, null, TestSetupHelper.DummyOpenTab, Account.Security);
+            var dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            DataNamesViewModel viewModel = new DataNamesViewModel(output, TestSetupHelper.DummyReportLogger, null, dataUpdater, TestSetupHelper.DummyOpenTab, Account.Security);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             Assert.AreEqual(1, viewModel.DataNames.Count);
         }
 
         [Test]
         public void CanUpdateSecurityData()
         {
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
-            ViewModel.UpdateData(newData);
+            context.ViewModel.UpdateData(newData);
 
-            Assert.AreEqual(1, ViewModel.DataNames.Count);
+            Assert.AreEqual(1, context.ViewModel.DataNames.Count);
         }
 
         [Test]
         public void CanCreateNewSecurity()
         {
-            Portfolio = TestSetupHelper.CreateBasicDataBase();
-
-            ViewModel.SelectItem(null);
-            var newRowItem = ViewModel.AddNewItem();
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+            context.ViewModel.SelectItem(null);
+            var newRowItem = context.ViewModel.AddNewItem();
             var newItem = newRowItem.Instance;
             newItem.Company = "company";
             newItem.Name = "name";
             newItem.Currency = "GBP";
             newItem.Url = "someUrl";
-            ViewModel.CompleteCreate(newRowItem);
-            Assert.AreEqual(2, ViewModel.DataNames.Count, "Bot enough in the view.");
-            Assert.AreEqual(2, Portfolio.FundsThreadSafe.Count, "Not enough in portfolio");
+            context.ViewModel.CompleteCreate(newRowItem);
+            Assert.AreEqual(2, context.ViewModel.DataNames.Count, "Not enough in the view.");
+            Assert.AreEqual(2, context.Portfolio.FundsThreadSafe.Count, "Not enough in portfolio");
         }
 
         [Test]
         public void CanEditSecurityName()
         {
-            Portfolio = TestSetupHelper.CreateBasicDataBase();
-            var item = ViewModel.DataNames[0];
-            ViewModel.SelectItem(item.Instance);
-            ViewModel.BeginRowEdit(item);
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+            var item = context.ViewModel.DataNames[0];
+            context.ViewModel.SelectItem(item.Instance);
+            context.ViewModel.BeginRowEdit(item);
             item.Instance.Company = "NewCompany";
-            ViewModel.CompleteEdit(item);
+            context.ViewModel.CompleteEdit(item);
 
-            Assert.AreEqual(1, ViewModel.DataNames.Count);
-            Assert.AreEqual(1, Portfolio.FundsThreadSafe.Count);
+            Assert.AreEqual(1, context.ViewModel.DataNames.Count);
+            Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Count);
 
-            Assert.AreEqual("NewCompany", Portfolio.FundsThreadSafe.Single().Names.Company);
+            Assert.AreEqual("NewCompany", context.Portfolio.FundsThreadSafe.Single().Names.Company);
         }
 
         [Test]
         public void CanEditSecurityNameAndUrl()
         {
-            Portfolio = TestSetupHelper.CreateBasicDataBase();
-            var item = ViewModel.DataNames[0];
-            ViewModel.SelectItem(item.Instance);
-            ViewModel.BeginRowEdit(item);
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+            var item = context.ViewModel.DataNames[0];
+            context.ViewModel.SelectItem(item.Instance);
+            context.ViewModel.BeginRowEdit(item);
             item.Instance.Company = "NewCompany";
             item.Instance.Url = "NewUrl";
-            ViewModel.CompleteEdit(item);
+            context.ViewModel.CompleteEdit(item);
 
-            Assert.AreEqual(1, ViewModel.DataNames.Count);
-            Assert.AreEqual(1, Portfolio.FundsThreadSafe.Count);
+            Assert.AreEqual(1, context.ViewModel.DataNames.Count);
+            Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Count);
 
-            Assert.AreEqual("NewCompany", Portfolio.FundsThreadSafe.Single().Names.Company);
-            Assert.AreEqual("NewUrl", Portfolio.FundsThreadSafe.Single().Names.Url);
+            Assert.AreEqual("NewCompany", context.Portfolio.FundsThreadSafe.Single().Names.Company);
+            Assert.AreEqual("NewUrl", context.Portfolio.FundsThreadSafe.Single().Names.Url);
         }
 
         [Test]
         [Ignore("IncompeteArchitecture - Downloader does not currently allow for use in test environment.")]
         public void CanDownloadSecurity()
         {
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
             NameData item = new NameData("Fidelity", "China");
-            ViewModel.SelectItem(item);
-            ViewModel.DownloadSelected();
+            context.ViewModel.SelectItem(item);
+            context.ViewModel.DownloadSelected();
 
-            Assert.AreEqual(1, ViewModel.DataNames.Count);
+            Assert.AreEqual(1, context.ViewModel.DataNames.Count);
         }
 
 
         [Test]
         public void CanDeleteSecurity()
         {
-            Portfolio = TestSetupHelper.CreateBasicDataBase();
-            Assert.AreEqual(1, ViewModel.DataStore.FundsThreadSafe.Count);
-            Assert.AreEqual(1, Portfolio.FundsThreadSafe.Count);
+            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var context = new ViewModelTestContext<DataNamesViewModel>(
+                null,
+                portfolio,
+                _viewModelFactory);
+            Assert.AreEqual(1, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Count);
 
             NameData item = new NameData("Fidelity", "China");
-            ViewModel.SelectItem(item);
-            ViewModel.DeleteSelected();
-            Assert.AreEqual(0, ViewModel.DataStore.FundsThreadSafe.Count);
-            Assert.AreEqual(0, Portfolio.FundsThreadSafe.Count);
+            context.ViewModel.SelectItem(item);
+            context.ViewModel.DeleteSelected();
+            Assert.AreEqual(0, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual(0, context.Portfolio.FundsThreadSafe.Count);
         }
     }
 }

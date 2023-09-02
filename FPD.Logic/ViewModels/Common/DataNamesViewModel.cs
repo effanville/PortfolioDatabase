@@ -12,6 +12,7 @@ using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions.Values;
 using FinancialStructures.NamingStructures;
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -20,10 +21,7 @@ namespace FPD.Logic.ViewModels.Common
     /// </summary>
     public sealed class DataNamesViewModel : TabViewModelBase<IPortfolio>
     {
-        /// <summary>
-        /// Function which updates the main data store.
-        /// </summary>
-        internal readonly Action<Action<IPortfolio>> UpdateDataCallback;
+        internal readonly IUpdater<IPortfolio> _updater;
 
         /// <summary>
         /// Logs any possible issues in the routines here back to the user.
@@ -103,7 +101,7 @@ namespace FPD.Logic.ViewModels.Common
         /// <returns></returns>
         public RowData DefaultRow()
         {
-            var defaultRow = new RowData(new NameData(), true, TypeOfAccount, UpdateDataCallback, Styles)
+            var defaultRow = new RowData(new NameData(), true, TypeOfAccount, _updater, Styles)
             {
                 IsNew = true
             };
@@ -113,15 +111,14 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public DataNamesViewModel(IPortfolio portfolio, Action<Action<IPortfolio>> updateDataCallback, IReportLogger reportLogger, UiStyles styles, Action<object> loadSelectedData, Account accountType)
+        public DataNamesViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account accountType)
             : base("Accounts", portfolio, loadSelectedData)
         {
             Styles = styles;
-            UpdateDataCallback = updateDataCallback;
             TypeOfAccount = accountType;
             ReportLogger = reportLogger;
+            _updater = dataUpdater;
             UpdateData(portfolio);
-
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
@@ -154,7 +151,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             base.UpdateData(dataToDisplay);
 
-            List<RowData> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(dataToDisplay, name), TypeOfAccount, UpdateDataCallback, Styles)).ToList();
+            List<RowData> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(dataToDisplay, name), TypeOfAccount, _updater, Styles)).ToList();
             DataNames = null;
             DataNames = values;
             DataNames ??= new List<RowData>();
@@ -171,10 +168,7 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
-        public override void UpdateData(IPortfolio dataToDisplay)
-        {
-            UpdateData(dataToDisplay, null);
-        }
+        public override void UpdateData(IPortfolio dataToDisplay) => UpdateData(dataToDisplay, null);
 
         /// <summary>
         /// Downloads the latest data for the selected entry.
@@ -189,7 +183,7 @@ namespace FPD.Logic.ViewModels.Common
             if (SelectedName != null)
             {
                 NameData names = SelectedName.Instance;
-                UpdateDataCallback(async programPortfolio => await PortfolioDataUpdater.Download(TypeOfAccount, programPortfolio, names, ReportLogger).ConfigureAwait(false));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(TypeOfAccount, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
             }
         }
 
@@ -240,7 +234,7 @@ namespace FPD.Logic.ViewModels.Common
                 NameData selectedInstance = rowData.Instance; //rowName.Instance;
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
                 NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-                UpdateDataCallback(programPortfolio => edited = programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => edited = programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger)));
             }
         }
 
@@ -252,12 +246,12 @@ namespace FPD.Logic.ViewModels.Common
             get;
         }
 
-        private void ExecuteDelete()
+        public void ExecuteDelete()
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DeletingData, $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
-                UpdateDataCallback(programPortfolio => programPortfolio.TryRemove(TypeOfAccount, SelectedName.Instance, ReportLogger));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(TypeOfAccount, SelectedName.Instance, ReportLogger)));
             }
             else
             {
