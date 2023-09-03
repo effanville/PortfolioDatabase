@@ -101,12 +101,12 @@ namespace FPD.Logic.Tests.CommonWindowTests
                 portfolio,
                 _viewModelFactory);
             context.ViewModel.SelectItem(null);
-            Assert.AreEqual(1, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual(1, context.ViewModel.ModelData.FundsThreadSafe.Count);
             Assert.AreEqual(1, context.Portfolio.BankAccountsThreadSafe.Count);
             NameData item = new NameData("Barclays", "currentAccount");
             context.ViewModel.SelectItem(item);
             context.ViewModel.DeleteSelected();
-            Assert.AreEqual(0, context.ViewModel.DataStore.BankAccountsThreadSafe.Count);
+            Assert.AreEqual(0, context.ViewModel.ModelData.BankAccountsThreadSafe.Count);
             Assert.AreEqual(0, context.Portfolio.BankAccountsThreadSafe.Count);
         }
     }

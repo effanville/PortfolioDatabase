@@ -10,9 +10,10 @@ using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
 using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions.Statistics;
 using FinancialStructures.Database.Statistics;
 using System.Threading.Tasks;
+
+using FinancialStructures.Database.Extensions.Statistics;
 
 namespace FPD.Logic.ViewModels.Stats
 {
@@ -120,7 +121,7 @@ namespace FPD.Logic.ViewModels.Stats
                 base.UpdateData(dataToDisplay);
             }
 
-            var stats = DataStore.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: StatsToView);
+            var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: StatsToView);
             fUiGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
             void AssignStats(List<AccountStatistics> stats)
             {

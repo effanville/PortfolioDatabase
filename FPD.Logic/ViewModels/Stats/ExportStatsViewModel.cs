@@ -255,7 +255,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteExportCommand()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), DataStore.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)
@@ -311,7 +311,7 @@ namespace FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowAssets),
                     assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList());
 
-                PortfolioStatistics stats = new PortfolioStatistics(DataStore, settings, fUiGlobals.CurrentFileSystem);
+                PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, fUiGlobals.CurrentFileSystem);
                 string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
                 DocumentType type = extension.ToEnum<DocumentType>();
 

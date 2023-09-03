@@ -227,7 +227,7 @@ namespace FPD.Logic.ViewModels.Asset
                 FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
-                    if (DataStore.TryGetAccount(fAccountType, SelectedName, out IValueList account))
+                    if (ModelData.TryGetAccount(fAccountType, SelectedName, out IValueList account))
                     {
                         IAmortisableAsset security = account as IAmortisableAsset;
                         CsvReaderWriter.WriteToCSVFile(security, result.FilePath, fReportLogger);

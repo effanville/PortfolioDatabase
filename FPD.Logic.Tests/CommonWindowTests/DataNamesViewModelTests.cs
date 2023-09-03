@@ -167,13 +167,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
                 null,
                 portfolio,
                 _viewModelFactory);
-            Assert.AreEqual(1, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual(1, context.ViewModel.ModelData.FundsThreadSafe.Count);
             Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Count);
 
             NameData item = new NameData("Fidelity", "China");
             context.ViewModel.SelectItem(item);
             context.ViewModel.DeleteSelected();
-            Assert.AreEqual(0, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual(0, context.ViewModel.ModelData.FundsThreadSafe.Count);
             Assert.AreEqual(0, context.Portfolio.FundsThreadSafe.Count);
         }
     }

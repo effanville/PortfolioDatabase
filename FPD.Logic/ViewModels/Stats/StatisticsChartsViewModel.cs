@@ -118,7 +118,7 @@ namespace FPD.Logic.ViewModels.Stats
             int snapshotGap = numDays / 100;
 
             PortfolioHistory history = new PortfolioHistory(
-                DataStore,
+                ModelData,
                 new PortfolioHistory.Settings(
                     firstDate,
                     lastDate,
@@ -140,7 +140,7 @@ namespace FPD.Logic.ViewModels.Stats
             ObservableCollection<LineSeries> newValues = new ObservableCollection<LineSeries>();
             if (HistoryStats.Count > 1)
             {
-                IReadOnlyList<string> sectorNames = DataStore.Sectors(Account.Security);
+                IReadOnlyList<string> sectorNames = ModelData.Sectors(Account.Security);
                 foreach (string name in sectorNames)
                 {
                     decimal total = HistoryStats[HistoryStats.Count - 1].SecurityValue;

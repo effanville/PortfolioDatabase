@@ -96,7 +96,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteCreateHistory()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + DataStore.Name + "-History.csv", filter: "CSV file|*.csv|All files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + ModelData.Name + "-History.csv", filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
@@ -104,9 +104,9 @@ namespace FPD.Logic.ViewModels.Stats
                     result.FilePath += ".csv";
                 }
 
-                PortfolioHistory history = new PortfolioHistory(DataStore, new PortfolioHistory.Settings(default, default, HistoryGapDays, generateSecurityValues: GenerateSecurityValues, generateBankAccountValues: GenerateBankAccountValues, generateSectorValues: GenerateSectorValues, generateSecurityRates: false, generateSectorRates: false));
+                PortfolioHistory history = new PortfolioHistory(ModelData, new PortfolioHistory.Settings(default, default, HistoryGapDays, generateSecurityValues: GenerateSecurityValues, generateBankAccountValues: GenerateBankAccountValues, generateSectorValues: GenerateSectorValues, generateSecurityRates: false, generateSectorRates: false));
                 history.ExportToFile(result.FilePath, fUiGlobals.CurrentFileSystem);
-                fCloseWindowAction(new PortfolioHistoryViewModel(DataStore, Styles));
+                fCloseWindowAction(new PortfolioHistoryViewModel(ModelData, Styles));
             }
             else
             {

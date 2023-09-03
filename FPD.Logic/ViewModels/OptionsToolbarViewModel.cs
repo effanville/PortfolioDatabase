@@ -99,7 +99,7 @@ namespace FPD.Logic.ViewModels
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"ExecuteNewDatabase called.");
             MessageBoxOutcome result;
-            if (DataStore.IsAlteredSinceSave)
+            if (ModelData.IsAlteredSinceSave)
             {
                 result = fUiGlobals.DialogCreationService.ShowMessageBox("Current database has unsaved alterations. Are you sure you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
             }

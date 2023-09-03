@@ -74,14 +74,14 @@ namespace FPD.Logic.ViewModels.Stats
 
             fLoadTab = loadTab;
 
-            StatsPageExportOptions = new ExportStatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsOptions], DataStore, obj => fLoadTab(obj));
+            StatsPageExportOptions = new ExportStatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsOptions], ModelData, obj => fLoadTab(obj));
             if (!fUserConfiguration.ChildConfigurations.TryGetValue(UserConfiguration.ReportOptions, out _))
             {
                 fUserConfiguration.ChildConfigurations.Add(UserConfiguration.ReportOptions, new ExportReportConfiguration());
             }
 
-            ExportReportOptions = new ExportReportViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.ReportOptions], DataStore, obj => fLoadTab(obj));
-            ExportHistoryOptions = new ExportHistoryViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.HistoryOptions], DataStore, obj => fLoadTab(obj));
+            ExportReportOptions = new ExportReportViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.ReportOptions], ModelData, obj => fLoadTab(obj));
+            ExportHistoryOptions = new ExportHistoryViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.HistoryOptions], ModelData, obj => fLoadTab(obj));
             CreateInvestmentListCommand = new RelayCommand(ExecuteInvestmentListCommand);
         }
 
@@ -95,16 +95,16 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteInvestmentListCommand()
         {
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", DataStore.Name + "-CSVStats.csv", filter: "CSV file|*.csv|All files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", ModelData.Name + "-CSVStats.csv", filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".csv"))
                 {
                     result.FilePath += ".csv";
                 }
-                PortfolioInvestments portfolioInvestments = new PortfolioInvestments(DataStore, new PortfolioInvestmentSettings());
+                PortfolioInvestments portfolioInvestments = new PortfolioInvestments(ModelData, new PortfolioInvestmentSettings());
                 portfolioInvestments.ExportToFile(result.FilePath, fUiGlobals.CurrentFileSystem, ReportLogger);
-                fLoadTab(new SecurityInvestmentViewModel(DataStore, Styles));
+                fLoadTab(new SecurityInvestmentViewModel(ModelData, Styles));
             }
             else
             {

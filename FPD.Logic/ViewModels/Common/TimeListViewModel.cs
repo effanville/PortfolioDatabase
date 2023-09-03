@@ -16,25 +16,25 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model for displaying a <see cref="TimeList"/>
     /// </summary>
-    public sealed class TimeListViewModel : ViewModelBase<IPortfolio>
+    public sealed class TimeListViewModel : ViewModelBase<TimeList, IPortfolio>
     {
-        private readonly Action<DailyValuation> DeleteValueAction;
-        private readonly Action<DailyValuation, DailyValuation> AddEditValueAction;
+        private readonly Action<DailyValuation> _deleteValueAction;
+        private readonly Action<DailyValuation, DailyValuation> _addEditValueAction;
 
-        internal DailyValuation fOldSelectedValuation;
+        private DailyValuation _oldSelectedValuation;
         internal DailyValuation SelectedValuation;
 
-        private List<DailyValuation> fValuations = new List<DailyValuation>();
-
-        private UiStyles fStyles;
+        private string _valueName;
+        private List<DailyValuation> _valuations;
+        private UiStyles _uiStyles;
 
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
         public UiStyles Styles
         {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
+            get => _uiStyles;
+            set => SetAndNotify(ref _uiStyles, value);
         }
 
         /// <summary>
@@ -42,19 +42,17 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public List<DailyValuation> Valuations
         {
-            get => fValuations;
-            set => SetAndNotify(ref fValuations, value, nameof(Valuations));
+            get => _valuations;
+            set => SetAndNotify(ref _valuations, value);
         }
-
-        private string fValueName;
-
+        
         /// <summary>
         /// The name of the type of value displayed.
         /// </summary>
         public string ValueName
         {
-            get => fValueName;
-            set => SetAndNotify(ref fValueName, value, nameof(ValueName));
+            get => _valueName;
+            set => SetAndNotify(ref _valueName, value);
         }
 
         /// <summary>
@@ -68,8 +66,8 @@ namespace FPD.Logic.ViewModels.Common
             Action<DailyValuation, DailyValuation> addEditValueAction)
             : base("TLVM", null)
         {
-            DeleteValueAction = deleteValueAction;
-            AddEditValueAction = addEditValueAction;
+            _deleteValueAction = deleteValueAction;
+            _addEditValueAction = addEditValueAction;
             ValueName = valueName;
             Styles = styles;
             PreEditCommand = new RelayCommand(ExecutePreEdit);
@@ -81,8 +79,9 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Routine to update the data in the display.
         /// </summary>
-        public void UpdateData(TimeList timeList)
+        public override void UpdateData(TimeList timeList)
         {
+            base.UpdateData(timeList);
             Valuations = null;
             Valuations = timeList?.Values() ?? new List<DailyValuation>();
         }
@@ -112,7 +111,6 @@ namespace FPD.Logic.ViewModels.Common
         public ICommand SelectionChangedCommand
         {
             get;
-            set;
         }
         private void ExecuteSelectionChanged(object obj)
         {
@@ -129,10 +127,9 @@ namespace FPD.Logic.ViewModels.Common
         public ICommand PreEditCommand
         {
             get;
-            set;
         }
 
-        private void ExecutePreEdit() => fOldSelectedValuation = SelectedValuation?.Copy();
+        private void ExecutePreEdit() => _oldSelectedValuation = SelectedValuation?.Copy();
 
         /// <summary>
         /// Command to add or edit data to the <see cref="TimeList"/>
@@ -140,14 +137,13 @@ namespace FPD.Logic.ViewModels.Common
         public ICommand AddEditDataCommand
         {
             get;
-            set;
         }
 
         private void ExecuteAddEditData()
         {
             if (SelectedValuation != null)
             {
-                AddEditValueAction(fOldSelectedValuation, SelectedValuation);
+                _addEditValueAction(_oldSelectedValuation, SelectedValuation);
             }
         }
 
@@ -158,7 +154,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (SelectedValuation != null)
             {
-                DeleteValueAction(SelectedValuation);
+                _deleteValueAction(SelectedValuation);
             }
         }
     }

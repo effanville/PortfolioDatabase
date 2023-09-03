@@ -162,7 +162,7 @@ namespace FPD.Logic.ViewModels
         /// <inheritdoc/>
         public override void UpdateData(IPortfolio portfolio)
         {
-            DataStore = portfolio;
+            ModelData = portfolio;
             PortfolioNameText = string.IsNullOrWhiteSpace(portfolio.Name) ? "Unsaved database" : portfolio.Name;
             HasValues = portfolio.NumberOf(Account.All) != 0;
             SecurityTotalText = $"Total Securities: {portfolio.NumberOf(Account.Security)}";
@@ -204,7 +204,7 @@ namespace FPD.Logic.ViewModels
 
         private void ExecuteCreateEdit()
         {
-            if (fSelectedNote != null && !DataStore.Notes.Contains(fSelectedNote))
+            if (fSelectedNote != null && !ModelData.Notes.Contains(fSelectedNote))
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(fSelectedNote.TimeStamp, fSelectedNote.Text)));
             }

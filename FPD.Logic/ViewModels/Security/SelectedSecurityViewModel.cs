@@ -229,7 +229,7 @@ namespace FPD.Logic.ViewModels.Security
             {
                 FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
                 List<object> outputs = null;
-                bool exists = DataStore.TryGetAccount(fAccount, SelectedName, out IValueList account);
+                bool exists = ModelData.TryGetAccount(fAccount, SelectedName, out IValueList account);
                 if (result.Success && exists)
                 {
                     ISecurity security = account as ISecurity;
@@ -270,7 +270,7 @@ namespace FPD.Logic.ViewModels.Security
                 FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
-                    if (DataStore.TryGetAccount(fAccount, SelectedName, out IValueList account))
+                    if (ModelData.TryGetAccount(fAccount, SelectedName, out IValueList account))
                     {
                         ISecurity security = account as ISecurity;
                         CsvReaderWriter.WriteToCSVFile(security, result.FilePath, fReportLogger);

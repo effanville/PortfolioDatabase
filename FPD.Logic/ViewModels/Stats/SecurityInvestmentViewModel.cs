@@ -46,7 +46,7 @@ namespace FPD.Logic.ViewModels.Stats
         public override void UpdateData(IPortfolio portfolio)
         {
             base.UpdateData(portfolio);
-            SecuritiesInvestments = DataStore.TotalInvestments(Totals.Security);
+            SecuritiesInvestments = ModelData.TotalInvestments(Totals.Security);
         }
 
     }

@@ -63,14 +63,14 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteCreateReport()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{DataStore.Name}-report.html", filter: "Html file|*.html|All files|*.*");
+            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{ModelData.Name}-report.html", filter: "Html file|*.html|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".html"))
                 {
                     result.FilePath += ".html";
                 }
-                PortfolioReport portfolioInvestments = new PortfolioReport(DataStore, PortfolioReport.Settings.Default());
+                PortfolioReport portfolioInvestments = new PortfolioReport(ModelData, PortfolioReport.Settings.Default());
                 portfolioInvestments.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, PortfolioReport.ExportSettings.Default(), ReportLogger);
                 fCloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, "Exported Report", result.FilePath));
             }

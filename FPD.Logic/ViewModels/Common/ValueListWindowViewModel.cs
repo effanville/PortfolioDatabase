@@ -61,7 +61,7 @@ namespace FPD.Logic.ViewModels.Common
             _dataUpdater = dataUpdater;
             _viewModelFactory = viewModelFactory;
             var dataNames = new DataNamesViewModel(
-                DataStore, 
+                ModelData, 
                 fUiGlobals.ReportLogger,
                 styles,
                 dataUpdater,
@@ -111,7 +111,7 @@ namespace FPD.Logic.ViewModels.Common
             }
 
             var newVM = _viewModelFactory(
-                DataStore,
+                ModelData,
                 Styles,
                 fUiGlobals, 
                 name, 

@@ -187,7 +187,7 @@ namespace FPD.Logic.ViewModels.Common
             {
                 FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
                 List<object> outputs = null;
-                bool exists = DataStore.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account);
+                bool exists = ModelData.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account);
                 if (result.Success && exists)
                 {
                     outputs = CsvReaderWriter.ReadFromCsv(account, result.FilePath, fReportLogger);
@@ -224,7 +224,7 @@ namespace FPD.Logic.ViewModels.Common
                 FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
-                    if (DataStore.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account))
+                    if (ModelData.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account))
                     {
                         CsvReaderWriter.WriteToCSVFile(account, result.FilePath, fReportLogger);
                     }

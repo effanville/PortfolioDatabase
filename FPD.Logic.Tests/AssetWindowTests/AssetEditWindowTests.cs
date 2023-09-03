@@ -56,8 +56,8 @@ namespace FPD.Logic.Tests.AssetWindowTests
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             context.ViewModel.UpdateData(newData);
 
-            Assert.AreEqual("TestFilePath", context.ViewModel.DataStore.Name);
-            Assert.AreEqual(1, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual("TestFilePath", context.ViewModel.ModelData.Name);
+            Assert.AreEqual(1, context.ViewModel.ModelData.FundsThreadSafe.Count);
         }
 
         [Test]
@@ -76,8 +76,8 @@ namespace FPD.Logic.Tests.AssetWindowTests
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             context.ViewModel.UpdateData(newData);
             Assert.AreEqual(1, context.ViewModel.Tabs.Count);
-            Assert.AreEqual("TestFilePath", context.ViewModel.DataStore.Name);
-            Assert.AreEqual(1, context.ViewModel.DataStore.FundsThreadSafe.Count);
+            Assert.AreEqual("TestFilePath", context.ViewModel.ModelData.Name);
+            Assert.AreEqual(1, context.ViewModel.ModelData.FundsThreadSafe.Count);
         }
 
         [Test]

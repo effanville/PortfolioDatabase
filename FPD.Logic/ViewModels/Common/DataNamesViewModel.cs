@@ -203,7 +203,7 @@ namespace FPD.Logic.ViewModels.Common
             {
                 SelectedName = selectableName;
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Current item is a name {SelectedName.Instance}");
-                SelectedValueHistory = DataStore.NumberData(TypeOfAccount, SelectedName.Instance, ReportLogger).ToList();
+                SelectedValueHistory = ModelData.NumberData(TypeOfAccount, SelectedName.Instance, ReportLogger).ToList();
 
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Successfully updated SelectedItem.");
             }
