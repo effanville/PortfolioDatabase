@@ -2,20 +2,26 @@
 using System.Collections.ObjectModel;
 using System.IO.Abstractions;
 using System.Reflection;
+
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.ViewModelBases;
+
 using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Security;
 using FPD.Logic.ViewModels.Stats;
+
 using FinancialStructures.Database;
+
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+
 using Common.Structure.DataEdit;
+
 using System.Timers;
 
 namespace FPD.Logic.ViewModels
@@ -132,15 +138,24 @@ namespace FPD.Logic.ViewModels
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = isLightTheme;
             Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio));
-            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security, _updater));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts", Account.BankAccount, _updater));
-            Tabs.Add(new SecurityEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension, _updater));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark, _updater));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency, _updater));
-            Tabs.Add(new AssetEditWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, _updater));
-            Tabs.Add(new StatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities",
+                Account.Security, _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSecurityViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts",
+                Account.BankAccount, _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSingleDataViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
+                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSecurityViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
+                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSingleDataViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
+                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSingleDataViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Assets", Account.Asset, 
+                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedAssetViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new StatsViewModel(fUiGlobals, Styles,
+                fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
             Tabs.Add(new StatisticsChartsViewModel(fUiGlobals, ProgramPortfolio, Styles));
-            Tabs.Add(new StatsCreatorWindowViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio, AddObjectAsMainTab));
+            Tabs.Add(new StatsCreatorWindowViewModel(fUiGlobals, Styles,
+                fUserConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio,
+                AddObjectAsMainTab));
 
             foreach (object tab in Tabs)
             {
@@ -149,6 +164,7 @@ namespace FPD.Logic.ViewModels
                     vmb.UpdateRequest += _updater.PerformUpdate;
                 }
             }
+
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
@@ -158,8 +174,10 @@ namespace FPD.Logic.ViewModels
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             AssemblyName name = assembly.GetName();
-            fConfigLocation = fUiGlobals.CurrentFileSystem.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
-            fUserConfiguration = UserConfiguration.LoadFromUserConfigFile(fConfigLocation, fUiGlobals.CurrentFileSystem, ReportLogger);
+            fConfigLocation = fUiGlobals.CurrentFileSystem.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
+            fUserConfiguration =
+                UserConfiguration.LoadFromUserConfigFile(fConfigLocation, fUiGlobals.CurrentFileSystem, ReportLogger);
         }
 
         /// <summary>
@@ -167,11 +185,15 @@ namespace FPD.Logic.ViewModels
         /// </summary>
         public void SaveConfig() => SaveConfig(fConfigLocation, fUiGlobals.CurrentFileSystem);
 
-        internal void SaveConfig(string filePath, IFileSystem fileSystem) => fUserConfiguration.SaveConfiguration(filePath, fileSystem);
+        internal void SaveConfig(string filePath, IFileSystem fileSystem) =>
+            fUserConfiguration.SaveConfiguration(filePath, fileSystem);
 
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
-            var changeType = AggEventArgs.ChangedAccount == Account.All || AggEventArgs.ChangedAccount != e.ChangedAccount ? Account.All : e.ChangedAccount;
+            var changeType =
+                AggEventArgs.ChangedAccount == Account.All || AggEventArgs.ChangedAccount != e.ChangedAccount
+                    ? Account.All
+                    : e.ChangedAccount;
             AggEventArgs = e.ChangedPortfolio
                 ? new PortfolioEventArgs(Account.All, e.UserInitiated)
                 : new PortfolioEventArgs(changeType, e.UserInitiated);
@@ -185,6 +207,7 @@ namespace FPD.Logic.ViewModels
             {
                 return;
             }
+
             var tabs = TabsShallowCopy();
             foreach (object tab in tabs)
             {

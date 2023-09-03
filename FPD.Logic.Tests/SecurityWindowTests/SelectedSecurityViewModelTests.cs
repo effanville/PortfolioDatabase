@@ -21,11 +21,11 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SelectedSecurityViewModel> _viewModelFactory
             = (globals, portfolio, name, dataUpdater) => new SelectedSecurityViewModel(
                 portfolio,
-                TestSetupHelper.DummyReportLogger,
                 null,
                 globals,
                 name,
-                Account.Security);
+                Account.Security,
+                dataUpdater);
 
         [Test]
         public void CanOpenWindow()

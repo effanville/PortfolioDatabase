@@ -8,7 +8,6 @@ using FinancialStructures.NamingStructures;
 
 using FPD.Logic.Tests.TestHelpers;
 using FPD.Logic.Tests.UserInteractions;
-using FPD.Logic.Tests.ViewModelExtensions;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Security;
 
@@ -22,14 +21,25 @@ namespace FPD.Logic.Tests.SecurityWindowTests
     [TestFixture]
     public class SecurityEditWindowTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SecurityEditWindowViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new SecurityEditWindowViewModel(globals, null, portfolio, "Securities", Account.Security, dataUpdater);
+        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, ValueListWindowViewModel> _viewModelFactory
+            = (globals, portfolio, name, dataUpdater) => new ValueListWindowViewModel(globals, null, portfolio, "Securities", Account.Security, dataUpdater, (dataStore,
+                uiStyles,
+                fUiGlobals, 
+                selectedName, 
+                accountType,
+                updater) => new SelectedSecurityViewModel(
+                dataStore,
+                uiStyles,
+                fUiGlobals, 
+                selectedName, 
+                accountType,
+                updater));
 
         [Test]
         public void CanLoadSuccessfully()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SecurityEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -42,7 +52,7 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<SecurityEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -57,7 +67,7 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanUpdateDataAndRemoveOldTab()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<SecurityEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -77,7 +87,7 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanAddTab()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SecurityEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -88,7 +98,7 @@ namespace FPD.Logic.Tests.SecurityWindowTests
             Assert.AreEqual(2, context.ViewModel.Tabs.Count);
             DataNamesViewModel dataNames = context.ViewModel.GetDataNamesViewModel();
             Assert.AreEqual(1, dataNames.DataNames.Count);
-            SelectedSecurityViewModel selected = context.ViewModel.SelectedViewModel(newData);
+            var selected = context.ViewModel.SelectedSecurityTab(newData);
             Assert.IsNotNull(selected);
             Assert.AreEqual(1, selected.TLVM.Valuations.Count);
         }

@@ -163,7 +163,7 @@ namespace FPD.Logic.ViewModels
         public override void UpdateData(IPortfolio portfolio)
         {
             DataStore = portfolio;
-            PortfolioNameText = string.IsNullOrWhiteSpace(portfolio.Name) ? "Unsaved database" : $"{portfolio.Name}";
+            PortfolioNameText = string.IsNullOrWhiteSpace(portfolio.Name) ? "Unsaved database" : portfolio.Name;
             HasValues = portfolio.NumberOf(Account.All) != 0;
             SecurityTotalText = $"Total Securities: {portfolio.NumberOf(Account.Security)}";
             SecurityAmountText = $"Total Value: {portfolio.TotalValue(Totals.Security).WithCurrencySymbol(portfolio.BaseCurrency)}";

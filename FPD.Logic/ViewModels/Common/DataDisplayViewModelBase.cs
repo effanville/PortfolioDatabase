@@ -80,8 +80,8 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string header, Account dataType)
-            : base(header, database)
+        public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string title, Account dataType)
+            : base(title, database)
         {
             fUiGlobals = globals;
             Styles = styles;
@@ -91,8 +91,8 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string header)
-            : base(header, database)
+        public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string title)
+            : base(title, database)
         {
             fUiGlobals = globals;
             Styles = styles;

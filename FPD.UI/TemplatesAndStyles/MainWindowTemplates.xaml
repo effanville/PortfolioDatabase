@@ -2,22 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:view="clr-namespace:FPD.UI.Windows"
                     xmlns:vm="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
-                    xmlns:vms="clr-namespace:FPD.Logic.ViewModels.Security;assembly=FPD.Logic"
                     xmlns:vmStats="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=FPD.Logic"
                     xmlns:cvm="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
                     xmlns:viewCommon="clr-namespace:FPD.UI.Windows"
-                    xmlns:viewSecurity="clr-namespace:FPD.UI.Windows.Security"
-                    xmlns:vma="clr-namespace:FPD.Logic.ViewModels.Asset;assembly=FPD.Logic"
-                    xmlns:viewAsset="clr-namespace:FPD.UI.Windows.Asset"
                     xmlns:statsView="clr-namespace:FPD.UI.Windows.Stats">
     <DataTemplate DataType="{x:Type vm:BasicDataViewModel}">
         <view:BasicDataView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vms:SecurityEditWindowViewModel}">
-        <viewSecurity:SecurityEditWindow />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vma:AssetEditWindowViewModel}">
-        <viewAsset:AssetEditWindow />
     </DataTemplate>
     <DataTemplate DataType="{x:Type cvm:ValueListWindowViewModel}">
         <viewCommon:SingleValueEditWindow />

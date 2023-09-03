@@ -22,17 +22,20 @@ namespace FPD.Logic.Tests.AssetWindowTests
     [TestFixture]
     public class AssetEditWindowTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, AssetEditWindowViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new AssetEditWindowViewModel(
+        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, ValueListWindowViewModel> _viewModelFactory
+            = (globals, portfolio, name, dataUpdater) => new ValueListWindowViewModel(
                 globals,
                 null,
                 portfolio,
-                dataUpdater);
+                "Asset",
+                Account.Asset,
+                dataUpdater,
+                (dataStore, uiStyles, uiGlobals, selectedName, accountType, updater) => new SelectedAssetViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, updater));
         [Test]
         public void CanLoadSuccessfully()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<AssetEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -46,7 +49,7 @@ namespace FPD.Logic.Tests.AssetWindowTests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<AssetEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -61,7 +64,7 @@ namespace FPD.Logic.Tests.AssetWindowTests
         public void CanUpdateDataAndRemoveOldTab()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<AssetEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -81,7 +84,7 @@ namespace FPD.Logic.Tests.AssetWindowTests
         public void CanAddTab()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<AssetEditWindowViewModel>(
+            var context = new ViewModelTestContext<ValueListWindowViewModel>(
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -92,7 +95,7 @@ namespace FPD.Logic.Tests.AssetWindowTests
             Assert.AreEqual(2, context.ViewModel.Tabs.Count);
             DataNamesViewModel dataNames = context.ViewModel.GetDataNamesViewModel();
             Assert.AreEqual(1, dataNames.DataNames.Count);
-            SelectedAssetViewModel selected = context.ViewModel.SelectedViewModel(newData);
+            SelectedAssetViewModel selected = context.ViewModel.SelectedAssetTab(newData);
             Assert.IsNotNull(selected);
             Assert.AreEqual(1, selected.ValuesTLVM.Valuations.Count);
         }

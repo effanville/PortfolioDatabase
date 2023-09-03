@@ -24,10 +24,11 @@ namespace FPD.Logic.Tests.AssetWindowTests
         private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SelectedAssetViewModel> _viewModelFactory
             = (globals, portfolio, name, dataUpdater) => new SelectedAssetViewModel(
                 portfolio,
-                TestSetupHelper.DummyReportLogger,
                 null,
                 globals,
-                name);
+                name,
+                Account.Asset,
+                dataUpdater);
 
         [Test]
         public void CanOpenWindow()

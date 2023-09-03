@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Common.UI;
@@ -17,6 +18,12 @@ namespace FPD.Logic.ViewModels.Common
     public class ValueListWindowViewModel : DataDisplayViewModelBase
     {
         private readonly IUpdater<IPortfolio> _dataUpdater;
+
+        private readonly Func<IPortfolio, UiStyles,
+            UiGlobals,
+            NameData,
+            Account,
+            IUpdater<IPortfolio>, TabViewModelBase<IPortfolio>> _viewModelFactory;
 
         /// <summary>
         /// The tabs to display.
@@ -37,19 +44,31 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ValueListWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, string title, Account accountType, IUpdater<IPortfolio> dataUpdater)
+        public ValueListWindowViewModel(
+            UiGlobals globals,
+            UiStyles styles, 
+            IPortfolio portfolio,
+            string title,
+            Account accountType, 
+            IUpdater<IPortfolio> dataUpdater,
+            Func<IPortfolio, UiStyles,
+            UiGlobals,
+            NameData,
+            Account,
+            IUpdater<IPortfolio>, TabViewModelBase<IPortfolio>> viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
         {
             _dataUpdater = dataUpdater;
-            UpdateData(portfolio);
-            Tabs.Add(new DataNamesViewModel(DataStore, fUiGlobals.ReportLogger, styles, dataUpdater, (name) => LoadTabFunc(name), accountType));
-            foreach (object tab in Tabs)
-            {
-                if (tab is ViewModelBase<IPortfolio> vmb)
-                {
-                    vmb.UpdateRequest += dataUpdater.PerformUpdate;
-                }
-            }
+            _viewModelFactory = viewModelFactory;
+            var dataNames = new DataNamesViewModel(
+                DataStore, 
+                fUiGlobals.ReportLogger,
+                styles,
+                dataUpdater,
+                (name) => LoadTabFunc(name),
+                accountType);
+            Tabs.Add(dataNames);
+            dataNames.UpdateRequest += dataUpdater.PerformUpdate;
             SelectedIndex = 0;
         }
 
@@ -58,36 +77,47 @@ namespace FPD.Logic.ViewModels.Common
         {
             base.UpdateData(dataToDisplay);
             List<object> removableTabs = new List<object>();
-            if (Tabs != null)
+            if (Tabs == null)
             {
-                foreach (object item in Tabs)
-                {
-                    if (item is TabViewModelBase<IPortfolio> viewModel)
-                    {
-                        viewModel.UpdateData(dataToDisplay, tabItem => removableTabs.Add(tabItem));
-                    }
-                }
+                return;
+            }
 
-                if (removableTabs.Any())
+            foreach (object item in Tabs)
+            {
+                if (item is TabViewModelBase<IPortfolio> viewModel)
                 {
-                    foreach (object tab in removableTabs)
-                    {
-                        fUiGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
-                    }
-
-                    removableTabs.Clear();
+                    viewModel.UpdateData(dataToDisplay, tabItem => removableTabs.Add(tabItem));
                 }
             }
+
+            if (!removableTabs.Any())
+            {
+                return;
+            }
+
+            foreach (object tab in removableTabs)
+            {
+                fUiGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
+            }
+
+            removableTabs.Clear();
         }
 
         internal void LoadTabFunc(object obj)
         {
-            if (obj is NameData name)
+            if (obj is not NameData name)
             {
-                var newVM = new SelectedSingleDataViewModel(DataStore, Styles, fUiGlobals, name, DataType, _dataUpdater);
-                newVM.UpdateRequest += _dataUpdater.PerformUpdate;
-                Tabs.Add(newVM);
+                return;
             }
+
+            var newVM = _viewModelFactory(
+                DataStore,
+                Styles,
+                fUiGlobals, 
+                name, 
+                DataType,
+                _dataUpdater);
+            Tabs.Add(newVM);
         }
 
         /// <summary>

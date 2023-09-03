@@ -16,14 +16,26 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [TestFixture]
     public class ValueListWindowViewModelTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, ViewModels.Common.ValueListWindowViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new ViewModels.Common.ValueListWindowViewModel(
+        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, ValueListWindowViewModel> _viewModelFactory
+            = (globals, portfolio, name, dataUpdater) => new ValueListWindowViewModel(
                 globals,
                 null,
                 portfolio,
                 "Title",
                 Account.Security,
-                dataUpdater);
+                dataUpdater,
+                (dataStore,
+                    uiStyles,
+                    fUiGlobals, 
+                    selectedName, 
+                    accountType,
+                    updater) => new SelectedSingleDataViewModel(
+                    dataStore,
+                    uiStyles,
+                    fUiGlobals, 
+                    selectedName, 
+                    accountType,
+                    updater));
 
         [Test]
         public void CanLoadSuccessfully()

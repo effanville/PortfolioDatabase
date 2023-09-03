@@ -128,10 +128,16 @@ namespace FPD.Logic.ViewModels.Security
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SelectedSecurityViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName, Account account)
+        public SelectedSecurityViewModel(
+            IPortfolio portfolio, 
+            UiStyles styles, 
+            UiGlobals globals, 
+            NameData selectedName, 
+            Account account,
+            IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
         {
-            fReportLogger = reportLogger;
+            fReportLogger = globals.ReportLogger;
             Styles = styles;
             fUiGlobals = globals;
             SelectedName = selectedName;
@@ -142,6 +148,7 @@ namespace FPD.Logic.ViewModels.Security
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             fAccount = account;
+            UpdateRequest += dataUpdater.PerformUpdate;
 
             if (portfolio.TryGetAccount(fAccount, SelectedName, out IValueList desired))
             {
@@ -150,6 +157,7 @@ namespace FPD.Logic.ViewModels.Security
                 TradePriceHeader = $"Price({currencySymbol})";
                 TradeTotalCostHeader = $"Total Cost({currencySymbol})";
                 TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
                 var securityStats = portfolio.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
                 SecurityStats = new AccountStatsViewModel(securityStats, Styles);
             }
@@ -159,6 +167,7 @@ namespace FPD.Logic.ViewModels.Security
                 TradePriceHeader = $"Price({currencySymbol})";
                 TradeTotalCostHeader = $"Total Cost({currencySymbol})";
                 TLVM = new TimeListViewModel(null, $"UnitPrice({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
                 SecurityStats = new AccountStatsViewModel(null, Styles);
             }
 

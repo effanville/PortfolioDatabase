@@ -35,8 +35,8 @@ namespace FPD.Logic.ViewModels.Asset
         /// <summary>
         /// The name data of the security this window details.
         /// </summary>
-        internal readonly NameData fSelectedName;
-        private readonly Account fAccountType = Account.Asset;
+        internal readonly NameData SelectedName;
+        private readonly Account fAccountType;
         private readonly IReportLogger fReportLogger;
         private readonly UiGlobals fUiGlobals;
 
@@ -115,30 +115,43 @@ namespace FPD.Logic.ViewModels.Asset
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SelectedAssetViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName)
+        public SelectedAssetViewModel(
+            IPortfolio portfolio,
+            UiStyles styles, 
+            UiGlobals globals, 
+            NameData selectedName,
+            Account dataType,
+            IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
         {
-            fReportLogger = reportLogger;
+            fReportLogger = globals.ReportLogger;
             Styles = styles;
             fUiGlobals = globals;
-            fSelectedName = selectedName;
+            SelectedName = selectedName;
+            fAccountType = Account.Asset;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-
-            if (portfolio.TryGetAccount(fAccountType, fSelectedName, out IValueList desired))
+            UpdateRequest += dataUpdater.PerformUpdate;
+            if (portfolio.TryGetAccount(fAccountType, SelectedName, out IValueList desired))
             {
                 IAmortisableAsset asset = desired as IAmortisableAsset;
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency ?? portfolio.BaseCurrency);
-                ValuesTLVM = new TimeListViewModel(asset.Values, $"Values({currencySymbol})", Styles, value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
-                DebtTLVM = new TimeListViewModel(asset.Debt, $"Debt({currencySymbol})", Styles, value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
-                PaymentsTLVM = new TimeListViewModel(asset.Payments, $"Payments({currencySymbol})", Styles, value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
+                ValuesTLVM = new TimeListViewModel(asset.Values, $"Values({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditValues(SelectedName, old, newVal));
+                DebtTLVM = new TimeListViewModel(asset.Debt, $"Debt({currencySymbol})", Styles, value => DeleteDebtValue(SelectedName, value), (old, newVal) => ExecuteAddEditDebt(SelectedName, old, newVal));
+                PaymentsTLVM = new TimeListViewModel(asset.Payments, $"Payments({currencySymbol})", Styles, value => DeletePaymentValue(SelectedName, value), (old, newVal) => ExecuteAddEditPayment(SelectedName, old, newVal));
+                ValuesTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+                DebtTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+                PaymentsTLVM.UpdateRequest += dataUpdater.PerformUpdate;
             }
             else
             {
                 string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
-                ValuesTLVM = new TimeListViewModel(null, $"Values({currencySymbol})", Styles, value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
-                DebtTLVM = new TimeListViewModel(null, $"Debt({currencySymbol})", Styles, value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
-                PaymentsTLVM = new TimeListViewModel(null, $"Payments({currencySymbol})", Styles, value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
+                ValuesTLVM = new TimeListViewModel(null, $"Values({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditValues(SelectedName, old, newVal));
+                DebtTLVM = new TimeListViewModel(null, $"Debt({currencySymbol})", Styles, value => DeleteDebtValue(SelectedName, value), (old, newVal) => ExecuteAddEditDebt(SelectedName, old, newVal));
+                PaymentsTLVM = new TimeListViewModel(null, $"Payments({currencySymbol})", Styles, value => DeletePaymentValue(SelectedName, value), (old, newVal) => ExecuteAddEditPayment(SelectedName, old, newVal));
+                ValuesTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+                DebtTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+                PaymentsTLVM.UpdateRequest += dataUpdater.PerformUpdate;
             }
 
             UpdateData(portfolio, null);
@@ -190,10 +203,10 @@ namespace FPD.Logic.ViewModels.Asset
 
         private void ExecuteDownloadCommand()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {fSelectedName} - a {fAccountType}");
-            if (fSelectedName != null)
+            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {fAccountType}");
+            if (SelectedName != null)
             {
-                NameData names = fSelectedName;
+                NameData names = SelectedName;
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccountType, programPortfolio, names, fReportLogger).ConfigureAwait(false)));
             }
         }
@@ -208,13 +221,13 @@ namespace FPD.Logic.ViewModels.Asset
 
         private void ExecuteExportCsvData()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {fSelectedName} exporting data to csv.");
-            if (fSelectedName != null)
+            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} exporting data to csv.");
+            if (SelectedName != null)
             {
                 FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
-                    if (DataStore.TryGetAccount(fAccountType, fSelectedName, out IValueList account))
+                    if (DataStore.TryGetAccount(fAccountType, SelectedName, out IValueList account))
                     {
                         IAmortisableAsset security = account as IAmortisableAsset;
                         CsvReaderWriter.WriteToCSVFile(security, result.FilePath, fReportLogger);
@@ -254,11 +267,11 @@ namespace FPD.Logic.ViewModels.Asset
         /// <inheritdoc/>
         public override void UpdateData(IPortfolio dataToDisplay, Action<object> removeTab)
         {
-            _ = fReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {fSelectedName} updating data.");
+            _ = fReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} updating data.");
             base.UpdateData(dataToDisplay);
-            if (fSelectedName != null)
+            if (SelectedName != null)
             {
-                if (!dataToDisplay.TryGetAccount(fAccountType, fSelectedName, out IValueList desired))
+                if (!dataToDisplay.TryGetAccount(fAccountType, SelectedName, out IValueList desired))
                 {
                     removeTab?.Invoke(this);
                     return;
@@ -267,8 +280,8 @@ namespace FPD.Logic.ViewModels.Asset
                 IAmortisableAsset asset = desired as IAmortisableAsset;
                 ValuesTLVM?.UpdateData(asset.Values);
                 DebtTLVM?.UpdateData(asset.Debt);
-                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccountType, fSelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
-                Values = dataToDisplay.NumberData(fAccountType, fSelectedName, fReportLogger).ToList();
+                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccountType, SelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
+                Values = dataToDisplay.NumberData(fAccountType, SelectedName, fReportLogger).ToList();
             }
         }
 
