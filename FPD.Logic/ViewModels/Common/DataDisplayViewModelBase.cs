@@ -17,11 +17,6 @@ namespace FPD.Logic.ViewModels.Common
         private UiStyles fStyles;
 
         /// <summary>
-        /// The globals for this view model.
-        /// </summary>
-        protected readonly UiGlobals fUiGlobals;
-
-        /// <summary>
         /// The user configuration for this view model.
         /// </summary>
         protected IConfiguration fUserConfiguration;
@@ -40,10 +35,6 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public virtual bool Closable => false;
 
-        /// <summary>
-        /// The logging mechanism.
-        /// </summary>
-        public IReportLogger ReportLogger => fUiGlobals.ReportLogger;
 
         /// <summary>
         /// The Account type the view model stores data pertaining to.
@@ -57,9 +48,8 @@ namespace FPD.Logic.ViewModels.Common
         /// Default constructor.
         /// </summary>
         public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IConfiguration config, IPortfolio database, string header, Account dataType)
-            : base(header, database)
+            : base(header, database, globals)
         {
-            fUiGlobals = globals;
             Styles = styles;
             fUserConfiguration = config;
             DataType = dataType;
@@ -69,9 +59,8 @@ namespace FPD.Logic.ViewModels.Common
         /// Default constructor.
         /// </summary>
         public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IConfiguration config, IPortfolio database, string header)
-            : base(header, database)
+            : base(header, database, globals)
         {
-            fUiGlobals = globals;
             Styles = styles;
             fUserConfiguration = config;
             DataType = Account.All;
@@ -81,9 +70,8 @@ namespace FPD.Logic.ViewModels.Common
         /// Default constructor.
         /// </summary>
         public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string title, Account dataType)
-            : base(title, database)
+            : base(title, database, globals)
         {
-            fUiGlobals = globals;
             Styles = styles;
             DataType = dataType;
         }
@@ -92,9 +80,8 @@ namespace FPD.Logic.ViewModels.Common
         /// Default constructor.
         /// </summary>
         public DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string title)
-            : base(title, database)
+            : base(title, database, globals)
         {
-            fUiGlobals = globals;
             Styles = styles;
             DataType = Account.All;
         }

@@ -37,8 +37,6 @@ namespace FPD.Logic.ViewModels.Asset
         /// </summary>
         internal readonly NameData SelectedName;
         private readonly Account fAccountType;
-        private readonly IReportLogger fReportLogger;
-        private readonly UiGlobals fUiGlobals;
 
         private UiStyles fStyles;
 
@@ -122,11 +120,9 @@ namespace FPD.Logic.ViewModels.Asset
             NameData selectedName,
             Account dataType,
             IUpdater<IPortfolio> dataUpdater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals)
         {
-            fReportLogger = globals.ReportLogger;
             Styles = styles;
-            fUiGlobals = globals;
             SelectedName = selectedName;
             fAccountType = Account.Asset;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
@@ -161,11 +157,11 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteData(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteData(fAccountType, name.ToTwoName(), value.Day, ReportLogger)));
             }
             else
             {
-                _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
             }
         }
 
@@ -173,11 +169,11 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetDebt(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetDebt(fAccountType, name.ToTwoName(), value.Day, ReportLogger)));
             }
             else
             {
-                _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
             }
         }
 
@@ -185,11 +181,11 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetPayment(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetPayment(fAccountType, name.ToTwoName(), value.Day, ReportLogger)));
             }
             else
             {
-                _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
             }
         }
 
@@ -203,11 +199,11 @@ namespace FPD.Logic.ViewModels.Asset
 
         private void ExecuteDownloadCommand()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {fAccountType}");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {fAccountType}");
             if (SelectedName != null)
             {
                 NameData names = SelectedName;
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccountType, programPortfolio, names, fReportLogger).ConfigureAwait(false)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccountType, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
             }
         }
 
@@ -221,20 +217,20 @@ namespace FPD.Logic.ViewModels.Asset
 
         private void ExecuteExportCsvData()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} exporting data to csv.");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} exporting data to csv.");
             if (SelectedName != null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
                     if (ModelData.TryGetAccount(fAccountType, SelectedName, out IValueList account))
                     {
                         IAmortisableAsset security = account as IAmortisableAsset;
-                        CsvReaderWriter.WriteToCSVFile(security, result.FilePath, fReportLogger);
+                        CsvReaderWriter.WriteToCSVFile(security, result.FilePath, ReportLogger);
                     }
                     else
                     {
-                        _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Could not find {fAccountType}.");
+                        _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Could not find {fAccountType}.");
                     }
                 }
             }
@@ -244,7 +240,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, ReportLogger)));
             }
         }
 
@@ -252,7 +248,7 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, ReportLogger)));
             }
         }
 
@@ -260,18 +256,18 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, ReportLogger)));
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay, Action<object> removeTab)
+        public override void UpdateData(IPortfolio modelData, Action<object> removeTab)
         {
-            _ = fReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} updating data.");
-            base.UpdateData(dataToDisplay);
+            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} updating data.");
+            base.UpdateData(modelData);
             if (SelectedName != null)
             {
-                if (!dataToDisplay.TryGetAccount(fAccountType, SelectedName, out IValueList desired))
+                if (!modelData.TryGetAccount(fAccountType, SelectedName, out IValueList desired))
                 {
                     removeTab?.Invoke(this);
                     return;
@@ -280,15 +276,15 @@ namespace FPD.Logic.ViewModels.Asset
                 IAmortisableAsset asset = desired as IAmortisableAsset;
                 ValuesTLVM?.UpdateData(asset.Values);
                 DebtTLVM?.UpdateData(asset.Debt);
-                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccountType, SelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
-                Values = dataToDisplay.NumberData(fAccountType, SelectedName, fReportLogger).ToList();
+                SecurityStats = modelData.GetStats(DateTime.Today, fAccountType, SelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
+                Values = modelData.NumberData(fAccountType, SelectedName, ReportLogger).ToList();
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay)
+        public override void UpdateData(IPortfolio modelData)
         {
-            UpdateData(dataToDisplay, null);
+            UpdateData(modelData, null);
         }
     }
 }

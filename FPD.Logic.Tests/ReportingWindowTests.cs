@@ -21,7 +21,7 @@ namespace FPD.Logic.Tests
         public void ReportsSync()
         {
             ReportingWindowViewModel viewModel = CreateViewModel("nothing");
-            viewModel.Reports.AddErrorReport(ReportSeverity.Critical, ReportType.Error, "Unknown", "Is this added?");
+            viewModel.ModelData.AddErrorReport(ReportSeverity.Critical, ReportType.Error, "Unknown", "Is this added?");
             viewModel.SyncReports();
 
             Assert.AreEqual(1, viewModel.ReportsToView.Count(), "Viewable reports should have one report added.");
@@ -39,7 +39,7 @@ namespace FPD.Logic.Tests
             ReportingWindowViewModel viewModel = CreateViewModel("nothing");
             viewModel.UpdateReport(ReportSeverity.Useful, ReportType.Error, "Unknown", "Is this added?");
 
-            Assert.AreEqual(1, viewModel.Reports.GetReports().Count, "Reports should have a report added.");
+            Assert.AreEqual(1, viewModel.ModelData.GetReports().Count, "Reports should have a report added.");
             Assert.AreEqual(1, viewModel.ReportsToView.Count(), "Viewable reports should have one report added.");
             Assert.AreEqual(ReportType.Error, viewModel.ReportsToView.Single().ErrorType);
             Assert.AreEqual("Unknown", viewModel.ReportsToView.Single().ErrorLocation);
@@ -56,11 +56,11 @@ namespace FPD.Logic.Tests
             viewModel.UpdateReport(ReportSeverity.Useful, ReportType.Error, "Unknown", "Is this added?");
             viewModel.UpdateReport(ReportSeverity.Useful, ReportType.Error, "Unknown", "Is this also added?");
 
-            Assert.AreEqual(2, viewModel.Reports.GetReports().Count, "Reports should have a report added.");
+            Assert.AreEqual(2, viewModel.ModelData.GetReports().Count, "Reports should have a report added.");
             Assert.AreEqual(2, viewModel.ReportsToView.Count(), "Viewable reports should have one report added.");
 
             viewModel.ClearReportsCommand.Execute(3);
-            Assert.AreEqual(0, viewModel.Reports.GetReports().Count, "Reports should have been cleared.");
+            Assert.AreEqual(0, viewModel.ModelData.GetReports().Count, "Reports should have been cleared.");
             Assert.AreEqual(0, viewModel.ReportsToView.Count(), "Viewable reports should have been cleared.");
         }
 
@@ -75,12 +75,12 @@ namespace FPD.Logic.Tests
             viewModel.UpdateReport(ReportSeverity.Useful, ReportType.Error, "Unknown", "Is this added?");
             viewModel.UpdateReport(ReportSeverity.Useful, ReportType.Error, "Unknown", "Is this also added?");
 
-            Assert.AreEqual(2, viewModel.Reports.GetReports().Count, "Reports should have a report added.");
+            Assert.AreEqual(2, viewModel.ModelData.GetReports().Count, "Reports should have a report added.");
             Assert.AreEqual(2, viewModel.ReportsToView.Count(), "Viewable reports should have one report added.");
 
             viewModel.IndexToDelete = 1;
             viewModel.DeleteReport();
-            Assert.AreEqual(1, viewModel.Reports.GetReports().Count, "Reports should have been cleared.");
+            Assert.AreEqual(1, viewModel.ModelData.GetReports().Count, "Reports should have been cleared.");
             Assert.AreEqual(1, viewModel.ReportsToView.Count(), "Viewable reports should have been cleared.");
             Assert.AreEqual(ReportType.Error, viewModel.ReportsToView.Single().ErrorType);
             Assert.AreEqual("Unknown", viewModel.ReportsToView.Single().ErrorLocation);

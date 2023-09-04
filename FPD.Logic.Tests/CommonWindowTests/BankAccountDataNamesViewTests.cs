@@ -22,7 +22,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
         private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
             = (globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
                 portfolio,
-                TestSetupHelper.DummyReportLogger,
+                globals,
                 null,
                 dataUpdater,
                 obj => { },
@@ -73,7 +73,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
         }
 
         [Test]
-        [Ignore("IncompeteArchitecture - Downloader does not currently allow for use in test environment.")]
+        [Ignore("IncompleteArchitecture - Downloader does not currently allow for use in test environment.")]
         public void CanDownload()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();

@@ -48,7 +48,7 @@ namespace FPD.Logic.ViewModels
 
         private void ExecuteFileSelect()
         {
-            FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
             if (result.Success)
             {
                 DisplayStats = new Uri(result.FilePath);

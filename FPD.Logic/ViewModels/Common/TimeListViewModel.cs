@@ -64,7 +64,7 @@ namespace FPD.Logic.ViewModels.Common
             UiStyles styles,
             Action<DailyValuation> deleteValueAction,
             Action<DailyValuation, DailyValuation> addEditValueAction)
-            : base("TLVM", null)
+            : base("TLVM", timeList, null)
         {
             _deleteValueAction = deleteValueAction;
             _addEditValueAction = addEditValueAction;
@@ -79,11 +79,11 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Routine to update the data in the display.
         /// </summary>
-        public override void UpdateData(TimeList timeList)
+        public override void UpdateData(TimeList modelData)
         {
-            base.UpdateData(timeList);
+            base.UpdateData(modelData);
             Valuations = null;
-            Valuations = timeList?.Values() ?? new List<DailyValuation>();
+            Valuations = modelData?.Values() ?? new List<DailyValuation>();
         }
 
         /// <summary>

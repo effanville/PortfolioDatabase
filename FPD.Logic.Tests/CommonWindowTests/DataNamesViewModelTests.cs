@@ -19,7 +19,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
         private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
             = (globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
                 portfolio,
-                TestSetupHelper.DummyReportLogger,
+                globals,
                 null,
                 dataUpdater,
                 obj => { },
@@ -61,7 +61,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
                 _viewModelFactory);
             IPortfolio output = TestSetupHelper.CreateBasicDataBase();
             var dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            DataNamesViewModel viewModel = new DataNamesViewModel(output, TestSetupHelper.DummyReportLogger, null, dataUpdater, TestSetupHelper.DummyOpenTab, Account.Security);
+            DataNamesViewModel viewModel = new DataNamesViewModel(output, TestSetupHelper.CreateGlobalsMock(null,null, null,TestSetupHelper.DummyReportLogger ), null, dataUpdater, TestSetupHelper.DummyOpenTab, Account.Security);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             Assert.AreEqual(1, viewModel.DataNames.Count);
         }

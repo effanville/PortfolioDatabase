@@ -38,7 +38,7 @@ namespace FPD.Logic.ViewModels.Common
         public int SelectedIndex
         {
             get => _selectedIndex;
-            set => SetAndNotify(ref _selectedIndex, value, nameof(SelectedIndex));
+            set => SetAndNotify(ref _selectedIndex, value);
         }
 
         /// <summary>
@@ -62,10 +62,10 @@ namespace FPD.Logic.ViewModels.Common
             _viewModelFactory = viewModelFactory;
             var dataNames = new DataNamesViewModel(
                 ModelData, 
-                fUiGlobals.ReportLogger,
+                DisplayGlobals,
                 styles,
                 dataUpdater,
-                (name) => LoadTabFunc(name),
+                LoadTabFunc,
                 accountType);
             Tabs.Add(dataNames);
             dataNames.UpdateRequest += dataUpdater.PerformUpdate;
@@ -73,9 +73,9 @@ namespace FPD.Logic.ViewModels.Common
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay)
+        public override void UpdateData(IPortfolio modelData)
         {
-            base.UpdateData(dataToDisplay);
+            base.UpdateData(modelData);
             List<object> removableTabs = new List<object>();
             if (Tabs == null)
             {
@@ -86,7 +86,7 @@ namespace FPD.Logic.ViewModels.Common
             {
                 if (item is TabViewModelBase<IPortfolio> viewModel)
                 {
-                    viewModel.UpdateData(dataToDisplay, tabItem => removableTabs.Add(tabItem));
+                    viewModel.UpdateData(modelData, tabItem => removableTabs.Add(tabItem));
                 }
             }
 
@@ -97,7 +97,7 @@ namespace FPD.Logic.ViewModels.Common
 
             foreach (object tab in removableTabs)
             {
-                fUiGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
+                DisplayGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
             }
 
             removableTabs.Clear();
@@ -113,7 +113,7 @@ namespace FPD.Logic.ViewModels.Common
             var newVM = _viewModelFactory(
                 ModelData,
                 Styles,
-                fUiGlobals, 
+                DisplayGlobals, 
                 name, 
                 DataType,
                 _dataUpdater);

@@ -43,9 +43,9 @@ namespace FPD.Logic.ViewModels.Stats
         /// The update routine. Updates the values stored.
         /// <inheritdoc/>
         /// </summary>
-        public override void UpdateData(IPortfolio portfolio)
+        public override void UpdateData(IPortfolio modelData)
         {
-            base.UpdateData(portfolio);
+            base.UpdateData(modelData);
             SecuritiesInvestments = ModelData.TotalInvestments(Totals.Security);
         }
 

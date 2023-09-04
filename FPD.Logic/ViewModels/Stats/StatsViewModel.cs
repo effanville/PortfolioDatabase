@@ -22,10 +22,10 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
-        private List<AccountStatistics> fStats;
+        private List<AccountStatistics> _stats;
 
-        private bool fDisplayValueFunds = true;
-        private List<Selectable<Statistic>> fStatisticNames;
+        private bool _displayValueFunds = true;
+        private List<Selectable<Statistic>> _statisticNames;
 
         /// <summary>
         /// Event handler controlling property changed
@@ -37,8 +37,8 @@ namespace FPD.Logic.ViewModels.Stats
         /// </summary>
         public bool DisplayValueFunds
         {
-            get => fDisplayValueFunds;
-            set => SetAndNotify(ref fDisplayValueFunds, value, nameof(DisplayValueFunds));
+            get => _displayValueFunds;
+            set => SetAndNotify(ref _displayValueFunds, value, nameof(DisplayValueFunds));
         }
 
         /// <summary>
@@ -46,10 +46,10 @@ namespace FPD.Logic.ViewModels.Stats
         /// </summary>
         public List<AccountStatistics> Stats
         {
-            get => fStats;
+            get => _stats;
             set
             {
-                SetAndNotify(ref fStats, value, nameof(Stats));
+                SetAndNotify(ref _stats, value);
                 StatisticsChanged?.Invoke(null, new PropertyChangedEventArgs(nameof(Stats)));
             }
         }
@@ -59,11 +59,11 @@ namespace FPD.Logic.ViewModels.Stats
         /// </summary>
         public List<Selectable<Statistic>> StatisticNames
         {
-            get => fStatisticNames;
-            set => SetAndNotify(ref fStatisticNames, value, nameof(StatisticNames));
+            get => _statisticNames;
+            set => SetAndNotify(ref _statisticNames, value);
         }
 
-        private Statistic[] StatsToView;
+        private Statistic[] _statsToView;
 
         /// <summary>
         /// Default constructor.
@@ -84,7 +84,7 @@ namespace FPD.Logic.ViewModels.Stats
                 fUserConfiguration.HasLoaded = true;
             }
 
-            StatsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
+            _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
             UpdateData(portfolio);
 
             StatisticNames.ForEach(stat => stat.SelectedChanged += OnSelectedChanged);
@@ -97,8 +97,8 @@ namespace FPD.Logic.ViewModels.Stats
         private void OnSelectedChanged(object sender, EventArgs e)
         {
             fUserConfiguration.StoreConfiguration(this);
-            StatsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
-            UpdateData();
+            _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
+            UpdateData(null);
         }
 
         /// <summary>
@@ -106,26 +106,30 @@ namespace FPD.Logic.ViewModels.Stats
         /// </summary>
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(StatisticNames) || e.PropertyName == nameof(DisplayValueFunds))
+            if (e.PropertyName != nameof(StatisticNames) && e.PropertyName != nameof(DisplayValueFunds))
             {
-                fUserConfiguration.StoreConfiguration(this);
-                await Task.Run(() => UpdateData());
+                return;
             }
+
+            fUserConfiguration.StoreConfiguration(this);
+            await Task.Run(() => UpdateData(null));
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay = null)
+        public override void UpdateData(IPortfolio modelData)
         {
-            if (dataToDisplay != null)
+            if (modelData != null)
             {
-                base.UpdateData(dataToDisplay);
+                base.UpdateData(modelData);
             }
 
-            var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: StatsToView);
-            fUiGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
-            void AssignStats(List<AccountStatistics> stats)
+            var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
+            DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
+            return;
+
+            void AssignStats(List<AccountStatistics> statistics)
             {
-                Stats = stats;
+                Stats = statistics;
             }
         }
     }

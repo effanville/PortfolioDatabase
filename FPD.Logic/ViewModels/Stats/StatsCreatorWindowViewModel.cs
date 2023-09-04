@@ -10,7 +10,6 @@ using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
 using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Export.Investments;
 
 namespace FPD.Logic.ViewModels.Stats
@@ -20,40 +19,40 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsCreatorWindowViewModel : DataDisplayViewModelBase
     {
-        private ExportHistoryViewModel fHistoryExport;
+        private ExportHistoryViewModel _historyExport;
 
         /// <summary>
         /// The options for exporting the history of the portfolio.
         /// </summary>
         public ExportHistoryViewModel ExportHistoryOptions
         {
-            get => fHistoryExport;
-            set => SetAndNotify(ref fHistoryExport, value, nameof(ExportHistoryOptions));
+            get => _historyExport;
+            set => SetAndNotify(ref _historyExport, value);
         }
 
-        private ExportStatsViewModel fDisplay;
+        private ExportStatsViewModel _display;
 
         /// <summary>
         /// The options for exporting an html page.
         /// </summary>
         public ExportStatsViewModel StatsPageExportOptions
         {
-            get => fDisplay;
-            set => SetAndNotify(ref fDisplay, value, nameof(StatsPageExportOptions));
+            get => _display;
+            set => SetAndNotify(ref _display, value);
         }
 
-        private ExportReportViewModel fExportReport;
+        private ExportReportViewModel _exportReport;
 
         /// <summary>
         /// The options for exporting an html page.
         /// </summary>
         public ExportReportViewModel ExportReportOptions
         {
-            get => fExportReport;
-            set => SetAndNotify(ref fExportReport, value, nameof(ExportReportOptions));
+            get => _exportReport;
+            set => SetAndNotify(ref _exportReport, value);
         }
 
-        private readonly Action<object> fLoadTab;
+        private readonly Action<object> _loadTab;
 
         /// <summary>
         /// Default constructor.
@@ -72,16 +71,16 @@ namespace FPD.Logic.ViewModels.Stats
                 fUserConfiguration.HasLoaded = true;
             }
 
-            fLoadTab = loadTab;
+            _loadTab = loadTab;
 
-            StatsPageExportOptions = new ExportStatsViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsOptions], ModelData, obj => fLoadTab(obj));
+            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsOptions], ModelData, obj => _loadTab(obj));
             if (!fUserConfiguration.ChildConfigurations.TryGetValue(UserConfiguration.ReportOptions, out _))
             {
                 fUserConfiguration.ChildConfigurations.Add(UserConfiguration.ReportOptions, new ExportReportConfiguration());
             }
 
-            ExportReportOptions = new ExportReportViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.ReportOptions], ModelData, obj => fLoadTab(obj));
-            ExportHistoryOptions = new ExportHistoryViewModel(fUiGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.HistoryOptions], ModelData, obj => fLoadTab(obj));
+            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.ReportOptions], ModelData, obj => _loadTab(obj));
+            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.HistoryOptions], ModelData, obj => _loadTab(obj));
             CreateInvestmentListCommand = new RelayCommand(ExecuteInvestmentListCommand);
         }
 
@@ -95,7 +94,7 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteInvestmentListCommand()
         {
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", ModelData.Name + "-CSVStats.csv", filter: "CSV file|*.csv|All files|*.*");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", ModelData.Name + "-CSVStats.csv", filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".csv"))
@@ -103,21 +102,21 @@ namespace FPD.Logic.ViewModels.Stats
                     result.FilePath += ".csv";
                 }
                 PortfolioInvestments portfolioInvestments = new PortfolioInvestments(ModelData, new PortfolioInvestmentSettings());
-                portfolioInvestments.ExportToFile(result.FilePath, fUiGlobals.CurrentFileSystem, ReportLogger);
-                fLoadTab(new SecurityInvestmentViewModel(ModelData, Styles));
+                portfolioInvestments.ExportToFile(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger);
+                _loadTab(new SecurityInvestmentViewModel(ModelData, Styles));
             }
             else
             {
-                fUiGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
+                DisplayGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay = null)
+        public override void UpdateData(IPortfolio modelData)
         {
-            base.UpdateData(dataToDisplay);
-            StatsPageExportOptions.UpdateData(dataToDisplay);
-            ExportHistoryOptions.UpdateData(dataToDisplay);
+            base.UpdateData(modelData);
+            StatsPageExportOptions.UpdateData(modelData);
+            ExportHistoryOptions.UpdateData(modelData);
         }
     }
 }

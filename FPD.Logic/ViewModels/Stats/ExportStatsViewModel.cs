@@ -255,7 +255,7 @@ namespace FPD.Logic.ViewModels.Stats
         private void ExecuteExportCommand()
         {
             fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)
@@ -311,8 +311,8 @@ namespace FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowAssets),
                     assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList());
 
-                PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, fUiGlobals.CurrentFileSystem);
-                string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
+                PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, DisplayGlobals.CurrentFileSystem);
+                string extension = DisplayGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
                 DocumentType type = extension.ToEnum<DocumentType>();
 
                 PortfolioStatisticsExportSettings exportSettings = new PortfolioStatisticsExportSettings(
@@ -335,7 +335,7 @@ namespace FPD.Logic.ViewModels.Stats
                     AssetDirection,
                     assetSelected);
 
-                stats.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
+                stats.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
                 ReportLogger.Log(ReportType.Information, ReportLocation.StatisticsPage.ToString(), "Created statistics page");
             }
@@ -344,7 +344,7 @@ namespace FPD.Logic.ViewModels.Stats
                 ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Was not able to create page in place specified.");
             }
 
-            CloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, "Exported Stats", path));
+            CloseWindowAction(new HtmlStatsViewerViewModel(Styles, DisplayGlobals, "Exported Stats", path));
         }
     }
 }

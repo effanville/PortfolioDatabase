@@ -78,17 +78,17 @@ namespace FPD.Logic.ViewModels
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio portfolio)
+        public override void UpdateData(IPortfolio modelData)
         {
-            base.UpdateData(portfolio);
-            fFileName = portfolio.Name;
-            Currencies = portfolio.Names(Account.Currency).Concat(portfolio.Companies(Account.Currency)).Distinct().ToList();
-            if (!Currencies.Contains(portfolio.BaseCurrency))
+            base.UpdateData(modelData);
+            fFileName = modelData.Name;
+            Currencies = modelData.Names(Account.Currency).Concat(modelData.Companies(Account.Currency)).Distinct().ToList();
+            if (!Currencies.Contains(modelData.BaseCurrency))
             {
-                Currencies.Add(portfolio.BaseCurrency);
+                Currencies.Add(modelData.BaseCurrency);
             }
 
-            BaseCurrency = portfolio.BaseCurrency;
+            BaseCurrency = modelData.BaseCurrency;
         }
 
         /// <summary>
@@ -101,16 +101,16 @@ namespace FPD.Logic.ViewModels
             MessageBoxOutcome result;
             if (ModelData.IsAlteredSinceSave)
             {
-                result = fUiGlobals.DialogCreationService.ShowMessageBox("Current database has unsaved alterations. Are you sure you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
+                result = DisplayGlobals.DialogCreationService.ShowMessageBox("Current database has unsaved alterations. Are you sure you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
             }
             else
             {
-                result = fUiGlobals.DialogCreationService.ShowMessageBox("Do you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
+                result = DisplayGlobals.DialogCreationService.ShowMessageBox("Do you want to load a new database?", "New Database?", BoxButton.YesNo, BoxImage.Warning);
             }
             if (result == MessageBoxOutcome.Yes)
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(userInitiated: true, programPortfolio => programPortfolio.Clear(ReportLogger)));
-                fUiGlobals.CurrentWorkingDirectory = "";
+                DisplayGlobals.CurrentWorkingDirectory = "";
             }
         }
 
@@ -121,15 +121,15 @@ namespace FPD.Logic.ViewModels
         private void ExecuteSaveDatabase()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Saving", $"Saving database {fFileName} called.");
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("xml", fFileName, fDirectory, "XML Files|*.xml|All Files|*.*");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", fFileName, fDirectory, "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                fFileName = fUiGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+                fFileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
 
-                fDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfo => portfo.Name = fUiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, portfo => portfo.SavePortfolio(result.FilePath, fUiGlobals.CurrentFileSystem, ReportLogger)));
-                fUiGlobals.CurrentWorkingDirectory = fDirectory;
+                fDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfo => portfo.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, portfo => portfo.SavePortfolio(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger)));
+                DisplayGlobals.CurrentWorkingDirectory = fDirectory;
             }
         }
 
@@ -141,14 +141,14 @@ namespace FPD.Logic.ViewModels
         private void ExecuteLoadDatabase()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loading database.");
-            FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.FillDetailsFromFile(fUiGlobals.CurrentFileSystem, result.FilePath, ReportLogger)));
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, programPortfolio => programPortfolio.SavePortfolio($"{result.FilePath}.bak", fUiGlobals.CurrentFileSystem, ReportLogger)));
-                fUiGlobals.CurrentWorkingDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                fFileName = fUiGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
-                fDirectory = fUiGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.FillDetailsFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, programPortfolio => programPortfolio.SavePortfolio($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem, ReportLogger)));
+                DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                fFileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+                fDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
 
                 ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loaded database {fFileName} successfully.");
             }
@@ -171,10 +171,10 @@ namespace FPD.Logic.ViewModels
         private void ImportFromOtherDatabase()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Importing", $"Execute import data for database {fFileName} called.");
-            FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                IPortfolio otherPortfolio = PortfolioFactory.CreateFromFile(fUiGlobals.CurrentFileSystem, result.FilePath, ReportLogger);
+                IPortfolio otherPortfolio = PortfolioFactory.CreateFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger);
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.ImportValuesFrom(otherPortfolio, ReportLogger)));
             }
         }

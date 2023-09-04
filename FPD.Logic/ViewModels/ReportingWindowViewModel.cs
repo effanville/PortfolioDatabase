@@ -18,62 +18,56 @@ namespace FPD.Logic.ViewModels
     /// <summary>
     /// View model for the user control that displays reports.
     /// </summary>
-    public class ReportingWindowViewModel : PropertyChangedBase
+    public class ReportingWindowViewModel : ViewModelBase<ErrorReports>
     {
-        private List<ErrorReport> fReportsToView = new List<ErrorReport>();
-        private readonly UiGlobals fUiGlobals;
+        private List<ErrorReport> _reportsToView = new List<ErrorReport>();
 
-        private UiStyles fStyles;
+        private UiStyles _styles;
 
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
         public UiStyles Styles
         {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
+            get => _styles;
+            set => SetAndNotify(ref _styles, value);
         }
 
         /// <summary>
-        /// The reports to display in the control. This is a sublist of <see cref="Reports"/> filtered by <see cref="ReportingSeverity"/>.
+        /// The reports to display in the control. This is a sublist of <see cref="ReportingWindowViewModel.ModelData"/> filtered by <see cref="ReportingSeverity"/>.
         /// </summary>
         public List<ErrorReport> ReportsToView
         {
-            get => fReportsToView;
-            set => SetAndNotify(ref fReportsToView, value, nameof(ReportsToView));
+            get => _reportsToView;
+            set => SetAndNotify(ref _reportsToView, value);
         }
 
-        private bool fIsExpanded;
+        private bool _isExpanded;
         /// <summary>
         /// Whether the view is expanded or not.
         /// </summary>
         public bool IsExpanded
         {
-            get => fIsExpanded;
-            set => SetAndNotify(ref fIsExpanded, value, nameof(IsExpanded));
+            get => _isExpanded;
+            set => SetAndNotify(ref _isExpanded, value);
         }
-
-        /// <summary>
-        /// Complete list of all reports stored.
-        /// </summary>
-        public ErrorReports Reports { get; set; }
 
         /// <summary>
         /// Selected index of the reports.
         /// </summary>
         public int IndexToDelete { get; set; }
 
-        private ReportSeverity fReportingSeverity;
+        private ReportSeverity _reportingSeverity;
 
         /// <summary>
         /// The selected reporting severity.
         /// </summary>
         public ReportSeverity ReportingSeverity
         {
-            get => fReportingSeverity;
+            get => _reportingSeverity;
             set
             {
-                SetAndNotify(ref fReportingSeverity, value, nameof(ReportingSeverity));
+                SetAndNotify(ref _reportingSeverity, value);
                 SyncReports();
             }
         }
@@ -87,11 +81,10 @@ namespace FPD.Logic.ViewModels
         /// Default constructor.
         /// </summary>
         public ReportingWindowViewModel(UiGlobals uiGlobals, UiStyles styles)
+            : base("Reports", new ErrorReports(), uiGlobals)
         {
             Styles = styles;
             IsExpanded = false;
-            fUiGlobals = uiGlobals;
-            Reports = new ErrorReports();
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
             SyncReports();
@@ -100,7 +93,7 @@ namespace FPD.Logic.ViewModels
         internal void SyncReports()
         {
             ReportsToView = null;
-            ReportsToView = Reports.GetReports(ReportingSeverity).ToList();
+            ReportsToView = ModelData.GetReports(ReportingSeverity).ToList();
             if (ReportsToView != null && (ReportsToView?.Any() ?? false))
             {
                 IsExpanded = true;
@@ -114,7 +107,7 @@ namespace FPD.Logic.ViewModels
 
         private void ExecuteClearReports()
         {
-            Reports.Clear();
+            ModelData.Clear();
             SyncReports();
         }
 
@@ -122,29 +115,30 @@ namespace FPD.Logic.ViewModels
         /// Command to export reports to a csv.
         /// </summary>
         public ICommand ExportReportsCommand { get; }
-        private void ExecuteExportReportsCommand() => _ = Task.Factory.StartNew(() => ExecuteExportReports());
+        private void ExecuteExportReportsCommand() => _ = Task.Factory.StartNew(ExecuteExportReports);
 
         private void ExecuteExportReports()
         {
             try
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(".csv", "errorReports.csv");
-                if (result.Success)
+                FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", "errorReports.csv");
+                if (!result.Success)
                 {
-                    using (StreamWriter writer = new StreamWriter(result.FilePath))
+                    return;
+                }
+
+                using (StreamWriter writer = new StreamWriter(result.FilePath))
+                {
+                    writer.WriteLine("Severity,ErrorType,Location,Message");
+                    foreach (ErrorReport report in ModelData.GetReports())
                     {
-                        writer.WriteLine("Severity,ErrorType,Location,Message");
-                        foreach (ErrorReport report in Reports.GetReports())
-                        {
-                            writer.WriteLine($"{report.ErrorSeverity},{report.ErrorType},{report.ErrorLocation},{report.Message}");
-                        }
+                        writer.WriteLine($"{report.ErrorSeverity},{report.ErrorType},{report.ErrorLocation},{report.Message}");
                     }
                 }
             }
             catch (IOException ex)
             {
-
-                fUiGlobals.CurrentDispatcher.Invoke(() => Reports.AddErrorReport(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Error when saving reports: {ex.Message}"));
+                DisplayGlobals.CurrentDispatcher.Invoke(() => ModelData.AddErrorReport(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Error when saving reports: {ex.Message}"));
             }
         }
 
@@ -153,11 +147,13 @@ namespace FPD.Logic.ViewModels
         /// </summary>
         public void DeleteReport()
         {
-            if (IndexToDelete >= 0)
+            if (IndexToDelete < 0)
             {
-                Reports.RemoveReport(IndexToDelete);
-                SyncReports();
+                return;
             }
+
+            ModelData.RemoveReport(IndexToDelete);
+            SyncReports();
         }
 
         /// <summary>
@@ -165,7 +161,7 @@ namespace FPD.Logic.ViewModels
         /// </summary>
         public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
         {
-            Reports.AddErrorReport(severity, type, location, message);
+            ModelData.AddErrorReport(severity, type, location, message);
             SyncReports();
         }
     }

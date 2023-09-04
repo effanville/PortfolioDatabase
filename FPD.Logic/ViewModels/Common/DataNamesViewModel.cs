@@ -13,6 +13,7 @@ using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions.Values;
 using FinancialStructures.NamingStructures;
 using Common.Structure.DataEdit;
+using Common.UI;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -22,11 +23,6 @@ namespace FPD.Logic.ViewModels.Common
     public sealed class DataNamesViewModel : TabViewModelBase<IPortfolio>
     {
         internal readonly IUpdater<IPortfolio> _updater;
-
-        /// <summary>
-        /// Logs any possible issues in the routines here back to the user.
-        /// </summary>
-        private readonly IReportLogger ReportLogger;
 
         private UiStyles fStyles;
 
@@ -111,12 +107,11 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public DataNamesViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account accountType)
-            : base("Accounts", portfolio, loadSelectedData)
+        public DataNamesViewModel(IPortfolio portfolio, UiGlobals uiGlobals, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account accountType)
+            : base("Accounts", portfolio, loadSelectedData, uiGlobals)
         {
             Styles = styles;
             TypeOfAccount = accountType;
-            ReportLogger = reportLogger;
             _updater = dataUpdater;
             UpdateData(portfolio);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
@@ -147,11 +142,11 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
-        public override void UpdateData(IPortfolio dataToDisplay, Action<object> removeTab)
+        public override void UpdateData(IPortfolio modelData, Action<object> removeTab)
         {
-            base.UpdateData(dataToDisplay);
+            base.UpdateData(modelData);
 
-            List<RowData> values = dataToDisplay.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(dataToDisplay, name), TypeOfAccount, _updater, Styles)).ToList();
+            List<RowData> values = modelData.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(modelData, name), TypeOfAccount, _updater, Styles)).ToList();
             DataNames = null;
             DataNames = values;
             DataNames ??= new List<RowData>();
@@ -168,7 +163,7 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
-        public override void UpdateData(IPortfolio dataToDisplay) => UpdateData(dataToDisplay, null);
+        public override void UpdateData(IPortfolio modelData) => UpdateData(modelData, null);
 
         /// <summary>
         /// Downloads the latest data for the selected entry.

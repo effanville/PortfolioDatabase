@@ -27,7 +27,6 @@ namespace FPD.Logic.ViewModels.Common
     /// </summary>
     public class SelectedSingleDataViewModel : TabViewModelBase<IPortfolio>
     {
-        private readonly UiGlobals fUiGlobals;
         private readonly Account TypeOfAccount;
         private readonly IReportLogger fReportLogger;
 
@@ -89,11 +88,10 @@ namespace FPD.Logic.ViewModels.Common
             NameData selectedName,
             Account accountType,
             IUpdater<IPortfolio> dataUpdater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals)
         {
-            fUiGlobals = globals;
             Styles = styles;
-            fReportLogger = fUiGlobals.ReportLogger;
+            fReportLogger = DisplayGlobals.ReportLogger;
             SelectedName = selectedName;
             TypeOfAccount = accountType;
             UpdateRequest += dataUpdater.PerformUpdate;
@@ -122,26 +120,26 @@ namespace FPD.Logic.ViewModels.Common
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay, Action<object> removeTab)
+        public override void UpdateData(IPortfolio modelData, Action<object> removeTab)
         {
-            base.UpdateData(dataToDisplay);
+            base.UpdateData(modelData);
             if (SelectedName != null)
             {
-                if (!dataToDisplay.Exists(TypeOfAccount, SelectedName))
+                if (!modelData.Exists(TypeOfAccount, SelectedName))
                 {
                     removeTab?.Invoke(this);
                     return;
                 }
 
-                _ = dataToDisplay.TryGetAccount(TypeOfAccount, SelectedName, out IValueList desired);
+                _ = modelData.TryGetAccount(TypeOfAccount, SelectedName, out IValueList desired);
                 TLVM?.UpdateData(desired.Values);
-                var stats = dataToDisplay.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+                var stats = modelData.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
                 Stats.UpdateData(stats);
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay) => UpdateData(dataToDisplay, null);
+        public override void UpdateData(IPortfolio modelData) => UpdateData(modelData, null);
 
         private void ExecuteAddEditData(NameData name, DailyValuation oldValue, DailyValuation newValue)
         {
@@ -185,7 +183,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (fSelectedName != null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
                 List<object> outputs = null;
                 bool exists = ModelData.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account);
                 if (result.Success && exists)
@@ -221,7 +219,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (fSelectedName != null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
                     if (ModelData.TryGetAccount(TypeOfAccount, fSelectedName, out IValueList account))
