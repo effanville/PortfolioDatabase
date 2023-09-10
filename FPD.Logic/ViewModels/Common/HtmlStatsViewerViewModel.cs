@@ -14,9 +14,6 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public sealed class HtmlStatsViewerViewModel : DataDisplayViewModelBase
     {
-        /// <inheritdoc />
-        public override bool Closable => true;
-
         private Uri fDisplayStats;
 
         /// <summary>
@@ -25,7 +22,7 @@ namespace FPD.Logic.ViewModels
         public Uri DisplayStats
         {
             get => fDisplayStats;
-            set => SetAndNotify(ref fDisplayStats, value, nameof(DisplayStats));
+            set => SetAndNotify(ref fDisplayStats, value);
         }
 
         /// <summary>
@@ -40,7 +37,7 @@ namespace FPD.Logic.ViewModels
         /// Construct an instance.
         /// </summary>
         public HtmlStatsViewerViewModel(UiStyles styles, UiGlobals globals, string header, string filePath)
-            : base(globals, styles, null, header, Account.All)
+            : base(globals, styles, null, header, Account.All, closable: true)
         {
             DisplayStats = new Uri(filePath);
             FileSelect = new RelayCommand(ExecuteFileSelect);

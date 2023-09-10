@@ -28,26 +28,12 @@ namespace FPD.Logic.ViewModels.Security
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public class SelectedSecurityViewModel : TabViewModelBase<IPortfolio>
+    public class SelectedSecurityViewModel : StyledClosableViewModelBase<IPortfolio>
     {
         private readonly Account fAccount;
 
-        private UiStyles fStyles;
-
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public UiStyles Styles
-        {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
-        }
-
         internal SecurityTrade fOldSelectedTrade;
         internal SecurityTrade SelectedTrade;
-
-        /// <inheritdoc/>
-        public override bool Closable => true;
 
         /// <summary>
         /// The name data of the security this window details.
@@ -65,7 +51,7 @@ namespace FPD.Logic.ViewModels.Security
         public TimeListViewModel TLVM
         {
             get => fTLVM;
-            set => SetAndNotify(ref fTLVM, value, nameof(TLVM));
+            set => SetAndNotify(ref fTLVM, value);
         }
 
         private List<SecurityTrade> fTrades = new List<SecurityTrade>();
@@ -76,7 +62,7 @@ namespace FPD.Logic.ViewModels.Security
         public List<SecurityTrade> Trades
         {
             get => fTrades;
-            set => SetAndNotify(ref fTrades, value, nameof(Trades));
+            set => SetAndNotify(ref fTrades, value);
         }
 
         private string fTradePriceHeader;
@@ -87,7 +73,7 @@ namespace FPD.Logic.ViewModels.Security
         public string TradePriceHeader
         {
             get => fTradePriceHeader;
-            set => SetAndNotify(ref fTradePriceHeader, value, nameof(TradePriceHeader));
+            set => SetAndNotify(ref fTradePriceHeader, value);
         }
 
         private string fTradeTotalCostHeader;
@@ -98,7 +84,7 @@ namespace FPD.Logic.ViewModels.Security
         public string TradeTotalCostHeader
         {
             get => fTradeTotalCostHeader;
-            set => SetAndNotify(ref fTradeTotalCostHeader, value, nameof(TradeTotalCostHeader));
+            set => SetAndNotify(ref fTradeTotalCostHeader, value);
         }
 
         private AccountStatsViewModel fSecurityStats;
@@ -109,7 +95,7 @@ namespace FPD.Logic.ViewModels.Security
         public AccountStatsViewModel SecurityStats
         {
             get => fSecurityStats;
-            set => SetAndNotify(ref fSecurityStats, value, nameof(SecurityStats));
+            set => SetAndNotify(ref fSecurityStats, value);
         }
 
         private List<DailyValuation> fValues;
@@ -133,9 +119,8 @@ namespace FPD.Logic.ViewModels.Security
             NameData selectedName, 
             Account account,
             IUpdater<IPortfolio> dataUpdater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals, styles, true)
         {
-            Styles = styles;
             SelectedName = selectedName;
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
@@ -167,7 +152,7 @@ namespace FPD.Logic.ViewModels.Security
                 SecurityStats = new AccountStatsViewModel(null, Styles);
             }
 
-            UpdateData(portfolio, null);
+            UpdateData(portfolio);
         }
 
         /// <summary>
@@ -288,7 +273,7 @@ namespace FPD.Logic.ViewModels.Security
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData, Action<object> removeTab)
+        public override void UpdateData(IPortfolio modelData)
         {
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} updating data.");
             base.UpdateData(modelData);
@@ -296,7 +281,7 @@ namespace FPD.Logic.ViewModels.Security
             {
                 if (!modelData.Exists(fAccount, SelectedName))
                 {
-                    DisplayGlobals.CurrentDispatcher.BeginInvoke(() => removeTab?.Invoke(this));
+                    OnRequestClose(EventArgs.Empty);
                     return;
                 }
 
@@ -310,9 +295,6 @@ namespace FPD.Logic.ViewModels.Security
                 Values = modelData.NumberData(fAccount, SelectedName, ReportLogger).ToList();
             }
         }
-
-        /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData) => UpdateData(modelData, null);
 
         private RelayCommand fPreEditCommand;
 

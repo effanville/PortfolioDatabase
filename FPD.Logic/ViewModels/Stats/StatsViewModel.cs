@@ -74,14 +74,14 @@ namespace FPD.Logic.ViewModels.Stats
             StatisticNames = statsToView != null
                 ? statsToView.Select(stat => new Selectable<Statistic>(stat, true)).ToList()
                 : AccountStatisticsHelpers.AllStatistics().Select(stat => new Selectable<Statistic>(stat, true)).ToList();
-            if (fUserConfiguration.HasLoaded)
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
-                fUserConfiguration.StoreConfiguration(this);
-                fUserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
             }
 
             _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
@@ -96,7 +96,7 @@ namespace FPD.Logic.ViewModels.Stats
         /// </summary>
         private void OnSelectedChanged(object sender, EventArgs e)
         {
-            fUserConfiguration.StoreConfiguration(this);
+            UserConfiguration.StoreConfiguration(this);
             _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
             UpdateData(null);
         }
@@ -111,7 +111,7 @@ namespace FPD.Logic.ViewModels.Stats
                 return;
             }
 
-            fUserConfiguration.StoreConfiguration(this);
+            UserConfiguration.StoreConfiguration(this);
             await Task.Run(() => UpdateData(null));
         }
 

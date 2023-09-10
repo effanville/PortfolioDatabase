@@ -37,15 +37,15 @@ namespace FPD.Logic.ViewModels.Stats
             : base(globals, styles, userConfiguration, portfolio, "", Account.All)
         {
             _closeWindowAction = CloseWindow;
-            if (fUserConfiguration.HasLoaded)
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
                 DisplayValueFunds = true;
-                fUserConfiguration.StoreConfiguration(this);
-                fUserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
             }
 
             ExportReportCommand = new RelayCommand(ExecuteCreateReport);
@@ -61,7 +61,7 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteCreateReport()
         {
-            fUserConfiguration.StoreConfiguration(this);
+            UserConfiguration.StoreConfiguration(this);
             FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{ModelData.Name}-report.html", filter: "Html file|*.html|All files|*.*");
             if (result.Success)
             {

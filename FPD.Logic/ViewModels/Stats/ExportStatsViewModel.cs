@@ -233,14 +233,14 @@ namespace FPD.Logic.ViewModels.Stats
             DisplayConditions.Add(new Selectable<string>(ShowBenchmarks, false));
             DisplayConditions.Add(new Selectable<string>(ShowAssets, false));
 
-            if (fUserConfiguration.HasLoaded)
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
-                fUserConfiguration.HasLoaded = true;
-                fUserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
             }
         }
 
@@ -254,7 +254,7 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteExportCommand()
         {
-            fUserConfiguration.StoreConfiguration(this);
+            UserConfiguration.StoreConfiguration(this);
             FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 

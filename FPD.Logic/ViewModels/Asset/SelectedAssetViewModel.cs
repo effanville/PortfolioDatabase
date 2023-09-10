@@ -30,7 +30,7 @@ namespace FPD.Logic.ViewModels.Asset
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public sealed class SelectedAssetViewModel : TabViewModelBase<IPortfolio>
+    public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IPortfolio>
     {
         /// <summary>
         /// The name data of the security this window details.
@@ -38,22 +38,8 @@ namespace FPD.Logic.ViewModels.Asset
         internal readonly NameData SelectedName;
         private readonly Account fAccountType;
 
-        private UiStyles fStyles;
-
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public UiStyles Styles
-        {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
-        }
-
         internal SecurityTrade fOldSelectedTrade;
         internal SecurityTrade SelectedTrade;
-
-        /// <inheritdoc/>
-        public override bool Closable => true;
 
         private TimeListViewModel fValuesTLVM;
 
@@ -74,7 +60,7 @@ namespace FPD.Logic.ViewModels.Asset
         public TimeListViewModel DebtTLVM
         {
             get => fDebtTLVM;
-            set => SetAndNotify(ref fDebtTLVM, value, nameof(DebtTLVM));
+            set => SetAndNotify(ref fDebtTLVM, value);
         }
 
         private TimeListViewModel fPaymentsTLVM;
@@ -85,7 +71,7 @@ namespace FPD.Logic.ViewModels.Asset
         public TimeListViewModel PaymentsTLVM
         {
             get => fPaymentsTLVM;
-            set => SetAndNotify(ref fPaymentsTLVM, value, nameof(PaymentsTLVM));
+            set => SetAndNotify(ref fPaymentsTLVM, value);
         }
 
         private AccountStatistics fSecurityStats;
@@ -96,7 +82,7 @@ namespace FPD.Logic.ViewModels.Asset
         public AccountStatistics SecurityStats
         {
             get => fSecurityStats;
-            set => SetAndNotify(ref fSecurityStats, value, nameof(SecurityStats));
+            set => SetAndNotify(ref fSecurityStats, value);
         }
 
         private List<DailyValuation> fValues;
@@ -107,7 +93,7 @@ namespace FPD.Logic.ViewModels.Asset
         public List<DailyValuation> Values
         {
             get => fValues;
-            set => SetAndNotify(ref fValues, value, nameof(Values));
+            set => SetAndNotify(ref fValues, value);
         }
 
         /// <summary>
@@ -120,11 +106,10 @@ namespace FPD.Logic.ViewModels.Asset
             NameData selectedName,
             Account dataType,
             IUpdater<IPortfolio> dataUpdater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals, styles, true)
         {
-            Styles = styles;
             SelectedName = selectedName;
-            fAccountType = Account.Asset;
+            fAccountType = dataType;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
             UpdateRequest += dataUpdater.PerformUpdate;
@@ -150,7 +135,7 @@ namespace FPD.Logic.ViewModels.Asset
                 PaymentsTLVM.UpdateRequest += dataUpdater.PerformUpdate;
             }
 
-            UpdateData(portfolio, null);
+            UpdateData(portfolio);
         }
 
         private void DeleteValue(NameData name, DailyValuation value)
@@ -261,30 +246,26 @@ namespace FPD.Logic.ViewModels.Asset
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData, Action<object> removeTab)
+        public override void UpdateData(IPortfolio modelData)
         {
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {SelectedName} updating data.");
             base.UpdateData(modelData);
-            if (SelectedName != null)
+            if (SelectedName == null)
             {
-                if (!modelData.TryGetAccount(fAccountType, SelectedName, out IValueList desired))
-                {
-                    removeTab?.Invoke(this);
-                    return;
-                }
-
-                IAmortisableAsset asset = desired as IAmortisableAsset;
-                ValuesTLVM?.UpdateData(asset.Values);
-                DebtTLVM?.UpdateData(asset.Debt);
-                SecurityStats = modelData.GetStats(DateTime.Today, fAccountType, SelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
-                Values = modelData.NumberData(fAccountType, SelectedName, ReportLogger).ToList();
+                return;
             }
-        }
 
-        /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
-        {
-            UpdateData(modelData, null);
+            if (!modelData.TryGetAccount(fAccountType, SelectedName, out IValueList desired))
+            {
+                OnRequestClose(EventArgs.Empty);
+                return;
+            }
+
+            IAmortisableAsset asset = desired as IAmortisableAsset;
+            ValuesTLVM?.UpdateData(asset.Values);
+            DebtTLVM?.UpdateData(asset.Debt);
+            SecurityStats = modelData.GetStats(DateTime.Today, fAccountType, SelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
+            Values = modelData.NumberData(fAccountType, SelectedName, ReportLogger).ToList();
         }
     }
 }

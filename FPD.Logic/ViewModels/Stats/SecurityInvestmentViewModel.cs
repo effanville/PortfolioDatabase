@@ -16,9 +16,6 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class SecurityInvestmentViewModel : DataDisplayViewModelBase
     {
-        /// <inheritdoc/>
-        public override bool Closable => true;
-
         private List<Labelled<TwoName, DailyValuation>> fSecuritiesInvestments;
 
         /// <summary>
@@ -27,14 +24,14 @@ namespace FPD.Logic.ViewModels.Stats
         public List<Labelled<TwoName, DailyValuation>> SecuritiesInvestments
         {
             get => fSecuritiesInvestments;
-            set => SetAndNotify(ref fSecuritiesInvestments, value, nameof(SecuritiesInvestments));
+            set => SetAndNotify(ref fSecuritiesInvestments, value);
         }
 
         /// <summary>
         /// Construct an instance
         /// </summary>
         public SecurityInvestmentViewModel(IPortfolio portfolio, UiStyles styles)
-            : base(null, styles, portfolio, "Investments")
+            : base(null, styles, portfolio, "Investments", closable: true)
         {
             UpdateData(portfolio);
         }

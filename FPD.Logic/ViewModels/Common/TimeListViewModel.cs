@@ -5,7 +5,6 @@ using System.Windows.Input;
 
 using Common.Structure.DataStructures;
 using Common.UI.Commands;
-using Common.UI.ViewModelBases;
 
 using FinancialStructures.Database;
 
@@ -16,7 +15,7 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model for displaying a <see cref="TimeList"/>
     /// </summary>
-    public sealed class TimeListViewModel : ViewModelBase<TimeList, IPortfolio>
+    public sealed class TimeListViewModel : StyledViewModelBase<TimeList, IPortfolio>
     {
         private readonly Action<DailyValuation> _deleteValueAction;
         private readonly Action<DailyValuation, DailyValuation> _addEditValueAction;
@@ -26,16 +25,6 @@ namespace FPD.Logic.ViewModels.Common
 
         private string _valueName;
         private List<DailyValuation> _valuations;
-        private UiStyles _uiStyles;
-
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public UiStyles Styles
-        {
-            get => _uiStyles;
-            set => SetAndNotify(ref _uiStyles, value);
-        }
 
         /// <summary>
         /// The list of values to display.
@@ -64,7 +53,7 @@ namespace FPD.Logic.ViewModels.Common
             UiStyles styles,
             Action<DailyValuation> deleteValueAction,
             Action<DailyValuation, DailyValuation> addEditValueAction)
-            : base("TLVM", timeList, null)
+            : base("TLVM", timeList, null, styles)
         {
             _deleteValueAction = deleteValueAction;
             _addEditValueAction = addEditValueAction;
@@ -111,6 +100,7 @@ namespace FPD.Logic.ViewModels.Common
         public ICommand SelectionChangedCommand
         {
             get;
+            set;
         }
         private void ExecuteSelectionChanged(object obj)
         {
@@ -127,6 +117,7 @@ namespace FPD.Logic.ViewModels.Common
         public ICommand PreEditCommand
         {
             get;
+            set;
         }
 
         private void ExecutePreEdit() => _oldSelectedValuation = SelectedValuation?.Copy();
@@ -137,6 +128,7 @@ namespace FPD.Logic.ViewModels.Common
         public ICommand AddEditDataCommand
         {
             get;
+            set;
         }
 
         private void ExecuteAddEditData()

@@ -60,27 +60,27 @@ namespace FPD.Logic.ViewModels.Stats
         public StatsCreatorWindowViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> loadTab)
             : base(globals, styles, userConfiguration, portfolio, "Stats Creator", Account.All)
         {
-            fUserConfiguration = userConfiguration;
-            if (fUserConfiguration.HasLoaded)
+            UserConfiguration = userConfiguration;
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
-                fUserConfiguration.StoreConfiguration(this);
-                fUserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
             }
 
             _loadTab = loadTab;
 
-            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.StatsOptions], ModelData, obj => _loadTab(obj));
-            if (!fUserConfiguration.ChildConfigurations.TryGetValue(UserConfiguration.ReportOptions, out _))
+            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => _loadTab(obj));
+            if (!UserConfiguration.ChildConfigurations.TryGetValue(Configuration.UserConfiguration.ReportOptions, out _))
             {
-                fUserConfiguration.ChildConfigurations.Add(UserConfiguration.ReportOptions, new ExportReportConfiguration());
+                UserConfiguration.ChildConfigurations.Add(Configuration.UserConfiguration.ReportOptions, new ExportReportConfiguration());
             }
 
-            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.ReportOptions], ModelData, obj => _loadTab(obj));
-            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, fUserConfiguration.ChildConfigurations[UserConfiguration.HistoryOptions], ModelData, obj => _loadTab(obj));
+            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => _loadTab(obj));
+            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => _loadTab(obj));
             CreateInvestmentListCommand = new RelayCommand(ExecuteInvestmentListCommand);
         }
 

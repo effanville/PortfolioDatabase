@@ -42,7 +42,7 @@ namespace FPD.Logic.ViewModels.Stats
         public List<PortfolioDaySnapshot> HistoryStats
         {
             get => fHistoryStats;
-            set => SetAndNotify(ref fHistoryStats, value, nameof(HistoryStats));
+            set => SetAndNotify(ref fHistoryStats, value);
         }
 
         /// <summary>

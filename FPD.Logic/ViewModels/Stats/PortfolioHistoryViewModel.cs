@@ -11,9 +11,6 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class PortfolioHistoryViewModel : DataDisplayViewModelBase
     {
-        /// <inheritdoc/>
-        public override bool Closable => true;
-
         private int fHistoryGapDays = 20;
 
         /// <summary>
@@ -48,7 +45,7 @@ namespace FPD.Logic.ViewModels.Stats
         /// Construct an instance.
         /// </summary>
         public PortfolioHistoryViewModel(IPortfolio portfolio, UiStyles styles)
-            : base(null, styles, portfolio, "History")
+            : base(null, styles, portfolio, "History", closable: true)
         {
             UpdateData(portfolio);
         }

@@ -6,7 +6,6 @@ using System.Windows.Input;
 using Common.Structure.DataStructures;
 using Common.Structure.Reporting;
 using Common.UI.Commands;
-using Common.UI.ViewModelBases;
 using FPD.Logic.TemplatesAndStyles;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
@@ -20,20 +19,9 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.
     /// </summary>
-    public sealed class DataNamesViewModel : TabViewModelBase<IPortfolio>
+    public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio>
     {
         internal readonly IUpdater<IPortfolio> _updater;
-
-        private UiStyles fStyles;
-
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public UiStyles Styles
-        {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
-        }
 
         internal readonly Account TypeOfAccount;
 
@@ -53,7 +41,7 @@ namespace FPD.Logic.ViewModels.Common
         public List<RowData> DataNames
         {
             get => fDataNames;
-            set => SetAndNotify(ref fDataNames, value, nameof(DataNames));
+            set => SetAndNotify(ref fDataNames, value);
         }
 
         private RowData fSelectedName;
@@ -67,7 +55,7 @@ namespace FPD.Logic.ViewModels.Common
             get => fSelectedName;
             set
             {
-                SetAndNotify(ref fSelectedName, value, nameof(SelectedName));
+                SetAndNotify(ref fSelectedName, value);
                 if (SelectedName != null)
                 {
                     OnPropertyChanged(nameof(SelectedNameSet));
@@ -88,7 +76,7 @@ namespace FPD.Logic.ViewModels.Common
         public List<DailyValuation> SelectedValueHistory
         {
             get => fSelectedValueHistory;
-            set => SetAndNotify(ref fSelectedValueHistory, value, nameof(SelectedValueHistory));
+            set => SetAndNotify(ref fSelectedValueHistory, value);
         }
 
         /// <summary>
@@ -108,9 +96,8 @@ namespace FPD.Logic.ViewModels.Common
         /// Construct an instance.
         /// </summary>
         public DataNamesViewModel(IPortfolio portfolio, UiGlobals uiGlobals, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account accountType)
-            : base("Accounts", portfolio, loadSelectedData, uiGlobals)
+            : base("Accounts", portfolio, uiGlobals, styles, closable: false)
         {
-            Styles = styles;
             TypeOfAccount = accountType;
             _updater = dataUpdater;
             UpdateData(portfolio);
@@ -118,7 +105,7 @@ namespace FPD.Logic.ViewModels.Common
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-            OpenTabCommand = new RelayCommand(() => LoadSelectedTab(SelectedName?.Instance));
+            OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.Instance));
         }
 
         /// <summary>
@@ -142,7 +129,7 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData, Action<object> removeTab)
+        public override void UpdateData(IPortfolio modelData)
         {
             base.UpdateData(modelData);
 
@@ -159,11 +146,6 @@ namespace FPD.Logic.ViewModels.Common
 
             OnPropertyChanged(nameof(DisplayCompany));
         }
-
-        /// <summary>
-        /// Updates the data in this view model from the given portfolio.
-        /// </summary>
-        public override void UpdateData(IPortfolio modelData) => UpdateData(modelData, null);
 
         /// <summary>
         /// Downloads the latest data for the selected entry.

@@ -58,7 +58,7 @@
                                                 Height="12"
                                                 Width="12"
                                                 Margin="2 2 0 0"
-                                                Click="CloseTabCommand">
+                                                Command="{Binding CloseCommand}">
                                             <Grid Width="10"
                                                   Height="10"
                                                   UseLayoutRounding="True"

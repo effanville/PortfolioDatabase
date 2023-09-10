@@ -70,15 +70,15 @@ namespace FPD.Logic.ViewModels.Stats
             : base(globals, styles, userConfiguration, portfolio, "", Account.All)
         {
             _closeWindowAction = closeWindow;
-            if (fUserConfiguration.HasLoaded)
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
                 HistoryGapDays = 20;
-                fUserConfiguration.StoreConfiguration(this);
-                fUserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
             }
 
             ExportHistoryCommand = new RelayCommand(ExecuteCreateHistory);
@@ -94,7 +94,7 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteCreateHistory()
         {
-            fUserConfiguration.StoreConfiguration(this);
+            UserConfiguration.StoreConfiguration(this);
             FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + ModelData.Name + "-History.csv", filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {

@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+
 using Common.UI;
 using Common.UI.ViewModelBases;
+
 using FPD.Logic.TemplatesAndStyles;
+
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
+
 using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Common
@@ -23,7 +25,7 @@ namespace FPD.Logic.ViewModels.Common
             UiGlobals,
             NameData,
             Account,
-            IUpdater<IPortfolio>, TabViewModelBase<IPortfolio>> _viewModelFactory;
+            IUpdater<IPortfolio>, ClosableViewModelBase<IPortfolio>> _viewModelFactory;
 
         /// <summary>
         /// The tabs to display.
@@ -46,22 +48,22 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public ValueListWindowViewModel(
             UiGlobals globals,
-            UiStyles styles, 
+            UiStyles styles,
             IPortfolio portfolio,
             string title,
-            Account accountType, 
+            Account accountType,
             IUpdater<IPortfolio> dataUpdater,
             Func<IPortfolio, UiStyles,
-            UiGlobals,
-            NameData,
-            Account,
-            IUpdater<IPortfolio>, TabViewModelBase<IPortfolio>> viewModelFactory)
+                UiGlobals,
+                NameData,
+                Account,
+                IUpdater<IPortfolio>, ClosableViewModelBase<IPortfolio>> viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
         {
             _dataUpdater = dataUpdater;
             _viewModelFactory = viewModelFactory;
             var dataNames = new DataNamesViewModel(
-                ModelData, 
+                ModelData,
                 DisplayGlobals,
                 styles,
                 dataUpdater,
@@ -76,7 +78,6 @@ namespace FPD.Logic.ViewModels.Common
         public override void UpdateData(IPortfolio modelData)
         {
             base.UpdateData(modelData);
-            List<object> removableTabs = new List<object>();
             if (Tabs == null)
             {
                 return;
@@ -84,23 +85,11 @@ namespace FPD.Logic.ViewModels.Common
 
             foreach (object item in Tabs)
             {
-                if (item is TabViewModelBase<IPortfolio> viewModel)
+                if (item is ViewModelBase<IPortfolio> viewModel)
                 {
-                    viewModel.UpdateData(modelData, tabItem => removableTabs.Add(tabItem));
+                    viewModel.UpdateData(modelData);
                 }
             }
-
-            if (!removableTabs.Any())
-            {
-                return;
-            }
-
-            foreach (object tab in removableTabs)
-            {
-                DisplayGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
-            }
-
-            removableTabs.Clear();
         }
 
         internal void LoadTabFunc(object obj)
@@ -113,16 +102,17 @@ namespace FPD.Logic.ViewModels.Common
             var newVM = _viewModelFactory(
                 ModelData,
                 Styles,
-                DisplayGlobals, 
-                name, 
+                DisplayGlobals,
+                name,
                 DataType,
                 _dataUpdater);
+            newVM.RequestClose += RemoveTab;
             Tabs.Add(newVM);
         }
 
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>
-        public bool RemoveTab(object obj) => Tabs.Remove(obj);
+        private void RemoveTab(object obj, EventArgs args) => Tabs.Remove(obj);
     }
 }
