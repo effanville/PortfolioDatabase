@@ -43,6 +43,7 @@ namespace FPD.Logic.ViewModels
         }
 
         private bool _isExpanded;
+
         /// <summary>
         /// Whether the view is expanded or not.
         /// </summary>
@@ -51,11 +52,6 @@ namespace FPD.Logic.ViewModels
             get => _isExpanded;
             set => SetAndNotify(ref _isExpanded, value);
         }
-
-        /// <summary>
-        /// Selected index of the reports.
-        /// </summary>
-        public int IndexToDelete { get; set; }
 
         private ReportSeverity _reportingSeverity;
 
@@ -75,7 +71,8 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// List of all types of ReportSeverity.
         /// </summary>
-        public static List<ReportSeverity> ReportSeverityValues => Enum.GetValues(typeof(ReportSeverity)).Cast<ReportSeverity>().ToList();
+        public static List<ReportSeverity> ReportSeverityValues =>
+            Enum.GetValues(typeof(ReportSeverity)).Cast<ReportSeverity>().ToList();
 
         /// <summary>
         /// Default constructor.
@@ -115,44 +112,51 @@ namespace FPD.Logic.ViewModels
         /// Command to export reports to a csv.
         /// </summary>
         public ICommand ExportReportsCommand { get; }
+
         private void ExecuteExportReportsCommand() => _ = Task.Factory.StartNew(ExecuteExportReports);
 
         private void ExecuteExportReports()
         {
             try
             {
-                FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", "errorReports.csv");
+                FileInteractionResult result =
+                    DisplayGlobals.FileInteractionService.SaveFile(".csv", "errorReports.csv");
                 if (!result.Success)
                 {
                     return;
                 }
 
-                using (StreamWriter writer = new StreamWriter(result.FilePath))
-                {
-                    writer.WriteLine("Severity,ErrorType,Location,Message");
-                    foreach (ErrorReport report in ModelData.GetReports())
-                    {
-                        writer.WriteLine($"{report.ErrorSeverity},{report.ErrorType},{report.ErrorLocation},{report.Message}");
-                    }
-                }
+                ModelData.Save(result.FilePath, DisplayGlobals.CurrentFileSystem);
             }
             catch (IOException ex)
             {
-                DisplayGlobals.CurrentDispatcher.Invoke(() => ModelData.AddErrorReport(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Error when saving reports: {ex.Message}"));
+                DisplayGlobals.CurrentDispatcher.Invoke(() => ModelData.AddErrorReport(ReportSeverity.Critical,
+                    ReportType.Error, ReportLocation.Saving, $"Error when saving reports: {ex.Message}"));
             }
         }
-
+        
         /// <summary>
         /// Command to delete a selected report.
         /// </summary>
-        public void DeleteReport()
+        public void DeleteReports(IList<ErrorReport> reports)
         {
-            if (IndexToDelete < 0)
+            int numberReports = reports.Count;
+            if (ModelData.RemoveReports(reports) != numberReports)
             {
-                return;
+                ReportLogger.Log(ReportType.Error,"Reports","Could not find error report to remove.");
             }
-
-            ModelData.RemoveReport(IndexToDelete);
+            SyncReports();
+        }
+        
+        /// <summary>
+        /// Command to delete a selected report.
+        /// </summary>
+        public void DeleteReport(ErrorReport report)
+        {
+            if (!ModelData.RemoveReport(report))
+            {
+                ReportLogger.Log(ReportType.Error,"Reports","Could not find error report to remove.");
+            }
             SyncReports();
         }
 

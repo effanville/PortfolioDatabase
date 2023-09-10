@@ -78,8 +78,8 @@ namespace FPD.Logic.Tests
             Assert.AreEqual(2, viewModel.ModelData.GetReports().Count, "Reports should have a report added.");
             Assert.AreEqual(2, viewModel.ReportsToView.Count(), "Viewable reports should have one report added.");
 
-            viewModel.IndexToDelete = 1;
-            viewModel.DeleteReport();
+            var reportToDelete = viewModel.ReportsToView[0];
+            viewModel.DeleteReport(reportToDelete);
             Assert.AreEqual(1, viewModel.ModelData.GetReports().Count, "Reports should have been cleared.");
             Assert.AreEqual(1, viewModel.ReportsToView.Count(), "Viewable reports should have been cleared.");
             Assert.AreEqual(ReportType.Error, viewModel.ReportsToView.Single().ErrorType);

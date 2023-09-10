@@ -55,6 +55,7 @@
             </StackPanel>
         </Grid>
         <DataGrid SelectionUnit="FullRow"
+                  SelectionMode="Extended"
                   AutoGenerateColumns="False"
                   FontWeight="Normal"
                   FontSize="{Binding Styles.MediumFontSize}"
