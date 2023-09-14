@@ -20,9 +20,10 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [TestFixture]
     public class SelectedSingleDataViewModelTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SelectedSingleDataViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new SelectedSingleDataViewModel(
+        private readonly Func<IValueList, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SelectedSingleDataViewModel> _viewModelFactory
+            = (data, globals, portfolio, name, dataUpdater) => new SelectedSingleDataViewModel(
                 portfolio,
+                data,
                 null,
                 globals,
                 new NameData("Barclays", "currentAccount"),
@@ -33,7 +34,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanOpenWindow()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSingleDataViewModel>(
+            var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -44,7 +46,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanAddValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSingleDataViewModel>(
+            var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -65,7 +68,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSingleDataViewModel>(
+            var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -88,8 +92,9 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanAddFromCSV()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSingleDataViewModel>(
+            var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
                 null,
+                new NameData("Barclays", "currentAccount"),
                 portfolio,
                 _viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
@@ -100,7 +105,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanWriteToCSV()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSingleDataViewModel>(
+            var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -111,7 +117,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDeleteValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSingleDataViewModel>(
+            var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);

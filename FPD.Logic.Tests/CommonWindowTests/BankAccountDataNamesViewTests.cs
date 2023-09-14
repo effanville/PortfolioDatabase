@@ -19,8 +19,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [TestFixture]
     public class BankAccountDataNamesViewTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
+        private readonly Func<IPortfolio, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
+            = (port, globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
                 portfolio,
                 globals,
                 null,
@@ -32,7 +32,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanCreateNew()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -54,7 +55,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditName()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -77,7 +79,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDownload()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -96,7 +99,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDelete()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);

@@ -7,11 +7,9 @@ using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.ViewModelBases;
 
-using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
 using FPD.Logic.ViewModels.Stats;
 
 using FinancialStructures.Database;
@@ -24,6 +22,10 @@ using Common.Structure.DataEdit;
 
 using System.Timers;
 
+using FinancialStructures.FinanceStructures;
+using FinancialStructures.FinanceStructures.Implementation;
+using FinancialStructures.FinanceStructures.Implementation.Asset;
+
 namespace FPD.Logic.ViewModels
 {
     /// <summary>
@@ -33,7 +35,7 @@ namespace FPD.Logic.ViewModels
     {
         private readonly Timer _timer = new Timer(100);
 
-        private PortfolioEventArgs AggEventArgs = new PortfolioEventArgs();
+        private PortfolioEventArgs AggEventArgs = new PortfolioEventArgs(Account.Unknown);
 
         private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
 
@@ -133,23 +135,23 @@ namespace FPD.Logic.ViewModels
             _updater.Database = ProgramPortfolio;
 
             LoadConfig();
-
+            var viewModelFactory = new ViewModelFactory(Styles, fUiGlobals, _updater);
             OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio);
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = isLightTheme;
             Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities",
-                Account.Security, _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSecurityViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security,
+                _updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts",
-                Account.BankAccount, _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSingleDataViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+                Account.BankAccount, _updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
-                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSecurityViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+                _updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
-                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSingleDataViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+                _updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
-                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedSingleDataViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Assets", Account.Asset, 
-                _updater, (dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater) => new SelectedAssetViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, dataUpdater)));
+                _updater, viewModelFactory));
+            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Assets", Account.Asset,
+                _updater, viewModelFactory));
             Tabs.Add(new StatsViewModel(fUiGlobals, Styles,
                 fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
             Tabs.Add(new StatisticsChartsViewModel(fUiGlobals, ProgramPortfolio, Styles));
@@ -191,7 +193,8 @@ namespace FPD.Logic.ViewModels
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
             var changeType =
-                AggEventArgs.ChangedAccount == Account.All || AggEventArgs.ChangedAccount != e.ChangedAccount
+                AggEventArgs.ChangedAccount == Account.All
+                || (AggEventArgs.ChangedAccount != Account.Unknown && AggEventArgs.ChangedAccount != e.ChangedAccount)
                     ? Account.All
                     : e.ChangedAccount;
             AggEventArgs = e.ChangedPortfolio
@@ -200,13 +203,20 @@ namespace FPD.Logic.ViewModels
         }
 
         private void _timer_Elapsed(object sender, ElapsedEventArgs e) => UpdateChildViewModels(AggEventArgs);
-
+        private bool isUpdating = false;
         private async void UpdateChildViewModels(PortfolioEventArgs e)
         {
             if (e.ChangedAccount == Account.Unknown)
             {
                 return;
             }
+
+            if (isUpdating)
+            {
+                return;
+            }
+
+            isUpdating = true;
 
             var tabs = TabsShallowCopy();
             foreach (object tab in tabs)
@@ -225,6 +235,7 @@ namespace FPD.Logic.ViewModels
             }
 
             AggEventArgs = new PortfolioEventArgs(Account.Unknown);
+            isUpdating = false;
         }
 
         private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)

@@ -9,17 +9,19 @@ using FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.Tests.TestHelpers
 {
-    internal sealed class ViewModelTestContext<TViewModel>
-        : ViewModelTestContext<TViewModel, IPortfolio>
-        where TViewModel : ViewModelBase<IPortfolio>
+    internal sealed class ViewModelTestContext<TData, TViewModel>
+        : ViewModelTestContext<TData, TViewModel, IPortfolio>
+        where TViewModel : ViewModelBase<TData, IPortfolio>
+        where TData : class
     {
         public IPortfolio Portfolio => DataStore;
 
         public ViewModelTestContext(
+            TData data,
             NameData name,
             IPortfolio dataStore,
-            Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, TViewModel> vmGenerator)
-            : base(name, dataStore, vmGenerator)
+            Func<TData, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, TViewModel> vmGenerator)
+            : base(data, name, dataStore, vmGenerator)
         {
         }
     }

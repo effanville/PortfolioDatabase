@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+
 using Common.Structure.DataStructures;
 using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
+
 using FPD.Logic.TemplatesAndStyles;
+
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Extensions.Statistics;
@@ -16,7 +19,9 @@ using FinancialStructures.Database.Statistics;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 using FinancialStructures;
+
 using FPD.Logic.ViewModels.Stats;
+
 using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Common
@@ -24,8 +29,9 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model to display a list with one value.
     /// </summary>
-    public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IPortfolio>
+    public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IValueList, IPortfolio>
     {
+        private IPortfolio _portfolio;
         private readonly Account TypeOfAccount;
 
         private NameData _selectedName;
@@ -37,7 +43,6 @@ namespace FPD.Logic.ViewModels.Common
         {
             get => _selectedName;
             set => SetAndNotify(ref _selectedName, value);
-
         }
 
         private TimeListViewModel _TLVM;
@@ -67,66 +72,63 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public SelectedSingleDataViewModel(
             IPortfolio portfolio,
+            IValueList valueList,
             UiStyles styles,
             UiGlobals globals,
             NameData selectedName,
             Account accountType,
             IUpdater<IPortfolio> dataUpdater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals, styles, closable: true)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
+                closable: true)
         {
+            _portfolio = portfolio;
             SelectedName = selectedName;
             TypeOfAccount = accountType;
             UpdateRequest += dataUpdater.PerformUpdate;
-            if (portfolio.TryGetAccount(accountType, SelectedName, out IValueList valueList))
-            {
-                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
-                TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
-                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
-                var stats = portfolio.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
-                Stats = new AccountStatsViewModel(stats, Styles);
-            }
-            else
-            {
-                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
-                TLVM = new TimeListViewModel(null, $"Value({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
-                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
-                Stats = new AccountStatsViewModel(null, Styles);
-            }
-
-            UpdateData(portfolio);
-
+            string currencySymbol =
+                CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
+            TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", Styles,
+                value => DeleteValue(SelectedName, value),
+                (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
+            TLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            
+            var stats = new AccountStatistics(
+                _portfolio,
+                DateTime.Today, 
+                TypeOfAccount, SelectedName,
+                AccountStatisticsHelpers.AllStatistics());
+            Stats = new AccountStatsViewModel(stats, Styles);
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
-
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IValueList modelData)
         {
             base.UpdateData(modelData);
-            if (SelectedName == null)
-            {
-                return;
-            }
-
-            if (!modelData.Exists(TypeOfAccount, SelectedName))
+            if (SelectedName == null || modelData == null)
             {
                 OnRequestClose(EventArgs.Empty);
                 return;
             }
 
-            _ = modelData.TryGetAccount(TypeOfAccount, SelectedName, out IValueList desired);
-            TLVM?.UpdateData(desired.Values);
-            var stats = modelData.GetStats(DateTime.Today, TypeOfAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+            TLVM?.UpdateData(ModelData.Values);
+            var stats = new AccountStatistics(
+                _portfolio,
+                DateTime.Today, 
+                TypeOfAccount, SelectedName,
+                AccountStatisticsHelpers.AllStatistics());
             Stats.UpdateData(stats);
         }
-        
+
         private void ExecuteAddEditData(NameData name, DailyValuation oldValue, DailyValuation newValue)
         {
             if (name != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        _ = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, ReportLogger)));
             }
         }
 
@@ -144,11 +146,13 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteData(TypeOfAccount, name, value.Day, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio => programPortfolio.TryDeleteData(TypeOfAccount, name, value.Day, ReportLogger)));
             }
             else
             {
-                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData.ToString(), "No Account was selected when trying to delete data.");
+                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData.ToString(),
+                    "No Account was selected when trying to delete data.");
             }
         }
 
@@ -164,12 +168,12 @@ namespace FPD.Logic.ViewModels.Common
         {
             if (_selectedName != null)
             {
-                FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result =
+                    DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
                 List<object> outputs = null;
-                bool exists = ModelData.TryGetAccount(TypeOfAccount, _selectedName, out IValueList account);
-                if (result.Success && exists)
+                if (result.Success)
                 {
-                    outputs = CsvReaderWriter.ReadFromCsv(account, result.FilePath, ReportLogger);
+                    outputs = CsvReaderWriter.ReadFromCsv(ModelData, result.FilePath, ReportLogger);
                 }
 
                 if (outputs == null)
@@ -181,11 +185,15 @@ namespace FPD.Logic.ViewModels.Common
                 {
                     if (obj is DailyValuation view)
                     {
-                        OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAddOrEditData(TypeOfAccount, SelectedName, view, view, ReportLogger)));
+                        OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                            programPortfolio =>
+                                programPortfolio.TryAddOrEditData(TypeOfAccount, SelectedName, view, view,
+                                    ReportLogger)));
                     }
                     else
                     {
-                        ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Have the wrong type of thing");
+                        ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(),
+                            "Have the wrong type of thing");
                     }
                 }
             }
@@ -206,20 +214,15 @@ namespace FPD.Logic.ViewModels.Common
                 return;
             }
 
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
+            FileInteractionResult result =
+                DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty,
+                    filter: "Csv Files|*.csv|All Files|*.*");
             if (!result.Success)
             {
                 return;
             }
 
-            if (ModelData.TryGetAccount(TypeOfAccount, _selectedName, out IValueList account))
-            {
-                CsvReaderWriter.WriteToCSVFile(account, result.FilePath, ReportLogger);
-            }
-            else
-            {
-                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving.ToString(), $"Could not find {TypeOfAccount}.");
-            }
+            CsvReaderWriter.WriteToCSVFile(ModelData, result.FilePath, ReportLogger);
         }
     }
 }

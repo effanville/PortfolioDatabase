@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Common.UI;
-using Common.UI.ViewModelBases;
 
 using FPD.Logic.TemplatesAndStyles;
 
@@ -19,13 +19,7 @@ namespace FPD.Logic.ViewModels.Common
     /// </summary>
     public class ValueListWindowViewModel : DataDisplayViewModelBase
     {
-        private readonly IUpdater<IPortfolio> _dataUpdater;
-
-        private readonly Func<IPortfolio, UiStyles,
-            UiGlobals,
-            NameData,
-            Account,
-            IUpdater<IPortfolio>, ClosableViewModelBase<IPortfolio>> _viewModelFactory;
+        private readonly IViewModelFactory _viewModelFactory;
 
         /// <summary>
         /// The tabs to display.
@@ -53,14 +47,9 @@ namespace FPD.Logic.ViewModels.Common
             string title,
             Account accountType,
             IUpdater<IPortfolio> dataUpdater,
-            Func<IPortfolio, UiStyles,
-                UiGlobals,
-                NameData,
-                Account,
-                IUpdater<IPortfolio>, ClosableViewModelBase<IPortfolio>> viewModelFactory)
+            IViewModelFactory viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
         {
-            _dataUpdater = dataUpdater;
             _viewModelFactory = viewModelFactory;
             var dataNames = new DataNamesViewModel(
                 ModelData,
@@ -83,12 +72,31 @@ namespace FPD.Logic.ViewModels.Common
                 return;
             }
 
+            List<object> tabsToRemove = new List<object>();
             foreach (object item in Tabs)
             {
-                if (item is ViewModelBase<IPortfolio> viewModel)
+                if (item is StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1)
                 {
-                    viewModel.UpdateData(modelData);
+                    viewModel1.UpdateData(modelData);
                 }
+
+                if (item is StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2)
+                {
+                    if (modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out var vl) 
+                        && vl is ISecurity security)
+                    {
+                        viewModel2.UpdateData(security);
+                    }
+                    else
+                    {
+                        tabsToRemove.Add(item);
+                    }
+                }
+            }
+            
+            foreach (object tab in tabsToRemove)
+            {
+                DisplayGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
             }
         }
 
@@ -99,15 +107,46 @@ namespace FPD.Logic.ViewModels.Common
                 return;
             }
 
-            var newVM = _viewModelFactory(
-                ModelData,
-                Styles,
-                DisplayGlobals,
-                name,
-                DataType,
-                _dataUpdater);
-            newVM.RequestClose += RemoveTab;
-            Tabs.Add(newVM);
+            if (ModelData.TryGetAccount(DataType, name, out IValueList valueList))
+            {
+                switch (valueList)
+                {
+                    case ISecurity security:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(security, security.Names, DataType,  ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                    case IAmortisableAsset asset:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(asset, asset.Names, DataType,  ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                    case IExchangableValueList exchangableValueList:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(exchangableValueList, exchangableValueList.Names, DataType,  ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                    default:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(valueList,valueList.Names, DataType, ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                StyledClosableViewModelBase<IPortfolio, IPortfolio> newVM;
+                newVM =  _viewModelFactory.GenerateViewModel(ModelData, null, DataType, ModelData);
+            }
+            
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace FPD.Logic.ViewModels.Common
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.
     /// </summary>
-    public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio>
+    public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio, IPortfolio>
     {
         internal readonly IUpdater<IPortfolio> _updater;
 
@@ -33,18 +33,18 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Backing field for <see cref="DataNames"/>.
         /// </summary>
-        private List<RowData> fDataNames = new List<RowData>();
+        private List<RowData> _dataNames = new List<RowData>();
 
         /// <summary>
         /// Name data of the names to be displayed in this view.
         /// </summary>
         public List<RowData> DataNames
         {
-            get => fDataNames;
-            set => SetAndNotify(ref fDataNames, value);
+            get => _dataNames;
+            set => SetAndNotify(ref _dataNames, value);
         }
 
-        private RowData fSelectedName;
+        private RowData _selectedName;
 
         /// <summary>
         /// The selected name with any alterations made by the user.
@@ -52,10 +52,10 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public RowData SelectedName
         {
-            get => fSelectedName;
+            get => _selectedName;
             set
             {
-                SetAndNotify(ref fSelectedName, value);
+                SetAndNotify(ref _selectedName, value);
                 if (SelectedName != null)
                 {
                     OnPropertyChanged(nameof(SelectedNameSet));
@@ -116,16 +116,10 @@ namespace FPD.Logic.ViewModels.Common
             get;
         }
 
-        private bool IsUpdated(IPortfolio dataToDisplay, NameData name)
-        {
-            bool result = dataToDisplay.LatestDate(TypeOfAccount, name) == DateTime.Today || dataToDisplay.LatestValue(TypeOfAccount, name).Equals(0.0m);
-
-            if (!result)
-            {
-            }
-            return result;
-        }
-
+        private bool IsUpdated(IPortfolio dataToDisplay, NameData name) 
+            => dataToDisplay.LatestDate(TypeOfAccount, name) == DateTime.Today 
+               || dataToDisplay.LatestValue(TypeOfAccount, name).Equals(0.0m);
+ 
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
@@ -205,14 +199,15 @@ namespace FPD.Logic.ViewModels.Common
         private void ExecuteCreateEdit(object obj)
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"ExecuteCreateEdit called.");
-            bool edited = false;
-            if (obj is RowData rowData && rowData != null && rowData.Instance != null && rowData.IsNew)
+            if (obj is not RowData rowData || rowData.Instance == null || !rowData.IsNew)
             {
-                NameData selectedInstance = rowData.Instance; //rowName.Instance;
-                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
-                NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => edited = programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger)));
+                return;
             }
+
+            NameData selectedInstance = rowData.Instance; //rowName.Instance;
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
+            NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger)));
         }
 
         /// <summary>

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+
 using Common.Structure.DataStructures;
 using Common.Structure.FileAccess;
 using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
-using Common.UI.ViewModelBases;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
+
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions;
@@ -20,7 +22,9 @@ using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 using FinancialStructures;
+
 using FPD.Logic.ViewModels.Stats;
+
 using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Security
@@ -28,8 +32,9 @@ namespace FPD.Logic.ViewModels.Security
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public class SelectedSecurityViewModel : StyledClosableViewModelBase<IPortfolio>
+    public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity, IPortfolio>
     {
+        private IPortfolio _portfolio;
         private readonly Account fAccount;
 
         internal SecurityTrade fOldSelectedTrade;
@@ -113,14 +118,16 @@ namespace FPD.Logic.ViewModels.Security
         /// Default constructor.
         /// </summary>
         public SelectedSecurityViewModel(
-            IPortfolio portfolio, 
-            UiStyles styles, 
-            UiGlobals globals, 
-            NameData selectedName, 
+            IPortfolio portfolio,
+            ISecurity security,
+            UiStyles styles,
+            UiGlobals globals,
+            NameData selectedName,
             Account account,
             IUpdater<IPortfolio> dataUpdater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio, globals, styles, true)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, styles, true)
         {
+            _portfolio = portfolio;
             SelectedName = selectedName;
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
@@ -131,28 +138,19 @@ namespace FPD.Logic.ViewModels.Security
             fAccount = account;
             UpdateRequest += dataUpdater.PerformUpdate;
 
-            if (portfolio.TryGetAccount(fAccount, SelectedName, out IValueList desired))
-            {
-                ISecurity security = desired as ISecurity;
-                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency ?? portfolio.BaseCurrency);
-                TradePriceHeader = $"Price({currencySymbol})";
-                TradeTotalCostHeader = $"Total Cost({currencySymbol})";
-                TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
-                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
-                var securityStats = portfolio.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
-                SecurityStats = new AccountStatsViewModel(securityStats, Styles);
-            }
-            else
-            {
-                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
-                TradePriceHeader = $"Price({currencySymbol})";
-                TradeTotalCostHeader = $"Total Cost({currencySymbol})";
-                TLVM = new TimeListViewModel(null, $"UnitPrice({currencySymbol})", Styles, value => DeleteValue(SelectedName, value), (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
-                TLVM.UpdateRequest += dataUpdater.PerformUpdate;
-                SecurityStats = new AccountStatsViewModel(null, Styles);
-            }
+            string currencySymbol =
+                CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency ?? portfolio.BaseCurrency);
+            TradePriceHeader = $"Price({currencySymbol})";
+            TradeTotalCostHeader = $"Total Cost({currencySymbol})";
+            TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles,
+                value => DeleteValue(SelectedName, value),
+                (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
+            TLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            var securityStats = portfolio
+                .GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
+            SecurityStats = new AccountStatsViewModel(securityStats, Styles);
 
-            UpdateData(portfolio);
+            UpdateData(ModelData);
         }
 
         /// <summary>
@@ -169,11 +167,14 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, programPortfolio => programPortfolio.TryDeleteData(fAccount, name.ToTwoName(), value.Day, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false,
+                    programPortfolio =>
+                        programPortfolio.TryDeleteData(fAccount, name.ToTwoName(), value.Day, ReportLogger)));
             }
             else
             {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
+                    "No Account was selected when trying to delete data.");
             }
         }
 
@@ -187,11 +188,14 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteDownloadCommand()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName} - a {fAccount}");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Download selected for account {SelectedName} - a {fAccount}");
             if (SelectedName != null)
             {
                 NameData names = SelectedName;
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccount, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    async programPortfolio => await PortfolioDataUpdater
+                        .Download(fAccount, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
             }
         }
 
@@ -205,17 +209,18 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteAddCsvData()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} adding data from csv.");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Selected {fAccount} {SelectedName} adding data from csv.");
             if (SelectedName != null)
             {
-                FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result =
+                    DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
                 List<object> outputs = null;
-                bool exists = ModelData.TryGetAccount(fAccount, SelectedName, out IValueList account);
-                if (result.Success && exists)
+                if (result.Success)
                 {
-                    ISecurity security = account as ISecurity;
-                    outputs = CsvReaderWriter.ReadFromCsv(security, result.FilePath, ReportLogger);
+                    outputs = CsvReaderWriter.ReadFromCsv(ModelData, result.FilePath, ReportLogger);
                 }
+
                 if (outputs != null)
                 {
                     foreach (object objec in outputs)
@@ -223,12 +228,18 @@ namespace FPD.Logic.ViewModels.Security
                         if (objec is SecurityDayData view)
                         {
                             var value = new DailyValuation(view.Date, view.UnitPrice);
-                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAddOrEditData(fAccount, SelectedName, value, value, ReportLogger)));
-                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName, view.Trade, view.Trade, ReportLogger)));
+                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                                programPortfolio =>
+                                    programPortfolio.TryAddOrEditData(fAccount, SelectedName, value, value,
+                                        ReportLogger)));
+                            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                                programPortfolio => programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName,
+                                    view.Trade, view.Trade, ReportLogger)));
                         }
                         else
                         {
-                            ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Have the wrong type of thing");
+                            ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(),
+                                "Have the wrong type of thing");
                         }
                     }
                 }
@@ -245,21 +256,16 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteExportCsvData()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} exporting data to csv.");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Selected {fAccount} {SelectedName} exporting data to csv.");
             if (SelectedName != null)
             {
-                FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
+                FileInteractionResult result =
+                    DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty,
+                        filter: "Csv Files|*.csv|All Files|*.*");
                 if (result.Success)
                 {
-                    if (ModelData.TryGetAccount(fAccount, SelectedName, out IValueList account))
-                    {
-                        ISecurity security = account as ISecurity;
-                        CsvReaderWriter.WriteToCSVFile(security, result.FilePath, ReportLogger);
-                    }
-                    else
-                    {
-                        _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Could not find {fAccount}.");
-                    }
+                    CsvReaderWriter.WriteToCSVFile(ModelData, result.FilePath, ReportLogger);
                 }
             }
         }
@@ -268,32 +274,35 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccount, name.ToTwoName(), oldValue, newValue, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        _ = programPortfolio.TryAddOrEditData(fAccount, name.ToTwoName(), oldValue, newValue,
+                            ReportLogger)));
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(ISecurity modelData)
         {
-            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccount} {SelectedName} updating data.");
+            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Selected {fAccount} {SelectedName} updating data.");
             base.UpdateData(modelData);
-            if (SelectedName != null)
+            if (SelectedName == null || modelData == null)
             {
-                if (!modelData.Exists(fAccount, SelectedName))
-                {
-                    OnRequestClose(EventArgs.Empty);
-                    return;
-                }
-
-                _ = modelData.TryGetAccount(fAccount, SelectedName, out IValueList desired);
-
-                ISecurity security = desired as ISecurity;
-                TLVM?.UpdateData(security.UnitPrice);
-                Trades = security.Trades.ToList();
-                var securityStats = modelData.GetStats(DateTime.Today, fAccount, SelectedName, AccountStatisticsHelpers.AllStatistics()).Single();
-                SecurityStats.UpdateData(securityStats);
-                Values = modelData.NumberData(fAccount, SelectedName, ReportLogger).ToList();
+                OnRequestClose(EventArgs.Empty);
+                return;
             }
+
+            TLVM?.UpdateData(ModelData.UnitPrice);
+            Trades = ModelData.Trades.ToList();
+            var securityStats = new AccountStatistics(
+                _portfolio,
+                DateTime.Today,
+                fAccount,
+                ModelData.Names,
+                AccountStatisticsHelpers.AllStatistics());
+            SecurityStats.UpdateData(securityStats);
+            Values = modelData.ListOfValues().ToList();
         }
 
         private RelayCommand fPreEditCommand;
@@ -322,9 +331,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             return new SecurityTrade()
             {
-                TradeType = TradeType.Buy,
-                Names = SelectedName.ToTwoName(),
-                Day = DateTime.Today
+                TradeType = TradeType.Buy, Names = SelectedName.ToTwoName(), Day = DateTime.Today
             };
         }
 
@@ -358,7 +365,9 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedTrade != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(), fOldSelectedTrade, SelectedTrade, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(fAccount, SelectedName.ToTwoName(),
+                        fOldSelectedTrade, SelectedTrade, ReportLogger)));
             }
         }
 
@@ -369,11 +378,14 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedName != null && SelectedTrade != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteTradeData(fAccount, SelectedName, SelectedTrade.Day, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        programPortfolio.TryDeleteTradeData(fAccount, SelectedName, SelectedTrade.Day, ReportLogger)));
             }
             else
             {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
+                    "No Account was selected when trying to delete data.");
             }
         }
     }

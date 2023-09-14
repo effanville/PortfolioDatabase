@@ -5,7 +5,8 @@ using FPD.Logic.TemplatesAndStyles;
 
 namespace FPD.Logic.ViewModels.Common;
 
-public abstract class StyledClosableViewModelBase<T> : ClosableViewModelBase<T> where T : class
+public abstract class StyledClosableViewModelBase<TModel, TUpdate> : ClosableViewModelBase<TModel, TUpdate> 
+    where TModel : class where TUpdate : class
 {        
     private UiStyles _styles;
 
@@ -24,7 +25,7 @@ public abstract class StyledClosableViewModelBase<T> : ClosableViewModelBase<T> 
         _styles = styles;
     }
 
-    protected StyledClosableViewModelBase(string header, T modelData, UiGlobals displayGlobals, UiStyles styles, bool closable) 
+    protected StyledClosableViewModelBase(string header, TModel modelData, UiGlobals displayGlobals, UiStyles styles, bool closable) 
         : base(header, modelData, displayGlobals, closable)
     {
         _styles = styles;

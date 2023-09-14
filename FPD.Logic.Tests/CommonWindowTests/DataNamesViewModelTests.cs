@@ -14,10 +14,10 @@ namespace FPD.Logic.Tests.CommonWindowTests
 {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
-    public partial class DataNamesViewModelTests
+    public sealed class DataNamesViewModelTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
+        private readonly Func<IPortfolio, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
+            = (p, globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
                 portfolio,
                 globals,
                 null,
@@ -29,7 +29,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanOpen()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -40,7 +41,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -55,7 +57,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanOpenSecurity()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -70,7 +73,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanUpdateSecurityData()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -84,7 +88,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanCreateNewSecurity()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -104,7 +109,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditSecurityName()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -124,7 +130,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditSecurityNameAndUrl()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -147,7 +154,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDownloadSecurity()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);
@@ -163,7 +171,8 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDeleteSecurity()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<DataNamesViewModel>(
+            var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
+                null,
                 null,
                 portfolio,
                 _viewModelFactory);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 
 using Common.Structure.DataEdit;
@@ -14,9 +13,10 @@ using Moq;
 
 namespace FPD.Logic.Tests.TestHelpers
 {
-    internal class ViewModelTestContext<TViewModel, TDataStore>
-        where TViewModel : ViewModelBase<TDataStore>
+    internal class ViewModelTestContext<TData, TViewModel, TDataStore>
+        where TViewModel : ViewModelBase<TData, TDataStore>
         where TDataStore : class
+        where TData : class
     {
         private readonly IUpdater<TDataStore> _dataUpdater;
 
@@ -45,9 +45,10 @@ namespace FPD.Logic.Tests.TestHelpers
         }
 
         public ViewModelTestContext(
+            TData data,
             NameData name,
             TDataStore dataStore,
-            Func<UiGlobals, TDataStore, NameData, IUpdater<TDataStore>, TViewModel> vmGenerator)
+            Func<TData, UiGlobals, TDataStore, NameData, IUpdater<TDataStore>, TViewModel> vmGenerator)
         {
             FileSystem = new MockFileSystem();
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
@@ -57,7 +58,7 @@ namespace FPD.Logic.Tests.TestHelpers
 
             _dataUpdater = TestSetupHelper.CreateUpdater(DataStore);
             Globals = TestSetupHelper.CreateGlobalsMock(FileSystem, fileMock.Object, dialogMock.Object);
-            ViewModel = vmGenerator(Globals, DataStore, Name, _dataUpdater);
+            ViewModel = vmGenerator(data, Globals, DataStore, Name, _dataUpdater);
             ViewModel.UpdateRequest += _dataUpdater.PerformUpdate;
         }
 
