@@ -27,7 +27,7 @@
     <DataTemplate DataType="{x:Type vmStats:ExportStatsViewModel}">
         <statsView:ExportStatsControl />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:HtmlStatsViewerViewModel}">
+    <DataTemplate DataType="{x:Type vm:HtmlViewerViewModel}">
         <view:HtmlStatsViewer />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vmStats:StatisticsChartsViewModel}">

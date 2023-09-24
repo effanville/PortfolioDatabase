@@ -1,9 +1,8 @@
 ﻿using System;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 
-using Common.Structure.DataEdit;
 using Common.Structure.DisplayClasses;
-using Common.UI;
 
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
@@ -19,24 +18,17 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [TestFixture]
     public class BankAccountDataNamesViewTests
     {
-        private readonly Func<IPortfolio, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
-            = (port, globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
-                portfolio,
-                globals,
-                null,
-                dataUpdater,
-                obj => { },
-                Account.BankAccount);
-
         [Test]
         public void CanCreateNew()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
-                null,
-                null,
                 portfolio,
-                _viewModelFactory);
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             context.ViewModel.SelectItem(null);
 
             var newRowItem = context.ViewModel.AddNewItem();
@@ -55,11 +47,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditName()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
-                null,
-                null,
                 portfolio,
-                _viewModelFactory);
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             context.ViewModel.SelectItem(null);
             var row = context.ViewModel.DataNames[0];
             NameData item = row.Instance;
@@ -79,11 +73,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDownload()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
-                null,
-                null,
                 portfolio,
-                _viewModelFactory);
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             context.ViewModel.SelectItem(null);
             SelectableEquatable<NameData> item = context.ViewModel.DataNames.First();
             context.ViewModel.SelectItem(item.Instance);
@@ -99,11 +95,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDelete()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
-                null,
-                null,
                 portfolio,
-                _viewModelFactory);
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             context.ViewModel.SelectItem(null);
             Assert.AreEqual(1, context.ViewModel.ModelData.FundsThreadSafe.Count);
             Assert.AreEqual(1, context.Portfolio.BankAccountsThreadSafe.Count);

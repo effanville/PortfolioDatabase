@@ -1,8 +1,5 @@
-﻿using System;
+﻿using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-
-using Common.Structure.DataEdit;
-using Common.UI;
 
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
@@ -22,23 +19,17 @@ namespace FPD.Logic.Tests.AssetWindowTests
     [TestFixture]
     public class AssetEditWindowTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, ValueListWindowViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new ValueListWindowViewModel(
-                globals,
-                null,
-                portfolio,
-                "Asset",
-                Account.Asset,
-                dataUpdater,
-                (dataStore, uiStyles, uiGlobals, selectedName, accountType, updater) => new SelectedAssetViewModel(dataStore, uiStyles, uiGlobals, selectedName, accountType, updater));
         [Test]
         public void CanLoadSuccessfully()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<ValueListWindowViewModel>(
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
+                portfolio, 
                 null,
+                Account.Asset,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.Tabs.Count);
             object tab = context.ViewModel.Tabs.Single();
             DataNamesViewModel nameModel = tab as DataNamesViewModel;
@@ -49,10 +40,13 @@ namespace FPD.Logic.Tests.AssetWindowTests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<ValueListWindowViewModel>(
-                null,
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
                 portfolio,
-                _viewModelFactory);
+                null,
+                Account.Asset,
+                portfolio,
+                viewModelFactory);
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             context.ViewModel.UpdateData(newData);
 
@@ -64,10 +58,13 @@ namespace FPD.Logic.Tests.AssetWindowTests
         public void CanUpdateDataAndRemoveOldTab()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<ValueListWindowViewModel>(
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
+                portfolio, 
                 null,
+                Account.Asset,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             NameData newNameData = new NameData("Fidelity", "Europe");
             context.ViewModel.LoadTabFunc(newNameData);
 
@@ -84,10 +81,14 @@ namespace FPD.Logic.Tests.AssetWindowTests
         public void CanAddTab()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<ValueListWindowViewModel>(
-                null,
+            
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
                 portfolio,
-                _viewModelFactory);
+                null,
+                Account.Asset,
+                portfolio,
+                viewModelFactory);
 
             NameData newData = new NameData("House", "MyHouse");
             context.ViewModel.LoadTabFunc(newData);

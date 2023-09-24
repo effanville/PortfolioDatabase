@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 using Common.UI;
 
@@ -11,6 +13,7 @@ using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 
 using Common.Structure.DataEdit;
+using Common.UI.Commands;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -21,20 +24,19 @@ namespace FPD.Logic.ViewModels.Common
     {
         private readonly IViewModelFactory _viewModelFactory;
 
-        /// <summary>
-        /// The tabs to display.
-        /// </summary>
         public ObservableCollection<object> Tabs { get; set; } = new ObservableCollection<object>();
 
-        private int _selectedIndex;
+        public ICommand SelectionChanged { get; }
 
-        /// <summary>
-        /// Index of the selected tab.
-        /// </summary>
-        public int SelectedIndex
+        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
         {
-            get => _selectedIndex;
-            set => SetAndNotify(ref _selectedIndex, value);
+            var source = e.AddedItems;
+            if (source is not object[] list || list.Length != 1)
+            {
+                return;
+            }
+
+            UpdateTab(list[0], ModelData);
         }
 
         /// <summary>
@@ -60,7 +62,8 @@ namespace FPD.Logic.ViewModels.Common
                 accountType);
             Tabs.Add(dataNames);
             dataNames.UpdateRequest += dataUpdater.PerformUpdate;
-            SelectedIndex = 0;
+            dataNames.RequestClose += RemoveTab;
+            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
         }
 
         /// <inheritdoc/>
@@ -75,28 +78,64 @@ namespace FPD.Logic.ViewModels.Common
             List<object> tabsToRemove = new List<object>();
             foreach (object item in Tabs)
             {
-                if (item is StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1)
+                if (!UpdateTab(item, modelData))
                 {
-                    viewModel1.UpdateData(modelData);
-                }
-
-                if (item is StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2)
-                {
-                    if (modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out var vl) 
-                        && vl is ISecurity security)
-                    {
-                        viewModel2.UpdateData(security);
-                    }
-                    else
-                    {
-                        tabsToRemove.Add(item);
-                    }
+                    tabsToRemove.Add(item);
                 }
             }
-            
+
             foreach (object tab in tabsToRemove)
             {
                 DisplayGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
+            }
+        }
+
+        private bool UpdateTab(object item, IPortfolio modelData)
+        {
+            switch (item)
+            {
+                case StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1:
+                {
+                    viewModel1.UpdateData(modelData);
+                    return true;
+                }
+                case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
+                {
+                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out var vl)
+                        || vl is not ISecurity security)
+                    {
+                        return false;
+                    }
+
+                    viewModel2.UpdateData(security);
+                    return true;
+
+                }
+                case StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> viewModel3:
+                {
+                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out var vl)
+                        || vl is not IAmortisableAsset asset)
+                    {
+                        return false;
+                    }
+
+                    viewModel3.UpdateData(asset);
+                    return true;
+
+                }
+                case StyledClosableViewModelBase<IValueList, IPortfolio> viewModel4:
+                {
+                    if (!modelData.TryGetAccount(DataType, viewModel4.ModelData.Names, out var vl))
+                    {
+                        return false;
+                    }
+
+                    viewModel4.UpdateData(vl);
+                    return true;
+
+                }
+                default:
+                    return false;
             }
         }
 
@@ -110,7 +149,7 @@ namespace FPD.Logic.ViewModels.Common
             if (ModelData.TryGetAccount(DataType, name, out IValueList valueList))
             {
                 switch (valueList)
-                {
+            {
                     case ISecurity security:
                     {
                         var newVM = _viewModelFactory.GenerateViewModel(security, security.Names, DataType,  ModelData);
@@ -121,13 +160,6 @@ namespace FPD.Logic.ViewModels.Common
                     case IAmortisableAsset asset:
                     {
                         var newVM = _viewModelFactory.GenerateViewModel(asset, asset.Names, DataType,  ModelData);
-                        newVM.RequestClose += RemoveTab;
-                        Tabs.Add(newVM);
-                        break;
-                    }
-                    case IExchangableValueList exchangableValueList:
-                    {
-                        var newVM = _viewModelFactory.GenerateViewModel(exchangableValueList, exchangableValueList.Names, DataType,  ModelData);
                         newVM.RequestClose += RemoveTab;
                         Tabs.Add(newVM);
                         break;
@@ -146,9 +178,9 @@ namespace FPD.Logic.ViewModels.Common
                 StyledClosableViewModelBase<IPortfolio, IPortfolio> newVM;
                 newVM =  _viewModelFactory.GenerateViewModel(ModelData, null, DataType, ModelData);
             }
-            
-        }
 
+        }
+        
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>

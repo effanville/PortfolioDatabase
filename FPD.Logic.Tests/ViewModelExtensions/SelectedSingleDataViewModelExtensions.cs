@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Common.Structure.DataStructures;
 using FPD.Logic.ViewModels.Common;
-using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 
 namespace FPD.Logic.Tests.ViewModelExtensions
 {
@@ -31,16 +31,16 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             viewModel.TLVM.PreEditCommand?.Execute(null);
         }
 
-        public static void CompleteEdit(this SelectedSingleDataViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEdit(this SelectedSingleDataViewModel viewModel, IValueList valueList)
         {
             viewModel.TLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(valueList);
         }
 
-        public static void DeleteSelected(this SelectedSingleDataViewModel viewModel, IPortfolio portfolio)
+        public static void DeleteSelected(this SelectedSingleDataViewModel viewModel, IValueList valueList)
         {
             viewModel.DeleteValuationCommand?.Execute(null);
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(valueList);
         }
     }
 }

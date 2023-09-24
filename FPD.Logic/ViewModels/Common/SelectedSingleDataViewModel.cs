@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 
 using Common.Structure.DataStructures;
@@ -14,7 +13,6 @@ using FPD.Logic.TemplatesAndStyles;
 
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;
-using FinancialStructures.Database.Extensions.Statistics;
 using FinancialStructures.Database.Statistics;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
@@ -31,8 +29,8 @@ namespace FPD.Logic.ViewModels.Common
     /// </summary>
     public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IValueList, IPortfolio>
     {
-        private IPortfolio _portfolio;
-        private readonly Account TypeOfAccount;
+        private readonly IPortfolio _portfolio;
+        private readonly Account _dataType;
 
         private NameData _selectedName;
 
@@ -76,14 +74,14 @@ namespace FPD.Logic.ViewModels.Common
             UiStyles styles,
             UiGlobals globals,
             NameData selectedName,
-            Account accountType,
+            Account accountDataType,
             IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
                 closable: true)
         {
             _portfolio = portfolio;
             SelectedName = selectedName;
-            TypeOfAccount = accountType;
+            _dataType = accountDataType;
             UpdateRequest += dataUpdater.PerformUpdate;
             string currencySymbol =
                 CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
@@ -91,13 +89,7 @@ namespace FPD.Logic.ViewModels.Common
                 value => DeleteValue(SelectedName, value),
                 (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
             TLVM.UpdateRequest += dataUpdater.PerformUpdate;
-            
-            var stats = new AccountStatistics(
-                _portfolio,
-                DateTime.Today, 
-                TypeOfAccount, SelectedName,
-                AccountStatisticsHelpers.AllStatistics());
-            Stats = new AccountStatsViewModel(stats, Styles);
+            Stats = new AccountStatsViewModel(null, Styles);
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
@@ -113,11 +105,12 @@ namespace FPD.Logic.ViewModels.Common
                 return;
             }
 
-            TLVM?.UpdateData(ModelData.Values);
+            TLVM.UpdateData(ModelData.Values);
             var stats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today, 
-                TypeOfAccount, SelectedName,
+                _dataType, 
+                SelectedName,
                 AccountStatisticsHelpers.AllStatistics());
             Stats.UpdateData(stats);
         }
@@ -128,7 +121,7 @@ namespace FPD.Logic.ViewModels.Common
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
                     programPortfolio =>
-                        _ = programPortfolio.TryAddOrEditData(TypeOfAccount, name, oldValue, newValue, ReportLogger)));
+                        _ = programPortfolio.TryAddOrEditData(_dataType, name, oldValue, newValue, ReportLogger)));
             }
         }
 
@@ -147,7 +140,7 @@ namespace FPD.Logic.ViewModels.Common
             if (name != null && value != null)
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => programPortfolio.TryDeleteData(TypeOfAccount, name, value.Day, ReportLogger)));
+                    programPortfolio => programPortfolio.TryDeleteData(_dataType, name, value.Day, ReportLogger)));
             }
             else
             {
@@ -166,35 +159,37 @@ namespace FPD.Logic.ViewModels.Common
 
         private void ExecuteAddCsvData()
         {
-            if (_selectedName != null)
+            if (_selectedName == null)
             {
-                FileInteractionResult result =
-                    DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
-                List<object> outputs = null;
-                if (result.Success)
-                {
-                    outputs = CsvReaderWriter.ReadFromCsv(ModelData, result.FilePath, ReportLogger);
-                }
+                return;
+            }
 
-                if (outputs == null)
-                {
-                    return;
-                }
+            FileInteractionResult result =
+                DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+            List<object> outputs = null;
+            if (result.Success)
+            {
+                outputs = CsvReaderWriter.ReadFromCsv(ModelData, result.FilePath, ReportLogger);
+            }
 
-                foreach (object obj in outputs)
+            if (outputs == null)
+            {
+                return;
+            }
+
+            foreach (object obj in outputs)
+            {
+                if (obj is DailyValuation view)
                 {
-                    if (obj is DailyValuation view)
-                    {
-                        OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                            programPortfolio =>
-                                programPortfolio.TryAddOrEditData(TypeOfAccount, SelectedName, view, view,
-                                    ReportLogger)));
-                    }
-                    else
-                    {
-                        ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(),
-                            "Have the wrong type of thing");
-                    }
+                    OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                        programPortfolio =>
+                            programPortfolio.TryAddOrEditData(_dataType, SelectedName, view, view,
+                                ReportLogger)));
+                }
+                else
+                {
+                    ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(),
+                        "Have the wrong type of thing");
                 }
             }
         }

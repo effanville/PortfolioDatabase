@@ -13,13 +13,15 @@ using FinancialStructures.Database.Extensions;
 using FinancialStructures.DataStructures;
 using FinancialStructures.NamingStructures;
 
+using FPD.Logic.ViewModels;
+
 using Moq;
 
 namespace FPD.Logic.Tests.TestHelpers
 {
     public static class TestSetupHelper
     {
-        internal static IReportLogger DummyReportLogger = new NothingReportLogger();
+        internal readonly static IReportLogger DummyReportLogger = new NothingReportLogger();
         public static Mock<IFileInteractionService> CreateFileMock(string filePath)
         {
             Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
@@ -27,6 +29,17 @@ namespace FPD.Logic.Tests.TestHelpers
             _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, filePath));
             return mockfileinteraction;
         }
+
+        internal static IViewModelFactory CreateViewModelFactory(
+            IPortfolio portfolio,
+            IFileSystem fileSystem,
+            IFileInteractionService fileService,
+            IBaseDialogCreationService dialogCreationService,
+            IReportLogger logger = null) 
+            => new ViewModelFactory(
+                null, 
+                CreateGlobalsMock(fileSystem, fileService, dialogCreationService, logger), 
+                CreateUpdater(portfolio));
 
         public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
         {

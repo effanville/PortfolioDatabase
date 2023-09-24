@@ -5,10 +5,12 @@ using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 
+using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Security;
+using FPD.Logic.ViewModels.Stats;
 
 namespace FPD.Logic.ViewModels;
 
@@ -25,29 +27,36 @@ public class ViewModelFactory : IViewModelFactory
         _updater = updater;
     }
 
+    public DataDisplayViewModelBase GenerateViewModel(
+        IPortfolio portfolio, 
+        NameData names,
+        Account account,
+        IConfiguration configuration,
+        string vmType) 
+        => vmType switch
+        {
+            nameof(StatsViewModel) => new StatsViewModel(_globals, _styles, configuration, portfolio, account),
+            nameof(BasicDataViewModel) => new BasicDataViewModel(_globals, _styles, portfolio),
+            _ => null
+        };
+
     public StyledClosableViewModelBase<T, IPortfolio> GenerateViewModel<T>(
         T modelData, 
         NameData names,
         Account account, 
         IPortfolio portfolio) 
-        where T : class
-    {
-        switch (modelData)
+        where T : class 
+        => modelData switch
         {
-            case IAmortisableAsset asset:
-                return new SelectedAssetViewModel(portfolio, asset, _styles, _globals, asset.Names, account, _updater)
-                    as StyledClosableViewModelBase<T, IPortfolio>;
-            case ISecurity security:
-                return new SelectedSecurityViewModel(portfolio, security, _styles, _globals, names, account, _updater) 
-                    as StyledClosableViewModelBase<T, IPortfolio>;
-            case IExchangableValueList exchangeableValueList:
-                return new SelectedSingleDataViewModel(portfolio, exchangeableValueList, _styles, _globals, exchangeableValueList.Names, account, _updater) 
-                    as StyledClosableViewModelBase<T, IPortfolio>;
-            case IValueList valueList:
-                return new SelectedSingleDataViewModel(portfolio, valueList, _styles, _globals, valueList.Names, account, _updater)
-                    as StyledClosableViewModelBase<T, IPortfolio>;
-            default:
-                return null;
-        }
-    }
+            IAmortisableAsset asset => new SelectedAssetViewModel(portfolio, asset, _styles, _globals, asset.Names,
+                account, _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+            ISecurity security => new SelectedSecurityViewModel(portfolio, security, _styles, _globals, names, account,
+                _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+            IExchangableValueList exchangeableValueList => new SelectedSingleDataViewModel(portfolio,
+                exchangeableValueList, _styles, _globals, exchangeableValueList.Names, account,
+                _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+            IValueList valueList => new SelectedSingleDataViewModel(portfolio, valueList, _styles, _globals,
+                valueList.Names, account, _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+            _ => null
+        };
 }

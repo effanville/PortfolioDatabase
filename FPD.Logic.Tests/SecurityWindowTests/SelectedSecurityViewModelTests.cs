@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Threading;
 using Common.Structure.DataStructures;
@@ -10,31 +11,25 @@ using FinancialStructures.FinanceStructures;
 using NUnit.Framework;
 using FinancialStructures.NamingStructures;
 using FPD.Logic.ViewModels.Security;
-using Common.UI;
-using Common.Structure.DataEdit;
 
 namespace FPD.Logic.Tests.SecurityWindowTests
 {
     [TestFixture]
     public sealed class SelectedSecurityViewModelTests
     {
-        Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SelectedSecurityViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new SelectedSecurityViewModel(
-                portfolio,
-                null,
-                globals,
-                name,
-                Account.Security,
-                dataUpdater);
-
         [Test]
         public void CanOpenWindow()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
         }
 
@@ -42,17 +37,22 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanAddTradeValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.Trades.Count);
             context.ViewModel.SelectTrade(null);
             SecurityTrade newItem = context.ViewModel.AddNewTrade();
             context.ViewModel.BeginEditTrade();
             newItem.Day = new DateTime(2002, 1, 1);
             newItem.NumberShares = 5;
-            context.ViewModel.CompleteEditTrade(context.Portfolio);
+            context.ViewModel.CompleteEditTrade(context.Data);
 
             Assert.AreEqual(2, context.ViewModel.Trades.Count);
             Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Single().Count());
@@ -62,17 +62,22 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanEditTradeValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.Trades.Count);
             SecurityTrade item = context.ViewModel.Trades[0];
             context.ViewModel.SelectTrade(item);
             context.ViewModel.BeginEditTrade();
             item.Day = new DateTime(2000, 1, 1);
             item.NumberShares = 1;
-            context.ViewModel.CompleteEditTrade(context.Portfolio);
+            context.ViewModel.CompleteEditTrade(context.Data);
 
             Assert.AreEqual(1, context.ViewModel.Trades.Count);
             Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Single().Count());
@@ -84,35 +89,43 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanDeleteTrade()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.Trades.Count);
             context.ViewModel.SelectTrade(context.ViewModel.Trades[0]);
-            context.ViewModel.DeleteSelectedTrade(context.Portfolio);
-            _ = context.Portfolio.TryGetAccount(Account.Security, context.Name, out IValueList valueList);
-            ISecurity security = valueList as ISecurity;
-            Assert.AreEqual(0, security.Values.Count());
-            Assert.AreEqual(1, security.UnitPrice.Count());
-            Assert.AreEqual(0, security.Trades.Count);
+            context.ViewModel.DeleteSelectedTrade(context.Data);
+            Assert.AreEqual(0, context.Data.Values.Count());
+            Assert.AreEqual(1, context.Data.UnitPrice.Count());
+            Assert.AreEqual(0, context.Data.Trades.Count);
         }
 
         [Test]
         public void CanAddValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             context.ViewModel.SelectUnitPrice(null);
             DailyValuation newItem = context.ViewModel.AddNewUnitPrice();
             context.ViewModel.BeginEdit();
             newItem.Day = new DateTime(2002, 1, 1);
             newItem.Value = 1;
-            context.ViewModel.CompleteEdit(context.Portfolio);
+            context.ViewModel.CompleteEdit(context.Data);
 
             Assert.AreEqual(2, context.ViewModel.TLVM.Valuations.Count);
             Assert.AreEqual(2, context.Portfolio.FundsThreadSafe.Single().Count());
@@ -122,17 +135,22 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanEditValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             DailyValuation item = context.ViewModel.TLVM.Valuations[0];
             context.ViewModel.SelectUnitPrice(item);
             context.ViewModel.BeginEdit();
             item.Day = new DateTime(2000, 1, 1);
             item.Value = 1;
-            context.ViewModel.CompleteEdit(context.Portfolio);
+            context.ViewModel.CompleteEdit(context.Data);
 
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Single().Count());
@@ -144,10 +162,15 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanAddFromCSV()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
         }
 
@@ -156,10 +179,15 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanWriteToCSV()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
         }
 
@@ -168,18 +196,21 @@ namespace FPD.Logic.Tests.SecurityWindowTests
         public void CanDeleteValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<SelectedSecurityViewModel>(
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Fidelity", "China"), out var desired);
+            var security = desired as ISecurity;
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<ISecurity, SelectedSecurityViewModel>(
+                security,
                 new NameData("Fidelity", "China"),
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             context.ViewModel.SelectUnitPrice(context.ViewModel.TLVM.Valuations[0]);
-            context.ViewModel.DeleteSelected(context.Portfolio);
-            _ = context.Portfolio.TryGetAccount(Account.Security, context.Name, out IValueList valueList);
-            ISecurity security = valueList as ISecurity;
-            Assert.AreEqual(0, security.Values.Count());
-            Assert.AreEqual(0, security.UnitPrice.Count());
-            Assert.AreEqual(1, security.Trades.Count);
+            context.ViewModel.DeleteSelected(context.Data);
+            Assert.AreEqual(0, context.Data.Values.Count());
+            Assert.AreEqual(0, context.Data.UnitPrice.Count());
+            Assert.AreEqual(1, context.Data.Trades.Count);
         }
     }
 }

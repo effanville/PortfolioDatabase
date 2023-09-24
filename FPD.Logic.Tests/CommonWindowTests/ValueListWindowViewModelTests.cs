@@ -3,9 +3,8 @@ using FPD.Logic.Tests.TestHelpers;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using NUnit.Framework;
-using Common.Structure.DataEdit;
-using Common.UI;
-using System;
+using System.IO.Abstractions.TestingHelpers;
+
 using FPD.Logic.Tests.UserInteractions;
 
 namespace FPD.Logic.Tests.CommonWindowTests
@@ -16,35 +15,17 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [TestFixture]
     public class ValueListWindowViewModelTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, ValueListWindowViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new ValueListWindowViewModel(
-                globals,
-                null,
-                portfolio,
-                "Title",
-                Account.Security,
-                dataUpdater,
-                (dataStore,
-                    uiStyles,
-                    fUiGlobals, 
-                    selectedName, 
-                    accountType,
-                    updater) => new SelectedSingleDataViewModel(
-                    dataStore,
-                    uiStyles,
-                    fUiGlobals, 
-                    selectedName, 
-                    accountType,
-                    updater));
-
         [Test]
         public void CanLoadSuccessfully()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<ViewModels.Common.ValueListWindowViewModel>(
-                new NameData("Fidelity", "China"),
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
                 portfolio,
-                _viewModelFactory);
+                new NameData("Fidelity", "China"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.Tabs.Count);
             DataNamesViewModel nameModel = context.ViewModel.GetDataNamesViewModel();
             Assert.AreEqual(1, nameModel.DataNames.Count);
@@ -54,10 +35,14 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<ViewModels.Common.ValueListWindowViewModel>(
-                new NameData("Fidelity", "China"),
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
                 portfolio,
-                _viewModelFactory);
+                new NameData("Fidelity", "China"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             context.ViewModel.UpdateData(newData);
 
@@ -69,10 +54,14 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanUpdateDataAndRemoveOldTab()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<ViewModels.Common.ValueListWindowViewModel>(
-                new NameData("Fidelity", "China"),
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
                 portfolio,
-                _viewModelFactory);
+                new NameData("Fidelity", "China"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             NameData newNameData = new NameData("Fidelity", "Europe");
             context.ViewModel.LoadTabFunc(newNameData);
 
@@ -89,10 +78,14 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanAddTab()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<ViewModels.Common.ValueListWindowViewModel>(
-                new NameData("Fidelity", "China"),
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+
+            var context = new ViewModelTestContext<IPortfolio, ValueListWindowViewModel>(
                 portfolio,
-                _viewModelFactory);
+                new NameData("Fidelity", "China"),
+                Account.BankAccount,
+                portfolio,
+                viewModelFactory);
             NameData newData = new NameData("Fidelity", "China");
             context.ViewModel.LoadTabFunc(newData);
 

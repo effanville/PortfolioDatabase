@@ -1,10 +1,6 @@
-﻿using System;
-
-using Common.Structure.DataEdit;
-using Common.UI;
+﻿using System.IO.Abstractions.TestingHelpers;
 
 using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
 
 using FPD.Logic.Tests.TestHelpers;
 using FPD.Logic.ViewModels;
@@ -19,9 +15,6 @@ namespace FPD.Logic.Tests
     [TestFixture]
     internal class BasicDataViewWindowTests
     {
-        private readonly Func<UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, BasicDataViewModel> _viewModelFactory
-            = (globals, portfolio, name, dataUpdater) => new BasicDataViewModel(globals, null, portfolio);
-
         /// <summary>
         /// Ensures the window displays data if the underlying database is modified.
         /// </summary>
@@ -29,10 +22,13 @@ namespace FPD.Logic.Tests
         public void EmptyPortfolioHasEmptyData()
         {
             var portfolio = PortfolioFactory.GenerateEmpty();
-            var context = new ViewModelTestContext<BasicDataViewModel>(
-                null,
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, BasicDataViewModel>(
                 portfolio,
-                _viewModelFactory);
+                null,
+                Account.All,
+                portfolio,
+                viewModelFactory);
 
             Assert.Multiple(() =>
             {
@@ -49,10 +45,13 @@ namespace FPD.Logic.Tests
         public void CanViewData()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var context = new ViewModelTestContext<BasicDataViewModel>(
-                null,
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, BasicDataViewModel>(
                 portfolio,
-                _viewModelFactory);
+                null,
+                Account.All,
+                portfolio,
+                viewModelFactory);
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(context.ViewModel.HasValues);
@@ -73,10 +72,13 @@ namespace FPD.Logic.Tests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
-            var context = new ViewModelTestContext<BasicDataViewModel>(
-                null,
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            var context = new ViewModelTestContext<IPortfolio, BasicDataViewModel>(
                 portfolio,
-                _viewModelFactory);
+                null,
+                Account.All,
+                portfolio,
+                viewModelFactory);
             Assert.IsFalse(context.ViewModel.HasValues);
 
             // Now update that data.

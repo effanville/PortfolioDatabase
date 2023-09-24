@@ -13,6 +13,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              DataContextChanged="UC_DataContextChanged"
+             
              d:DesignWidth="800">
     <UserControl.Resources>
         <uic:StringToUKDateConverter x:Key="StringToUKDate" />

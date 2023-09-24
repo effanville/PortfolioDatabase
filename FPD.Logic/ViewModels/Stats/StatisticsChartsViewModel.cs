@@ -23,26 +23,16 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatisticsChartsViewModel : DataDisplayViewModelBase
     {
-        private int fHistoryGapDays = 25;
-
-        /// <summary>
-        /// The number of days between points on the charts.
-        /// </summary>
-        public int HistoryGapDays
-        {
-            get => fHistoryGapDays;
-            set => SetAndNotify(ref fHistoryGapDays, value);
-        }
-
-        private List<PortfolioDaySnapshot> fHistoryStats;
+        private int _historyGapDays = 25;
+        private List<PortfolioDaySnapshot> _historyStats;
 
         /// <summary>
         /// The history information.
         /// </summary>
         public List<PortfolioDaySnapshot> HistoryStats
         {
-            get => fHistoryStats;
-            set => SetAndNotify(ref fHistoryStats, value);
+            get => _historyStats;
+            set => SetAndNotify(ref _historyStats, value);
         }
 
         /// <summary>
@@ -69,26 +59,26 @@ namespace FPD.Logic.ViewModels.Stats
                                                                .ToDictionary(x => x.Key, x => x.Value)
                                                            ?? new Dictionary<string, decimal>();
 
-        private ObservableCollection<LineSeries> fIRRlines = new ObservableCollection<LineSeries>();
+        private ObservableCollection<LineSeries> _IRRlines = new ObservableCollection<LineSeries>();
 
         /// <summary>
         /// Specific line values for the rate of return chart.
         /// </summary>
         public ObservableCollection<LineSeries> IRRLines
         {
-            get => fIRRlines;
-            set => SetAndNotify(ref fIRRlines, value);
+            get => _IRRlines;
+            set => SetAndNotify(ref _IRRlines, value);
         }
 
-        private ObservableCollection<StackedAreaSeries> fTotallines = new ObservableCollection<StackedAreaSeries>();
+        private ObservableCollection<StackedAreaSeries> _totalLines = new ObservableCollection<StackedAreaSeries>();
 
         /// <summary>
         /// Specific line values for the rate of return chart.
         /// </summary>
         public ObservableCollection<StackedAreaSeries> TotalLines
         {
-            get => fTotallines;
-            set => SetAndNotify(ref fTotallines, value);
+            get => _totalLines;
+            set => SetAndNotify(ref _totalLines, value);
         }
 
         /// <summary>
@@ -97,7 +87,6 @@ namespace FPD.Logic.ViewModels.Stats
         public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, UiStyles styles)
             : base(uiGlobals, styles, portfolio, "Charts", Account.All)
         {
-            UpdateData(portfolio);
         }
 
         /// <summary>

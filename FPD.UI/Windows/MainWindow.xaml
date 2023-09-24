@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FPD.UI.Windows"
         xmlns:vm="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         mc:Ignorable="d"
         MinHeight="400"
@@ -65,9 +66,9 @@
                 <local:OptionsToolbar Grid.Column="1"
                                       DataContext="{Binding OptionsToolbarCommands}"
                                       Background="{Binding Styles.BackgroundBrush}" />
-                <StackPanel Grid.Column="3" />
+                <StackPanel Grid.Column="2" />
                 <StackPanel Orientation="Horizontal"
-                            Grid.Column="4"
+                            Grid.Column="3"
                             Background="Transparent"
                             MouseDown="UserControl_MouseDown"
                             HorizontalAlignment="Right">
@@ -147,8 +148,14 @@
                             Margin="0"
                             ItemsSource="{Binding Tabs}"
                             SelectedIndex="0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectionChanged}"
+                                                   PassEventArgsToCommand="true" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <TabControl.Resources>
-                        <Style  TargetType="{x:Type TabControl}">
+                        <Style TargetType="{x:Type TabControl}">
                             <Setter Property="Padding"
                                     Value="4,4,4,4" />
                             <Setter Property="BorderThickness"
@@ -278,50 +285,42 @@
                              Content="{Binding ReportsViewModel}" />
             </Grid>
         </Grid>
-        <Rectangle x:Name="leftSizeGrip"
-                   Width="5"
+        <Rectangle Width="5"
                    HorizontalAlignment="Left"
                    Cursor="SizeWE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle x:Name="rightSizeGrip"
-                   Width="5"
+        <Rectangle Width="5"
                    HorizontalAlignment="Right"
                    Cursor="SizeWE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle x:Name="topSizeGrip"
-                   Height="5"
+        <Rectangle Height="5"
                    VerticalAlignment="Top"
                    Cursor="SizeNS"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle x:Name="bottomSizeGrip"
-                   Height="5"
+        <Rectangle Height="5"
                    VerticalAlignment="Bottom"
                    Cursor="SizeNS"
                    Style="{StaticResource RectBorderStyle}" />
         <!--  Corners  -->
-        <Rectangle Name="topLeftSizeGrip"
-                   Width="7"
+        <Rectangle Width="7"
                    Height="7"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Cursor="SizeNWSE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle Name="bottomRightSizeGrip"
-                   Width="7"
+        <Rectangle Width="7"
                    Height="7"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Bottom"
                    Cursor="SizeNWSE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle Name="topRightSizeGrip"
-                   Width="7"
+        <Rectangle Width="7"
                    Height="7"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Cursor="SizeNESW"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle Name="bottomLeftSizeGrip"
-                   Width="7"
+        <Rectangle Width="7"
                    Height="7"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Bottom"

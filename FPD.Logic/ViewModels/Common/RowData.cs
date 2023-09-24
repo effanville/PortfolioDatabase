@@ -57,8 +57,7 @@ namespace FPD.Logic.ViewModels.Common
         public RowData()
         {
         }
-
-
+        
         /// <inheritdoc/>
         public void BeginEdit() => _preEditSelectedName = Instance?.Copy();
 

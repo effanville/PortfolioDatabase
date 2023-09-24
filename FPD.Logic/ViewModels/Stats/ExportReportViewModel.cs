@@ -71,7 +71,7 @@ namespace FPD.Logic.ViewModels.Stats
                 }
                 PortfolioReport portfolioInvestments = new PortfolioReport(ModelData, PortfolioReport.Settings.Default());
                 portfolioInvestments.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, PortfolioReport.ExportSettings.Default(), ReportLogger);
-                _closeWindowAction(new HtmlStatsViewerViewModel(Styles, DisplayGlobals, "Exported Report", result.FilePath));
+                _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Report", result.FilePath));
             }
             else
             {

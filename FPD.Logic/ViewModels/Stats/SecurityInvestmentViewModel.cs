@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Common.Structure.DataStructures;
 using Common.Structure.NamingStructures;
@@ -16,15 +17,15 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class SecurityInvestmentViewModel : DataDisplayViewModelBase
     {
-        private List<Labelled<TwoName, DailyValuation>> fSecuritiesInvestments;
+        private List<Labelled<TwoName, DailyValuation>> _securitiesInvestments;
 
         /// <summary>
         /// The investments into the securities.
         /// </summary>
         public List<Labelled<TwoName, DailyValuation>> SecuritiesInvestments
         {
-            get => fSecuritiesInvestments;
-            set => SetAndNotify(ref fSecuritiesInvestments, value);
+            get => _securitiesInvestments;
+            set => SetAndNotify(ref _securitiesInvestments, value);
         }
 
         /// <summary>
@@ -41,10 +42,15 @@ namespace FPD.Logic.ViewModels.Stats
         /// <inheritdoc/>
         /// </summary>
         public override void UpdateData(IPortfolio modelData)
-        {
+        {            
+            if (!modelData.Equals(ModelData))
+            {
+                OnRequestClose(EventArgs.Empty);
+                return;
+            }
+            
             base.UpdateData(modelData);
             SecuritiesInvestments = ModelData.TotalInvestments(Totals.Security);
         }
-
     }
 }

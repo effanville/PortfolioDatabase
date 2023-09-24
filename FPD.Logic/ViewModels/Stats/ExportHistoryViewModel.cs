@@ -67,7 +67,7 @@ namespace FPD.Logic.ViewModels.Stats
         /// Default Constructor.
         /// </summary>
         public ExportHistoryViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
-            : base(globals, styles, userConfiguration, portfolio, "", Account.All)
+            : base(globals, styles, userConfiguration, portfolio, "", Account.All, closable: true)
         {
             _closeWindowAction = closeWindow;
             if (UserConfiguration.HasLoaded)

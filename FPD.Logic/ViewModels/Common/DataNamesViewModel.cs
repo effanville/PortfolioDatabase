@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using Common.Structure.DataStructures;
@@ -23,12 +24,12 @@ namespace FPD.Logic.ViewModels.Common
     {
         internal readonly IUpdater<IPortfolio> _updater;
 
-        internal readonly Account TypeOfAccount;
+        internal readonly Account DataType;
 
         /// <summary>
         /// Whether a company column should be displayed.
         /// </summary>
-        public bool DisplayCompany => TypeOfAccount != Account.Benchmark;
+        public bool DisplayCompany => DataType != Account.Benchmark;
 
         /// <summary>
         /// Backing field for <see cref="DataNames"/>.
@@ -68,39 +69,35 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public bool SelectedNameSet => SelectedName != null;
 
-        private List<DailyValuation> fSelectedValueHistory;
+        private List<DailyValuation> _selectedValueHistory;
 
         /// <summary>
         /// The evolution of the selected accounts total value.
         /// </summary>
         public List<DailyValuation> SelectedValueHistory
         {
-            get => fSelectedValueHistory;
-            set => SetAndNotify(ref fSelectedValueHistory, value);
+            get => _selectedValueHistory;
+            set => SetAndNotify(ref _selectedValueHistory, value);
         }
 
         /// <summary>
         /// Calculate default RowData for a row in the Datanames table.
         /// </summary>
         /// <returns></returns>
-        public RowData DefaultRow()
-        {
-            var defaultRow = new RowData(new NameData(), true, TypeOfAccount, _updater, Styles)
+        public RowData DefaultRow() =>
+            new RowData(new NameData(), true, DataType, _updater, Styles)
             {
                 IsNew = true
             };
-            return defaultRow;
-        }
 
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public DataNamesViewModel(IPortfolio portfolio, UiGlobals uiGlobals, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account accountType)
+        public DataNamesViewModel(IPortfolio portfolio, UiGlobals uiGlobals, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account dataType)
             : base("Accounts", portfolio, uiGlobals, styles, closable: false)
         {
-            TypeOfAccount = accountType;
+            DataType = dataType;
             _updater = dataUpdater;
-            UpdateData(portfolio);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
@@ -117,8 +114,8 @@ namespace FPD.Logic.ViewModels.Common
         }
 
         private bool IsUpdated(IPortfolio dataToDisplay, NameData name) 
-            => dataToDisplay.LatestDate(TypeOfAccount, name) == DateTime.Today 
-               || dataToDisplay.LatestValue(TypeOfAccount, name).Equals(0.0m);
+            => dataToDisplay.LatestDate(DataType, name) == DateTime.Today 
+               || dataToDisplay.LatestValue(DataType, name).Equals(0.0m);
  
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
@@ -127,7 +124,7 @@ namespace FPD.Logic.ViewModels.Common
         {
             base.UpdateData(modelData);
 
-            List<RowData> values = modelData.NameDataForAccount(TypeOfAccount).Select(name => new RowData(name, IsUpdated(modelData, name), TypeOfAccount, _updater, Styles)).ToList();
+            List<RowData> values = modelData.NameDataForAccount(DataType).Select(name => new RowData(name, IsUpdated(modelData, name), DataType, _updater, Styles)).ToList();
             DataNames = null;
             DataNames = values;
             DataNames ??= new List<RowData>();
@@ -136,6 +133,7 @@ namespace FPD.Logic.ViewModels.Common
             if (SelectedName != null && !DataNames.Contains(SelectedName))
             {
                 SelectedName = null;
+                SelectedValueHistory = null;
             }
 
             OnPropertyChanged(nameof(DisplayCompany));
@@ -150,12 +148,14 @@ namespace FPD.Logic.ViewModels.Common
         }
         private void ExecuteDownloadCommand()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName.Instance} - a {TypeOfAccount}");
-            if (SelectedName != null)
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName.Instance} - a {DataType}");
+            if (SelectedName == null)
             {
-                NameData names = SelectedName.Instance;
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(TypeOfAccount, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
+                return;
             }
+
+            NameData names = SelectedName.Instance;
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(DataType, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -167,15 +167,17 @@ namespace FPD.Logic.ViewModels.Common
             set;
         }
 
-        private void ExecuteSelectionChanged(object args)
-        {
+        private void ExecuteSelectionChanged(object args) => SelectionChanged(args);
+
+        private async void SelectionChanged(object args)
+        {            
             // object reference issue in following line
             if (DataNames != null && args is RowData selectableName && selectableName.Instance != null)
             {
                 SelectedName = selectableName;
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Current item is a name {SelectedName.Instance}");
-                SelectedValueHistory = ModelData.NumberData(TypeOfAccount, SelectedName.Instance, ReportLogger).ToList();
-
+                var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.Instance, ReportLogger).ToList());
+                SelectedValueHistory = history;
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Successfully updated SelectedItem.");
             }
             else
@@ -207,7 +209,7 @@ namespace FPD.Logic.ViewModels.Common
             NameData selectedInstance = rowData.Instance; //rowName.Instance;
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
             NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(TypeOfAccount, name, ReportLogger)));
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name, ReportLogger)));
         }
 
         /// <summary>
@@ -223,7 +225,7 @@ namespace FPD.Logic.ViewModels.Common
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DeletingData, $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(TypeOfAccount, SelectedName.Instance, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.Instance, ReportLogger)));
             }
             else
             {

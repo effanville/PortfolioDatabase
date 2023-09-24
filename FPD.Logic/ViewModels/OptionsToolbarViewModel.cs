@@ -20,39 +20,35 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
-        private string fFileName;
-        private string fDirectory;
-        private string fBaseCurrency;
+        private string _fileName;
+        private string _directory;
+        private string _baseCurrency;
 
         /// <summary>
         /// The base currency to display in the top dropdown.
         /// </summary>
         public string BaseCurrency
         {
-            get => fBaseCurrency;
-            set
-            {
-                SetAndNotify(ref fBaseCurrency, value, nameof(BaseCurrency));
-                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Editing BaseCurrency.");
-            }
+            get => _baseCurrency;
+            set => SetAndNotify(ref _baseCurrency, value);
         }
 
-        private List<string> fCurrencies;
+        private List<string> _currencies;
 
         /// <summary>
         /// The currencies to populate the dropdown with.
         /// </summary>
         public List<string> Currencies
         {
-            get => fCurrencies;
-            set => SetAndNotify(ref fCurrencies, value, nameof(Currencies));
+            get => _currencies;
+            set => SetAndNotify(ref _currencies, value);
         }
 
-        private bool fIsLightTheme;
+        private bool _isLightTheme;
         public bool IsLightTheme
         {
-            get => fIsLightTheme;
-            set => SetAndNotify(ref fIsLightTheme, value, nameof(IsLightTheme));
+            get => _isLightTheme;
+            set => SetAndNotify(ref _isLightTheme, value);
         }
 
         private void UpdateColours(object sender, PropertyChangedEventArgs e) => Styles.UpdateTheme(IsLightTheme);
@@ -63,8 +59,6 @@ namespace FPD.Logic.ViewModels
         public OptionsToolbarViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Options")
         {
-            UpdateData(portfolio);
-
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
@@ -81,7 +75,7 @@ namespace FPD.Logic.ViewModels
         public override void UpdateData(IPortfolio modelData)
         {
             base.UpdateData(modelData);
-            fFileName = modelData.Name;
+            _fileName = modelData.Name;
             Currencies = modelData.Names(Account.Currency).Concat(modelData.Companies(Account.Currency)).Distinct().ToList();
             if (!Currencies.Contains(modelData.BaseCurrency))
             {
@@ -120,16 +114,16 @@ namespace FPD.Logic.ViewModels
         public ICommand SaveDatabaseCommand { get; }
         private void ExecuteSaveDatabase()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Saving", $"Saving database {fFileName} called.");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", fFileName, fDirectory, "XML Files|*.xml|All Files|*.*");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Saving", $"Saving database {_fileName} called.");
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                fFileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+                _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
 
-                fDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfo => portfo.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, portfo => portfo.SavePortfolio(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger)));
-                DisplayGlobals.CurrentWorkingDirectory = fDirectory;
+                DisplayGlobals.CurrentWorkingDirectory = _directory;
             }
         }
 
@@ -147,10 +141,10 @@ namespace FPD.Logic.ViewModels
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.FillDetailsFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger)));
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, programPortfolio => programPortfolio.SavePortfolio($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem, ReportLogger)));
                 DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                fFileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
-                fDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+                _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+                _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
 
-                ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loaded database {fFileName} successfully.");
+                ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loaded database {_fileName} successfully.");
             }
         }
 
@@ -160,7 +154,7 @@ namespace FPD.Logic.ViewModels
         public ICommand UpdateDataCommand { get; }
         private void ExecuteUpdateData()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Downloading", $"Execute update data for database {fFileName} called.");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Downloading", $"Execute update data for database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(Account.All, programPortfolio, null, ReportLogger).ConfigureAwait(false)));
         }
 
@@ -170,7 +164,7 @@ namespace FPD.Logic.ViewModels
         public ICommand ImportFromOtherDatabaseCommand { get; }
         private void ImportFromOtherDatabase()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Importing", $"Execute import data for database {fFileName} called.");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Importing", $"Execute import data for database {_fileName} called.");
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
@@ -185,7 +179,7 @@ namespace FPD.Logic.ViewModels
         public ICommand CleanDataCommand { get; }
         private void ExecuteCleanData()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "EditingData", $"Execute clean database for database {fFileName} called.");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "EditingData", $"Execute clean database for database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.CleanData()));
         }
 
@@ -195,7 +189,7 @@ namespace FPD.Logic.ViewModels
         public ICommand RepriceResetCommand { get; }
         private void ExecuteRepriceReset()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "EditingData", $"Execute clean database for database {fFileName} called.");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "EditingData", $"Execute clean database for database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.MigrateRepriceToReset()));
         }
 
@@ -206,7 +200,7 @@ namespace FPD.Logic.ViewModels
 
         private void ExecuteRefresh()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "DatabaseAccess", $"Execute refresh on the window fo database {fFileName} called.");
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "DatabaseAccess", $"Execute refresh on the window fo database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.OnPortfolioChanged(false, new PortfolioEventArgs(Account.All))));
         }
 

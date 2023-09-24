@@ -21,10 +21,10 @@ using System.Collections.Generic;
 using Common.Structure.DataEdit;
 
 using System.Timers;
+using System.Windows.Controls;
+using System.Windows.Input;
 
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.FinanceStructures.Implementation;
-using FinancialStructures.FinanceStructures.Implementation.Asset;
+using Common.UI.Commands;
 
 namespace FPD.Logic.ViewModels
 {
@@ -43,13 +43,18 @@ namespace FPD.Logic.ViewModels
         {
             lock (TabsLock)
             {
+                if (obj is DataDisplayViewModelBase vmb)
+                {
+                    vmb.RequestClose += RemoveTab;
+                }
+
                 Tabs.Add(obj);
             }
         }
 
-        private readonly UiGlobals fUiGlobals;
-        internal UserConfiguration fUserConfiguration;
-        private string fConfigLocation;
+        private readonly UiGlobals _uiGlobals;
+        internal UserConfiguration _userConfiguration;
+        private string _configLocation;
         private readonly IUpdater<IPortfolio> _updater;
 
         /// <summary>
@@ -129,34 +134,35 @@ namespace FPD.Logic.ViewModels
             Styles = new UiStyles(isLightTheme);
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
-            fUiGlobals = globals;
-            fUiGlobals.ReportLogger = ReportLogger;
+            _uiGlobals = globals;
+            _uiGlobals.ReportLogger = ReportLogger;
             _updater = updater;
             _updater.Database = ProgramPortfolio;
 
+            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
             LoadConfig();
-            var viewModelFactory = new ViewModelFactory(Styles, fUiGlobals, _updater);
-            OptionsToolbarCommands = new OptionsToolbarViewModel(fUiGlobals, Styles, ProgramPortfolio);
+            var viewModelFactory = new ViewModelFactory(Styles, _uiGlobals, _updater);
+            OptionsToolbarCommands = new OptionsToolbarViewModel(_uiGlobals, Styles, ProgramPortfolio);
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = isLightTheme;
-            Tabs.Add(new BasicDataViewModel(fUiGlobals, Styles, ProgramPortfolio));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security,
+            Tabs.Add(new BasicDataViewModel(_uiGlobals, Styles, ProgramPortfolio));
+            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Bank Accounts",
+            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Bank Accounts",
                 Account.BankAccount, _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
+            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
+            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
+            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(fUiGlobals, Styles, ProgramPortfolio, "Assets", Account.Asset,
+            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Assets", Account.Asset,
                 _updater, viewModelFactory));
-            Tabs.Add(new StatsViewModel(fUiGlobals, Styles,
-                fUserConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
-            Tabs.Add(new StatisticsChartsViewModel(fUiGlobals, ProgramPortfolio, Styles));
-            Tabs.Add(new StatsCreatorWindowViewModel(fUiGlobals, Styles,
-                fUserConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio,
+            Tabs.Add(new StatsViewModel(_uiGlobals, Styles,
+                _userConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
+            Tabs.Add(new StatisticsChartsViewModel(_uiGlobals, ProgramPortfolio, Styles));
+            Tabs.Add(new StatsCreatorWindowViewModel(_uiGlobals, Styles,
+                _userConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio,
                 AddObjectAsMainTab));
 
             foreach (object tab in Tabs)
@@ -164,6 +170,7 @@ namespace FPD.Logic.ViewModels
                 if (tab is DataDisplayViewModelBase vmb)
                 {
                     vmb.UpdateRequest += _updater.PerformUpdate;
+                    vmb.RequestClose += RemoveTab;
                 }
             }
 
@@ -176,19 +183,19 @@ namespace FPD.Logic.ViewModels
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             AssemblyName name = assembly.GetName();
-            fConfigLocation = fUiGlobals.CurrentFileSystem.Path.Combine(
+            _configLocation = _uiGlobals.CurrentFileSystem.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
-            fUserConfiguration =
-                UserConfiguration.LoadFromUserConfigFile(fConfigLocation, fUiGlobals.CurrentFileSystem, ReportLogger);
+            _userConfiguration =
+                UserConfiguration.LoadFromUserConfigFile(_configLocation, _uiGlobals.CurrentFileSystem, ReportLogger);
         }
 
         /// <summary>
         /// Saves the user configuration to the local appData folder.
         /// </summary>
-        public void SaveConfig() => SaveConfig(fConfigLocation, fUiGlobals.CurrentFileSystem);
+        public void SaveConfig() => SaveConfig(_configLocation, _uiGlobals.CurrentFileSystem);
 
         internal void SaveConfig(string filePath, IFileSystem fileSystem) =>
-            fUserConfiguration.SaveConfiguration(filePath, fileSystem);
+            _userConfiguration.SaveConfiguration(filePath, fileSystem);
 
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
@@ -202,8 +209,11 @@ namespace FPD.Logic.ViewModels
                 : new PortfolioEventArgs(changeType, e.UserInitiated);
         }
 
-        private void _timer_Elapsed(object sender, ElapsedEventArgs e) => UpdateChildViewModels(AggEventArgs);
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e) =>
+            Task.Run(() => UpdateChildViewModels(AggEventArgs));
+
         private bool isUpdating = false;
+
         private async void UpdateChildViewModels(PortfolioEventArgs e)
         {
             if (e.ChangedAccount == Account.Unknown)
@@ -219,14 +229,20 @@ namespace FPD.Logic.ViewModels
             isUpdating = true;
 
             var tabs = TabsShallowCopy();
+            List<object> tabsToRemove = new List<object>();
             foreach (object tab in tabs)
             {
-                if (tab is DataDisplayViewModelBase vm && e.ShouldUpdate(vm.DataType))
+                if (!UpdateTab(tab, ProgramPortfolio, e.ChangedAccount))
                 {
-                    await Task.Run(() => vm.UpdateData(ProgramPortfolio));
+                    tabsToRemove.Add(tab);
                 }
             }
-
+            
+            foreach (object tab in tabsToRemove)
+            {
+                _uiGlobals.CurrentDispatcher.BeginInvoke(() => RemoveTab(tab, EventArgs.Empty));
+            }
+            
             OptionsToolbarCommands.UpdateData(ProgramPortfolio);
 
             if (e.ChangedPortfolio)
@@ -240,5 +256,42 @@ namespace FPD.Logic.ViewModels
 
         private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
             => ReportsViewModel?.UpdateReport(severity, type, location, message);
+
+        private void RemoveTab(object obj, EventArgs args)
+        {
+            lock (TabsLock)
+            {
+                Tabs.Remove(obj);
+            }
+        }
+
+        public ICommand SelectionChanged { get; }
+
+        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
+        {
+            var source = e.AddedItems;
+            if (source is not object[] list || list.Length != 1)
+            {
+                return;
+            }
+
+            UpdateTab(list[0], ProgramPortfolio, Account.All);
+        }
+
+        private bool UpdateTab(object item, IPortfolio modelData, Account changedAccount)
+        {
+            if (item is not DataDisplayViewModelBase vmb)
+            {
+                return false;
+            }
+
+            if (!PortfolioEventArgs.ShouldUpdate(changedAccount, vmb.DataType))
+            {
+                return true;
+            }
+
+            vmb.UpdateData(modelData);
+            return true;
+        }
     }
 }

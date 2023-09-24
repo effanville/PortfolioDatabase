@@ -1,9 +1,8 @@
 ﻿using System;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 
-using Common.Structure.DataEdit;
 using Common.Structure.DataStructures;
-using Common.UI;
 
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
@@ -20,25 +19,18 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [TestFixture]
     public class SelectedSingleDataViewModelTests
     {
-        private readonly Func<IValueList, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, SelectedSingleDataViewModel> _viewModelFactory
-            = (data, globals, portfolio, name, dataUpdater) => new SelectedSingleDataViewModel(
-                portfolio,
-                data,
-                null,
-                globals,
-                new NameData("Barclays", "currentAccount"),
-                Account.BankAccount,
-                dataUpdater);
-
         [Test]
         public void CanOpenWindow()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Barclays", "currentAccount"), out var desired);
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
-                null,
-                null,
+                desired,
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
         }
 
@@ -46,11 +38,14 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanAddValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Barclays", "currentAccount"), out var desired);
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
-                null,
-                null,
+                desired,
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             context.ViewModel.SelectItem(null);
             DailyValuation newItem = context.ViewModel.AddNewItem();
@@ -58,7 +53,7 @@ namespace FPD.Logic.Tests.CommonWindowTests
             context.ViewModel.BeginEdit();
             newItem.Day = new DateTime(2002, 1, 1);
             newItem.Value = 1;
-            context.ViewModel.CompleteEdit(context.Portfolio);
+            context.ViewModel.CompleteEdit(context.Data);
 
             Assert.AreEqual(2, context.ViewModel.TLVM.Valuations.Count);
             Assert.AreEqual(2, context.Portfolio.BankAccountsThreadSafe.Single().Count());
@@ -68,18 +63,21 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Barclays", "currentAccount"), out var desired);
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
-                null,
-                null,
+                desired,
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             DailyValuation item = context.ViewModel.TLVM.Valuations[0];
             context.ViewModel.SelectItem(item);
             context.ViewModel.BeginEdit();
             item.Day = new DateTime(2000, 1, 1);
             item.Value = 1;
-            context.ViewModel.CompleteEdit(context.Portfolio);
+            context.ViewModel.CompleteEdit(context.Data);
 
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             Assert.AreEqual(1, context.Portfolio.BankAccountsThreadSafe.Single().Count());
@@ -92,11 +90,14 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanAddFromCSV()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Barclays", "currentAccount"), out var desired);
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
-                null,
+                desired,
                 new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
         }
 
@@ -105,11 +106,14 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanWriteToCSV()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Barclays", "currentAccount"), out var desired);
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
-                null,
-                null,
+                desired,
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
         }
 
@@ -117,15 +121,18 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDeleteValue()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            portfolio.TryGetAccount(Account.Asset, new TwoName("Barclays", "currentAccount"), out var desired);
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IValueList, SelectedSingleDataViewModel>(
-                null,
-                null,
+                desired,
+                new NameData("Barclays", "currentAccount"),
+                Account.BankAccount,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.TLVM.Valuations.Count);
             var name = new NameData("Barclays", "currentAccount");
             context.ViewModel.SelectItem(context.ViewModel.TLVM.Valuations[0]);
-            context.ViewModel.DeleteSelected(context.Portfolio);
+            context.ViewModel.DeleteSelected(context.Data);
             _ = context.Portfolio.TryGetAccount(Account.BankAccount, name, out IValueList bankAccount);
             Assert.AreEqual(0, bankAccount.Values.Count());
             Assert.AreEqual(0, context.ViewModel.TLVM.Valuations.Count);

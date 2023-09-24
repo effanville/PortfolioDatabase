@@ -63,47 +63,12 @@
                                 Grid.Column="2" />
             </Grid>
         </Border>
-        <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                BorderThickness="1"
-                Grid.Column="1"
-                Grid.Row="2">
-            <DataGrid Grid.Row="1"
-                      Grid.Column="1"
-                      ItemsSource="{Binding SecurityStats.Statistics}"
-                      AutoGenerateColumns="False">
-                <DataGrid.RowStyle>
-                    <Style TargetType="{x:Type DataGridRow}"
-                           BasedOn="{StaticResource DGR_Style}">
-                        <Setter Property="Background"
-                                Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
-                        <Setter Property="Foreground"
-                                Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
-                    </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.CellStyle>
-                    <Style TargetType="{x:Type DataGridCell}"
-                           BasedOn="{StaticResource DGC_Style}">
-                        <Setter Property="Foreground"
-                                Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
-                        <Setter Property="Background"
-                                Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
-                    </Style>
-                </DataGrid.CellStyle>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Statistic"
-                                        Width="Auto"
-                                        Binding="{Binding Path=StatType}" />
-                    <DataGridTextColumn Header="Value"
-                                        Width="Auto"
-                                        Binding="{Binding Path=ValueAsObject}" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
+        <ContentControl Grid.Row="1"
+                        Grid.Column="1"
+                        Content="{Binding Statistics}" />
 
         <Grid Grid.Row="1"
               Grid.Column="2"
-              Grid.ColumnSpan="1"
-              Grid.RowSpan="3"
               VerticalAlignment="Stretch"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>

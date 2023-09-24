@@ -27,30 +27,30 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public class BasicDataViewModel : DataDisplayViewModelBase
     {
-        private string fPortfolioNameText;
+        private string _portfolioNameText;
 
         /// <summary>
         /// The name of the portfolio to display.
         /// </summary>
         public string PortfolioNameText
         {
-            get => fPortfolioNameText;
-            set => SetAndNotify(ref fPortfolioNameText, value, nameof(PortfolioNameText));
+            get => _portfolioNameText;
+            set => SetAndNotify(ref _portfolioNameText, value, nameof(PortfolioNameText));
         }
 
-        private bool fHasValues;
+        private bool _hasValues;
 
         /// <summary>
         /// Are any values present in the portfolio.
         /// </summary>
         public bool HasValues
         {
-            get => fHasValues;
+            get => _hasValues;
             set
             {
-                if (fHasValues != value)
+                if (_hasValues != value)
                 {
-                    fHasValues = value;
+                    _hasValues = value;
                     OnPropertyChanged(nameof(HasValues));
                     OnPropertyChanged(nameof(NoValues));
                 }
@@ -60,93 +60,86 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// The opposite of <see cref="HasValues"/>
         /// </summary>
-        public bool NoValues => !fHasValues;
+        public bool NoValues => !_hasValues;
 
-        private string fSecurityTotalText;
+        private string _securityTotalText;
 
         /// <summary>
         /// A string detailing the total number of securities.
         /// </summary>
         public string SecurityTotalText
         {
-            get => fSecurityTotalText;
-            set => SetAndNotify(ref fSecurityTotalText, value, nameof(SecurityTotalText));
+            get => _securityTotalText;
+            set => SetAndNotify(ref _securityTotalText, value);
         }
 
-        private string fSecurityAmountText;
+        private string _securityAmountText;
 
         /// <summary>
         /// A string detailing the total value of securities.
         /// </summary>
         public string SecurityAmountText
         {
-            get => fSecurityAmountText;
-            set => SetAndNotify(ref fSecurityAmountText, value, nameof(SecurityAmountText));
+            get => _securityAmountText;
+            set => SetAndNotify(ref _securityAmountText, value);
         }
 
-        private List<Labelled<TwoName, DailyValuation>> fTopSecurities;
+        private List<Labelled<TwoName, DailyValuation>> _topSecurities;
 
         /// <summary>
         /// The major security latest values.
         /// </summary>
         public List<Labelled<TwoName, DailyValuation>> TopSecurities
         {
-            get => fTopSecurities;
-            set
-            {
-                if (fTopSecurities != value)
-                {
-                    fTopSecurities = value;
-                    OnPropertyChanged(nameof(TopSecurities));
-                }
-            }
+            get => _topSecurities;
+            set => SetAndNotify(ref _topSecurities, value);
         }
 
-        private string fBankAccountTotalText;
+        private string _bankAccountTotalText;
 
         /// <summary>
         /// The total number of bank accounts in the portfolio string.
         /// </summary>
         public string BankAccountTotalText
         {
-            get => fBankAccountTotalText;
-            set => SetAndNotify(ref fBankAccountTotalText, value, nameof(BankAccountTotalText));
+            get => _bankAccountTotalText;
+            set => SetAndNotify(ref _bankAccountTotalText, value);
         }
 
-        private string fBankAccountAmountText;
+        private string _bankAccountAmountText;
 
         /// <summary>
         /// The total amount in bank accounts as a string.
         /// </summary>
         public string BankAccountAmountText
         {
-            get => fBankAccountAmountText;
-            set => SetAndNotify(ref fBankAccountAmountText, value, nameof(BankAccountAmountText));
+            get => _bankAccountAmountText;
+            set => SetAndNotify(ref _bankAccountAmountText, value);
         }
 
-        private List<Labelled<TwoName, DailyValuation>> fTopBankAccounts;
+        private List<Labelled<TwoName, DailyValuation>> _topBankAccounts;
 
         /// <summary>
         /// The major bank account values.
         /// </summary>
         public List<Labelled<TwoName, DailyValuation>> TopBankAccounts
         {
-            get => fTopBankAccounts;
-            set => SetAndNotify(ref fTopBankAccounts, value, nameof(TopBankAccounts));
+            get => _topBankAccounts;
+            set => SetAndNotify(ref _topBankAccounts, value);
         }
 
-        private List<Note> fNotes;
+        private List<Note> _notes;
 
         /// <summary>
         /// The notes held in the portfolio.
         /// </summary>
         public List<Note> Notes
         {
-            get => fNotes;
-            set => SetAndNotify(ref fNotes, value, nameof(Notes));
+            get => _notes;
+            set => SetAndNotify(ref _notes, value);
         }
 
-        private Note fSelectedNote;
+        private Note _selectedNote;
 
         /// <summary>
         /// Construct an instance.
@@ -156,7 +149,6 @@ namespace FPD.Logic.ViewModels
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand(ExecuteCreateEdit);
-            UpdateData(portfolio);
         }
 
         /// <inheritdoc/>
@@ -189,11 +181,11 @@ namespace FPD.Logic.ViewModels
         {
             if (Notes != null && args is Note note)
             {
-                fSelectedNote = note;
+                _selectedNote = note;
             }
             else if (args == CollectionView.NewItemPlaceholder)
             {
-                fSelectedNote = null;
+                _selectedNote = null;
             }
         }
 
@@ -204,9 +196,9 @@ namespace FPD.Logic.ViewModels
 
         private void ExecuteCreateEdit()
         {
-            if (fSelectedNote != null && !ModelData.Notes.Contains(fSelectedNote))
+            if (_selectedNote != null && !ModelData.Notes.Contains(_selectedNote))
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(fSelectedNote.TimeStamp, fSelectedNote.Text)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(_selectedNote.TimeStamp, _selectedNote.Text)));
             }
         }
 
@@ -215,9 +207,9 @@ namespace FPD.Logic.ViewModels
         /// </summary>
         public void DeleteSelectedNote()
         {
-            if (fSelectedNote != null)
+            if (_selectedNote != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.RemoveNote(fSelectedNote)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.RemoveNote(_selectedNote)));
             }
         }
     }

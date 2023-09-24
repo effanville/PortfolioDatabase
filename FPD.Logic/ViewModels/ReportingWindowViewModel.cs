@@ -84,7 +84,6 @@ namespace FPD.Logic.ViewModels
             IsExpanded = false;
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
-            SyncReports();
         }
 
         internal void SyncReports()

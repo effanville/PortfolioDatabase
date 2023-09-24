@@ -62,7 +62,6 @@ namespace FPD.Logic.ViewModels.Common
             PreEditCommand = new RelayCommand(ExecutePreEdit);
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            UpdateData(timeList);
         }
 
         /// <summary>

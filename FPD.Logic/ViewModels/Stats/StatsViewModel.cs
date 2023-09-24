@@ -38,7 +38,7 @@ namespace FPD.Logic.ViewModels.Stats
         public bool DisplayValueFunds
         {
             get => _displayValueFunds;
-            set => SetAndNotify(ref _displayValueFunds, value, nameof(DisplayValueFunds));
+            set => SetAndNotify(ref _displayValueFunds, value);
         }
 
         /// <summary>
@@ -85,7 +85,6 @@ namespace FPD.Logic.ViewModels.Stats
             }
 
             _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
-            UpdateData(portfolio);
 
             StatisticNames.ForEach(stat => stat.SelectedChanged += OnSelectedChanged);
             PropertyChanged += OnPropertyChanged;
@@ -94,11 +93,11 @@ namespace FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Update to regenerate the statistics displayed if required.
         /// </summary>
-        private void OnSelectedChanged(object sender, EventArgs e)
+        private async void OnSelectedChanged(object sender, EventArgs e)
         {
             UserConfiguration.StoreConfiguration(this);
             _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
-            UpdateData(null);
+            await Task.Run(()=> UpdateData(null));
         }
 
         /// <summary>

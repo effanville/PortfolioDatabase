@@ -12,17 +12,17 @@ namespace FPD.Logic.ViewModels
     /// <summary>
     /// Enables the display and selection of a html file in a closable tab.
     /// </summary>
-    public sealed class HtmlStatsViewerViewModel : DataDisplayViewModelBase
+    public sealed class HtmlViewerViewModel : DataDisplayViewModelBase
     {
-        private Uri fDisplayStats;
+        private Uri _htmlPath;
 
         /// <summary>
         /// The uri path of the html file to display.
         /// </summary>
-        public Uri DisplayStats
+        public Uri HtmlPath
         {
-            get => fDisplayStats;
-            set => SetAndNotify(ref fDisplayStats, value);
+            get => _htmlPath;
+            set => SetAndNotify(ref _htmlPath, value);
         }
 
         /// <summary>
@@ -36,10 +36,10 @@ namespace FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public HtmlStatsViewerViewModel(UiStyles styles, UiGlobals globals, string header, string filePath)
+        public HtmlViewerViewModel(UiStyles styles, UiGlobals globals, string header, string filePath)
             : base(globals, styles, null, header, Account.All, closable: true)
         {
-            DisplayStats = new Uri(filePath);
+            HtmlPath = new Uri(filePath);
             FileSelect = new RelayCommand(ExecuteFileSelect);
         }
 
@@ -48,7 +48,7 @@ namespace FPD.Logic.ViewModels
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
             if (result.Success)
             {
-                DisplayStats = new Uri(result.FilePath);
+                HtmlPath = new Uri(result.FilePath);
             }
         }
     }

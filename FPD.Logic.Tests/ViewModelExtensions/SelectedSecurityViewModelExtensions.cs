@@ -2,8 +2,8 @@
 using Common.Structure.DataStructures;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Security;
-using FinancialStructures.Database;
 using FinancialStructures.DataStructures;
+using FinancialStructures.FinanceStructures;
 
 namespace FPD.Logic.Tests.ViewModelExtensions
 {
@@ -33,16 +33,16 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             viewModel.PreEditCommand?.Execute(null);
         }
 
-        public static void CompleteEditTrade(this SelectedSecurityViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEditTrade(this SelectedSecurityViewModel viewModel, ISecurity security)
         {
             viewModel.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(security);
         }
 
-        public static void DeleteSelectedTrade(this SelectedSecurityViewModel viewModel, IPortfolio portfolio)
+        public static void DeleteSelectedTrade(this SelectedSecurityViewModel viewModel, ISecurity security)
         {
             viewModel.DeleteTrade();
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(security);
         }
 
         public static DailyValuation AddNewUnitPrice(this SelectedSecurityViewModel viewModel)
@@ -66,16 +66,16 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             viewModel.TLVM.PreEditCommand?.Execute(null);
         }
 
-        public static void CompleteEdit(this SelectedSecurityViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEdit(this SelectedSecurityViewModel viewModel, ISecurity security)
         {
             viewModel.TLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(security);
         }
 
-        public static void DeleteSelected(this SelectedSecurityViewModel viewModel, IPortfolio portfolio)
+        public static void DeleteSelected(this SelectedSecurityViewModel viewModel, ISecurity security)
         {
             viewModel.TLVM.DeleteValuation();
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(security);
         }
     }
 }

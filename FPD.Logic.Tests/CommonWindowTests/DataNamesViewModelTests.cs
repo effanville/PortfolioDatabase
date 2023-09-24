@@ -6,9 +6,7 @@ using FPD.Logic.Tests.ViewModelExtensions;
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 using NUnit.Framework;
-using Common.Structure.DataEdit;
-using Common.UI;
-using System;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace FPD.Logic.Tests.CommonWindowTests
 {
@@ -16,24 +14,17 @@ namespace FPD.Logic.Tests.CommonWindowTests
     [Apartment(ApartmentState.STA)]
     public sealed class DataNamesViewModelTests
     {
-        private readonly Func<IPortfolio, UiGlobals, IPortfolio, NameData, IUpdater<IPortfolio>, DataNamesViewModel> _viewModelFactory
-            = (p, globals, portfolio, name, dataUpdater) => new DataNamesViewModel(
-                portfolio,
-                globals,
-                null,
-                dataUpdater,
-                obj => { },
-                Account.Security);
-
         [Test]
         public void CanOpen()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.DataNames.Count);
         }
 
@@ -41,11 +32,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanUpdateData()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
 
             context.ViewModel.UpdateData(newData);
@@ -57,11 +50,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanOpenSecurity()
         {
             var portfolio = TestSetupHelper.CreateEmptyDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             IPortfolio output = TestSetupHelper.CreateBasicDataBase();
             var dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
             DataNamesViewModel viewModel = new DataNamesViewModel(output, TestSetupHelper.CreateGlobalsMock(null,null, null,TestSetupHelper.DummyReportLogger ), null, dataUpdater, TestSetupHelper.DummyOpenTab, Account.Security);
@@ -73,11 +68,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanUpdateSecurityData()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             IPortfolio newData = TestSetupHelper.CreateBasicDataBase();
             context.ViewModel.UpdateData(newData);
 
@@ -88,11 +85,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanCreateNewSecurity()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             context.ViewModel.SelectItem(null);
             var newRowItem = context.ViewModel.AddNewItem();
             var newItem = newRowItem.Instance;
@@ -109,11 +108,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditSecurityName()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             var item = context.ViewModel.DataNames[0];
             context.ViewModel.SelectItem(item.Instance);
             context.ViewModel.BeginRowEdit(item);
@@ -130,11 +131,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanEditSecurityNameAndUrl()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
                 null,
                 null,
+                Account.Security,
                 portfolio,
-                _viewModelFactory);
+                viewModelFactory);
             var item = context.ViewModel.DataNames[0];
             context.ViewModel.SelectItem(item.Instance);
             context.ViewModel.BeginRowEdit(item);
@@ -154,11 +157,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDownloadSecurity()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
-                null,
-                null,
                 portfolio,
-                _viewModelFactory);
+                new NameData("Fidelity", "China"),
+                Account.Security,
+                portfolio,
+                viewModelFactory);
             NameData item = new NameData("Fidelity", "China");
             context.ViewModel.SelectItem(item);
             context.ViewModel.DownloadSelected();
@@ -171,11 +176,13 @@ namespace FPD.Logic.Tests.CommonWindowTests
         public void CanDeleteSecurity()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
+            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
             var context = new ViewModelTestContext<IPortfolio, DataNamesViewModel>(
-                null,
-                null,
                 portfolio,
-                _viewModelFactory);
+                new NameData("Fidelity", "China"),
+                Account.Security,
+                portfolio,
+                viewModelFactory);
             Assert.AreEqual(1, context.ViewModel.ModelData.FundsThreadSafe.Count);
             Assert.AreEqual(1, context.Portfolio.FundsThreadSafe.Count);
 

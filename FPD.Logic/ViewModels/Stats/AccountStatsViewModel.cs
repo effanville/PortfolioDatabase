@@ -20,7 +20,6 @@ namespace FPD.Logic.ViewModels.Stats
         public AccountStatsViewModel(AccountStatistics accStats, UiStyles styles)
         : base("Account Stats", accStats, null, styles)
         {
-            UpdateData(accStats);
         }
 
         /// <summary>
