@@ -42,7 +42,7 @@ namespace FPD.Logic.ViewModels.Security
         /// <summary>
         /// The name data of the security this window details.
         /// </summary>
-        public NameData SelectedName
+        public TwoName SelectedName
         {
             get;
         }
@@ -121,7 +121,7 @@ namespace FPD.Logic.ViewModels.Security
             ISecurity security,
             UiStyles styles,
             UiGlobals globals,
-            NameData selectedName,
+            TwoName selectedName,
             Account account,
             IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, styles, true)
@@ -158,13 +158,13 @@ namespace FPD.Logic.ViewModels.Security
 
         private void ExecuteDeleteValuation() => DeleteValue(SelectedName, TLVM.SelectedValuation);
 
-        private void DeleteValue(NameData name, DailyValuation value)
+        private void DeleteValue(TwoName name, DailyValuation value)
         {
             if (name != null && value != null)
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false,
                     programPortfolio =>
-                        programPortfolio.TryDeleteData(_dataType, name.ToTwoName(), value.Day, ReportLogger)));
+                        programPortfolio.TryDeleteData(_dataType, name, value.Day, ReportLogger)));
             }
             else
             {
@@ -190,7 +190,7 @@ namespace FPD.Logic.ViewModels.Security
                 return;
             }
 
-            NameData names = SelectedName;
+            TwoName names = SelectedName;
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
                 async programPortfolio => await PortfolioDataUpdater
                     .Download(_dataType, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
@@ -273,13 +273,13 @@ namespace FPD.Logic.ViewModels.Security
             }
         }
 
-        private void ExecuteAddEditUnitPriceData(NameData name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditUnitPriceData(TwoName name, DailyValuation oldValue, DailyValuation newValue)
         {
             if (newValue != null)
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
                     programPortfolio =>
-                        _ = programPortfolio.TryAddOrEditData(_dataType, name.ToTwoName(), oldValue, newValue,
+                        _ = programPortfolio.TryAddOrEditData(_dataType, name, oldValue, newValue,
                             ReportLogger)));
             }
         }
@@ -332,7 +332,7 @@ namespace FPD.Logic.ViewModels.Security
         public SecurityTrade DefaultTradeValue() =>
             new SecurityTrade()
             {
-                TradeType = TradeType.Buy, Names = SelectedName.ToTwoName(), Day = DateTime.Today
+                TradeType = TradeType.Buy, Names = SelectedName, Day = DateTime.Today
             };
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace FPD.Logic.ViewModels.Security
             if (_selectedTrade != null)
             {
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(_dataType, SelectedName.ToTwoName(),
+                    programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(_dataType, SelectedName,
                         _oldSelectedTrade, _selectedTrade, ReportLogger)));
             }
         }
@@ -378,6 +378,7 @@ namespace FPD.Logic.ViewModels.Security
         {
             if (SelectedName != null && _selectedTrade != null)
             {
+                Trades.Remove(_selectedTrade);
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
                     programPortfolio =>
                         programPortfolio.TryDeleteTradeData(_dataType, SelectedName, _selectedTrade.Day, ReportLogger)));

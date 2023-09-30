@@ -23,7 +23,6 @@ namespace FPD.Logic.ViewModels.Common
         private DailyValuation _oldSelectedValuation;
         internal DailyValuation SelectedValuation;
 
-        private string _valueName;
         private List<DailyValuation> _valuations;
 
         /// <summary>
@@ -33,15 +32,6 @@ namespace FPD.Logic.ViewModels.Common
         {
             get => _valuations;
             set => SetAndNotify(ref _valuations, value);
-        }
-        
-        /// <summary>
-        /// The name of the type of value displayed.
-        /// </summary>
-        public string ValueName
-        {
-            get => _valueName;
-            set => SetAndNotify(ref _valueName, value);
         }
 
         /// <summary>
@@ -53,11 +43,10 @@ namespace FPD.Logic.ViewModels.Common
             UiStyles styles,
             Action<DailyValuation> deleteValueAction,
             Action<DailyValuation, DailyValuation> addEditValueAction)
-            : base("TLVM", timeList, null, styles)
+            : base(valueName, timeList, null, styles)
         {
             _deleteValueAction = deleteValueAction;
             _addEditValueAction = addEditValueAction;
-            ValueName = valueName;
             Styles = styles;
             PreEditCommand = new RelayCommand(ExecutePreEdit);
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
@@ -143,10 +132,13 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public void DeleteValuation()
         {
-            if (SelectedValuation != null)
+            if (SelectedValuation == null)
             {
-                _deleteValueAction(SelectedValuation);
+                return;
             }
+
+            Valuations.Remove(SelectedValuation);
+            _deleteValueAction(SelectedValuation);
         }
     }
 }

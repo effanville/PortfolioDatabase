@@ -146,6 +146,7 @@
                                                 Binding="{Binding Path=NumberShares, UpdateSourceTrigger=LostFocus}" />
                             <DataGridTemplateColumn Header="Trade costs"
                                                     MinWidth="50"
+                                                    IsReadOnly="False"
                                                     Width="Auto">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

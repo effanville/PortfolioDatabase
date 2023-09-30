@@ -28,7 +28,7 @@
                 Style="{StaticResource ResourceKey=defaultButton}"
                 Grid.Row="0"
                 Margin="5 5 5 5"
-                Content="HTML Stats to Display"
+                Content="Select"
                 Command="{Binding FileSelect}" />
         <TextBox Grid.Row="0"
                  Grid.Column="1"
@@ -37,7 +37,7 @@
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  VerticalContentAlignment="Center"
-                 Text="{Binding HtmlPath}" />
+                 Text="{Binding UrlTextPath}" />
         <wpf:WebView2 Grid.Row="1"
                       Grid.Column="0"
                       Width="Auto"

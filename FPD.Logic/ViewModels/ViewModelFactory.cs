@@ -29,7 +29,7 @@ public class ViewModelFactory : IViewModelFactory
 
     public DataDisplayViewModelBase GenerateViewModel(
         IPortfolio portfolio, 
-        NameData names,
+        TwoName names,
         Account account,
         IConfiguration configuration,
         string vmType) 
@@ -42,7 +42,7 @@ public class ViewModelFactory : IViewModelFactory
 
     public StyledClosableViewModelBase<T, IPortfolio> GenerateViewModel<T>(
         T modelData, 
-        NameData names,
+        TwoName names,
         Account account, 
         IPortfolio portfolio) 
         where T : class 

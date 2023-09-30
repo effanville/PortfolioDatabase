@@ -1,4 +1,7 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Abstractions.TestingHelpers;
+using System.Net;
 
 using FinancialStructures.Database;
 

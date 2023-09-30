@@ -93,7 +93,13 @@ namespace FPD.Logic.ViewModels.Common
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public DataNamesViewModel(IPortfolio portfolio, UiGlobals uiGlobals, UiStyles styles, IUpdater<IPortfolio> dataUpdater, Action<object> loadSelectedData, Account dataType)
+        public DataNamesViewModel(
+            IPortfolio portfolio, 
+            UiGlobals uiGlobals, 
+            UiStyles styles, 
+            IUpdater<IPortfolio> dataUpdater,
+            Action<object> loadSelectedData, 
+            Account dataType)
             : base("Accounts", portfolio, uiGlobals, styles, closable: false)
         {
             DataType = dataType;
@@ -124,7 +130,9 @@ namespace FPD.Logic.ViewModels.Common
         {
             base.UpdateData(modelData);
 
-            List<RowData> values = modelData.NameDataForAccount(DataType).Select(name => new RowData(name, IsUpdated(modelData, name), DataType, _updater, Styles)).ToList();
+            List<RowData> values = modelData
+                .NameDataForAccount(DataType)
+                .Select(name => new RowData(name, IsUpdated(modelData, name), DataType, _updater, Styles)).ToList();
             DataNames = null;
             DataNames = values;
             DataNames ??= new List<RowData>();
@@ -200,14 +208,14 @@ namespace FPD.Logic.ViewModels.Common
 
         private void ExecuteCreateEdit(object obj)
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"ExecuteCreateEdit called.");
+            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"ExecuteCreateEdit called.");
             if (obj is not RowData rowData || rowData.Instance == null || !rowData.IsNew)
             {
                 return;
             }
 
             NameData selectedInstance = rowData.Instance; //rowName.Instance;
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
+            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
             NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name, ReportLogger)));
         }
@@ -222,14 +230,15 @@ namespace FPD.Logic.ViewModels.Common
 
         public void ExecuteDelete()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DeletingData, $"Deleting {SelectedName} from the database");
+            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DeletingData, $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
+                DataNames.Remove(SelectedName);
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.Instance, ReportLogger)));
             }
             else
             {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "Nothing was selected when trying to delete.");
+                _ = ReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "Nothing was selected when trying to delete.");
             }
         }
     }

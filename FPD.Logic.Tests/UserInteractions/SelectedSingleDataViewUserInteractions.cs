@@ -3,12 +3,12 @@ using Common.Structure.DataStructures;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.FinanceStructures;
 
-namespace FPD.Logic.Tests.ViewModelExtensions
+namespace FPD.Logic.Tests.UserInteractions
 {
     /// <summary>
     /// Contains user like interaction behaviours with the <see cref="SelectedSingleDataViewModel"/>.
     /// </summary>
-    public static class SelectedSingleDataViewModelExtensions
+    public static class SelectedSingleDataViewUserInteractions
     {
         public static DailyValuation AddNewItem(this SelectedSingleDataViewModel viewModel)
         {
@@ -25,7 +25,7 @@ namespace FPD.Logic.Tests.ViewModelExtensions
         {
             viewModel.TLVM.SelectionChangedCommand?.Execute(valueToSelect);
         }
-
+        
         public static void BeginEdit(this SelectedSingleDataViewModel viewModel)
         {
             viewModel.TLVM.PreEditCommand?.Execute(null);

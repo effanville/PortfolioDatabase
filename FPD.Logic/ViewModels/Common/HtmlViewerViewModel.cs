@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Windows.Input;
+
 using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
+
 using FinancialStructures.Database;
 
 namespace FPD.Logic.ViewModels
@@ -14,6 +17,23 @@ namespace FPD.Logic.ViewModels
     /// </summary>
     public sealed class HtmlViewerViewModel : DataDisplayViewModelBase
     {
+        private string _urlTextPath;
+
+        public string UrlTextPath
+        {
+            get => _urlTextPath;
+            set
+            {
+                if (SetAndNotify(ref _urlTextPath, value))
+                {
+                    if (UriHelpers.IsValidUri(_urlTextPath, out Uri newUri))
+                    {
+                        HtmlPath = newUri;
+                    }
+                }
+            }
+        }
+
         private Uri _htmlPath;
 
         /// <summary>
@@ -22,7 +42,7 @@ namespace FPD.Logic.ViewModels
         public Uri HtmlPath
         {
             get => _htmlPath;
-            set => SetAndNotify(ref _htmlPath, value);
+            private set => SetAndNotify(ref _htmlPath, value);
         }
 
         /// <summary>
@@ -39,7 +59,11 @@ namespace FPD.Logic.ViewModels
         public HtmlViewerViewModel(UiStyles styles, UiGlobals globals, string header, string filePath)
             : base(globals, styles, null, header, Account.All, closable: true)
         {
-            HtmlPath = new Uri(filePath);
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                UrlTextPath = filePath;
+            }
+
             FileSelect = new RelayCommand(ExecuteFileSelect);
         }
 
@@ -48,7 +72,7 @@ namespace FPD.Logic.ViewModels
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
             if (result.Success)
             {
-                HtmlPath = new Uri(result.FilePath);
+                UrlTextPath = result.FilePath;
             }
         }
     }

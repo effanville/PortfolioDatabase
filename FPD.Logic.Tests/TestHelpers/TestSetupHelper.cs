@@ -13,6 +13,7 @@ using FinancialStructures.Database.Extensions;
 using FinancialStructures.DataStructures;
 using FinancialStructures.NamingStructures;
 
+using FPD.Logic.Tests.Support;
 using FPD.Logic.ViewModels;
 
 using Moq;
@@ -21,7 +22,8 @@ namespace FPD.Logic.Tests.TestHelpers
 {
     public static class TestSetupHelper
     {
-        internal readonly static IReportLogger DummyReportLogger = new NothingReportLogger();
+        internal static IReportLogger DummyReportLogger => new NothingReportLogger();
+
         public static Mock<IFileInteractionService> CreateFileMock(string filePath)
         {
             Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
@@ -61,23 +63,7 @@ namespace FPD.Logic.Tests.TestHelpers
 
         public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IBaseDialogCreationService dialogCreationService, IReportLogger logger = null)
         {
-            return new UiGlobals(null, DispatcherSetup().Object, fileSystem, fileService, dialogCreationService, logger ?? DummyReportLogger);
-        }
-
-        private static Mock<IDispatcher> DispatcherSetup()
-        {
-            Mock<IDispatcher> dispatcherMock = new Mock<IDispatcher>();
-            _ = dispatcherMock.Setup(x => x.Invoke(It.IsAny<Action>())).Callback((Action a) => a());
-
-            _ = dispatcherMock.Setup(x => x.BeginInvoke(It.IsAny<Action>())).Callback((Action a) => a());
-            return dispatcherMock;
-        }
-
-        internal static Action<object> DummyOpenTab => action => OpenTab();
-
-        private static void OpenTab()
-        {
-            return;
+            return new UiGlobals(null, TestDependencies.SetupDispatcher(), fileSystem, fileService, dialogCreationService, logger ?? DummyReportLogger);
         }
 
         public static IPortfolio CreateBasicDataBase()

@@ -32,12 +32,12 @@ namespace FPD.Logic.ViewModels.Common
         private readonly IPortfolio _portfolio;
         private readonly Account _dataType;
 
-        private NameData _selectedName;
+        private TwoName _selectedName;
 
         /// <summary>
         /// Name and Company data of the selected security in the list
         /// </summary>
-        public NameData SelectedName
+        public TwoName SelectedName
         {
             get => _selectedName;
             set => SetAndNotify(ref _selectedName, value);
@@ -73,7 +73,7 @@ namespace FPD.Logic.ViewModels.Common
             IValueList valueList,
             UiStyles styles,
             UiGlobals globals,
-            NameData selectedName,
+            TwoName selectedName,
             Account accountDataType,
             IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
@@ -115,7 +115,7 @@ namespace FPD.Logic.ViewModels.Common
             Stats.UpdateData(stats);
         }
 
-        private void ExecuteAddEditData(NameData name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditData(TwoName name, DailyValuation oldValue, DailyValuation newValue)
         {
             if (name != null)
             {
@@ -135,7 +135,7 @@ namespace FPD.Logic.ViewModels.Common
 
         private void ExecuteDeleteValuation() => DeleteValue(SelectedName, TLVM.SelectedValuation);
 
-        private void DeleteValue(NameData name, DailyValuation value)
+        private void DeleteValue(TwoName name, DailyValuation value)
         {
             if (name != null && value != null)
             {
