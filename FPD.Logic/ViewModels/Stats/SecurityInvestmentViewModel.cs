@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Common.Structure.DataStructures;
 using Common.Structure.NamingStructures;
@@ -16,25 +17,22 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class SecurityInvestmentViewModel : DataDisplayViewModelBase
     {
-        /// <inheritdoc/>
-        public override bool Closable => true;
-
-        private List<Labelled<TwoName, DailyValuation>> fSecuritiesInvestments;
+        private List<Labelled<TwoName, DailyValuation>> _securitiesInvestments;
 
         /// <summary>
         /// The investments into the securities.
         /// </summary>
         public List<Labelled<TwoName, DailyValuation>> SecuritiesInvestments
         {
-            get => fSecuritiesInvestments;
-            set => SetAndNotify(ref fSecuritiesInvestments, value, nameof(SecuritiesInvestments));
+            get => _securitiesInvestments;
+            set => SetAndNotify(ref _securitiesInvestments, value);
         }
 
         /// <summary>
         /// Construct an instance
         /// </summary>
         public SecurityInvestmentViewModel(IPortfolio portfolio, UiStyles styles)
-            : base(null, styles, portfolio, "Investments")
+            : base(null, styles, portfolio, "Investments", closable: true)
         {
             UpdateData(portfolio);
         }
@@ -43,11 +41,16 @@ namespace FPD.Logic.ViewModels.Stats
         /// The update routine. Updates the values stored.
         /// <inheritdoc/>
         /// </summary>
-        public override void UpdateData(IPortfolio portfolio)
-        {
-            base.UpdateData(portfolio);
-            SecuritiesInvestments = DataStore.TotalInvestments(Totals.Security);
+        public override void UpdateData(IPortfolio modelData)
+        {            
+            if (!modelData.Equals(ModelData))
+            {
+                OnRequestClose(EventArgs.Empty);
+                return;
+            }
+            
+            base.UpdateData(modelData);
+            SecuritiesInvestments = ModelData.TotalInvestments(Totals.Security);
         }
-
     }
 }

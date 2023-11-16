@@ -1,44 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Common.UI.ViewModelBases;
-
 using FinancialStructures.Database.Statistics;
 
 using FPD.Logic.TemplatesAndStyles;
+using FPD.Logic.ViewModels.Common;
 
 namespace FPD.Logic.ViewModels.Stats
 {
-    public sealed class AccountStatsViewModel : PropertyChangedBase
+    public sealed class AccountStatsViewModel : StyledViewModelBase<AccountStatistics>
     {
-        private UiStyles fStyles;
-
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public UiStyles Styles
-        {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
-        }
-
-        private List<IStatistic> fStatistics;
+        private List<IStatistic> _statistics;
         public List<IStatistic> Statistics
         {
-            get => fStatistics;
-            set => SetAndNotify(ref fStatistics, value, nameof(Statistics));
+            get => _statistics;
+            set => SetAndNotify(ref _statistics, value);
         }
 
         public AccountStatsViewModel(AccountStatistics accStats, UiStyles styles)
+        : base("Account Stats", accStats, null, styles)
         {
-            Styles = styles;
-            UpdateData(accStats);
         }
 
         /// <summary>
         /// Routine to update the data in the display.
         /// </summary>
-        public void UpdateData(AccountStatistics accStats)
+        public override void UpdateData(AccountStatistics accStats)
         {
             Statistics = null;
             Statistics = accStats?.Statistics.ToList() ?? new List<IStatistic>();

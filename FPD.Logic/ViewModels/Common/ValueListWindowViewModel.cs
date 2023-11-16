@@ -1,13 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Input;
+
 using Common.UI;
-using Common.UI.ViewModelBases;
+
 using FPD.Logic.TemplatesAndStyles;
+
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
+
 using Common.Structure.DataEdit;
+using Common.UI.Commands;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -16,83 +22,168 @@ namespace FPD.Logic.ViewModels.Common
     /// </summary>
     public class ValueListWindowViewModel : DataDisplayViewModelBase
     {
-        private readonly IUpdater<IPortfolio> _dataUpdater;
+        private readonly IViewModelFactory _viewModelFactory;
 
-        /// <summary>
-        /// The tabs to display.
-        /// </summary>
         public ObservableCollection<object> Tabs { get; set; } = new ObservableCollection<object>();
 
-        private int _selectedIndex;
+        public ICommand SelectionChanged { get; }
 
-        /// <summary>
-        /// Index of the selected tab.
-        /// </summary>
-        public int SelectedIndex
+        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
         {
-            get => _selectedIndex;
-            set => SetAndNotify(ref _selectedIndex, value, nameof(SelectedIndex));
+            var source = e.AddedItems;
+            if (source is not object[] list || list.Length != 1)
+            {
+                return;
+            }
+
+            UpdateTab(list[0], ModelData);
         }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ValueListWindowViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, string title, Account accountType, IUpdater<IPortfolio> dataUpdater)
+        public ValueListWindowViewModel(
+            UiGlobals globals,
+            UiStyles styles,
+            IPortfolio portfolio,
+            string title,
+            Account accountType,
+            IUpdater<IPortfolio> dataUpdater,
+            IViewModelFactory viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
         {
-            _dataUpdater = dataUpdater;
-            UpdateData(portfolio);
-            Tabs.Add(new DataNamesViewModel(DataStore, fUiGlobals.ReportLogger, styles, dataUpdater, (name) => LoadTabFunc(name), accountType));
-            foreach (object tab in Tabs)
-            {
-                if (tab is ViewModelBase<IPortfolio> vmb)
-                {
-                    vmb.UpdateRequest += dataUpdater.PerformUpdate;
-                }
-            }
-            SelectedIndex = 0;
+            _viewModelFactory = viewModelFactory;
+            var dataNames = new DataNamesViewModel(
+                ModelData,
+                DisplayGlobals,
+                styles,
+                dataUpdater,
+                LoadTabFunc,
+                accountType);
+            Tabs.Add(dataNames);
+            dataNames.UpdateRequest += dataUpdater.PerformUpdate;
+            dataNames.RequestClose += RemoveTab;
+            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay)
+        public override void UpdateData(IPortfolio modelData)
         {
-            base.UpdateData(dataToDisplay);
-            List<object> removableTabs = new List<object>();
-            if (Tabs != null)
+            base.UpdateData(modelData);
+            if (Tabs == null)
             {
-                foreach (object item in Tabs)
-                {
-                    if (item is TabViewModelBase<IPortfolio> viewModel)
-                    {
-                        viewModel.UpdateData(dataToDisplay, tabItem => removableTabs.Add(tabItem));
-                    }
-                }
+                return;
+            }
 
-                if (removableTabs.Any())
+            List<object> tabsToRemove = new List<object>();
+            foreach (object item in Tabs)
+            {
+                if (!UpdateTab(item, modelData))
                 {
-                    foreach (object tab in removableTabs)
+                    tabsToRemove.Add(item);
+                }
+            }
+
+            foreach (object tab in tabsToRemove)
+            {
+                DisplayGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
+            }
+        }
+
+        private bool UpdateTab(object item, IPortfolio modelData)
+        {
+            switch (item)
+            {
+                case StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1:
+                {
+                    viewModel1.UpdateData(modelData);
+                    return true;
+                }
+                case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
+                {
+                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out var vl)
+                        || vl is not ISecurity security)
                     {
-                        fUiGlobals.CurrentDispatcher.BeginInvoke(() => _ = Tabs.Remove(tab));
+                        return false;
                     }
 
-                    removableTabs.Clear();
+                    viewModel2.UpdateData(security);
+                    return true;
+
                 }
+                case StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> viewModel3:
+                {
+                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out var vl)
+                        || vl is not IAmortisableAsset asset)
+                    {
+                        return false;
+                    }
+
+                    viewModel3.UpdateData(asset);
+                    return true;
+
+                }
+                case StyledClosableViewModelBase<IValueList, IPortfolio> viewModel4:
+                {
+                    if (!modelData.TryGetAccount(DataType, viewModel4.ModelData.Names, out var vl))
+                    {
+                        return false;
+                    }
+
+                    viewModel4.UpdateData(vl);
+                    return true;
+
+                }
+                default:
+                    return false;
             }
         }
 
         internal void LoadTabFunc(object obj)
         {
-            if (obj is NameData name)
+            if (obj is not NameData name)
             {
-                var newVM = new SelectedSingleDataViewModel(DataStore, Styles, fUiGlobals, name, DataType, _dataUpdater);
-                newVM.UpdateRequest += _dataUpdater.PerformUpdate;
-                Tabs.Add(newVM);
+                return;
             }
-        }
 
+            if (ModelData.TryGetAccount(DataType, name, out IValueList valueList))
+            {
+                switch (valueList)
+            {
+                    case ISecurity security:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(security, security.Names, DataType,  ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                    case IAmortisableAsset asset:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(asset, asset.Names, DataType,  ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                    default:
+                    {
+                        var newVM = _viewModelFactory.GenerateViewModel(valueList,valueList.Names, DataType, ModelData);
+                        newVM.RequestClose += RemoveTab;
+                        Tabs.Add(newVM);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                StyledClosableViewModelBase<IPortfolio, IPortfolio> newVM;
+                newVM =  _viewModelFactory.GenerateViewModel(ModelData, null, DataType, ModelData);
+            }
+
+        }
+        
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>
-        public bool RemoveTab(object obj) => Tabs.Remove(obj);
+        private void RemoveTab(object obj, EventArgs args) => Tabs.Remove(obj);
     }
 }

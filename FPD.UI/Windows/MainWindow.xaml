@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FPD.UI.Windows"
         xmlns:vm="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         mc:Ignorable="d"
         MinHeight="400"
@@ -65,9 +66,9 @@
                 <local:OptionsToolbar Grid.Column="1"
                                       DataContext="{Binding OptionsToolbarCommands}"
                                       Background="{Binding Styles.BackgroundBrush}" />
-                <StackPanel Grid.Column="3" />
+                <StackPanel Grid.Column="2" />
                 <StackPanel Orientation="Horizontal"
-                            Grid.Column="4"
+                            Grid.Column="3"
                             Background="Transparent"
                             MouseDown="UserControl_MouseDown"
                             HorizontalAlignment="Right">
@@ -147,8 +148,14 @@
                             Margin="0"
                             ItemsSource="{Binding Tabs}"
                             SelectedIndex="0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectionChanged}"
+                                                   PassEventArgsToCommand="true" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <TabControl.Resources>
-                        <Style  TargetType="{x:Type TabControl}">
+                        <Style TargetType="{x:Type TabControl}">
                             <Setter Property="Padding"
                                     Value="4,4,4,4" />
                             <Setter Property="BorderThickness"

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 
 using Common.Structure.DataEdit;
@@ -10,174 +9,168 @@ using Common.Structure.Reporting;
 using Common.UI;
 using Common.UI.Commands;
 using Common.UI.Services;
-using Common.UI.ViewModelBases;
 
 using FinancialStructures;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions;
-using FinancialStructures.Database.Extensions.Statistics;
 using FinancialStructures.Database.Statistics;
-using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
+using FPD.Logic.ViewModels.Stats;
 
 namespace FPD.Logic.ViewModels.Asset
 {
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public sealed class SelectedAssetViewModel : TabViewModelBase<IPortfolio>
+    public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset, IPortfolio>
     {
+        private readonly IPortfolio _portfolio;
+
         /// <summary>
         /// The name data of the security this window details.
         /// </summary>
-        internal readonly NameData fSelectedName;
-        private readonly Account fAccountType = Account.Asset;
-        private readonly IReportLogger fReportLogger;
-        private readonly UiGlobals fUiGlobals;
+        internal readonly NameData SelectedName;
 
-        private UiStyles fStyles;
+        private readonly Account _dataType;
 
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public UiStyles Styles
-        {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
-        }
-
-        internal SecurityTrade fOldSelectedTrade;
-        internal SecurityTrade SelectedTrade;
-
-        /// <inheritdoc/>
-        public override bool Closable => true;
-
-        private TimeListViewModel fValuesTLVM;
+        private TimeListViewModel _valuesTLVM;
 
         /// <summary>
         /// View Model for the unit price data of the Security.
         /// </summary>
         public TimeListViewModel ValuesTLVM
         {
-            get => fValuesTLVM;
-            set => SetAndNotify(ref fValuesTLVM, value, nameof(ValuesTLVM));
+            get => _valuesTLVM;
+            set => SetAndNotify(ref _valuesTLVM, value);
         }
 
-        private TimeListViewModel fDebtTLVM;
+        private TimeListViewModel _debtTLVM;
 
         /// <summary>
         /// View Model for the unit price data of the Security.
         /// </summary>
         public TimeListViewModel DebtTLVM
         {
-            get => fDebtTLVM;
-            set => SetAndNotify(ref fDebtTLVM, value, nameof(DebtTLVM));
+            get => _debtTLVM;
+            set => SetAndNotify(ref _debtTLVM, value);
         }
 
-        private TimeListViewModel fPaymentsTLVM;
+        private TimeListViewModel _paymentsTLVM;
 
         /// <summary>
         /// View Model for the payments for the Asset.
         /// </summary>
         public TimeListViewModel PaymentsTLVM
         {
-            get => fPaymentsTLVM;
-            set => SetAndNotify(ref fPaymentsTLVM, value, nameof(PaymentsTLVM));
+            get => _paymentsTLVM;
+            set => SetAndNotify(ref _paymentsTLVM, value);
         }
 
-        private AccountStatistics fSecurityStats;
+        private AccountStatsViewModel _statistics;
 
         /// <summary>
         /// The statistics for the security.
         /// </summary>
-        public AccountStatistics SecurityStats
+        public AccountStatsViewModel Statistics
         {
-            get => fSecurityStats;
-            set => SetAndNotify(ref fSecurityStats, value, nameof(SecurityStats));
+            get => _statistics;
+            set => SetAndNotify(ref _statistics, value);
         }
 
-        private List<DailyValuation> fValues;
+        private List<DailyValuation> _values;
 
         /// <summary>
         /// List of total held amount of the security.
         /// </summary>
         public List<DailyValuation> Values
         {
-            get => fValues;
-            set => SetAndNotify(ref fValues, value, nameof(Values));
+            get => _values;
+            set => SetAndNotify(ref _values, value);
         }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SelectedAssetViewModel(IPortfolio portfolio, IReportLogger reportLogger, UiStyles styles, UiGlobals globals, NameData selectedName)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", portfolio)
+        public SelectedAssetViewModel(
+            IPortfolio portfolio,
+            IAmortisableAsset asset,
+            UiStyles styles,
+            UiGlobals globals,
+            NameData selectedName,
+            Account dataType,
+            IUpdater<IPortfolio> dataUpdater)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", asset, globals, styles, true)
         {
-            fReportLogger = reportLogger;
-            Styles = styles;
-            fUiGlobals = globals;
-            fSelectedName = selectedName;
+            _portfolio = portfolio;
+            SelectedName = selectedName;
+            _dataType = dataType;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-
-            if (portfolio.TryGetAccount(fAccountType, fSelectedName, out IValueList desired))
-            {
-                IAmortisableAsset asset = desired as IAmortisableAsset;
-                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency ?? portfolio.BaseCurrency);
-                ValuesTLVM = new TimeListViewModel(asset.Values, $"Values({currencySymbol})", Styles, value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
-                DebtTLVM = new TimeListViewModel(asset.Debt, $"Debt({currencySymbol})", Styles, value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
-                PaymentsTLVM = new TimeListViewModel(asset.Payments, $"Payments({currencySymbol})", Styles, value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
-            }
-            else
-            {
-                string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(portfolio.BaseCurrency);
-                ValuesTLVM = new TimeListViewModel(null, $"Values({currencySymbol})", Styles, value => DeleteValue(fSelectedName, value), (old, newVal) => ExecuteAddEditValues(fSelectedName, old, newVal));
-                DebtTLVM = new TimeListViewModel(null, $"Debt({currencySymbol})", Styles, value => DeleteDebtValue(fSelectedName, value), (old, newVal) => ExecuteAddEditDebt(fSelectedName, old, newVal));
-                PaymentsTLVM = new TimeListViewModel(null, $"Payments({currencySymbol})", Styles, value => DeletePaymentValue(fSelectedName, value), (old, newVal) => ExecuteAddEditPayment(fSelectedName, old, newVal));
-            }
-
-            UpdateData(portfolio, null);
+            UpdateRequest += dataUpdater.PerformUpdate;
+            string currencySymbol =
+                CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
+            ValuesTLVM = new TimeListViewModel(asset.Values, $"Values({currencySymbol})", Styles,
+                value => DeleteValue(SelectedName, value),
+                (old, newVal) => ExecuteAddEditValues(SelectedName, old, newVal));
+            DebtTLVM = new TimeListViewModel(asset.Debt, $"Debt({currencySymbol})", Styles,
+                value => DeleteDebtValue(SelectedName, value),
+                (old, newVal) => ExecuteAddEditDebt(SelectedName, old, newVal));
+            PaymentsTLVM = new TimeListViewModel(asset.Payments, $"Payments({currencySymbol})", Styles,
+                value => DeletePaymentValue(SelectedName, value),
+                (old, newVal) => ExecuteAddEditPayment(SelectedName, old, newVal));
+            ValuesTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            DebtTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            PaymentsTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            Statistics = new AccountStatsViewModel(null, Styles);
         }
 
         private void DeleteValue(NameData name, DailyValuation value)
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteData(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        programPortfolio.TryDeleteData(_dataType, name.ToTwoName(), value.Day, ReportLogger)));
             }
             else
             {
-                _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
+                    "No Account was selected when trying to delete data.");
             }
         }
 
         private void DeleteDebtValue(NameData name, DailyValuation value)
         {
-            if (name != null && value != null)
+            if (name == null || value == null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetDebt(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
+                    "No Account was selected when trying to delete data.");
+                return;
             }
-            else
-            {
-                _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
-            }
+
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                programPortfolio =>
+                    programPortfolio.TryDeleteAssetDebt(_dataType, name.ToTwoName(), value.Day, ReportLogger)));
         }
 
         private void DeletePaymentValue(NameData name, DailyValuation value)
         {
-            if (name != null && value != null)
+            if (name == null || value == null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryDeleteAssetPayment(fAccountType, name.ToTwoName(), value.Day, fReportLogger)));
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
+                    "No Account was selected when trying to delete data.");
+                return;
             }
-            else
-            {
-                _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "No Account was selected when trying to delete data.");
-            }
+
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                programPortfolio =>
+                    programPortfolio.TryDeleteAssetPayment(_dataType, name.ToTwoName(), value.Day,
+                        ReportLogger)));
         }
 
         /// <summary>
@@ -190,12 +183,17 @@ namespace FPD.Logic.ViewModels.Asset
 
         private void ExecuteDownloadCommand()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {fSelectedName} - a {fAccountType}");
-            if (fSelectedName != null)
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Download selected for account {SelectedName} - a {_dataType}");
+            if (SelectedName == null)
             {
-                NameData names = fSelectedName;
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(fAccountType, programPortfolio, names, fReportLogger).ConfigureAwait(false)));
+                return;
             }
+
+            NameData names = SelectedName;
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                async programPortfolio => await PortfolioDataUpdater
+                    .Download(_dataType, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -208,22 +206,19 @@ namespace FPD.Logic.ViewModels.Asset
 
         private void ExecuteExportCsvData()
         {
-            _ = fReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {fSelectedName} exporting data to csv.");
-            if (fSelectedName != null)
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Selected {_dataType} {SelectedName} exporting data to csv.");
+            if (SelectedName == null)
             {
-                FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("csv", string.Empty, filter: "Csv Files|*.csv|All Files|*.*");
-                if (result.Success)
-                {
-                    if (DataStore.TryGetAccount(fAccountType, fSelectedName, out IValueList account))
-                    {
-                        IAmortisableAsset security = account as IAmortisableAsset;
-                        CsvReaderWriter.WriteToCSVFile(security, result.FilePath, fReportLogger);
-                    }
-                    else
-                    {
-                        _ = fReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, $"Could not find {fAccountType}.");
-                    }
-                }
+                return;
+            }
+
+            FileInteractionResult result =
+                DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty,
+                    filter: "Csv Files|*.csv|All Files|*.*");
+            if (result.Success)
+            {
+                CsvReaderWriter.WriteToCSVFile(ModelData, result.FilePath, ReportLogger);
             }
         }
 
@@ -231,7 +226,9 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditData(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio => _ = programPortfolio.TryAddOrEditData(_dataType, name.ToTwoName(), oldValue,
+                        newValue, ReportLogger)));
             }
         }
 
@@ -239,7 +236,9 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(_dataType, name.ToTwoName(),
+                        oldValue, newValue, ReportLogger)));
             }
         }
 
@@ -247,35 +246,40 @@ namespace FPD.Logic.ViewModels.Asset
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(fAccountType, name.ToTwoName(), oldValue, newValue, fReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(_dataType, name.ToTwoName(),
+                        oldValue, newValue, ReportLogger)));
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay, Action<object> removeTab)
+        public override void UpdateData(IAmortisableAsset modelData)
         {
-            _ = fReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Selected {fAccountType} {fSelectedName} updating data.");
-            base.UpdateData(dataToDisplay);
-            if (fSelectedName != null)
+            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+                $"Selected {_dataType} {SelectedName} updating data.");
+            base.UpdateData(modelData);
+            if (SelectedName == null)
             {
-                if (!dataToDisplay.TryGetAccount(fAccountType, fSelectedName, out IValueList desired))
-                {
-                    removeTab?.Invoke(this);
-                    return;
-                }
-
-                IAmortisableAsset asset = desired as IAmortisableAsset;
-                ValuesTLVM?.UpdateData(asset.Values);
-                DebtTLVM?.UpdateData(asset.Debt);
-                SecurityStats = dataToDisplay.GetStats(DateTime.Today, fAccountType, fSelectedName, AccountStatisticsHelpers.DefaultAssetStats()).Single();
-                Values = dataToDisplay.NumberData(fAccountType, fSelectedName, fReportLogger).ToList();
+                return;
             }
-        }
 
-        /// <inheritdoc/>
-        public override void UpdateData(IPortfolio dataToDisplay)
-        {
-            UpdateData(dataToDisplay, null);
+            if (modelData == null)
+            {
+                OnRequestClose(EventArgs.Empty);
+                return;
+            }
+
+            ValuesTLVM?.UpdateData(modelData.Values);
+            DebtTLVM?.UpdateData(modelData.Debt);
+            PaymentsTLVM?.UpdateData(modelData.Payments);
+            var stats = new AccountStatistics(
+                _portfolio,
+                DateTime.Today,
+                _dataType,
+                SelectedName,
+                AccountStatisticsHelpers.DefaultAssetStats());
+            Statistics.UpdateData(stats);
+            Values = modelData.ListOfValues();
         }
     }
 }

@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       d:DataContext="{d:DesignInstance Type=common:ValueListWindowViewModel}"
       Background="{Binding Styles.BackgroundSecondaryBrush}"
       mc:Ignorable="d">
@@ -20,10 +21,16 @@
         <TabControl x:Name="TabMain"
                     Grid.Row="0"
                     Grid.Column="0"
+                    SelectedIndex="0"
                     FontFamily="{Binding Styles.FontFamily}"
                     ItemsSource="{Binding Tabs}"
-                    Background="{Binding Styles.BackgroundBrush}"
-                    SelectedIndex="{Binding SelectedIndex}">
+                    Background="{Binding Styles.BackgroundBrush}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChanged}"
+                                           PassEventArgsToCommand="true"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
@@ -58,7 +65,7 @@
                                                 Height="12"
                                                 Width="12"
                                                 Margin="2 2 0 0"
-                                                Click="CloseTabCommand">
+                                                Command="{Binding CloseCommand}">
                                             <Grid Width="10"
                                                   Height="10"
                                                   UseLayoutRounding="True"

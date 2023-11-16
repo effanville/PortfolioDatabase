@@ -268,3 +268,6 @@ Build/source/Properties/launchSettings.json
 
 # Mac object stores
 **/.DS_Store
+
+# Ignore specflow autogen files
+**/*.feature.cs

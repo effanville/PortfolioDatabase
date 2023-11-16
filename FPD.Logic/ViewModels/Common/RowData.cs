@@ -1,9 +1,14 @@
 ﻿using System;
+
 using Common.Structure.DisplayClasses;
+
 using FPD.Logic.TemplatesAndStyles;
+
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
+
 using System.ComponentModel;
+
 using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Common
@@ -21,7 +26,8 @@ namespace FPD.Logic.ViewModels.Common
         /// </summary>
         public bool IsNew
         {
-            get; set;
+            get;
+            init;
         }
 
         /// <summary>
@@ -51,25 +57,23 @@ namespace FPD.Logic.ViewModels.Common
         public RowData()
         {
         }
-
-
+        
         /// <inheritdoc/>
         public void BeginEdit() => _preEditSelectedName = Instance?.Copy();
 
         /// <inheritdoc/>
         public void CancelEdit() => _preEditSelectedName = null;
-
+        
         /// <inheritdoc/>
         public void EndEdit()
         {
             NameData selectedInstance = Instance; //rowName.Instance;
-
-            // maybe fired from editing stuff. Try that
-            if (!string.IsNullOrEmpty(selectedInstance.Name) || !string.IsNullOrEmpty(selectedInstance.Company))
-            {
-                NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-                _updater.PerformUpdate(null, new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryEditName(_typeOfAccount, _preEditSelectedName, name, null)));
-            }
+            NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency,
+                selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
+            _updater.PerformUpdate(null,
+                new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        programPortfolio.TryEditName(_typeOfAccount, _preEditSelectedName, name, null)));
         }
 
         /// <inheritdoc/>

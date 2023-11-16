@@ -9,7 +9,6 @@ using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Export.Report;
-using FinancialStructures.Database.Extensions;
 using Common.Structure.ReportWriting;
 
 namespace FPD.Logic.ViewModels.Stats
@@ -19,16 +18,16 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class ExportReportViewModel : DataDisplayViewModelBase
     {
-        private readonly Action<object> fCloseWindowAction;
-        private bool fDisplayValueFunds;
+        private readonly Action<object> _closeWindowAction;
+        private bool _displayValueFunds;
 
         /// <summary>
         /// The number of days to have between history stats.
         /// </summary>
         public bool DisplayValueFunds
         {
-            get => fDisplayValueFunds;
-            set => SetAndNotify(ref fDisplayValueFunds, value, nameof(DisplayValueFunds));
+            get => _displayValueFunds;
+            set => SetAndNotify(ref _displayValueFunds, value);
         }
 
         /// <summary>
@@ -37,16 +36,16 @@ namespace FPD.Logic.ViewModels.Stats
         public ExportReportViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> CloseWindow)
             : base(globals, styles, userConfiguration, portfolio, "", Account.All)
         {
-            fCloseWindowAction = CloseWindow;
-            if (fUserConfiguration.HasLoaded)
+            _closeWindowAction = CloseWindow;
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
                 DisplayValueFunds = true;
-                fUserConfiguration.StoreConfiguration(this);
-                fUserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
             }
 
             ExportReportCommand = new RelayCommand(ExecuteCreateReport);
@@ -62,21 +61,21 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteCreateReport()
         {
-            fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{DataStore.Name}-report.html", filter: "Html file|*.html|All files|*.*");
+            UserConfiguration.StoreConfiguration(this);
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{ModelData.Name}-report.html", filter: "Html file|*.html|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".html"))
                 {
                     result.FilePath += ".html";
                 }
-                PortfolioReport portfolioInvestments = new PortfolioReport(DataStore, PortfolioReport.Settings.Default());
-                portfolioInvestments.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, PortfolioReport.ExportSettings.Default(), ReportLogger);
-                fCloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, "Exported Report", result.FilePath));
+                PortfolioReport portfolioInvestments = new PortfolioReport(ModelData, PortfolioReport.Settings.Default());
+                portfolioInvestments.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, PortfolioReport.ExportSettings.Default(), ReportLogger);
+                _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Report", result.FilePath));
             }
             else
             {
-                fUiGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
+                DisplayGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
     }

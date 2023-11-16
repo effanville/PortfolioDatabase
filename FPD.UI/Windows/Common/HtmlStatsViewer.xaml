@@ -6,7 +6,7 @@
              xmlns:wb="clr-namespace:Common.UI.Wpf.Controls;assembly=Common.UI.Wpf"
              xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
              xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-             d:DataContext="{d:DesignInstance Type=viewmodels:HtmlStatsViewerViewModel}"
+             d:DataContext="{d:DesignInstance Type=viewmodels:HtmlViewerViewModel}"
              mc:Ignorable="d"
              FontFamily="{Binding Styles.FontFamily}"
              d:DesignHeight="450"
@@ -28,7 +28,7 @@
                 Style="{StaticResource ResourceKey=defaultButton}"
                 Grid.Row="0"
                 Margin="5 5 5 5"
-                Content="HTML Stats to Display"
+                Content="Select"
                 Command="{Binding FileSelect}" />
         <TextBox Grid.Row="0"
                  Grid.Column="1"
@@ -37,12 +37,12 @@
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  VerticalContentAlignment="Center"
-                 Text="{Binding DisplayStats}" />
+                 Text="{Binding UrlTextPath}" />
         <wpf:WebView2 Grid.Row="1"
                       Grid.Column="0"
                       Width="Auto"
                       Height="Auto"
                       Grid.ColumnSpan="2"
-                      wb:WebBrowserBehaviours.BindableSource="{Binding DisplayStats}"/>
+                      wb:WebBrowserBehaviours.BindableSource="{Binding HtmlPath}"/>
     </Grid>
 </UserControl>
