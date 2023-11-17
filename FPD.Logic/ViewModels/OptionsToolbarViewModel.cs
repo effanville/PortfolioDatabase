@@ -13,6 +13,8 @@ using FinancialStructures.Database.Extensions;
 using System.ComponentModel;
 using Common.Structure.DataEdit;
 
+using FinancialStructures.Persistence;
+
 namespace FPD.Logic.ViewModels
 {
     /// <summary>
@@ -121,8 +123,14 @@ namespace FPD.Logic.ViewModels
                 _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
 
                 _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfo => portfo.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, portfo => portfo.SavePortfolio(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                    true, 
+                    portfo => portfo.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
+                var portfolioPersistence = new XmlPortfolioPersistence();
+                var options = new XmlFilePersistenceOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                    false, 
+                    portfo => portfolioPersistence.Save(portfo, options, ReportLogger)));
                 DisplayGlobals.CurrentWorkingDirectory = _directory;
             }
         }
@@ -138,8 +146,14 @@ namespace FPD.Logic.ViewModels
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.FillDetailsFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger)));
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false, programPortfolio => programPortfolio.SavePortfolio($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                    true, 
+                    programPortfolio => programPortfolio.FillDetailsFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger)));
+                var portfolioPersistence = new XmlPortfolioPersistence();
+                var options = new XmlFilePersistenceOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                    false, 
+                    programPortfolio => portfolioPersistence.Save(programPortfolio, options, ReportLogger)));
                 DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
                 _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
                 _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);

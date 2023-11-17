@@ -9,10 +9,10 @@ using Common.Console.Options;
 using Common.Structure.Extensions;
 using Common.Structure.Reporting;
 
-using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Export.Statistics;
 using Common.Structure.ReportWriting;
+
+using FinancialStructures.Persistence;
 
 namespace FPDconsole
 {
@@ -59,8 +59,8 @@ namespace FPDconsole
         /// <inheritdoc/>
         public int Execute(IConsole console, IReportLogger logger, string[] args = null)
         {
-            IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
-            portfolio.LoadPortfolio(_filepathOption.Value, _fileSystem, logger);
+            var xmlPersistence = new XmlPortfolioPersistence();
+            var portfolio = xmlPersistence.Load(new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
             logger.Log(ReportType.Information, "Loading", $"Successfully loaded portfolio from {_filepathOption.Value}");
 
             DocumentType docType = _fileTypeOption.Value;

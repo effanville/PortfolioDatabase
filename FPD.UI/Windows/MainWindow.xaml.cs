@@ -14,6 +14,9 @@ using FinancialStructures.Database;
 using Common.UI.Wpf;
 using System.Windows.Input;
 using System.Windows.Shapes;
+
+using FinancialStructures.Persistence;
+
 using Microsoft.Win32;
 
 namespace FPD.UI.Windows
@@ -97,7 +100,9 @@ namespace FPD.UI.Windows
                 {
                     VM.ProgramPortfolio.Name = fUiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
                     MainWindowViewModel vm = DataContext as MainWindowViewModel;
-                    vm.ProgramPortfolio.SavePortfolio(savingResult.FilePath, fUiGlobals.CurrentFileSystem, vm.ReportLogger);
+                    var xmlPersistence = new XmlPortfolioPersistence();
+                    var options = new XmlFilePersistenceOptions(savingResult.FilePath, fUiGlobals.CurrentFileSystem);
+                    xmlPersistence.Save(vm.ProgramPortfolio, options, vm.ReportLogger);
                 }
             }
             if (result == MessageBoxOutcome.Cancel)

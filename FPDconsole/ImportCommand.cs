@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 
 using Common.Console;
@@ -8,6 +7,7 @@ using Common.Console.Options;
 using Common.Structure.Reporting;
 
 using FinancialStructures.Database;
+using FinancialStructures.Persistence;
 
 namespace FPDconsole
 {
@@ -55,8 +55,8 @@ namespace FPDconsole
 
             portfolio.ImportValuesFrom(otherPortfolio, logger);
 
-            portfolio.SavePortfolio(_filepathOption.Value, _fileSystem, logger);
-
+            var xmlPersistence = new XmlPortfolioPersistence();
+            xmlPersistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
             return 0;
         }
 

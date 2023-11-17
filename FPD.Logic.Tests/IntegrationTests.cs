@@ -23,9 +23,9 @@ namespace FPD.Logic.Tests
         {
             ViewModel.OptionsToolbarCommands.LoadDatabaseCommand.Execute(1);
 
-            Assert.AreEqual(1, ViewModel.ProgramPortfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(1, ViewModel.ProgramPortfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(1, ViewModel.ProgramPortfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(1, ViewModel.ProgramPortfolio.BankAccounts.Count);
+            Assert.AreEqual(1, ViewModel.ProgramPortfolio.Funds.Count);
+            Assert.AreEqual(1, ViewModel.ProgramPortfolio.BenchMarks.Count);
 
             BasicDataViewModel dataView = ViewModel.Tabs[0] as BasicDataViewModel;
             dataView.UpdateData(ViewModel.ProgramPortfolio);

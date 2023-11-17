@@ -159,14 +159,14 @@ namespace FPD.Logic.ViewModels
             HasValues = modelData.NumberOf(Account.All) != 0;
             SecurityTotalText = $"Total Securities: {modelData.NumberOf(Account.Security)}";
             SecurityAmountText = $"Total Value: {modelData.TotalValue(Totals.Security).WithCurrencySymbol(modelData.BaseCurrency)}";
-            List<ISecurity> securities = modelData.FundsThreadSafe.ToList();
+            List<ISecurity> securities = modelData.Funds.ToList();
 
             securities.Sort((fund, otherFund) => fund.ValueComparison(otherFund, DateTime.Today));
             TopSecurities = securities.Take(5).Select(name => new Labelled<TwoName, DailyValuation>(new TwoName(name.Names.Company, name.Names.Name), name.Value(DateTime.Today))).ToList();
 
             BankAccountTotalText = $"Total Bank Accounts: {modelData.NumberOf(Account.BankAccount)}";
             BankAccountAmountText = $"Total Value: {modelData.TotalValue(Totals.BankAccount).WithCurrencySymbol(modelData.BaseCurrency)}";
-            List<IExchangableValueList> bankAccounts = modelData.BankAccountsThreadSafe.ToList();
+            List<IExchangableValueList> bankAccounts = modelData.BankAccounts.ToList();
             bankAccounts.Sort((bank, otherBank) => bank.ValueComparison(otherBank, DateTime.Today));
             TopBankAccounts = bankAccounts.Take(5).Select(name => new Labelled<TwoName, DailyValuation>(new TwoName(name.Names.Company, name.Names.Name), name.Value(DateTime.Today) ?? new DailyValuation(DateTime.Today, 0.0m))).ToList();
             Notes = modelData.Notes.ToList();

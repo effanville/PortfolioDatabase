@@ -8,9 +8,6 @@
           <Name>name</Name>
           <Sectors />
         </Names>
-        <Values>
-          <Values />
-        </Values>
         <Shares>
           <Values />
         </Shares>
@@ -33,9 +30,6 @@
         <Values>
           <Values />
         </Values>
-        <Amounts>
-          <Values />
-        </Amounts>
       </CashAccount>
     </BankAccounts>
     <Currencies>

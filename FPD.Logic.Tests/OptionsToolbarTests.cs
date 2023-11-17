@@ -27,9 +27,9 @@ namespace FPD.Logic.Tests
             //Check that data held is an empty database
 
             Assert.AreEqual(null, portfolio.Name);
-            Assert.AreEqual(0, portfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(0, portfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(0, portfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(0, portfolio.Funds.Count);
+            Assert.AreEqual(0, portfolio.BankAccounts.Count);
+            Assert.AreEqual(0, portfolio.BenchMarks.Count);
         }
 
         [Test]
@@ -52,9 +52,9 @@ namespace FPD.Logic.Tests
             //Input prespecified example database
 
             Assert.AreEqual(name, portfolio.Name);
-            Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
         }
 
         [Test]
@@ -78,10 +78,9 @@ namespace FPD.Logic.Tests
             //Input prespecified example database
 
             Assert.AreEqual(name, portfolio.Name);
-            Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
-
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
 
             viewModel.SaveDatabaseCommand.Execute(1);
 
@@ -107,9 +106,9 @@ namespace FPD.Logic.Tests
             //Input prespecified example database
 
             Assert.AreEqual(name, portfolio.Name);
-            Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
             Assert.AreEqual(1, portfolio.Assets.Count);
         }
 
@@ -129,9 +128,9 @@ namespace FPD.Logic.Tests
             //Input prespecified example database
 
             Assert.AreEqual(testFilePath, portfolio.Name);
-            Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
         }
 
         [Test]
@@ -148,9 +147,9 @@ namespace FPD.Logic.Tests
             //Check that data held is an empty database
 
             Assert.AreEqual("TestFilePath", portfolio.Name);
-            Assert.AreEqual(1, portfolio.FundsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BankAccountsThreadSafe.Count);
-            Assert.AreEqual(1, portfolio.BenchMarksThreadSafe.Count);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
         }
     }
 }

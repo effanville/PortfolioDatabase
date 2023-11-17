@@ -12,6 +12,8 @@ using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Export.Statistics;
 using Common.Structure.ReportWriting;
 
+using FinancialStructures.Persistence;
+
 namespace FPDconsole
 {
     internal sealed class DownloadCommand : ICommand
@@ -70,8 +72,8 @@ namespace FPDconsole
                 stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, logger);
             }
 
-            portfolio.SavePortfolio(_filepathOption.Value, _fileSystem, logger);
-
+            var xmlPersistence = new XmlPortfolioPersistence();
+            xmlPersistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
             return 0;
         }
 
