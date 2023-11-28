@@ -16,6 +16,8 @@ namespace FPD.UI.Windows.Stats
     /// </summary>
     public partial class StatsUserControl : AutoGenColumnControl
     {
+        private bool _isDataGridSet = false;
+        
         /// <summary>
         /// Construct an instance.
         /// </summary>
@@ -23,6 +25,17 @@ namespace FPD.UI.Windows.Stats
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
+            IsVisibleChanged += OnIsVisibleChanged;
+        }
+
+        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if(e.NewValue is bool isVisibleChanged && !isVisibleChanged)
+            {
+                return;
+            }
+
+            UpdateDataGrid(null, null);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -38,8 +51,8 @@ namespace FPD.UI.Windows.Stats
             {
                 bridge.Styles = dc.Styles;
             }
-            UpdateDataGrid(null, null);
         }
+        
         /// <summary>
         /// Updates the data displayed in the grid.
         /// </summary>
@@ -47,6 +60,11 @@ namespace FPD.UI.Windows.Stats
         {
             if (DataContext is StatsViewModel vm)
             {
+                if (_isDataGridSet && (!vm.ModelData?.IsAlteredSinceSave ?? true))
+                {
+                    return;
+                }
+
                 DataTable dt = await Task.Run(() => GetTable(vm.Stats));
                 DataTable GetTable(List<AccountStatistics> statistics)
                 {
@@ -64,11 +82,12 @@ namespace FPD.UI.Windows.Stats
                     {
                         _ = dt.Rows.Add(val.StatValuesAsObjects.ToArray());
                     }
-
+                    
                     return dt;
                 }
 
                 StatsBox.ItemsSource = dt.DefaultView;
+                _isDataGridSet = true;
             }
         }
 

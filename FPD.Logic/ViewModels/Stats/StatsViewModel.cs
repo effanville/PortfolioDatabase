@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+
 using Common.Structure.DisplayClasses;
 using Common.UI;
 
@@ -22,6 +23,7 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
+        private bool _updateDataInProgress = true;
         private List<AccountStatistics> _stats;
 
         private bool _displayValueFunds = true;
@@ -97,7 +99,10 @@ namespace FPD.Logic.ViewModels.Stats
         {
             UserConfiguration.StoreConfiguration(this);
             _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
-            await Task.Run(()=> UpdateData(null));
+            if (!_updateDataInProgress)
+            {
+                await Task.Run(() => UpdateData(null));
+            }
         }
 
         /// <summary>
@@ -111,19 +116,29 @@ namespace FPD.Logic.ViewModels.Stats
             }
 
             UserConfiguration.StoreConfiguration(this);
-            await Task.Run(() => UpdateData(null));
+            if (!_updateDataInProgress)
+            {
+                await Task.Run(() => UpdateData(null));
+            }
         }
 
         /// <inheritdoc/>
         public override void UpdateData(IPortfolio modelData)
         {
+            _updateDataInProgress = true;
             if (modelData != null)
             {
                 base.UpdateData(modelData);
             }
 
+            if (Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true))
+            {
+                return;
+            }
+
             var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
             DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
+            _updateDataInProgress = false;
             return;
 
             void AssignStats(List<AccountStatistics> statistics)

@@ -14,7 +14,7 @@
 	<commonUI:AutoGenColumnControl.Resources>
 		<fpdui:Bridge x:Key="bridge"
 					  Styles="{Binding Styles}" />
-	</commonUI:AutoGenColumnControl.Resources>
+	</commonUI:AutoGenColumnControl.Resources>            
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="40" />
