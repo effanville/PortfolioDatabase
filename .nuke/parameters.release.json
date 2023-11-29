@@ -9,7 +9,7 @@
     "FinancialStructures"
   ],
   "Configuration": "Release",
-  "Framework": "net6.0-windows",
+  "Framework": "net7.0-windows",
   "Runtime": "win-x64",
   "IsProd": true
 }
