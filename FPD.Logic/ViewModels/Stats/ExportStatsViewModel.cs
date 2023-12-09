@@ -14,7 +14,6 @@ using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
 using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Statistics;
 using FinancialStructures.Database.Export.Statistics;
 using System.Linq;
@@ -27,9 +26,9 @@ namespace FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class ExportStatsViewModel : DataDisplayViewModelBase
     {
-        private readonly Action<object> CloseWindowAction;
+        private readonly Action<object> _closeWindowAction;
 
-        private List<Selectable<string>> fDisplayConditions = new List<Selectable<string>>();
+        private List<Selectable<string>> _displayConditions = new List<Selectable<string>>();
 
         private const string ShowSecurities = "ShowSecurites";
         private const string ShowBankAccounts = "ShowBankAccounts";
@@ -47,41 +46,41 @@ namespace FPD.Logic.ViewModels.Stats
         /// </summary>
         public List<Selectable<string>> DisplayConditions
         {
-            get => fDisplayConditions;
-            set => SetAndNotify(ref fDisplayConditions, value, nameof(DisplayConditions));
+            get => _displayConditions;
+            set => SetAndNotify(ref _displayConditions, value);
         }
 
-        private Statistic fSecuritySortingField;
+        private Statistic _securitySortingField;
 
         /// <summary>
         /// The statistic to sort the security data by.
         /// </summary>
         public Statistic SecuritySortingField
         {
-            get => fSecuritySortingField;
-            set => SetAndNotify(ref fSecuritySortingField, value, nameof(SecuritySortingField));
+            get => _securitySortingField;
+            set => SetAndNotify(ref _securitySortingField, value);
         }
 
-        private SortDirection fSecurityDirection;
+        private SortDirection _securityDirection;
 
         /// <summary>
         /// The direction to sort the Security data in.
         /// </summary>
         public SortDirection SecurityDirection
         {
-            get => fSecurityDirection;
-            set => SetAndNotify(ref fSecurityDirection, value, nameof(SecurityDirection));
+            get => _securityDirection;
+            set => SetAndNotify(ref _securityDirection, value);
         }
 
-        private List<Selectable<Statistic>> fSecurityColumnNames = new List<Selectable<Statistic>>();
+        private List<Selectable<Statistic>> _securityColumnNames = new List<Selectable<Statistic>>();
 
         /// <summary>
         /// The possible columns for security export, and which ones are selected.
         /// </summary>
         public List<Selectable<Statistic>> SecurityColumnNames
         {
-            get => fSecurityColumnNames;
-            set => SetAndNotify(ref fSecurityColumnNames, value, nameof(SecurityColumnNames));
+            get => _securityColumnNames;
+            set => SetAndNotify(ref _securityColumnNames, value);
         }
 
         private Statistic fBankSortingField;
@@ -92,108 +91,108 @@ namespace FPD.Logic.ViewModels.Stats
         public Statistic BankSortingField
         {
             get => fBankSortingField;
-            set => SetAndNotify(ref fBankSortingField, value, nameof(BankSortingField));
+            set => SetAndNotify(ref fBankSortingField, value);
         }
 
-        private SortDirection fBankDirection;
+        private SortDirection _bankDirection;
 
         /// <summary>
         /// The direction to sort the Bank Account data in.
         /// </summary>
         public SortDirection BankDirection
         {
-            get => fBankDirection;
-            set => SetAndNotify(ref fBankDirection, value, nameof(BankDirection));
+            get => _bankDirection;
+            set => SetAndNotify(ref _bankDirection, value);
         }
 
-        private List<Selectable<Statistic>> fBankColumnNames = new List<Selectable<Statistic>>();
+        private List<Selectable<Statistic>> _bankColumnNames = new List<Selectable<Statistic>>();
 
         /// <summary>
         /// The possible columns for bank account export, and which ones are selected.
         /// </summary>
         public List<Selectable<Statistic>> BankColumnNames
         {
-            get => fBankColumnNames;
-            set => SetAndNotify(ref fBankColumnNames, value, nameof(BankColumnNames));
+            get => _bankColumnNames;
+            set => SetAndNotify(ref _bankColumnNames, value);
         }
 
-        private Statistic fSectorSortingField;
+        private Statistic _sectorSortingField;
 
         /// <summary>
         /// The statistic to sort the sector data by.
         /// </summary>
         public Statistic SectorSortingField
         {
-            get => fSectorSortingField;
-            set => SetAndNotify(ref fSectorSortingField, value, nameof(SectorSortingField));
+            get => _sectorSortingField;
+            set => SetAndNotify(ref _sectorSortingField, value);
         }
 
 
-        private SortDirection fSectorDirection;
+        private SortDirection _sectorDirection;
 
         /// <summary>
         /// The direction to sort the Sector data in.
         /// </summary>
         public SortDirection SectorDirection
         {
-            get => fSectorDirection;
-            set => SetAndNotify(ref fSectorDirection, value, nameof(SectorDirection));
+            get => _sectorDirection;
+            set => SetAndNotify(ref _sectorDirection, value);
         }
 
-        private List<Selectable<Statistic>> fSectorColumnNames = new List<Selectable<Statistic>>();
+        private List<Selectable<Statistic>> _sectorColumnNames = new List<Selectable<Statistic>>();
 
         /// <summary>
         /// The possible columns for sector export, and which ones are selected.
         /// </summary>
         public List<Selectable<Statistic>> SectorColumnNames
         {
-            get => fSectorColumnNames;
-            set => SetAndNotify(ref fSectorColumnNames, value, nameof(SectorColumnNames));
+            get => _sectorColumnNames;
+            set => SetAndNotify(ref _sectorColumnNames, value);
         }
 
 
-        private Statistic fAssetSortingField;
+        private Statistic _assetSortingField;
 
         /// <summary>
         /// The statistic to sort the Asset data by.
         /// </summary>
         public Statistic AssetSortingField
         {
-            get => fAssetSortingField;
-            set => SetAndNotify(ref fAssetSortingField, value, nameof(AssetSortingField));
+            get => _assetSortingField;
+            set => SetAndNotify(ref _assetSortingField, value);
         }
 
 
-        private SortDirection fAssetDirection;
+        private SortDirection _assetDirection;
 
         /// <summary>
         /// The direction to sort the Asset data in.
         /// </summary>
         public SortDirection AssetDirection
         {
-            get => fAssetDirection;
-            set => SetAndNotify(ref fAssetDirection, value, nameof(AssetDirection));
+            get => _assetDirection;
+            set => SetAndNotify(ref _assetDirection, value);
         }
 
-        private List<Selectable<Statistic>> fAssetColumnNames = new List<Selectable<Statistic>>();
+        private List<Selectable<Statistic>> _assetColumnNames = new List<Selectable<Statistic>>();
 
         /// <summary>
         /// The possible columns for Asset export, and which ones are selected.
         /// </summary>
         public List<Selectable<Statistic>> AssetColumnNames
         {
-            get => fAssetColumnNames;
-            set => SetAndNotify(ref fAssetColumnNames, value, nameof(AssetColumnNames));
+            get => _assetColumnNames;
+            set => SetAndNotify(ref _assetColumnNames, value);
         }
 
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ExportStatsViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> CloseWindow)
+        public ExportStatsViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
             : base(globals, styles, userConfiguration, portfolio, "", Account.All)
         {
-            CloseWindowAction = CloseWindow;
+            _closeWindowAction = closeWindow;
             ExportCommand = new RelayCommand(ExecuteExportCommand);
 
             foreach (Statistic stat in AccountStatisticsHelpers.DefaultSecurityStats())
@@ -233,14 +232,14 @@ namespace FPD.Logic.ViewModels.Stats
             DisplayConditions.Add(new Selectable<string>(ShowBenchmarks, false));
             DisplayConditions.Add(new Selectable<string>(ShowAssets, false));
 
-            if (fUserConfiguration.HasLoaded)
+            if (UserConfiguration.HasLoaded)
             {
-                fUserConfiguration.RestoreFromConfiguration(this);
+                UserConfiguration.RestoreFromConfiguration(this);
             }
             else
             {
-                fUserConfiguration.HasLoaded = true;
-                fUserConfiguration.StoreConfiguration(this);
+                UserConfiguration.HasLoaded = true;
+                UserConfiguration.StoreConfiguration(this);
             }
         }
 
@@ -254,8 +253,8 @@ namespace FPD.Logic.ViewModels.Stats
 
         private void ExecuteExportCommand()
         {
-            fUserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), DataStore.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            UserConfiguration.StoreConfiguration(this);
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)
@@ -311,8 +310,8 @@ namespace FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowAssets),
                     assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList());
 
-                PortfolioStatistics stats = new PortfolioStatistics(DataStore, settings, fUiGlobals.CurrentFileSystem);
-                string extension = fUiGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
+                PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, DisplayGlobals.CurrentFileSystem);
+                string extension = DisplayGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
                 DocumentType type = extension.ToEnum<DocumentType>();
 
                 PortfolioStatisticsExportSettings exportSettings = new PortfolioStatisticsExportSettings(
@@ -335,7 +334,7 @@ namespace FPD.Logic.ViewModels.Stats
                     AssetDirection,
                     assetSelected);
 
-                stats.ExportToFile(fUiGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
+                stats.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
                 ReportLogger.Log(ReportType.Information, ReportLocation.StatisticsPage.ToString(), "Created statistics page");
             }
@@ -344,7 +343,7 @@ namespace FPD.Logic.ViewModels.Stats
                 ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Was not able to create page in place specified.");
             }
 
-            CloseWindowAction(new HtmlStatsViewerViewModel(Styles, fUiGlobals, "Exported Stats", path));
+            _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Stats", path));
         }
     }
 }

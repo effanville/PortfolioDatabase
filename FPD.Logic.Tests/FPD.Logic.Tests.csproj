@@ -12,6 +12,9 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+		<PackageReference Include="SpecFlow" Version="3.9.74" />
+		<PackageReference Include="SpecFlow.Autofac" Version="3.9.74" />
+		<PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
 		<PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.3" />
 	</ItemGroup>
 
@@ -28,6 +31,6 @@
 		<None Update="ExampleDatabases\user.config">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
 
+	</ItemGroup>
 </Project>

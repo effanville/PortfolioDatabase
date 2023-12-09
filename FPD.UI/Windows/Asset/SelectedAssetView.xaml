@@ -6,16 +6,19 @@
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Common.UI.Wpf"
              xmlns:asset="clr-namespace:FPD.Logic.ViewModels.Asset;assembly=FPD.Logic"
-             xmlns:gui="clr-namespace:FPD.UI"
+             xmlns:fpdui="clr-namespace:FPD.UI"
              d:DataContext="{d:DesignInstance Type=asset:SelectedAssetViewModel}"
              Background="{Binding Styles.BackgroundBrush}"
              mc:Ignorable="d"
-             x:Name="proxyProxy"
              d:DesignHeight="450"
+             DataContextChanged="UC_DataContextChanged"
              d:DesignWidth="800">
     <UserControl.Resources>
         <uic:StringToUKDateConverter x:Key="StringToUKDate" />
-        <gui:DisplayConstants x:Key="Consts" />
+        <fpdui:DisplayConstants x:Key="Consts" />
+        <fpdui:Bridge x:Key="bridge"
+                      x:Name="bridge"
+                      Styles="{Binding Styles}" />
     </UserControl.Resources>
     <Grid Width="Auto">
         <Grid.RowDefinitions>
@@ -39,7 +42,7 @@
                     Command="{Binding ExportCsvData}"
                     ToolTip="Exports data from the selected security to a csv file." />
         </StackPanel>
-        <Border BorderBrush="DeepSkyBlue"
+        <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                 BorderThickness="1"
                 Grid.Column="0"
                 Grid.Row="1">
@@ -60,29 +63,12 @@
                                 Grid.Column="2" />
             </Grid>
         </Border>
-        <Border BorderBrush="DeepSkyBlue"
-                BorderThickness="1"
-                Grid.Column="1"
-                Grid.Row="2">
-            <DataGrid Grid.Row="1"
-                      Grid.Column="1"
-                      ItemsSource="{Binding SecurityStats.Statistics}"
-                      AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Statistic"
-                                        Width="Auto"
-                                        Binding="{Binding Path=StatType}" />
-                    <DataGridTextColumn Header="Value"
-                                        Width="Auto"
-                                        Binding="{Binding Path=ValueAsObject}" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
+        <ContentControl Grid.Row="1"
+                        Grid.Column="1"
+                        Content="{Binding Statistics}" />
 
         <Grid Grid.Row="1"
               Grid.Column="2"
-              Grid.ColumnSpan="1"
-              Grid.RowSpan="3"
               VerticalAlignment="Stretch"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>

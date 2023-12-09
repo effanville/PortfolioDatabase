@@ -14,7 +14,7 @@
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
     <Product>FinancePortfolioDatabase</Product>
-	<VersionPrefix>23.07.0</VersionPrefix>
+	<VersionPrefix>23.12.0</VersionPrefix>
 	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 
@@ -70,9 +70,6 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Windows\ReportingWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Windows\Security\SecurityEditWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Windows\Security\SelectedSecurityView.xaml">

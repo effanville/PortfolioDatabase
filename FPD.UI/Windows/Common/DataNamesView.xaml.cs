@@ -1,5 +1,6 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 using FPD.Logic.ViewModels.Common;
 
@@ -20,9 +21,30 @@ namespace FPD.UI.Windows
 
         private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
-            if (DataContext != null && DataContext is DataNamesViewModel vm && vm.DataNames != null)
+            if (DataContext != null 
+                && DataContext is DataNamesViewModel vm 
+                && vm.DataNames != null)
             {
                 e.NewItem = vm.DefaultRow();
+            }
+        }
+
+        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Delete && e.Key != Key.Back)
+            {
+                return;
+            }
+
+            if (e.OriginalSource is not DataGridCell)
+            {
+                return;
+            }
+
+            if (DataContext != null 
+                && DataContext is DataNamesViewModel vm)
+            {
+                vm.ExecuteDelete();
             }
         }
     }

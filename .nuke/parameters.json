@@ -9,6 +9,11 @@
     "FinancialStructures"
   ],
   "Configuration": "Release",
-  "Framework": "net6.0-windows",
-  "Runtime": "win-x64"
+  "Framework": "net7.0-windows",
+  "Runtime": "win-x64",
+  "TagRepo": true,
+  "TestProjects": [
+    "FinancialStructures.Tests",
+    "FPD.Logic.Tests"
+  ]
 }

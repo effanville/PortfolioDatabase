@@ -1,9 +1,15 @@
 ﻿using System;
+
 using Common.Structure.DisplayClasses;
+
 using FPD.Logic.TemplatesAndStyles;
+
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
+
 using System.ComponentModel;
+
+using Common.Structure.DataEdit;
 
 namespace FPD.Logic.ViewModels.Common
 {
@@ -12,42 +18,37 @@ namespace FPD.Logic.ViewModels.Common
     /// </summary>
     public sealed class RowData : SelectableEquatable<NameData>, IEditableObject, IEquatable<RowData>
     {
-        private readonly Account TypeOfAccount;
-        private NameData fPreEditSelectedName;
+        private readonly Account _typeOfAccount;
+        private NameData _preEditSelectedName;
 
         /// <summary>
         /// Is the row a new row.
         /// </summary>
         public bool IsNew
         {
-            get; set;
+            get;
+            init;
         }
-
-        private UiStyles fStyles;
 
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
-        public UiStyles Styles
-        {
-            get => fStyles;
-            set => fStyles = value;
-        }
+        public UiStyles Styles { get; set; }
 
         /// <summary>
         /// Function which updates the main data store.
         /// </summary>
-        private readonly Action<Action<IPortfolio>> UpdateDataCallback;
+        private readonly IUpdater<IPortfolio> _updater;
 
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public RowData(NameData name, bool isThis, Account accType, Action<Action<IPortfolio>> update, UiStyles styles)
+        public RowData(NameData name, bool isThis, Account accType, IUpdater<IPortfolio> update, UiStyles styles)
             : base(name, isThis)
         {
             Styles = styles;
-            TypeOfAccount = accType;
-            UpdateDataCallback = update;
+            _typeOfAccount = accType;
+            _updater = update;
         }
 
         /// <summary>
@@ -56,48 +57,31 @@ namespace FPD.Logic.ViewModels.Common
         public RowData()
         {
         }
-
+        
+        /// <inheritdoc/>
+        public void BeginEdit() => _preEditSelectedName = Instance?.Copy();
 
         /// <inheritdoc/>
-        public void BeginEdit()
-        {
-            fPreEditSelectedName = Instance?.Copy();
-        }
-
-        /// <inheritdoc/>
-        public void CancelEdit()
-        {
-            fPreEditSelectedName = null;
-        }
-
+        public void CancelEdit() => _preEditSelectedName = null;
+        
         /// <inheritdoc/>
         public void EndEdit()
         {
             NameData selectedInstance = Instance; //rowName.Instance;
-
-            // maybe fired from editing stuff. Try that
-            if (!string.IsNullOrEmpty(selectedInstance.Name) || !string.IsNullOrEmpty(selectedInstance.Company))
-            {
-                NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
-                UpdateDataCallback(programPortfolio => programPortfolio.TryEditName(TypeOfAccount, fPreEditSelectedName, name, null));
-            }
+            NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency,
+                selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
+            _updater.PerformUpdate(null,
+                new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        programPortfolio.TryEditName(_typeOfAccount, _preEditSelectedName, name, null)));
         }
 
         /// <inheritdoc/>
-        public bool Equals(RowData other)
-        {
-            return base.Equals(other?.Instance);
-        }
+        public bool Equals(RowData other) => base.Equals(other?.Instance);
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as RowData);
-        }
+        public override bool Equals(object obj) => Equals(obj as RowData);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(base.GetHashCode(), Instance);
-        }
+        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Instance);
     }
 }

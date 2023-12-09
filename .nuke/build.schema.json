@@ -27,7 +27,7 @@
         },
         "Framework": {
           "type": "string",
-          "description": "Framework to build with - Current is net6.0"
+          "description": "Framework to build with - Current is net7.0"
         },
         "Help": {
           "type": "boolean",
@@ -111,6 +111,10 @@
           "type": "string",
           "description": "Path to a solution file that is automatically loaded"
         },
+        "TagRepo": {
+          "type": "boolean",
+          "description": "Should this version be tagged"
+        },
         "Target": {
           "type": "array",
           "description": "List of targets to be invoked. Default is '{default_target}'",
@@ -125,6 +129,13 @@
               "PublishNuget",
               "Test"
             ]
+          }
+        },
+        "TestProjects": {
+          "type": "array",
+          "description": "Projects to run unit tests for",
+          "items": {
+            "type": "string"
           }
         },
         "Verbosity": {

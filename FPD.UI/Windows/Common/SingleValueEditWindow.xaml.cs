@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using FPD.Logic.ViewModels.Common;
 
 namespace FPD.UI.Windows
 {
@@ -14,16 +13,6 @@ namespace FPD.UI.Windows
         public SingleValueEditWindow()
         {
             InitializeComponent();
-        }
-
-        private void CloseTabCommand(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ValueListWindowViewModel VM = DataContext as ValueListWindowViewModel;
-            var button = e.OriginalSource as System.Windows.Controls.Button;
-            if(button != null && VM != null)
-            {
-                _ = VM.RemoveTab(button.DataContext);
-            }
         }
     }
 }

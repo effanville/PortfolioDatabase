@@ -7,8 +7,9 @@
   <PropertyGroup>
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
-
-	<VersionPrefix>23.07.0</VersionPrefix>
+	  <PublishTrimmed>true</PublishTrimmed>
+	  <TrimMode>Link</TrimMode>
+	<VersionPrefix>23.12.0</VersionPrefix>
 	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
   </PropertyGroup>
 

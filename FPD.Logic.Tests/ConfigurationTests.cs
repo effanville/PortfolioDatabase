@@ -645,8 +645,8 @@ namespace FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            var vm = new MainWindowViewModel(globals, new SynchronousPortfolioUpdater());
-            vm.fUserConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
+            var vm = new MainWindowViewModel(globals, new SynchronousUpdater<IPortfolio>());
+            vm._userConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
             string testConfigPath = "c:/temp/saved/user.config";
             vm.SaveConfig(testConfigPath, tempFileSystem);
 

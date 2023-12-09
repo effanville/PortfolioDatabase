@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
+
 using Common.Console;
 using Common.Console.Commands;
 using Common.Structure.Extensions;
@@ -10,7 +11,7 @@ namespace FPDconsole
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
             // Create the logger.
             void reportAction(ReportSeverity severity, ReportType reportType, string location, string text)
@@ -25,7 +26,7 @@ namespace FPDconsole
                     writeLine(message);
                 }
             }
-            IReportLogger logger = new LogReporter(reportAction);
+            IReportLogger logger = new LogReporter(reportAction, saveInternally: true);
 
             // Create the Console to write output.
             void writeLine(string text) => Console.WriteLine(text);
@@ -45,15 +46,16 @@ namespace FPDconsole
             {
                 new DownloadCommand(fileSystem),
                 new StatisticsCommand(fileSystem),
+                new ImportCommand(fileSystem),
             };
 
             logger.Log(ReportSeverity.Useful, ReportType.Information, $"FPDConsole", "FPDconsole.exe - version 1");
 
             // Generate the context, validate the arguments and execute.
-            ConsoleContext.SetAndExecute(args, console, logger, validCommands);
+            int returnValue = ConsoleContext.SetAndExecute(args, console, logger, validCommands);
             string logPath = fileSystem.Path.Combine(fileSystem.Directory.GetCurrentDirectory(), $"{DateTime.Now.FileSuitableDateTimeValue()}-consoleLog.log");
             logger.WriteReportsToFile(logPath);
-            return;
+            return returnValue;
         }
     }
 }

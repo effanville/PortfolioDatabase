@@ -28,8 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          token: ${{ secrets.INTERNAL_PAT }}
           submodules: recursive
-          fetch-depth: '0'
+          fetch-depth: 0
       - name: Cache .nuke/temp, ~/.nuget/packages
         uses: actions/cache@v3
         with:

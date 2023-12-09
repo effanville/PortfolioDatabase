@@ -3,6 +3,7 @@ using Common.Structure.DataStructures;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Asset;
 using FinancialStructures.Database;
+using FinancialStructures.FinanceStructures;
 
 namespace FPD.Logic.Tests.ViewModelExtensions
 {
@@ -22,26 +23,22 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             return newItem;
         }
 
-        public static void SelectDebt(this SelectedAssetViewModel viewModel, DailyValuation valueToSelect)
-        {
-            viewModel.DebtTLVM.SelectionChangedCommand?.Execute(valueToSelect);
-        }
+        public static void SelectDebt(this SelectedAssetViewModel viewModel, DailyValuation valueToSelect) 
+            => viewModel.DebtTLVM.SelectionChangedCommand?.Execute(valueToSelect);
 
-        public static void BeginEditDebt(this SelectedAssetViewModel viewModel)
-        {
-            viewModel.DebtTLVM.PreEditCommand?.Execute(null);
-        }
+        public static void BeginEditDebt(this SelectedAssetViewModel viewModel) 
+            => viewModel.DebtTLVM.PreEditCommand?.Execute(null);
 
-        public static void CompleteEditTrade(this SelectedAssetViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEditTrade(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.DebtTLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(asset);
         }
 
-        public static void DeleteSelectedDebt(this SelectedAssetViewModel viewModel, IPortfolio portfolio)
+        public static void DeleteSelectedDebt(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.DebtTLVM.DeleteValuation();
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(asset);
         }
 
         public static DailyValuation AddNewUnitPrice(this SelectedAssetViewModel viewModel)
@@ -55,26 +52,22 @@ namespace FPD.Logic.Tests.ViewModelExtensions
             return newItem;
         }
 
-        public static void SelectValue(this SelectedAssetViewModel viewModel, DailyValuation valueToSelect)
-        {
-            viewModel.ValuesTLVM.SelectionChangedCommand?.Execute(valueToSelect);
-        }
+        public static void SelectValue(this SelectedAssetViewModel viewModel, DailyValuation valueToSelect) 
+            => viewModel.ValuesTLVM.SelectionChangedCommand?.Execute(valueToSelect);
 
-        public static void BeginEdit(this SelectedAssetViewModel viewModel)
-        {
-            viewModel.ValuesTLVM.PreEditCommand?.Execute(null);
-        }
+        public static void BeginEdit(this SelectedAssetViewModel viewModel) 
+            => viewModel.ValuesTLVM.PreEditCommand?.Execute(null);
 
-        public static void CompleteEdit(this SelectedAssetViewModel viewModel, IPortfolio portfolio)
+        public static void CompleteEdit(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.ValuesTLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(asset);
         }
 
-        public static void DeleteSelected(this SelectedAssetViewModel viewModel, IPortfolio portfolio)
+        public static void DeleteSelected(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.ValuesTLVM.DeleteValuation();
-            viewModel.UpdateData(portfolio);
+            viewModel.UpdateData(asset);
         }
     }
 }

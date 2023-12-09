@@ -11,9 +11,9 @@
              d:DataContext="{d:DesignInstance Type=security:SelectedSecurityViewModel}"
              Background="{Binding Styles.BackgroundBrush}"
              mc:Ignorable="d"
-             x:Name="proxyProxy"
              d:DesignHeight="450"
              DataContextChanged="UC_DataContextChanged"
+             
              d:DesignWidth="800">
     <UserControl.Resources>
         <uic:StringToUKDateConverter x:Key="StringToUKDate" />
@@ -146,6 +146,7 @@
                                                 Binding="{Binding Path=NumberShares, UpdateSourceTrigger=LostFocus}" />
                             <DataGridTemplateColumn Header="Trade costs"
                                                     MinWidth="50"
+                                                    IsReadOnly="False"
                                                     Width="Auto">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
