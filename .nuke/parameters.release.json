@@ -11,5 +11,10 @@
   "Configuration": "Release",
   "Framework": "net7.0-windows",
   "Runtime": "win-x64",
-  "IsProd": true
+  "IsProd": true,
+  "TagRepo": true,
+  "TestProjects": [
+    "FinancialStructures.Tests",
+    "FPD.Logic.Tests"
+  ]
 }
