@@ -84,6 +84,10 @@
             "type": "string"
           }
         },
+        "PushTag": {
+          "type": "boolean",
+          "description": "Should this tag be pushed to the remote"
+        },
         "Root": {
           "type": "string",
           "description": "Root directory during build execution"
@@ -100,10 +104,14 @@
               "Clean",
               "Compile",
               "DiagnosticPrint",
+              "GitTag",
               "Publish",
               "PublishExe",
               "PublishNuget",
-              "Test"
+              "Release",
+              "ReleaseNotes",
+              "Test",
+              "UpdateVersion"
             ]
           }
         },
@@ -124,10 +132,14 @@
               "Clean",
               "Compile",
               "DiagnosticPrint",
+              "GitTag",
               "Publish",
               "PublishExe",
               "PublishNuget",
-              "Test"
+              "Release",
+              "ReleaseNotes",
+              "Test",
+              "UpdateVersion"
             ]
           }
         },

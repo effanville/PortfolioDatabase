@@ -12,6 +12,7 @@
   "Framework": "net7.0-windows",
   "Runtime": "win-x64",
   "TagRepo": true,
+  "PushTag": false,
   "TestProjects": [
     "FinancialStructures.Tests",
     "FPD.Logic.Tests"
