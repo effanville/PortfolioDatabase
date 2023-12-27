@@ -1,23 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-
   <PropertyGroup>
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
-	  <PublishTrimmed>true</PublishTrimmed>
-	  <TrimMode>Link</TrimMode>
-	<VersionPrefix>23.12.0</VersionPrefix>
-	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>Link</TrimMode>
+    <VersionPrefix>23.12.01</VersionPrefix>
+    <VersionSuffix>
+    </VersionSuffix>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
-	  <ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
+    <ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="InsertScheduleDownloadTask.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -26,5 +23,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-	
 </Project>

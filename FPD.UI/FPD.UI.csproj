@@ -1,37 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-	<PublishSingleFile>false</PublishSingleFile>
-	<SelfContained>true</SelfContained>
-	<PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <PublishReadyToRun>true</PublishReadyToRun>
     <PublishTrimmed>false</PublishTrimmed>
     <TrimMode>CopyUsed</TrimMode>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>self_drawn_icon.ico</ApplicationIcon>
   </PropertyGroup>
-
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
     <Product>FinancePortfolioDatabase</Product>
-	<VersionPrefix>23.12.0</VersionPrefix>
-	<VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
+    <VersionPrefix>23.12.01</VersionPrefix>
+    <VersionSuffix>
+    </VersionSuffix>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1823.32" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
-	
-	<ItemGroup>
-		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
-		<ProjectReference Include="..\Common\Common.UI.Wpf\Common.UI.Wpf.csproj" />
-		<ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
-		<ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
+    <ProjectReference Include="..\Common\Common.UI.Wpf\Common.UI.Wpf.csproj" />
+    <ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="self_drawn_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -43,7 +39,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-
   <ItemGroup>
     <Page Update="Windows\BasicDataView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
@@ -103,5 +98,4 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>
-
 </Project>
