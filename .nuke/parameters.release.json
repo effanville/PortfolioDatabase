@@ -13,6 +13,7 @@
   "Runtime": "win-x64",
   "IsProd": true,
   "TagRepo": true,
+  "PushTag": true,
   "TestProjects": [
     "FinancialStructures.Tests",
     "FPD.Logic.Tests"

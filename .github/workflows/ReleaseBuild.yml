@@ -20,6 +20,12 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
 
 jobs:
   windows-latest:
@@ -38,8 +44,8 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd Publish'
-        run: ./build.cmd Publish
+      - name: Run './build.cmd Release with release profile'
+        run: ./build.cmd Release --profile Release
       - uses: actions/upload-artifact@v3
         with:
           name: bin
@@ -48,3 +54,4 @@ jobs:
         with:
           name: package
           path: Publish/package
+          
