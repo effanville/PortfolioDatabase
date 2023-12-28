@@ -46,6 +46,12 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
       - name: Run './build.cmd Release with release profile'
         run: ./build.cmd Release --profile Release
+      - uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Test results
+          path: '**/*.trx'
+          reporter: dotnet-trx
       - uses: actions/upload-artifact@v3
         with:
           name: bin
