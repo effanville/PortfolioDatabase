@@ -15,9 +15,7 @@
     <Authors>Effanville</Authors>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionPrefix>23.12.01</VersionPrefix>
-    <VersionSuffix>
-    </VersionSuffix>
+    <Version>23.12.01</Version>
   </PropertyGroup>
   <PropertyGroup>
     <Deterministic>false</Deterministic>

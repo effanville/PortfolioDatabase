@@ -12,9 +12,7 @@
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
     <Product>FinancePortfolioDatabase</Product>
-    <VersionPrefix>23.12.01</VersionPrefix>
-    <VersionSuffix>
-    </VersionSuffix>
+	<Version>23.12.01</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
