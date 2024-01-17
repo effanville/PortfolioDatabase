@@ -2,7 +2,10 @@
   "profiles": {
     "FPDconsole": {
       "commandName": "Project",
-      "commandLineArgs": "download --filepath \"../database/url-address.xml\""
+      "commandLineArgs": "stats --filepath \"../database/url-address.xml\" --outputPath \"../database/stats.html\" --mailTo \"env:mailToName\"",
+      "environmentVariables": {
+        "mailToName": ""
+      }
     }
   }
 }

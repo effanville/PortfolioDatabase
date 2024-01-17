@@ -14,6 +14,9 @@ using Common.Structure.ReportWriting;
 
 using FinancialStructures.Persistence;
 
+using FPDconsole.Utilities.Mail;
+using Microsoft.Extensions.Configuration;
+
 namespace FPDconsole
 {
     internal sealed class StatisticsCommand : ICommand
@@ -22,50 +25,51 @@ namespace FPDconsole
         readonly CommandOption<string> _filepathOption;
         readonly CommandOption<string> _outputPathOption;
         readonly CommandOption<DocumentType> _fileTypeOption;
+        private readonly CommandOption<string> _mailRecipientOption;
 
         /// <inheritdoc/>
         public string Name => "stats";
 
         /// <inheritdoc/>
-        public IList<CommandOption> Options
-        {
-            get;
-        } = new List<CommandOption>();
+        public IList<CommandOption> Options { get; } = new List<CommandOption>();
 
         /// <inheritdoc/>
-        public IList<ICommand> SubCommands
-        {
-            get;
-        } = new List<ICommand>();
+        public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
         public StatisticsCommand(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            bool fileValidator(string filepath) => fileSystem.File.Exists(filepath);
-            _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
+            _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _outputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
             Options.Add(_outputPathOption);
             _fileTypeOption = new CommandOption<DocumentType>("docType", "The type of the stats to output.", required: false);
             Options.Add(_fileTypeOption);
+            _mailRecipientOption = new CommandOption<string>("mailTo", "The email address to mail the stats to.", required: false);
+            Options.Add(_mailRecipientOption);
+            return;
+
+            bool FileValidator(string filepath) => fileSystem.File.Exists(filepath);
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, string[] args = null)
-        {
-            return Execute(console, null, args);
-        }
+        public int Execute(IConsole console, string[] args = null) 
+            => Execute(console, null, args);
 
         /// <inheritdoc/>
         public int Execute(IConsole console, IReportLogger logger, string[] args = null)
         {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .Build();
             var xmlPersistence = new XmlPortfolioPersistence();
             var portfolio = xmlPersistence.Load(new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
             logger.Log(ReportType.Information, "Loading", $"Successfully loaded portfolio from {_filepathOption.Value}");
 
             DocumentType docType = _fileTypeOption.Value;
 
-            string directory = _fileSystem.Path.GetDirectoryName(_filepathOption.Value);
+            string directory = _fileSystem.Path.GetDirectoryName(_outputPathOption.Value);
             string filePath = _fileSystem.Path.Combine(
                 directory,
                 $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.Name}.{docType}");
@@ -76,25 +80,37 @@ namespace FPDconsole
             stats.ExportToFile(_fileSystem, filePath, docType, exportSettings, logger);
             logger.Log(ReportType.Information, "StatisticsGeneration", $"Successfully generated statistics page {filePath}");
 
+            if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
+            {
+                string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
+                string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
+                var smtpInfo = SmtpInfo.GmailHost();
+                smtpInfo.AuthUser = smtpAuthUser;
+                smtpInfo.AuthPassword = smtpAuthPassword;
+                var emailData = new MailInfo()
+                {
+                    Sender = smtpAuthUser,
+                    Subject = "[Update] Stats auto update",
+                    Body = $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
+                    Recipients = new List<string>{_mailRecipientOption.Value},
+                    AttachmentFileNames = new List<string> {filePath}
+                };
+                MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, logger);
+            }
+
             return 0;
         }
 
         /// <inheritdoc/>
         public bool Validate(IConsole console, string[] args)
-        {
-            return Validate(console, null, args);
-        }
+            => Validate(console, null, args);
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, IReportLogger logger, string[] args)
-        {
-            return CommandExtensions.Validate(this, args, console, logger);
-        }
+        public bool Validate(IConsole console, IReportLogger logger, string[] args) 
+            => this.Validate(args, console, logger);
 
         /// <inheritdoc/>
         public void WriteHelp(IConsole console)
-        {
-            CommandExtensions.WriteHelp(this, console);
-        }
+            => CommandExtensions.WriteHelp(this, console);
     }
 }

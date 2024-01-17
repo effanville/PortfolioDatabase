@@ -8,11 +8,14 @@ using Common.Structure.Extensions;
 using Common.Structure.Reporting;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions;
 using FinancialStructures.Database.Export.Statistics;
 using Common.Structure.ReportWriting;
 
 using FinancialStructures.Persistence;
+
+using FPDconsole.Utilities.Mail;
+
+using Microsoft.Extensions.Configuration;
 
 namespace FPDconsole
 {
@@ -21,40 +24,41 @@ namespace FPDconsole
         private readonly IFileSystem _fileSystem;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<bool> _updateStatsOption;
+        private readonly CommandOption<string> _mailRecipientOption;
 
         public string Name => "download";
 
         /// <inheritdoc/>
-        public IList<CommandOption> Options
-        {
-            get;
-        } = new List<CommandOption>();
+        public IList<CommandOption> Options { get; } = new List<CommandOption>();
 
         /// <inheritdoc/>
-        public IList<ICommand> SubCommands
-        {
-            get;
-        } = new List<ICommand>();
+        public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
         public DownloadCommand(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            Func<string, bool> fileValidator = filepath => fileSystem.File.Exists(filepath);
-            _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
+            _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _updateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
             Options.Add(_updateStatsOption);
+            _mailRecipientOption = new CommandOption<string>("mailTo", "The email address to mail the stats to.", required: false);
+            Options.Add(_mailRecipientOption);
+            return;
+
+            bool FileValidator(string filepath) => fileSystem.File.Exists(filepath);
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, string[] args = null)
-        {
-            return Execute(console, null, args);
-        }
+        public int Execute(IConsole console, string[] args = null) 
+            => Execute(console, null, args);
 
         /// <inheritdoc/>
         public int Execute(IConsole console, IReportLogger logger, string[] args = null)
         {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .Build();
             IPortfolio portfolio = PortfolioFactory.CreateFromFile(_fileSystem, _filepathOption.Value, logger);
             logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_filepathOption.Value}");
 
@@ -70,6 +74,24 @@ namespace FPDconsole
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
                 stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, logger);
+                
+                if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
+                {
+                    string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
+                    string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
+                    var smtpInfo = SmtpInfo.GmailHost();
+                    smtpInfo.AuthUser = smtpAuthUser;
+                    smtpInfo.AuthPassword = smtpAuthPassword;
+                    var emailData = new MailInfo()
+                    {
+                        Sender = smtpAuthUser,
+                        Subject = "[Update] Stats auto update",
+                        Body = $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
+                        Recipients = new List<string>{_mailRecipientOption.Value},
+                        AttachmentFileNames = new List<string> {filePath}
+                    };
+                    MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, logger);
+                }
             }
 
             var xmlPersistence = new XmlPortfolioPersistence();
@@ -78,21 +100,15 @@ namespace FPDconsole
         }
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, string[] args)
-        {
-            return Validate(console, null, args);
-        }
+        public bool Validate(IConsole console, string[] args) 
+            => Validate(console, null, args);
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, IReportLogger logger, string[] args)
-        {
-            return CommandExtensions.Validate(this, args, console, logger);
-        }
+        public bool Validate(IConsole console, IReportLogger logger, string[] args) 
+            => this.Validate(args, console, logger);
 
         /// <inheritdoc/>
-        public void WriteHelp(IConsole console)
-        {
-            CommandExtensions.WriteHelp(this, console);
-        }
+        public void WriteHelp(IConsole console) 
+            => CommandExtensions.WriteHelp(this, console);
     }
 }
