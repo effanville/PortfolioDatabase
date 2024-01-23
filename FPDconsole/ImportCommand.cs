@@ -46,11 +46,14 @@ namespace FPDconsole
 
         /// <inheritdoc/>
         public int Execute(IConsole console, IReportLogger logger, string[] args = null)
-        {
-            IPortfolio portfolio = PortfolioFactory.CreateFromFile(_fileSystem, _filepathOption.Value, logger);
+        {            
+            var portfolioPersistence = new PortfolioPersistence();
+            var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
+            IPortfolio portfolio = portfolioPersistence.Load(portfolioOptions, logger);
             logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_filepathOption.Value}");
 
-            IPortfolio otherPortfolio = PortfolioFactory.CreateFromFile(_fileSystem, _otherDatabaseFilepath.Value, logger);
+            var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem);
+            IPortfolio otherPortfolio = portfolioPersistence.Load(otherPortfolioOptions, logger);
             logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
 
             portfolio.ImportValuesFrom(otherPortfolio, logger);

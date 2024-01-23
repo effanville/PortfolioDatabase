@@ -63,9 +63,12 @@ namespace FPDconsole
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
-            var xmlPersistence = new XmlPortfolioPersistence();
-            var portfolio = xmlPersistence.Load(new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
-            logger.Log(ReportType.Information, "Loading", $"Successfully loaded portfolio from {_filepathOption.Value}");
+            var portfolioPersistence = new PortfolioPersistence();
+            var portfolio = portfolioPersistence.Load(
+                PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem),
+                logger);
+            logger.Log(ReportType.Information, "Loading",
+                $"Successfully loaded portfolio from {_filepathOption.Value}");
 
             DocumentType docType = _fileTypeOption.Value;
 
@@ -78,7 +81,8 @@ namespace FPDconsole
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
             var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
             stats.ExportToFile(_fileSystem, filePath, docType, exportSettings, logger);
-            logger.Log(ReportType.Information, "StatisticsGeneration", $"Successfully generated statistics page {filePath}");
+            logger.Log(ReportType.Information, "StatisticsGeneration",
+                $"Successfully generated statistics page {filePath}");
 
             if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
             {
@@ -91,9 +95,10 @@ namespace FPDconsole
                 {
                     Sender = smtpAuthUser,
                     Subject = "[Update] Stats auto update",
-                    Body = $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
-                    Recipients = new List<string>{_mailRecipientOption.Value},
-                    AttachmentFileNames = new List<string> {filePath}
+                    Body =
+                        $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
+                    Recipients = new List<string> { _mailRecipientOption.Value },
+                    AttachmentFileNames = new List<string> { filePath }
                 };
                 MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, logger);
             }

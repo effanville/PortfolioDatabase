@@ -59,7 +59,11 @@ namespace FPDconsole
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
-            IPortfolio portfolio = PortfolioFactory.CreateFromFile(_fileSystem, _filepathOption.Value, logger);
+            PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
+            PersistenceOptions persistenceOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
+            IPortfolio portfolio = portfolioPersistence.Load(
+                persistenceOptions,
+                logger);
             logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_filepathOption.Value}");
 
             PortfolioDataUpdater.Download(Account.All, portfolio, null, logger).Wait();
@@ -94,9 +98,8 @@ namespace FPDconsole
                 }
             }
 
-            var xmlPersistence = new XmlPortfolioPersistence();
-            xmlPersistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
-            return 0;
+            bool saved = portfolioPersistence.Save(portfolio, persistenceOptions, logger);
+            return saved ? 0 : 1;
         }
 
         /// <inheritdoc/>
