@@ -10,8 +10,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <AppxAutoIncrementPackageRevision>false</AppxAutoIncrementPackageRevision>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Effanville</Authors>
   </PropertyGroup>
   <PropertyGroup>
