@@ -57,6 +57,7 @@ jobs:
         uses: LouisBrunner/checks-action@v1.2.0
         if: always()
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           name: Code coverage
           conclusion: ${{ job.status }}
           output: '{"summary":"Code coverage"}'
