@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 
 using Common.Console;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace FPDconsole
+namespace FPD.Console
 {
     internal static class Program
     {

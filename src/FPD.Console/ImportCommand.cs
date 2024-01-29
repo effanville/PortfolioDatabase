@@ -9,7 +9,7 @@ using Common.Structure.Reporting;
 using FinancialStructures.Database;
 using FinancialStructures.Persistence;
 
-namespace FPDconsole
+namespace FPD.Console
 {
     internal sealed class ImportCommand : ICommand
     {

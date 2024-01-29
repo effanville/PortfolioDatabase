@@ -14,10 +14,11 @@ using Common.Structure.ReportWriting;
 
 using FinancialStructures.Persistence;
 
-using FPDconsole.Utilities.Mail;
+using FPD.Console.Utilities.Mail;
+
 using Microsoft.Extensions.Configuration;
 
-namespace FPDconsole
+namespace FPD.Console
 {
     internal sealed class StatisticsCommand : ICommand
     {

@@ -1,4 +1,4 @@
-namespace FPDconsole.Utilities.Mail;
+namespace FPD.Console.Utilities.Mail;
 
 public sealed class SmtpInfo
 {

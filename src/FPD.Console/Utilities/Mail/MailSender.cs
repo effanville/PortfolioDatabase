@@ -5,7 +5,7 @@ using System.Net.Mime;
 
 using Common.Structure.Reporting;
 
-namespace FPDconsole.Utilities.Mail;
+namespace FPD.Console.Utilities.Mail;
 
 internal static class MailSender
 {

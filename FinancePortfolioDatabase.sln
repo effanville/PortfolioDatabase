@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures.Tests",
 		{B86EADB1-3561-470B-9421-2E6992A25346} = {B86EADB1-3561-470B-9421-2E6992A25346}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPDconsole", "FPDconsole\FPDconsole.csproj", "{7FA607A1-AF11-48A7-B410-07E9875685D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Console", "src\FPD.Console\FPD.Console.csproj", "{7FA607A1-AF11-48A7-B410-07E9875685D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures", "FinancialStructures\FinancialStructures\FinancialStructures.csproj", "{B86EADB1-3561-470B-9421-2E6992A25346}"
 EndProject
