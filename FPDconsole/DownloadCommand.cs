@@ -81,8 +81,11 @@ namespace FPDconsole
                 
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
+                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail to stored recipient {_mailRecipientOption.Value}");
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
+                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
+                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
                     var smtpInfo = SmtpInfo.GmailHost();
                     smtpInfo.AuthUser = smtpAuthUser;
                     smtpInfo.AuthPassword = smtpAuthPassword;
@@ -94,6 +97,7 @@ namespace FPDconsole
                         Recipients = new List<string>{_mailRecipientOption.Value},
                         AttachmentFileNames = new List<string> {filePath}
                     };
+                    logger.Log(ReportType.Information, "Mailing", $"Setup content for mailing.");
                     MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, logger);
                 }
             }
