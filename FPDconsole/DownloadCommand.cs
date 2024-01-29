@@ -79,9 +79,9 @@ namespace FPDconsole
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
                 stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, logger);
                 
+                logger.Log(ReportType.Information, "Mailing", $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
-                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail to stored recipient {_mailRecipientOption.Value}");
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
                     logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
