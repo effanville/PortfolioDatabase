@@ -6,7 +6,7 @@
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
     <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>Link</TrimMode>
+    <TrimMode>Partial</TrimMode>
     <Version>23.12.01</Version>
   </PropertyGroup>
   <ItemGroup>
