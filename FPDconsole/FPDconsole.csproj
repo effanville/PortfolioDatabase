@@ -6,8 +6,8 @@
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
     <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>Partial</TrimMode>
     <Version>23.12.01</Version>
+    <TrimMode>partial</TrimMode>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
