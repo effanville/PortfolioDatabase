@@ -8,6 +8,8 @@
     <PublishTrimmed>true</PublishTrimmed>
     <Version>23.12.01</Version>
     <TrimMode>partial</TrimMode>
+    <RootNamespace>Effanville.$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>Effanville.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />

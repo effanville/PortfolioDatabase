@@ -1,4 +1,4 @@
-namespace FPD.Console.Utilities.Mail;
+namespace Effanville.FPD.Console.Utilities.Mail;
 
 public sealed class SmtpInfo
 {

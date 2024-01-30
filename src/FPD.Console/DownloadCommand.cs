@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
+
 using Common.Console;
 using Common.Console.Commands;
 using Common.Console.Options;
 using Common.Structure.Extensions;
 using Common.Structure.Reporting;
+using Common.Structure.ReportWriting;
+
+using Effanville.FPD.Console.Utilities.Mail;
+
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Export.Statistics;
-using Common.Structure.ReportWriting;
-
 using FinancialStructures.Persistence;
-
-using FPD.Console.Utilities.Mail;
 
 using Microsoft.Extensions.Configuration;
 
-namespace FPD.Console
+namespace Effanville.FPD.Console
 {
     internal sealed class DownloadCommand : ICommand
     {

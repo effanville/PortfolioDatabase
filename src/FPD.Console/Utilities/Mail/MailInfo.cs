@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FPD.Console.Utilities.Mail;
+namespace Effanville.FPD.Console.Utilities.Mail;
 
 public sealed class MailInfo
 {

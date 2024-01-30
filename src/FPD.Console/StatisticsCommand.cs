@@ -5,20 +5,18 @@ using System.IO.Abstractions;
 using Common.Console;
 using Common.Console.Commands;
 using Common.Console.Options;
-
 using Common.Structure.Extensions;
 using Common.Structure.Reporting;
-
-using FinancialStructures.Database.Export.Statistics;
 using Common.Structure.ReportWriting;
 
-using FinancialStructures.Persistence;
+using Effanville.FPD.Console.Utilities.Mail;
 
-using FPD.Console.Utilities.Mail;
+using FinancialStructures.Database.Export.Statistics;
+using FinancialStructures.Persistence;
 
 using Microsoft.Extensions.Configuration;
 
-namespace FPD.Console
+namespace Effanville.FPD.Console
 {
     internal sealed class StatisticsCommand : ICommand
     {

@@ -6,7 +6,7 @@ using Common.Console;
 
 using Microsoft.Extensions.Hosting;
 
-namespace FPD.Console
+namespace Effanville.FPD.Console
 {
     internal static class Program
     {

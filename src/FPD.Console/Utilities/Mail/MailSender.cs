@@ -5,9 +5,9 @@ using System.Net.Mime;
 
 using Common.Structure.Reporting;
 
-namespace FPD.Console.Utilities.Mail;
+namespace Effanville.FPD.Console.Utilities.Mail;
 
-internal static class MailSender
+public static class MailSender
 {
     public static void WriteEmail(
         IFileSystem fileSystem,
