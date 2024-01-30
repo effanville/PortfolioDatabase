@@ -21,25 +21,22 @@ namespace Effanville.FPD.Console
         public string Name => "import";
 
         /// <inheritdoc/>
-        public IList<CommandOption> Options
-        {
-            get;
-        } = new List<CommandOption>();
+        public IList<CommandOption> Options { get; } = new List<CommandOption>();
 
         /// <inheritdoc/>
-        public IList<ICommand> SubCommands
-        {
-            get;
-        } = new List<ICommand>();
+        public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
         public ImportCommand(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            bool fileValidator(string filepath) => fileSystem.File.Exists(filepath);
-            _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, fileValidator);
+            _filepathOption =
+                new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
-            _otherDatabaseFilepath = new CommandOption<string>("importfilepath", "Filepath for that database to import from.", required: true, fileValidator);
+            _otherDatabaseFilepath = new CommandOption<string>("importfilepath",
+                "Filepath for that database to import from.", required: true, FileValidator);
             Options.Add(_otherDatabaseFilepath);
+            return;
+            bool FileValidator(string filepath) => fileSystem.File.Exists(filepath);
         }
 
         /// <inheritdoc/>
@@ -47,15 +44,17 @@ namespace Effanville.FPD.Console
 
         /// <inheritdoc/>
         public int Execute(IConsole console, IReportLogger logger, string[] args = null)
-        {            
+        {
             var portfolioPersistence = new PortfolioPersistence();
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
             IPortfolio portfolio = portfolioPersistence.Load(portfolioOptions, logger);
-            logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_filepathOption.Value}");
+            logger.Log(ReportType.Information, $"{ReportLocation.Loading}",
+                $"Successfully loaded portfolio from {_filepathOption.Value}");
 
             var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem);
             IPortfolio otherPortfolio = portfolioPersistence.Load(otherPortfolioOptions, logger);
-            logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
+            logger.Log(ReportType.Information, $"{ReportLocation.Loading}",
+                $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
 
             portfolio.ImportValuesFrom(otherPortfolio, logger);
 
@@ -68,7 +67,8 @@ namespace Effanville.FPD.Console
         public bool Validate(IConsole console, string[] args) => Validate(console, null, args);
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, IReportLogger logger, string[] args) => CommandExtensions.Validate(this, args, console, logger);
+        public bool Validate(IConsole console, IReportLogger logger, string[] args) =>
+            this.Validate(args, console, logger);
 
         /// <inheritdoc/>
         public void WriteHelp(IConsole console) => CommandExtensions.WriteHelp(this, console);
