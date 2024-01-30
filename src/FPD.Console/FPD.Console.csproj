@@ -13,7 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
-    <ProjectReference Include="..\..\Common\Common.Console\Common.Console.csproj" />
+    <ProjectReference Include="..\..\Common\src\Common.Console\Common.Console.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="InsertScheduleDownloadTask.bat">

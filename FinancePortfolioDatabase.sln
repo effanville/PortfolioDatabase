@@ -37,13 +37,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5F985C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI", "Common\Common.UI\Common.UI.csproj", "{037B9B7D-83E3-4395-9C8C-A1D528C39FA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Console", "Common\Common.Console\Common.Console.csproj", "{B86DCF20-F414-4900-817B-3A4B812E9FB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Console", "Common\src\Common.Console\Common.Console.csproj", "{B86DCF20-F414-4900-817B-3A4B812E9FB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "BuildProcess\source\_build.csproj", "{D313AFE2-7B03-4896-9C64-C6C70834D6C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI.Wpf", "Common\Common.UI.Wpf\Common.UI.Wpf.csproj", "{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Console.Tests", "Common\Common.Console.Tests\Common.Console.Tests.csproj", "{57281CA2-6721-4042-BE87-31097A5F9C93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Console.Tests", "Common\test\Common.Console.Tests\Common.Console.Tests.csproj", "{57281CA2-6721-4042-BE87-31097A5F9C93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Structure.Tests", "Common\Common.Structure.Tests\Common.Structure.Tests.csproj", "{B6877373-B71C-457B-9381-4098368D3DEC}"
 EndProject
