@@ -5,9 +5,9 @@ using System.Net.Mime;
 
 using Common.Structure.Reporting;
 
-namespace FPDconsole.Utilities.Mail;
+namespace Effanville.FPD.Console.Utilities.Mail;
 
-internal static class MailSender
+public static class MailSender
 {
     public static void WriteEmail(
         IFileSystem fileSystem,
@@ -19,6 +19,7 @@ internal static class MailSender
         {
             if (!smtpInfo.Validate())
             {
+                logger.Error("Emailing", "Could not validate smtp info.");
                 return;
             }
 
@@ -51,11 +52,13 @@ internal static class MailSender
                 // Add the file attachment to this email message.
                 newMail.Attachments.Add(data);
             }
+            logger.Log(ReportType.Information, "Emailing", "Added all attachments.");
 
             client.EnableSsl = true;
             client.Port = smtpInfo.Port;
             client.Credentials = new System.Net.NetworkCredential(smtpInfo.AuthUser, smtpInfo.AuthPassword);
             client.Send(newMail);
+            logger.Log(ReportType.Information, "Emailing", "Sent mail.");
         }
         catch (Exception ex)
         {

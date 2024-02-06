@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using Common.Console;
-using Common.Console.Commands;
-using Common.Console.Options;
+
 using Common.Structure.Extensions;
 using Common.Structure.Reporting;
+using Common.Structure.ReportWriting;
+
+using Effanville.Common.Console;
+using Effanville.Common.Console.Commands;
+using Effanville.Common.Console.Options;
+using Effanville.FPD.Console.Utilities.Mail;
+
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Export.Statistics;
-using Common.Structure.ReportWriting;
-
 using FinancialStructures.Persistence;
-
-using FPDconsole.Utilities.Mail;
 
 using Microsoft.Extensions.Configuration;
 
-namespace FPDconsole
+namespace Effanville.FPD.Console
 {
     internal sealed class DownloadCommand : ICommand
     {
@@ -79,10 +80,13 @@ namespace FPDconsole
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
                 stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, logger);
                 
+                logger.Log(ReportType.Information, "Mailing", $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
+                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
+                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
                     var smtpInfo = SmtpInfo.GmailHost();
                     smtpInfo.AuthUser = smtpAuthUser;
                     smtpInfo.AuthPassword = smtpAuthPassword;
@@ -94,6 +98,7 @@ namespace FPDconsole
                         Recipients = new List<string>{_mailRecipientOption.Value},
                         AttachmentFileNames = new List<string> {filePath}
                     };
+                    logger.Log(ReportType.Information, "Mailing", $"Setup content for mailing.");
                     MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, logger);
                 }
             }

@@ -6,12 +6,14 @@
     <AssemblyTitle>FPDConsole</AssemblyTitle>
     <Product>FPDConsole</Product>
     <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>Link</TrimMode>
     <Version>23.12.01</Version>
+    <TrimMode>partial</TrimMode>
+    <RootNamespace>Effanville.$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>Effanville.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
-    <ProjectReference Include="..\Common\Common.Console\Common.Console.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\..\Common\src\Common.Console\Common.Console.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="InsertScheduleDownloadTask.bat">
@@ -29,5 +31,11 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>FPD.Console.Tests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿<commonUI:AutoGenColumnControl xmlns:commonUI="clr-namespace:Common.UI.Wpf.Controls;assembly=Common.UI.Wpf"
+﻿<commonUI:AutoGenColumnControl xmlns:commonUI="clr-namespace:Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
 							   x:Class="FPD.UI.Windows.Stats.StatsUserControl"
 							   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 							   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
