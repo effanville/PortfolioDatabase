@@ -53,6 +53,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPD.Console.Tests", "test\FPD.Console.Tests\FPD.Console.Tests.csproj", "{53D9FAAF-B0C1-4205-A70F-D26141858EE9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FinanceStructures", "FinanceStructures", "{6F626A7B-2A01-4FC5-8844-A9D7C70CF2E3}"
+	ProjectSection(SolutionItems) = preProject
+		FinancialStructures\Directory.Build.props = FinancialStructures\Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug(Tests)|x64 = Debug(Tests)|x64
