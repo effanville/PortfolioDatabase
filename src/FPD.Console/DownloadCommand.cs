@@ -74,7 +74,7 @@ namespace Effanville.FPD.Console
                 string directory = _fileSystem.Path.GetDirectoryName(_filepathOption.Value);
                 string filePath = _fileSystem.Path.Combine(
                     directory,
-                    $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.Name}.html");
+                    $"{DateTime.Today:yyyy-MM-dd}-{portfolio.Name}.html");
                 var settings = PortfolioStatisticsSettings.DefaultSettings();
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
