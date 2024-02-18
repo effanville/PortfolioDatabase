@@ -1,17 +1,19 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI.Services;
+using Effanville.FPD.Logic.Tests.TestHelpers;
+
+using FinancialStructures.Database;
 
 using FPD.Logic.ViewModels;
-using FPD.Logic.Tests.TestHelpers;
-using FinancialStructures.Database;
+
 using Moq;
+
 using NUnit.Framework;
 
-namespace FPD.Logic.Tests
+namespace Effanville.FPD.Logic.Tests
 {
     public class OptionsToolbarTests
     {

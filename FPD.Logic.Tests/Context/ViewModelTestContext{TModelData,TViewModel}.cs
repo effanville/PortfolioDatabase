@@ -6,7 +6,7 @@ using FinancialStructures.Database;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels;
 
-namespace FPD.Logic.Tests.Context;
+namespace Effanville.FPD.Logic.Tests.Context;
 
 public class ViewModelTestContext<TModelData, TViewModel> where TModelData : class where TViewModel : class
 {

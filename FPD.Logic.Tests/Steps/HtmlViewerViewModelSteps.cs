@@ -1,13 +1,14 @@
+using Effanville.FPD.Logic.Tests.Context;
+
 using FinancialStructures.Database;
 
-using FPD.Logic.Tests.Context;
 using FPD.Logic.ViewModels;
 
 using NUnit.Framework;
 
 using TechTalk.SpecFlow;
 
-namespace FPD.Logic.Tests.Steps;
+namespace Effanville.FPD.Logic.Tests.Steps;
 
 [Binding]
 public class HtmlViewerViewModelSteps

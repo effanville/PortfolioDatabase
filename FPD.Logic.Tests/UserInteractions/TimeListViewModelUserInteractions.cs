@@ -2,7 +2,7 @@ using Effanville.Common.Structure.DataStructures;
 
 using FPD.Logic.ViewModels.Common;
 
-namespace FPD.Logic.Tests.UserInteractions;
+namespace Effanville.FPD.Logic.Tests.UserInteractions;
 
 public static class TimeListViewModelUserInteractions
 {

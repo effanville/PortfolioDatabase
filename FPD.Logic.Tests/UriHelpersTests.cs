@@ -5,7 +5,7 @@ using FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 
-namespace FPD.Logic.Tests;
+namespace Effanville.FPD.Logic.Tests;
 
 public class UriHelpersTests
 {

@@ -14,7 +14,7 @@ using FPD.Logic.ViewModels;
 
 using Moq;
 
-namespace FPD.Logic.Tests.TestHelpers
+namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
     internal sealed class ViewModelTestContext<TData, TViewModel>
         where TViewModel : ViewModelBase<TData, IPortfolio>

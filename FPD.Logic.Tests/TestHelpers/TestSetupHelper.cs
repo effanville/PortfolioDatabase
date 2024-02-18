@@ -7,18 +7,18 @@ using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
+using Effanville.FPD.Logic.Tests.Support;
 
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;
 using FinancialStructures.DataStructures;
 using FinancialStructures.NamingStructures;
 
-using FPD.Logic.Tests.Support;
 using FPD.Logic.ViewModels;
 
 using Moq;
 
-namespace FPD.Logic.Tests.TestHelpers
+namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
     public static class TestSetupHelper
     {

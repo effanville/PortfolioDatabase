@@ -4,15 +4,17 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 
 using Effanville.Common.UI;
+using Effanville.FPD.Logic.Tests.TestHelpers;
+
+using FinancialStructures.Database;
+using FinancialStructures.Database.Statistics;
 
 using FPD.Logic.Configuration;
 using FPD.Logic.ViewModels;
-using FPD.Logic.Tests.TestHelpers;
-using FinancialStructures.Database.Statistics;
-using NUnit.Framework;
-using FinancialStructures.Database;
 
-namespace FPD.Logic.Tests
+using NUnit.Framework;
+
+namespace Effanville.FPD.Logic.Tests
 {
     [TestFixture]
     public sealed class ConfigurationTests

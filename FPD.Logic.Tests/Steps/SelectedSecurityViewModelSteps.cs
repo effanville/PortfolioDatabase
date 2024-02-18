@@ -1,22 +1,21 @@
 using System;
 
 using Effanville.Common.Structure.DataStructures;
+using Effanville.FPD.Logic.Tests.Context;
+using Effanville.FPD.Logic.Tests.UserInteractions;
 
 using FinancialStructures.Database;
 using FinancialStructures.DataStructures;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 
-using FPD.Logic.Tests.Context;
-using FPD.Logic.Tests.UserInteractions;
-using FPD.Logic.Tests.ViewModelExtensions;
 using FPD.Logic.ViewModels.Security;
 
 using NUnit.Framework;
 
 using TechTalk.SpecFlow;
 
-namespace FPD.Logic.Tests.Steps;
+namespace Effanville.FPD.Logic.Tests.Steps;
 
 [Binding]
 public class SelectedSecurityViewModelSteps

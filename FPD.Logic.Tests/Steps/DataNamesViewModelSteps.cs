@@ -1,19 +1,18 @@
-using System;
 using System.Linq;
+
+using Effanville.FPD.Logic.Tests.Context;
+using Effanville.FPD.Logic.Tests.UserInteractions;
 
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;
 
-using FPD.Logic.Tests.Context;
-using FPD.Logic.Tests.TestHelpers;
-using FPD.Logic.Tests.UserInteractions;
 using FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 
 using TechTalk.SpecFlow;
 
-namespace FPD.Logic.Tests.Steps;
+namespace Effanville.FPD.Logic.Tests.Steps;
 
 [Binding]
 public class DataNamesViewModelSteps

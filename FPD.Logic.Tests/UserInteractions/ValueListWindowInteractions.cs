@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FPD.Logic.ViewModels.Common;
+
 using FinancialStructures.NamingStructures;
 
 using FPD.Logic.ViewModels.Asset;
+using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Security;
 
-namespace FPD.Logic.Tests.UserInteractions
+namespace Effanville.FPD.Logic.Tests.UserInteractions
 {
     /// <summary>
-    /// Contains user like interaction behaviours with the <see cref="ViewModels.Common.ValueListWindowViewModel"/>.
+    /// Contains user like interaction behaviours with the <see cref="ValueListWindowViewModel"/>.
     /// </summary>
     public static class ValueListWindowInteractions
     {

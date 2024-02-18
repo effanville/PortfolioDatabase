@@ -6,7 +6,7 @@ using FinancialStructures.Database;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
-namespace FPD.Logic.Tests.Context;
+namespace Effanville.FPD.Logic.Tests.Context;
 
 public sealed class DataNamesViewModelTestContext : ViewModelTestContext<IPortfolio, DataNamesViewModel>
 {

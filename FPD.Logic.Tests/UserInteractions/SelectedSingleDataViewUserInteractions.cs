@@ -2,10 +2,11 @@
 
 using Effanville.Common.Structure.DataStructures;
 
-using FPD.Logic.ViewModels.Common;
 using FinancialStructures.FinanceStructures;
 
-namespace FPD.Logic.Tests.UserInteractions
+using FPD.Logic.ViewModels.Common;
+
+namespace Effanville.FPD.Logic.Tests.UserInteractions
 {
     /// <summary>
     /// Contains user like interaction behaviours with the <see cref="SelectedSingleDataViewModel"/>.

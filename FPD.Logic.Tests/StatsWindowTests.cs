@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Abstractions.TestingHelpers;
-using System.Net;
+﻿using System.IO.Abstractions.TestingHelpers;
+
+using Effanville.FPD.Logic.Tests.TestHelpers;
 
 using FinancialStructures.Database;
 
 using FPD.Logic.Configuration;
-using FPD.Logic.Tests.TestHelpers;
 using FPD.Logic.ViewModels.Stats;
 
 using NUnit.Framework;
 
-namespace FPD.Logic.Tests
+namespace Effanville.FPD.Logic.Tests
 {
     /// <summary>
     /// Tests to ensure that the stats window displays what it should do.

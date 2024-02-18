@@ -6,12 +6,12 @@ using Autofac;
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
+using Effanville.FPD.Logic.Tests.Context;
 
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 
 using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.Tests.Context;
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.ViewModels.Common;
@@ -21,7 +21,7 @@ using Moq;
 
 using SpecFlow.Autofac;
 
-namespace FPD.Logic.Tests.Support;
+namespace Effanville.FPD.Logic.Tests.Support;
 
 public static class TestDependencies
 {
