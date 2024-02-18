@@ -12,7 +12,7 @@
     <AssemblyName>Effanville.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
     <ProjectReference Include="..\..\Common\src\Common.Console\Common.Console.csproj" />
   </ItemGroup>
   <ItemGroup>
