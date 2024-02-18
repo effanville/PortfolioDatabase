@@ -144,17 +144,12 @@
                                                 MinWidth="50"
                                                 Width="Auto"
                                                 Binding="{Binding Path=NumberShares, UpdateSourceTrigger=LostFocus}" />
-                            <DataGridTemplateColumn Header="Trade costs"
+                            <DataGridTextColumn Header="Trade costs"
                                                     MinWidth="50"
                                                     IsReadOnly="False"
+                                                    Binding="{Binding Path=TradeCosts, UpdateSourceTrigger=LostFocus}"
                                                     Width="Auto">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=TradeCosts, UpdateSourceTrigger=LostFocus}"
-                                                   Foreground="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTextColumn>
                             <DataGridTextColumn MinWidth="50"
                                                 Width="Auto"
                                                 IsReadOnly="True"
