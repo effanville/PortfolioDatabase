@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFrameworks>net7.0-windows</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>true</SelfContained>
