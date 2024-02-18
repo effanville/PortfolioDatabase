@@ -5,15 +5,15 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
                 xmlns:fpdui="clr-namespace:FPD.UI"
+                xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
                 d:DataContext="{d:DesignInstance Type=common:TimeListViewModel}"
                 mc:Ignorable="d"
                 d:DesignHeight="450"
                 d:DesignWidth="800"
                 DataContextChanged="UC_DataContextChanged">
     <ContentControl.Resources>
-        <uic:StringToUKDateConverter x:Key="StringToUKDate" />
+        <converters:StringToUKDateConverter x:Key="StringToUKDate" />
         <fpdui:Bridge x:Key="bridge"
                       Styles="{Binding Styles}" />
     </ContentControl.Resources>

@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ucdo="clr-namespace:Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              xmlns:stats="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=FPD.Logic"
+             xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              d:DataContext="{d:DesignInstance Type=stats:StatisticsChartsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -24,14 +24,14 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ucdo:BindableChart Title="Total Value Over TIme"
+        <controls:BindableChart Title="Total Value Over TIme"
                             Style="{StaticResource ChartStyle1}"
                             Height="Auto"
                             Width="Auto"
                             Grid.Column="0"
                             Grid.Row="0"
                             SeriesSource="{Binding TotalLines}" />
-        <ucdo:BindableChart x:Name="securityCarChart"
+        <controls:BindableChart x:Name="securityCarChart"
                             Title="Sector IRR over time"
                             Style="{StaticResource ChartStyle1}"
                             Height="Auto"

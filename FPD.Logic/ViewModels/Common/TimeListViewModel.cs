@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-using Common.Structure.DataStructures;
-using Common.UI.Commands;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.UI.Commands;
 
 using FinancialStructures.Database;
 

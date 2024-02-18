@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 
-using Common.Structure.DataEdit;
-using Common.UI;
-using Common.UI.Services;
-using Common.UI.ViewModelBases;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
+using Effanville.Common.UI.ViewModelBases;
 
 using FinancialStructures.Database;
 using FinancialStructures.NamingStructures;

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Common.Structure.DisplayClasses;
+
+using Effanville.Common.Structure.DisplayClasses;
+
 using FPD.Logic.ViewModels.Stats;
 using FinancialStructures.Database.Statistics;
 

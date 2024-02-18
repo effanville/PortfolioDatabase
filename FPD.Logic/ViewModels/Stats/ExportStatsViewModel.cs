@@ -2,13 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
-using Common.Structure.DisplayClasses;
-using Common.Structure.Extensions;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
-
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
@@ -17,7 +10,14 @@ using FinancialStructures.Database;
 using FinancialStructures.Database.Statistics;
 using FinancialStructures.Database.Export.Statistics;
 using System.Linq;
-using Common.Structure.ReportWriting;
+
+using Effanville.Common.Structure.DisplayClasses;
+using Effanville.Common.Structure.Extensions;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.ReportWriting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
 
 namespace FPD.Logic.ViewModels.Stats
 {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 
-using Common.Structure.DataEdit;
-using Common.Structure.DataStructures;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Services;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
 
 using FinancialStructures.Database;
 using FinancialStructures.Database.Extensions;

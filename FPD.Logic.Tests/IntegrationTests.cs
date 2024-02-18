@@ -1,4 +1,5 @@
-﻿using Common.Structure.DisplayClasses;
+﻿using Effanville.Common.Structure.DisplayClasses;
+
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.Tests.TestHelpers;

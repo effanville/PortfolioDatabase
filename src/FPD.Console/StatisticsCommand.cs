@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 
-using Common.Structure.Extensions;
-using Common.Structure.Reporting;
-using Common.Structure.ReportWriting;
-
 using Effanville.Common.Console;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
+using Effanville.Common.Structure.Extensions;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.ReportWriting;
 using Effanville.FPD.Console.Utilities.Mail;
 
 using FinancialStructures.Database.Export.Statistics;

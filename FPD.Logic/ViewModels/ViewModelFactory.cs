@@ -1,5 +1,5 @@
-using Common.Structure.DataEdit;
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
 
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;

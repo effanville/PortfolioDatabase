@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
 
 using FPD.Logic.TemplatesAndStyles;
 
@@ -12,8 +12,8 @@ using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;
 using FinancialStructures.NamingStructures;
 
-using Common.Structure.DataEdit;
-using Common.UI.Commands;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
 
 namespace FPD.Logic.ViewModels.Common
 {

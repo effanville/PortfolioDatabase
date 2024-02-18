@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Common.Structure.DisplayClasses;
-
 using FPD.Logic.TemplatesAndStyles;
 
 using FinancialStructures.Database;
@@ -9,7 +7,8 @@ using FinancialStructures.NamingStructures;
 
 using System.ComponentModel;
 
-using Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DisplayClasses;
 
 namespace FPD.Logic.ViewModels.Common
 {

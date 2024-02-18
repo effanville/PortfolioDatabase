@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-using Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting;
 
 using FPD.Logic.Tests.Context;
 using FPD.Logic.ViewModels;

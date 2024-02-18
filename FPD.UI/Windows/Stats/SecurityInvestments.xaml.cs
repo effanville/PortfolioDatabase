@@ -1,4 +1,4 @@
-﻿using Common.UI.Wpf.Controls;
+﻿using Effanville.Common.UI.Wpf.Controls;
 
 namespace FPD.UI.Windows.Stats
 {

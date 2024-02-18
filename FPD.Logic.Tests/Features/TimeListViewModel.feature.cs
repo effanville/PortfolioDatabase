@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace FPD.Logic.Tests.Features
+namespace Effanville.FPD.Logic.Tests.Features
 {
     using TechTalk.SpecFlow;
     using System;

@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
-             xmlns:commonui="clr-namespace:Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
+             xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
+             xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              d:DataContext="{d:DesignInstance Type=common:DataNamesViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -18,7 +18,7 @@
           VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch">
         <Grid.Resources>
-            <uic:StringToUKDateConverter x:Key="StringToUKDate" />
+            <converters:StringToUKDateConverter x:Key="StringToUKDate" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -65,7 +65,7 @@
                   PreviewKeyDown="DataGrid_KeyDown"
                   AddingNewItem="DataGrid_AddingNewItem">
             <DataGrid.Resources>
-                <commonui:BindingProxy x:Key="proxy"
+                <controls:BindingProxy x:Key="proxy"
                                        Data="{Binding}" />
             </DataGrid.Resources>
             <DataGrid.RowStyle>

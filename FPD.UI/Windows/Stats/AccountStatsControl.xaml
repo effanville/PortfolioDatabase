@@ -4,15 +4,15 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:common="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=FPD.Logic"
-                xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
                 xmlns:fpdui="clr-namespace:FPD.UI"
+                xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
                 d:DataContext="{d:DesignInstance Type=common:AccountStatsViewModel}"
                 mc:Ignorable="d"
                 d:DesignHeight="450"
                 d:DesignWidth="800"
                 DataContextChanged="UC_DataContextChanged">
     <ContentControl.Resources>
-        <uic:StringToUKDateConverter x:Key="StringToUKDate" />
+        <converters:StringToUKDateConverter x:Key="StringToUKDate" />
         <fpdui:Bridge x:Key="bridge"
                       x:Name="bridge"
                       Styles="{Binding Styles}" />

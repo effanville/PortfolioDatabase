@@ -1,6 +1,6 @@
 using System;
 
-using Common.Structure.DataStructures;
+using Effanville.Common.Structure.DataStructures;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.Tests.Context;

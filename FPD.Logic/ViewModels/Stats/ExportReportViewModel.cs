@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Windows.Input;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.ReportWriting;
+
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Export.Report;
-using Common.Structure.ReportWriting;
+
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
 
 namespace FPD.Logic.ViewModels.Stats
 {

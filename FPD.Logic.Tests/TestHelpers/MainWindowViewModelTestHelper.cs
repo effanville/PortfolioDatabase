@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using Common.UI;
+
+using Effanville.Common.UI;
+
 using FPD.Logic.ViewModels;
 using FinancialStructures.Database;
 using NUnit.Framework;

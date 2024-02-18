@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
-using Common.Structure.Reporting;
+
+using Effanville.Common.Structure.Reporting;
+
 using FPD.Logic.ViewModels.Stats;
 
 namespace FPD.Logic.Configuration

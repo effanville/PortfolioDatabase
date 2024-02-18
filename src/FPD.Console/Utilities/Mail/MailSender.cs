@@ -3,7 +3,7 @@ using System.IO.Abstractions;
 using System.Net.Mail;
 using System.Net.Mime;
 
-using Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting;
 
 namespace Effanville.FPD.Console.Utilities.Mail;
 

@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:wb="clr-namespace:Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
              xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              d:DataContext="{d:DesignInstance Type=viewmodels:HtmlViewerViewModel}"
              mc:Ignorable="d"
              FontFamily="{Binding Styles.FontFamily}"
@@ -43,6 +43,6 @@
                       Width="Auto"
                       Height="Auto"
                       Grid.ColumnSpan="2"
-                      wb:WebBrowserBehaviours.BindableSource="{Binding HtmlPath}"/>
+                      controls:WebBrowserBehaviours.BindableSource="{Binding HtmlPath}"/>
     </Grid>
 </UserControl>

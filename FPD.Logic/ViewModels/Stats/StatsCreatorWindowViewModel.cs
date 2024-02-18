@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows.Input;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
 
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;

@@ -3,9 +3,9 @@ using System.IO.Abstractions.TestingHelpers;
 
 using Autofac;
 
-using Common.Structure.DataEdit;
-using Common.Structure.Reporting;
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
 
 using FinancialStructures.Database;
 using FinancialStructures.FinanceStructures;

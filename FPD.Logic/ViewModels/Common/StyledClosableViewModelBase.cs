@@ -1,5 +1,5 @@
-using Common.UI;
-using Common.UI.ViewModelBases;
+using Effanville.Common.UI;
+using Effanville.Common.UI.ViewModelBases;
 
 using FPD.Logic.TemplatesAndStyles;
 

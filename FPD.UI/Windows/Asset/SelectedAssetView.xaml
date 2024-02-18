@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
-             xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
              xmlns:asset="clr-namespace:FPD.Logic.ViewModels.Asset;assembly=FPD.Logic"
              xmlns:fpdui="clr-namespace:FPD.UI"
+             xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
              d:DataContext="{d:DesignInstance Type=asset:SelectedAssetViewModel}"
              Background="{Binding Styles.BackgroundBrush}"
              mc:Ignorable="d"
@@ -14,7 +14,7 @@
              DataContextChanged="UC_DataContextChanged"
              d:DesignWidth="800">
     <UserControl.Resources>
-        <uic:StringToUKDateConverter x:Key="StringToUKDate" />
+        <converters:StringToUKDateConverter x:Key="StringToUKDate" />
         <fpdui:DisplayConstants x:Key="Consts" />
         <fpdui:Bridge x:Key="bridge"
                       x:Name="bridge"

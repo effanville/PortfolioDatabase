@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 
-using Common.Structure.DataStructures;
-using Common.Structure.Reporting;
-
 using Effanville.Common.Console;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.Reporting;
 
 using NUnit.Framework;
 

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting;
 
 using FPD.Logic.ViewModels;
 

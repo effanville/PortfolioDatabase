@@ -3,14 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:uic="clr-namespace:Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
-             xmlns:cs="clr-namespace:Common.Structure.NamingStructures;assembly=Effanville.Common.Structure"
              xmlns:ns="clr-namespace:FinancialStructures.NamingStructures;assembly=FinancialStructures"
-             xmlns:ds="clr-namespace:Common.Structure.DataStructures;assembly=Effanville.Common.Structure"
              xmlns:fpdui="clr-namespace:FPD.UI"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
+             xmlns:ds="clr-namespace:Effanville.Common.Structure.DataStructures;assembly=Effanville.Common.Structure"
+             xmlns:cs="clr-namespace:Effanville.Common.Structure.NamingStructures;assembly=Effanville.Common.Structure"
              d:DataContext="{d:DesignInstance Type=viewmodels:BasicDataViewModel}"
              mc:Ignorable="d"
              HorizontalAlignment="Stretch"
@@ -24,7 +24,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
-            <uic:StringToUKDateConverter x:Key="StringToUKDate" />
+            <converters:StringToUKDateConverter x:Key="StringToUKDate" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <x:Array Type="{x:Type System:Type}"
                      x:Key="ListWithTwoStringTypes">

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-using Common.UI.ViewModelBases;
+using Effanville.Common.UI.ViewModelBases;
 
 namespace FPD.Logic.TemplatesAndStyles
 {

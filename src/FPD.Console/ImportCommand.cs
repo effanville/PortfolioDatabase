@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 
-using Common.Structure.Reporting;
-
 using Effanville.Common.Console;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
+using Effanville.Common.Structure.Reporting;
 
 using FinancialStructures.Database;
 using FinancialStructures.Persistence;

@@ -1,6 +1,6 @@
-using Common.Structure.DataEdit;
-using Common.Structure.DataStructures;
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.UI;
 
 using FinancialStructures.Database;
 

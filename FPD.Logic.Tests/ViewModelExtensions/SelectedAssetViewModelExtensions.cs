@@ -1,5 +1,7 @@
 ﻿using System.Linq;
-using Common.Structure.DataStructures;
+
+using Effanville.Common.Structure.DataStructures;
+
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Asset;
 using FinancialStructures.Database;

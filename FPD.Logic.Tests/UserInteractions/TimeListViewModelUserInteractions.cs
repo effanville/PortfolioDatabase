@@ -1,4 +1,4 @@
-using Common.Structure.DataStructures;
+using Effanville.Common.Structure.DataStructures;
 
 using FPD.Logic.ViewModels.Common;
 

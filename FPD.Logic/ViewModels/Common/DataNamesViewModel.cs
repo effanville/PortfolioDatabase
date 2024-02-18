@@ -4,16 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
-using Common.Structure.DataStructures;
-using Common.Structure.Reporting;
-using Common.UI.Commands;
+
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.Reporting;
+
 using FPD.Logic.TemplatesAndStyles;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions.Values;
 using FinancialStructures.NamingStructures;
-using Common.Structure.DataEdit;
-using Common.UI;
+
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
 
 namespace FPD.Logic.ViewModels.Common
 {

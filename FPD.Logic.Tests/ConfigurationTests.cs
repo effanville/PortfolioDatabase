@@ -2,7 +2,9 @@
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using Common.UI;
+
+using Effanville.Common.UI;
+
 using FPD.Logic.Configuration;
 using FPD.Logic.ViewModels;
 using FPD.Logic.Tests.TestHelpers;

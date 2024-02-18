@@ -4,16 +4,19 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Reflection;
 using System.Windows;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Services;
-using Common.UI.Wpf.Services;
+
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
-using Common.UI.Wpf;
+
 using System.Windows.Input;
 using System.Windows.Shapes;
+
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
+using Effanville.Common.UI.Wpf;
+using Effanville.Common.UI.Wpf.Services;
 
 using FinancialStructures.Persistence;
 

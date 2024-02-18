@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
-using Common.Structure.DataEdit;
-using Common.Structure.DataStructures;
-using Common.Structure.FileAccess;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.FileAccess;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
 
 using FinancialStructures;
 using FinancialStructures.Database;

@@ -7,14 +7,14 @@ using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
 
+using Effanville.Common.UI;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
 using FinancialStructures.Database;
 using FinancialStructures.Database.Export.History;
 using FinancialStructures.Database.Extensions.Values;
-
-using Common.UI;
 
 namespace FPD.Logic.ViewModels.Stats
 {

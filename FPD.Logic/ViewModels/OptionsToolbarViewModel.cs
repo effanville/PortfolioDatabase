@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 using FinancialStructures.Database;
 using FinancialStructures.Database.Download;
 using FinancialStructures.Database.Extensions;
 using System.ComponentModel;
-using Common.Structure.DataEdit;
+
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
 
 using FinancialStructures.Persistence;
 

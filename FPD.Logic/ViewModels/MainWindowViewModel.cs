@@ -3,10 +3,6 @@ using System.Collections.ObjectModel;
 using System.IO.Abstractions;
 using System.Reflection;
 
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.ViewModelBases;
-
 using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
@@ -17,14 +13,15 @@ using FinancialStructures.Database;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
-
-using Common.Structure.DataEdit;
-
 using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Common.UI.Commands;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.ViewModelBases;
 
 namespace FPD.Logic.ViewModels
 {

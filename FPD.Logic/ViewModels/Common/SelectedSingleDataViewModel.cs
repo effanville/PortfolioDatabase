@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
-using Common.Structure.DataStructures;
-using Common.Structure.FileAccess;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.FileAccess;
+using Effanville.Common.Structure.Reporting;
 
 using FPD.Logic.TemplatesAndStyles;
 
@@ -20,7 +18,9 @@ using FinancialStructures;
 
 using FPD.Logic.ViewModels.Stats;
 
-using Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
 
 namespace FPD.Logic.ViewModels.Common
 {
