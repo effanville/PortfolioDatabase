@@ -41,18 +41,18 @@ namespace FPD.Logic.Tests
           <d2p1:KeyValueOfstringanyType>
             <d2p1:Key>ExportStatsViewModel</d2p1:Key>
             <d2p1:Value i:type=""ExportStatsConfiguration"">
-              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <AssetDirection>Ascending</AssetDirection>
               <AssetSortingField>AccountType</AssetSortingField>
-              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>AccountType</BankSortingField>
-              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <HasLoaded>false</HasLoaded>
-              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <SectorDirection>Ascending</SectorDirection>
               <SectorSortingField>AccountType</SectorSortingField>
-              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <SecurityDirection>Ascending</SecurityDirection>
               <SecuritySortingField>AccountType</SecuritySortingField>
             </d2p1:Value>
@@ -98,7 +98,7 @@ namespace FPD.Logic.Tests
         <ChildConfigurations />
         <DisplayValueFunds>true</DisplayValueFunds>
         <HasLoaded>true</HasLoaded>
-        <StatisticNames xmlns:d5p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+        <StatisticNames xmlns:d5p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
           <d5p1:SelectableOfStatisticKZb_SPP6u>
             <d5p1:Instance>AccountType</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
@@ -229,7 +229,7 @@ namespace FPD.Logic.Tests
           <d2p1:KeyValueOfstringanyType>
             <d2p1:Key>ExportStatsViewModel</d2p1:Key>
             <d2p1:Value i:type=""ExportStatsConfiguration"">
-              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
@@ -297,7 +297,7 @@ namespace FPD.Logic.Tests
               </AssetColumnNames>
               <AssetDirection>Ascending</AssetDirection>
               <AssetSortingField>Company</AssetSortingField>
-              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
@@ -325,7 +325,7 @@ namespace FPD.Logic.Tests
               </BankColumnNames>
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>Company</BankSortingField>
-              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>DisplayValueFunds</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
@@ -360,7 +360,7 @@ namespace FPD.Logic.Tests
                 </d8p1:SelectableOfstring>
               </DisplayConditions>
               <HasLoaded>true</HasLoaded>
-              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
@@ -420,7 +420,7 @@ namespace FPD.Logic.Tests
               </SectorColumnNames>
               <SectorDirection>Ascending</SectorDirection>
               <SectorSortingField>Name</SectorSortingField>
-              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfStatisticKZb_SPP6u>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
