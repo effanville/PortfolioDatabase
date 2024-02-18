@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
-             xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
+             xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
              xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
              xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              d:DataContext="{d:DesignInstance Type=common:DataNamesViewModel}"

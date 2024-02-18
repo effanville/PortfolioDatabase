@@ -12,6 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
+    <AssemblyName>FPD.UI</AssemblyName>
     <Product>FinancePortfolioDatabase</Product>
 	<Version>23.12.01</Version>
   </PropertyGroup>

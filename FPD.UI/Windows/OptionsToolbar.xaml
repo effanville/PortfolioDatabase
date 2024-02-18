@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
+             xmlns:viewmodels="clr-namespace:FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
              d:DataContext="{d:DesignInstance Type=viewmodels:OptionsToolbarViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"

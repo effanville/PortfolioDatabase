@@ -3,7 +3,7 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=FPD.Logic"
+                xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                 xmlns:fpdui="clr-namespace:FPD.UI"
                 xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"

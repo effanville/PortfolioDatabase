@@ -15,6 +15,7 @@
     <Deterministic>false</Deterministic>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <RootNamespace>Effanville.$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>Effanville.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

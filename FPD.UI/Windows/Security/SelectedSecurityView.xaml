@@ -6,7 +6,7 @@
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              xmlns:fpdui="clr-namespace:FPD.UI"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:security="clr-namespace:FPD.Logic.ViewModels.Security;assembly=FPD.Logic"
+             xmlns:security="clr-namespace:FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
              xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
              d:DataContext="{d:DesignInstance Type=security:SelectedSecurityViewModel}"
              Background="{Binding Styles.BackgroundBrush}"
