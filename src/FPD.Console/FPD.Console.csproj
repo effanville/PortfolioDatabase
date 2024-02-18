@@ -3,13 +3,8 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyTitle>FPDConsole</AssemblyTitle>
-    <Product>FPDConsole</Product>
     <PublishTrimmed>true</PublishTrimmed>
-    <Version>23.12.01</Version>
     <TrimMode>partial</TrimMode>
-    <RootNamespace>Effanville.$(MSBuildProjectName)</RootNamespace>
-    <AssemblyName>Effanville.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
@@ -31,11 +26,5 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>FPD.Console.Tests</_Parameter1>
-    </AssemblyAttribute>
   </ItemGroup>
 </Project>
