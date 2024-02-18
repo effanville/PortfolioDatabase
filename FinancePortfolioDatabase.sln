@@ -28,28 +28,28 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic", "FPD.Logic\FPD.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic.Tests", "FPD.Logic.Tests\FPD.Logic.Tests.csproj", "{90EDA2DB-996B-497B-8562-C311F37B8A5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Structure", "Common\Common.Structure\Common.Structure.csproj", "{A2CB7343-EE36-451E-A71B-5CC4E38C2589}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Structure", "Common\src\Common.Structure\Common.Structure.csproj", "{A2CB7343-EE36-451E-A71B-5CC4E38C2589}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5F985C0F-B939-463C-BCCF-060883E478B5}"
 	ProjectSection(SolutionItems) = preProject
 		Common\Directory.Build.props = Common\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI", "Common\Common.UI\Common.UI.csproj", "{037B9B7D-83E3-4395-9C8C-A1D528C39FA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI", "Common\src\Common.UI\Common.UI.csproj", "{037B9B7D-83E3-4395-9C8C-A1D528C39FA2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Console", "Common\src\Common.Console\Common.Console.csproj", "{B86DCF20-F414-4900-817B-3A4B812E9FB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "BuildProcess\source\_build.csproj", "{D313AFE2-7B03-4896-9C64-C6C70834D6C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI.Wpf", "Common\Common.UI.Wpf\Common.UI.Wpf.csproj", "{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI.Wpf", "Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj", "{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Console.Tests", "Common\test\Common.Console.Tests\Common.Console.Tests.csproj", "{57281CA2-6721-4042-BE87-31097A5F9C93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Structure.Tests", "Common\Common.Structure.Tests\Common.Structure.Tests.csproj", "{B6877373-B71C-457B-9381-4098368D3DEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Structure.Tests", "Common\test\Common.Structure.Tests\Common.Structure.Tests.csproj", "{B6877373-B71C-457B-9381-4098368D3DEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Wpf.Tests", "Common\Common.UI.Wpf.Tests\Common.UI.Wpf.Tests.csproj", "{B3DF818A-95CC-4717-9423-B5668A05C68E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Wpf.Tests", "Common\test\Common.UI.Wpf.Tests\Common.UI.Wpf.Tests.csproj", "{B3DF818A-95CC-4717-9423-B5668A05C68E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common\Common.UI.Tests\Common.UI.Tests.csproj", "{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common\test\Common.UI.Tests\Common.UI.Tests.csproj", "{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPD.Console.Tests", "test\FPD.Console.Tests\FPD.Console.Tests.csproj", "{53D9FAAF-B0C1-4205-A70F-D26141858EE9}"
 EndProject
