@@ -2,10 +2,9 @@
 using System.Linq;
 
 using Effanville.FinancialStructures.NamingStructures;
-
-using FPD.Logic.ViewModels.Asset;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels.Asset;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Security;
 
 namespace Effanville.FPD.Logic.Tests.UserInteractions
 {

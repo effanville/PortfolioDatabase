@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
 
-using FPD.Logic.ViewModels.Asset;
+using Effanville.FPD.Logic.ViewModels.Asset;
 
-namespace FPD.UI.Windows.Asset
+namespace Effanville.FPD.UI.Windows.Asset
 {
     /// <summary>
     /// Interaction logic for SelectedSecurityView.xaml

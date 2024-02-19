@@ -7,8 +7,7 @@ using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
-
-using FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels.Security;
 
 using NUnit.Framework;
 

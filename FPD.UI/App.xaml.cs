@@ -4,9 +4,10 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using FPD.UI.Windows;
 
-namespace FPD.UI
+using Effanville.FPD.UI.Windows;
+
+namespace Effanville.FPD.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml

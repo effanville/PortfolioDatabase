@@ -1,13 +1,13 @@
-﻿<UserControl x:Class="FPD.UI.Windows.Security.SelectedSecurityView"
+﻿<UserControl x:Class="Effanville.FPD.UI.Windows.Security.SelectedSecurityView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
-             xmlns:fpdui="clr-namespace:FPD.UI"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:security="clr-namespace:FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
              xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
+             xmlns:security="clr-namespace:Effanville.FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
+             xmlns:ui="clr-namespace:Effanville.FPD.UI"
              d:DataContext="{d:DesignInstance Type=security:SelectedSecurityViewModel}"
              Background="{Binding Styles.BackgroundBrush}"
              mc:Ignorable="d"
@@ -17,8 +17,8 @@
              d:DesignWidth="800">
     <UserControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
-        <fpdui:DisplayConstants x:Key="Consts" />
-        <fpdui:Bridge x:Key="bridge"
+        <ui:DisplayConstants x:Key="Consts" />
+        <ui:Bridge x:Key="bridge"
                       x:Name="bridge"
                       Styles="{Binding Styles}" />
     </UserControl.Resources>

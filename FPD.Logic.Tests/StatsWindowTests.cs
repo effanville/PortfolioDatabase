@@ -1,10 +1,9 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.Tests.TestHelpers;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.ViewModels.Stats;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
 using NUnit.Framework;
 

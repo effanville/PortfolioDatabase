@@ -2,11 +2,10 @@
 using System.Linq;
 
 using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     public sealed class AccountStatsViewModel : StyledViewModelBase<AccountStatistics>
     {

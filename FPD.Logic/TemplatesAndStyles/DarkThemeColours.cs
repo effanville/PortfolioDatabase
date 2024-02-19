@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace FPD.Logic.TemplatesAndStyles
+namespace Effanville.FPD.Logic.TemplatesAndStyles
 {
     /// <summary>
     /// Stores the colours and brushes used in the program.

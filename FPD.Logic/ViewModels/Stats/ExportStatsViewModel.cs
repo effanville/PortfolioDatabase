@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Input;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
 using System.Linq;
+using System.Windows.Input;
 
 using Effanville.Common.Structure.DisplayClasses;
 using Effanville.Common.Structure.Extensions;
@@ -18,8 +13,11 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// View model for the stats options page.

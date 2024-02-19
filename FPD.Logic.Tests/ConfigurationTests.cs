@@ -6,10 +6,9 @@ using System.Linq;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.Tests.TestHelpers;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels;
 
 using NUnit.Framework;
 

@@ -12,8 +12,7 @@ using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Support;
-
-using FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
 

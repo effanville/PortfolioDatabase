@@ -1,9 +1,8 @@
 using Effanville.Common.UI;
 using Effanville.Common.UI.ViewModelBases;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-using FPD.Logic.TemplatesAndStyles;
-
-namespace FPD.Logic.ViewModels.Common;
+namespace Effanville.FPD.Logic.ViewModels.Common;
 
 public abstract class StyledClosableViewModelBase<TModel, TUpdate> : ClosableViewModelBase<TModel, TUpdate> 
     where TModel : class where TUpdate : class

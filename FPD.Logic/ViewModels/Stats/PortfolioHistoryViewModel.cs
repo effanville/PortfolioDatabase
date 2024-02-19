@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.History;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// Contains settings and ability to generate a history of portfolio object.

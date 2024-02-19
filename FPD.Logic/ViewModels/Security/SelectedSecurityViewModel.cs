@@ -7,11 +7,6 @@ using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.FileAccess;
 using Effanville.Common.Structure.Reporting;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Stats;
-
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
@@ -23,8 +18,11 @@ using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-namespace FPD.Logic.ViewModels.Security
+namespace Effanville.FPD.Logic.ViewModels.Security
 {
     /// <summary>
     /// View model for the display of a security data.

@@ -2,9 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-using FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-namespace FPD.UI
+namespace Effanville.FPD.UI
 {
     public sealed class Bridge : FrameworkElement, INotifyPropertyChanged
     {

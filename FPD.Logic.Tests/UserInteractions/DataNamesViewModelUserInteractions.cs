@@ -1,6 +1,5 @@
 using Effanville.FinancialStructures.NamingStructures;
-
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.UserInteractions;
 

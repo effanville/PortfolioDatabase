@@ -2,9 +2,8 @@
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.FinancialStructures.FinanceStructures;
-
-using FPD.Logic.ViewModels.Asset;
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Asset;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.ViewModelExtensions
 {

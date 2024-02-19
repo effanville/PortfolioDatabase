@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 
 using Effanville.FinancialStructures.Database;
-
-using FPD.Logic.ViewModels;
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.ViewModelExtensions
 {

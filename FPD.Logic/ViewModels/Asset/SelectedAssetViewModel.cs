@@ -16,12 +16,11 @@ using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Stats;
-
-namespace FPD.Logic.ViewModels.Asset
+namespace Effanville.FPD.Logic.ViewModels.Asset
 {
     /// <summary>
     /// View model for the display of a security data.

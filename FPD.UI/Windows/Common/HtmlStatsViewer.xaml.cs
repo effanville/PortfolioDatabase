@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows.Common
 {
     /// <summary>
     /// Interaction logic for HtmlStatsViewer.xaml

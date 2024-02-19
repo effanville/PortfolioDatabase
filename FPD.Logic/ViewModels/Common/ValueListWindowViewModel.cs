@@ -5,16 +5,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
-
-using FPD.Logic.TemplatesAndStyles;
-
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-namespace FPD.Logic.ViewModels.Common
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// A view model for displaying a collect of <see cref="IValueList"/>

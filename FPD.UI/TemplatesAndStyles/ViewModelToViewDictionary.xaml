@@ -1,33 +1,34 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:view="clr-namespace:FPD.UI.Windows.Security"
-                    xmlns:cview="clr-namespace:FPD.UI.Windows"
-                    xmlns:aview="clr-namespace:FPD.UI.Windows.Asset"
-                    xmlns:vm="clr-namespace:FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
-                    xmlns:vma="clr-namespace:FPD.Logic.ViewModels.Asset;assembly=Effanville.FPD.Logic"
-                    xmlns:cvm="clr-namespace:FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
-                    xmlns:svm="clr-namespace:FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic">
+                    xmlns:vm="clr-namespace:Effanville.FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
+                    xmlns:cvm="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
+                    xmlns:vma="clr-namespace:Effanville.FPD.Logic.ViewModels.Asset;assembly=Effanville.FPD.Logic"
+                    xmlns:svm="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
+                    xmlns:security="clr-namespace:Effanville.FPD.UI.Windows.Security"
+                    xmlns:stats="clr-namespace:Effanville.FPD.UI.Windows.Stats"
+                    xmlns:common="clr-namespace:Effanville.FPD.UI.Windows.Common"
+                    xmlns:asset="clr-namespace:Effanville.FPD.UI.Windows.Asset">
 
     <DataTemplate DataType="{x:Type vm:SelectedSecurityViewModel}">
-        <view:SelectedSecurityView/>
+        <security:SelectedSecurityView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type cvm:DataNamesViewModel}">
-        <cview:DataNamesView/>
+        <common:DataNamesView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vma:SelectedAssetViewModel}">
-        <aview:SelectedAssetView/>
+        <asset:SelectedAssetView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type cvm:SelectedSingleDataViewModel}">
-        <cview:SelectedSingleDataView/>
+        <common:SelectedSingleDataView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type cvm:TimeListViewModel}">
-        <cview:TimeListView />
+        <common:TimeListView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type svm:AccountStatsViewModel}">
-        <cview:AccountStatsControl />
+        <stats:AccountStatsControl />
     </DataTemplate>
 </ResourceDictionary>

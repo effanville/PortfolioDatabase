@@ -3,8 +3,7 @@ using System.Linq;
 
 using Effanville.Common.Structure.Reporting;
 using Effanville.FPD.Logic.Tests.Context;
-
-using FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels;
 
 using NUnit.Framework;
 

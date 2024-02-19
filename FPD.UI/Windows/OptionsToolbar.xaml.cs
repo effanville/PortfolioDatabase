@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows
 {
     /// <summary>
     /// Interaction logic for OptionsToolbar.xaml

@@ -8,13 +8,12 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Context;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels;
-using FPD.Logic.ViewModels.Asset;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Asset;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Security;
 
 using Moq;
 

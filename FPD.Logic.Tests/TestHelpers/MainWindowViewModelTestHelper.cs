@@ -3,8 +3,7 @@ using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
-
-using FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels;
 
 using NUnit.Framework;
 

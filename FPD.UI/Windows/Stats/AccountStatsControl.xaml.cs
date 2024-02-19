@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Stats;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows.Stats
 {
     /// <summary>
     /// Interaction logic for TimeListView.xaml

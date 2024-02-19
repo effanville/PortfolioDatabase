@@ -2,9 +2,8 @@ using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.Context;
 

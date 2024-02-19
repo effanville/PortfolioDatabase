@@ -7,9 +7,8 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
 

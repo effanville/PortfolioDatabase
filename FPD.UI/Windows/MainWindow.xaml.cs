@@ -4,10 +4,6 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Reflection;
 using System.Windows;
-
-using FPD.Logic.ViewModels;
-using FPD.Logic.ViewModels.Common;
-
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -18,10 +14,12 @@ using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Persistence;
+using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 using Microsoft.Win32;
 
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

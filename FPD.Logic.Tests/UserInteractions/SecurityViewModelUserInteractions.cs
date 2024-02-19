@@ -1,6 +1,5 @@
 using Effanville.FinancialStructures.DataStructures;
-
-using FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels.Security;
 
 namespace Effanville.FPD.Logic.Tests.UserInteractions;
 

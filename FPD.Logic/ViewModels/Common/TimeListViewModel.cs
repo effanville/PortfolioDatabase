@@ -6,10 +6,9 @@ using System.Windows.Input;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.UI.Commands;
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-using FPD.Logic.TemplatesAndStyles;
-
-namespace FPD.Logic.ViewModels.Common
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// View model for displaying a <see cref="TimeList"/>

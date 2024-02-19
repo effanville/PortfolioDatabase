@@ -3,10 +3,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.FinancialStructures.DataStructures;
+using Effanville.FPD.Logic.ViewModels;
 
-using FPD.Logic.ViewModels;
-
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows
 {
     /// <summary>
     /// Interaction logic for Page1.xaml

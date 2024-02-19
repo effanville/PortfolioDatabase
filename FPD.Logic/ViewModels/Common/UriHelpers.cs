@@ -1,6 +1,6 @@
 using System;
 
-namespace FPD.Logic.ViewModels.Common;
+namespace Effanville.FPD.Logic.ViewModels.Common;
 
 public static class UriHelpers
 {

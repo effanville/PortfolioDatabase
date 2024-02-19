@@ -8,10 +8,9 @@ using System.Text;
 using System.Xml;
 
 using Effanville.Common.Structure.Reporting;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-using FPD.Logic.ViewModels.Stats;
-
-namespace FPD.Logic.Configuration
+namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
     /// Contains user specific configuration for the ui.

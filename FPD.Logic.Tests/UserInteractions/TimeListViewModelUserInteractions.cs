@@ -1,6 +1,5 @@
 using Effanville.Common.Structure.DataStructures;
-
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.UserInteractions;
 

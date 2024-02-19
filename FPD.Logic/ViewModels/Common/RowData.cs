@@ -1,15 +1,13 @@
 ﻿using System;
-
-using FPD.Logic.TemplatesAndStyles;
-
 using System.ComponentModel;
 
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.DisplayClasses;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-namespace FPD.Logic.ViewModels.Common
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// Contains a row of <see cref="NameData"/> which can be edited and can be set as new.

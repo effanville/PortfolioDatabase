@@ -15,11 +15,10 @@ using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.ViewModels
+namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
     /// The homepage of the program, detailing main holdings in the portfolio.

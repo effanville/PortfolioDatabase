@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FPD.Logic.Configuration
+namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
     /// Configuration object for storing user interactions.

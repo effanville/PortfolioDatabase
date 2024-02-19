@@ -1,12 +1,12 @@
-﻿<ContentControl x:Class="FPD.UI.Windows.TimeListView"
+﻿<ContentControl x:Class="Effanville.FPD.UI.Windows.Common.TimeListView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:common="clr-namespace:FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                xmlns:fpdui="clr-namespace:FPD.UI"
                 xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
+                xmlns:common="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
+                xmlns:ui="clr-namespace:Effanville.FPD.UI"
                 d:DataContext="{d:DesignInstance Type=common:TimeListViewModel}"
                 mc:Ignorable="d"
                 d:DesignHeight="450"
@@ -14,7 +14,7 @@
                 DataContextChanged="UC_DataContextChanged">
     <ContentControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
-        <fpdui:Bridge x:Key="bridge"
+        <ui:Bridge x:Key="bridge"
                       Styles="{Binding Styles}" />
     </ContentControl.Resources>
     <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"

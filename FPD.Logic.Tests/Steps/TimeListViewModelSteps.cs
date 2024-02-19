@@ -1,11 +1,10 @@
 using System;
 
 using Effanville.Common.Structure.DataStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 

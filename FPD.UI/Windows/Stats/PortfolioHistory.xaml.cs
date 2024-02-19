@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-using FPD.Logic.ViewModels.Stats;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-namespace FPD.UI.Windows.Stats
+namespace Effanville.FPD.UI.Windows.Stats
 {
     /// <summary>
     /// Interaction logic for PortfolioHistory.xaml

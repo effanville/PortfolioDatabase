@@ -5,7 +5,7 @@ using System.Linq;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.DataStructures;
 
-namespace FPD.UI
+namespace Effanville.FPD.UI
 {
     /// <summary>
     /// Container class for various constant values to be used in the display.

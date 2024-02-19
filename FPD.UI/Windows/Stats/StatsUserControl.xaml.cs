@@ -2,17 +2,15 @@
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-using FPD.Logic.ViewModels.Stats;
-
-using System.Threading.Tasks;
-
 using Effanville.Common.UI.Wpf.Controls;
 using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-namespace FPD.UI.Windows.Stats
+namespace Effanville.FPD.UI.Windows.Stats
 {
     /// <summary>
     /// Interaction logic for StatsUserControl.xaml

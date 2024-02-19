@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using FPD.Logic.ViewModels.Stats;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-namespace FPD.Logic.Configuration
+namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
     /// Configuration for the stats display

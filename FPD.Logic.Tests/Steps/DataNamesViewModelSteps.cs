@@ -4,8 +4,7 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
-
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 

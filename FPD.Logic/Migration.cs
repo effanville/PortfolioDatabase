@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FPD.Logic
+namespace Effanville.FPD.Logic
 {
     /// <summary>
     /// A migration from one version of an object to another.

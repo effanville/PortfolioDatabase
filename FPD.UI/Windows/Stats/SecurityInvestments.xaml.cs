@@ -1,6 +1,6 @@
 ﻿using Effanville.Common.UI.Wpf.Controls;
 
-namespace FPD.UI.Windows.Stats
+namespace Effanville.FPD.UI.Windows.Stats
 {
     /// <summary>
     /// Interaction logic for SecurityInvestments.xaml

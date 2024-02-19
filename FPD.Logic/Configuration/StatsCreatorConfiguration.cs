@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using FPD.Logic.ViewModels.Stats;
 
-namespace FPD.Logic.Configuration
+using Effanville.FPD.Logic.ViewModels.Stats;
+
+namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
     /// Configuration object for the <see cref="StatsCreatorWindowViewModel"/>

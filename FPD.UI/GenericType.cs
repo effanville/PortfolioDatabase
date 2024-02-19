@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Markup;
 
-namespace FPD.UI
+namespace Effanville.FPD.UI
 {
     /// <summary>
     /// A markup type to enable the display of generics. For example,

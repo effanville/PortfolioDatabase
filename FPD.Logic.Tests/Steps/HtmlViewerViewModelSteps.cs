@@ -1,7 +1,6 @@
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Tests.Context;
-
-using FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 

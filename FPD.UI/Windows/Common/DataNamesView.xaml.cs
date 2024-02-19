@@ -1,10 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows.Common
 {
     /// <summary>
     /// Interaction logic for DataNamesView.xaml

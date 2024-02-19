@@ -1,9 +1,9 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-using FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels.Security;
 
-namespace FPD.UI.Windows.Security
+namespace Effanville.FPD.UI.Windows.Security
 {
     /// <summary>
     /// Interaction logic for SelectedSecurityView.xaml

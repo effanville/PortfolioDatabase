@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-using System.ComponentModel;
 
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
@@ -16,8 +12,10 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Download;
 using Effanville.FinancialStructures.Database.Extensions;
 using Effanville.FinancialStructures.Persistence;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace FPD.Logic.ViewModels
+namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
     /// View model for the top toolbar.

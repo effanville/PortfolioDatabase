@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 

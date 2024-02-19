@@ -8,17 +8,15 @@ using System.Windows.Input;
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
-
-using FPD.Logic.TemplatesAndStyles;
-
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Download;
 using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-namespace FPD.Logic.ViewModels.Common
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.
