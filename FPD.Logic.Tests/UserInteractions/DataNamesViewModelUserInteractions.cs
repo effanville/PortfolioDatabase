@@ -1,4 +1,4 @@
-using FinancialStructures.NamingStructures;
+using Effanville.FinancialStructures.NamingStructures;
 
 using FPD.Logic.ViewModels.Common;
 

@@ -2,13 +2,12 @@
 
 using FPD.Logic.TemplatesAndStyles;
 
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
-
 using System.ComponentModel;
 
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.DisplayClasses;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.ViewModels.Common
 {

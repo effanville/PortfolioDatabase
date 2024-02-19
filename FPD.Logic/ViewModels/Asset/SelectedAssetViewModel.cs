@@ -9,14 +9,13 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
-
-using FinancialStructures;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions;
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
+using Effanville.FinancialStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Extensions.DataEdit;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;

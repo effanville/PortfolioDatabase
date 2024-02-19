@@ -1,13 +1,12 @@
 using System;
 
 using Effanville.Common.Structure.DataStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
-
-using FinancialStructures.Database;
-using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
 
 using FPD.Logic.ViewModels.Security;
 

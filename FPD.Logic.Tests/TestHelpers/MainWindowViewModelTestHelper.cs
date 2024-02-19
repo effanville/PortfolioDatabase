@@ -2,8 +2,7 @@
 using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
-
-using FinancialStructures.Database;
+using Effanville.FinancialStructures.Database;
 
 using FPD.Logic.ViewModels;
 

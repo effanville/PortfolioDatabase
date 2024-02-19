@@ -8,19 +8,17 @@ using Effanville.Common.Structure.FileAccess;
 using Effanville.Common.Structure.Reporting;
 
 using FPD.Logic.TemplatesAndStyles;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
-using FinancialStructures;
-
 using FPD.Logic.ViewModels.Stats;
 
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Extensions.DataEdit;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.ViewModels.Common
 {

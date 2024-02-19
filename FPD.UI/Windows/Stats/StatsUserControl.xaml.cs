@@ -6,10 +6,11 @@ using System.Windows;
 using System.Windows.Controls;
 
 using FPD.Logic.ViewModels.Stats;
-using FinancialStructures.Database.Statistics;
+
 using System.Threading.Tasks;
 
 using Effanville.Common.UI.Wpf.Controls;
+using Effanville.FinancialStructures.Database.Statistics;
 
 namespace FPD.UI.Windows.Stats
 {

@@ -10,21 +10,19 @@ using Effanville.Common.Structure.Reporting;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions;
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
-using FinancialStructures;
-
 using FPD.Logic.ViewModels.Stats;
 
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Extensions.DataEdit;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.ViewModels.Security
 {

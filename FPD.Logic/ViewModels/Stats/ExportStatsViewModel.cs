@@ -6,9 +6,6 @@ using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
-using FinancialStructures.Database;
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.Database.Export.Statistics;
 using System.Linq;
 
 using Effanville.Common.Structure.DisplayClasses;
@@ -18,6 +15,9 @@ using Effanville.Common.Structure.ReportWriting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.Statistics;
+using Effanville.FinancialStructures.Database.Statistics;
 
 namespace FPD.Logic.ViewModels.Stats
 {

@@ -5,9 +5,8 @@ using Effanville.Common.Console;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Reporting;
-
-using FinancialStructures.Database;
-using FinancialStructures.Persistence;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 
 namespace Effanville.FPD.Console
 {

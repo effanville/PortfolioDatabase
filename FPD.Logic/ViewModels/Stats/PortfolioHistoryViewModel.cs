@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.History;
+
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Export.History;
 
 namespace FPD.Logic.ViewModels.Stats
 {

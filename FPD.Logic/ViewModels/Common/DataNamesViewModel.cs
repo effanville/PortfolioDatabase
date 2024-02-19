@@ -10,13 +10,13 @@ using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 
 using FPD.Logic.TemplatesAndStyles;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions.Values;
-using FinancialStructures.NamingStructures;
 
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Extensions.Values;
+using Effanville.FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.ViewModels.Common
 {

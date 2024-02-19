@@ -3,9 +3,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 using Effanville.Common.Structure.DisplayClasses;
+using Effanville.FinancialStructures.Database.Statistics;
 
 using FPD.Logic.ViewModels.Stats;
-using FinancialStructures.Database.Statistics;
 
 namespace FPD.Logic.Configuration
 {

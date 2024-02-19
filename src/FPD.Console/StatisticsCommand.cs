@@ -8,10 +8,9 @@ using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.ReportWriting;
+using Effanville.FinancialStructures.Database.Export.Statistics;
+using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
-
-using FinancialStructures.Database.Export.Statistics;
-using FinancialStructures.Persistence;
 
 using Microsoft.Extensions.Configuration;
 

@@ -5,9 +5,8 @@ using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
 using Effanville.Common.UI.ViewModelBases;
-
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
 
 using FPD.Logic.Configuration;
 using FPD.Logic.ViewModels;

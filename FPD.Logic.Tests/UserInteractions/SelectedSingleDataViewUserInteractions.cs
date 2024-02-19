@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 
 using Effanville.Common.Structure.DataStructures;
-
-using FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.FinanceStructures;
 
 using FPD.Logic.ViewModels.Common;
 

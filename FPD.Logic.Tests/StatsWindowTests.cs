@@ -1,8 +1,7 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 
+using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Tests.TestHelpers;
-
-using FinancialStructures.Database;
 
 using FPD.Logic.Configuration;
 using FPD.Logic.ViewModels.Stats;

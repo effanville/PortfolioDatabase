@@ -8,8 +8,6 @@ using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 using FPD.Logic.ViewModels.Stats;
 
-using FinancialStructures.Database;
-
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
@@ -22,6 +20,7 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
+using Effanville.FinancialStructures.Database;
 
 namespace FPD.Logic.ViewModels
 {

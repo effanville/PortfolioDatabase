@@ -1,7 +1,6 @@
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
-
-using FinancialStructures.Database;
+using Effanville.FinancialStructures.Database;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels;

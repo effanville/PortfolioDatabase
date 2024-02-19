@@ -5,8 +5,7 @@ using System.Windows.Input;
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.UI.Commands;
-
-using FinancialStructures.Database;
+using Effanville.FinancialStructures.Database;
 
 using FPD.Logic.TemplatesAndStyles;
 

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FinancialStructures.DataStructures;
 
 namespace FPD.UI
 {

@@ -4,11 +4,10 @@ using System.Windows.Input;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
 
 namespace FPD.Logic.ViewModels
 {

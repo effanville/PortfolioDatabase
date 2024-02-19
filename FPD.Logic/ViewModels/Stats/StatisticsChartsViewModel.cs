@@ -8,13 +8,12 @@ using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
 
 using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.History;
+using Effanville.FinancialStructures.Database.Extensions.Values;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Export.History;
-using FinancialStructures.Database.Extensions.Values;
 
 namespace FPD.Logic.ViewModels.Stats
 {

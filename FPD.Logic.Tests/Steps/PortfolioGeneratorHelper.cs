@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
 
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.TestHelpers;
-
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
 
 using TechTalk.SpecFlow;
 

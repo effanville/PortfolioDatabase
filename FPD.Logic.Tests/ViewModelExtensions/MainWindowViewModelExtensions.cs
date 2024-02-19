@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-using FinancialStructures.Database;
+using Effanville.FinancialStructures.Database;
 
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;

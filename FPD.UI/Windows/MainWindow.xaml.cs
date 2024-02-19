@@ -7,7 +7,6 @@ using System.Windows;
 
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;
-using FinancialStructures.Database;
 
 using System.Windows.Input;
 using System.Windows.Shapes;
@@ -17,8 +16,8 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
-
-using FinancialStructures.Persistence;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 
 using Microsoft.Win32;
 

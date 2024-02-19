@@ -6,10 +6,9 @@ using Autofac;
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FPD.Logic.Tests.Context;
-
-using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
 
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels;

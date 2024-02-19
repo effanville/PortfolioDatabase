@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Input;
+
+using Effanville.FinancialStructures.DataStructures;
+
 using FPD.Logic.ViewModels;
-using FinancialStructures.DataStructures;
 
 namespace FPD.UI.Windows
 {

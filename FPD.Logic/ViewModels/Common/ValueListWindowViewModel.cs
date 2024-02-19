@@ -8,12 +8,11 @@ using Effanville.Common.Structure.DataEdit;
 
 using FPD.Logic.TemplatesAndStyles;
 
-using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
-
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
 
 namespace FPD.Logic.ViewModels.Common
 {

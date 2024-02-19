@@ -1,6 +1,5 @@
+using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Tests.TestHelpers;
-
-using FinancialStructures.Database;
 
 using FPD.Logic.ViewModels;
 

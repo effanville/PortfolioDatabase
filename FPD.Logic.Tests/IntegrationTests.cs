@@ -1,10 +1,9 @@
 ﻿using Effanville.Common.Structure.DisplayClasses;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.Tests.UserInteractions;
 using Effanville.FPD.Logic.Tests.ViewModelExtensions;
-
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
 
 using FPD.Logic.ViewModels;
 using FPD.Logic.ViewModels.Common;

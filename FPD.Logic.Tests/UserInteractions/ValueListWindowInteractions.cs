@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using FinancialStructures.NamingStructures;
+using Effanville.FinancialStructures.NamingStructures;
 
 using FPD.Logic.ViewModels.Asset;
 using FPD.Logic.ViewModels.Common;

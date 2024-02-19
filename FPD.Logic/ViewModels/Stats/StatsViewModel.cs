@@ -7,14 +7,13 @@ using FPD.Logic.Configuration;
 using FPD.Logic.TemplatesAndStyles;
 using FPD.Logic.ViewModels.Common;
 
-using FinancialStructures.Database;
-using FinancialStructures.Database.Statistics;
 using System.Threading.Tasks;
 
 using Effanville.Common.Structure.DisplayClasses;
 using Effanville.Common.UI;
-
-using FinancialStructures.Database.Extensions.Statistics;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Extensions.Statistics;
+using Effanville.FinancialStructures.Database.Statistics;
 
 namespace FPD.Logic.ViewModels.Stats
 {

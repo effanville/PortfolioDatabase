@@ -7,12 +7,11 @@ using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Extensions.DataEdit;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Support;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
-using FinancialStructures.DataStructures;
-using FinancialStructures.NamingStructures;
 
 using FPD.Logic.ViewModels;
 

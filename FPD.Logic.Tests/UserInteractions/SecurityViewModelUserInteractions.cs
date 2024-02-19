@@ -1,4 +1,4 @@
-using FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.DataStructures;
 
 using FPD.Logic.ViewModels.Security;
 

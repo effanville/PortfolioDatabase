@@ -1,10 +1,9 @@
 using System;
 
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
-
-using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
 
 using FPD.Logic.ViewModels.Common;
 

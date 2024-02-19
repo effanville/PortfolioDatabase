@@ -7,12 +7,11 @@ using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.ReportWriting;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Export.Statistics;
+using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Export.Statistics;
-using FinancialStructures.Persistence;
 
 using Microsoft.Extensions.Configuration;
 
