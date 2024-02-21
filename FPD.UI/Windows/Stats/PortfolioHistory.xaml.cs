@@ -19,10 +19,9 @@ namespace Effanville.FPD.UI.Windows.Stats
         }
         private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            string bridgeName = "bridge";
-            if (Resources.Contains(bridgeName)
+            if (Resources.Contains(DisplayConstants.StyleBridgeName)
                 && DataContext is PortfolioHistoryViewModel dc
-                && Resources[bridgeName] is Bridge bridge)
+                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
             }

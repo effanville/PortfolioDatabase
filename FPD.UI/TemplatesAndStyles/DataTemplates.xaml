@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:fs="clr-namespace:Effanville.Common.Structure.DataStructures;assembly=Effanville.Common.Structure"
                     xmlns:stats="clr-namespace:Effanville.FinancialStructures.Database.Statistics;assembly=Effanville.FinancialStructures">
-    <DataTemplate x:Key="DVView"
+    <DataTemplate x:Key="DvView"
                   DataType="{x:Type fs:DailyValuation}">
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding Path=Day}" />
@@ -19,7 +19,7 @@
                 <DataGridTextColumn Header="Statistic"
                                     Width="Auto"
                                     IsReadOnly="true"
-                                    Binding="{Binding Path=StatType}"/>
+                                    Binding="{Binding Path=StatType}" />
                 <DataGridTextColumn Header="Value"
                                     Width="Auto"
                                     IsReadOnly="true"
@@ -29,6 +29,6 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type stats:IStatistic}">
         <TextBlock Text="{Binding ValueAsObject}"
-    Foreground="Black"/>
-    </DataTemplate> 
+                   Foreground="Black" />
+    </DataTemplate>
 </ResourceDictionary>

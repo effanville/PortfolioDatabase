@@ -20,8 +20,7 @@ namespace Effanville.FPD.UI.Windows.Common
 
         private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
-            if (DataContext != null 
-                && DataContext is DataNamesViewModel vm 
+            if (DataContext  is DataNamesViewModel vm 
                 && vm.DataNames != null)
             {
                 e.NewItem = vm.DefaultRow();
@@ -40,8 +39,7 @@ namespace Effanville.FPD.UI.Windows.Common
                 return;
             }
 
-            if (DataContext != null 
-                && DataContext is DataNamesViewModel vm)
+            if (DataContext is DataNamesViewModel vm)
             {
                 vm.ExecuteDelete();
             }

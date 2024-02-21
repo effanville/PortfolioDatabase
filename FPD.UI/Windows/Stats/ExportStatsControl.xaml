@@ -52,7 +52,7 @@
                 Grid.Column="2"
                 Grid.Row="1"
                 Content="Export Statistics"
-                Style="{StaticResource ResourceKey=defaultButton}"
+                Style="{StaticResource ResourceKey=DefaultButton}"
                 Width="200"
                 Command="{Binding ExportCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />

@@ -17,32 +17,32 @@
                     ToolTip="Database Save/Load"
                     Margin="2">
             <Button Content="New"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding NewDatabaseCommand}" />
             <Button Content="Save"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding SaveDatabaseCommand}" />
             <Button Content="Load"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding LoadDatabaseCommand}" />
             <Button Content="Refresh Display"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding RefreshCommand}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal"
                     ToolTip="Portfolio Settings"
                     Margin="2">
             <Button Content="Update Data"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding UpdateDataCommand}" />
             <Button Content="Import Data"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding ImportFromOtherDatabaseCommand}" />
             <Button Content="Clean Data"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding CleanDataCommand}" />
             <Button Content="Reprice-Reset"
-                    Style="{StaticResource ResourceKey=defaultButtonNoMargin}"
+                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding RepriceResetCommand}" />
             <Label Margin="5 5 5 5"
                    VerticalAlignment="Center"

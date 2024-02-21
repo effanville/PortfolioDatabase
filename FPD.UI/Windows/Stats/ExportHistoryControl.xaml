@@ -49,7 +49,7 @@
         </Grid>
         <Button Grid.Column="2"
                 Content="Create portfolio History"
-                Style="{StaticResource ResourceKey=defaultButton}"
+                Style="{StaticResource ResourceKey=DefaultButton}"
                 Width="200"
                 Command="{Binding ExportHistoryCommand}" />
     </Grid>

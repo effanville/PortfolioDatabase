@@ -3,7 +3,6 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:converters="clr-namespace:Effanville.Common.UI.Wpf.Converters;assembly=Effanville.Common.UI.Wpf"
                 xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
                 xmlns:ui="clr-namespace:Effanville.FPD.UI"
                 d:DataContext="{d:DesignInstance Type=stats:AccountStatsViewModel}"
@@ -12,9 +11,7 @@
                 d:DesignWidth="800"
                 DataContextChanged="UC_DataContextChanged">
     <ContentControl.Resources>
-        <converters:StringToUKDateConverter x:Key="StringToUKDate" />
-        <ui:Bridge x:Key="bridge"
-                      x:Name="bridge"
+        <ui:Bridge x:Key="Bridge"
                       Styles="{Binding Styles}" />
     </ContentControl.Resources>
     <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
@@ -26,20 +23,20 @@
                   AutoGenerateColumns="False">
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DGR_Style}">
+                       BasedOn="{StaticResource DgrStyle}">
                     <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                     <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
                 <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DGC_Style}">
+                       BasedOn="{StaticResource DgcStyle}">
                     <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                     <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>

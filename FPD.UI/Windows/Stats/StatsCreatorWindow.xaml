@@ -29,7 +29,7 @@
             Background="{Binding Styles.BackgroundBrush}">
         <Button Grid.Row="0"
                     Content="Create Investment list"
-                    Style="{StaticResource ResourceKey=defaultButton}"
+                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Width="300"
                     Command="{Binding  CreateInvestmentListCommand}" />
     </Border>

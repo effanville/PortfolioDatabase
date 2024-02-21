@@ -17,7 +17,7 @@ namespace Effanville.FPD.UI.Windows.Stats
     /// </summary>
     public partial class StatsUserControl : AutoGenColumnControl
     {
-        private bool _isDataGridSet = false;
+        private bool _isDataGridSet;
         
         /// <summary>
         /// Construct an instance.
@@ -45,10 +45,10 @@ namespace Effanville.FPD.UI.Windows.Stats
             {
                 vm.StatisticsChanged += UpdateDataGrid;
             }
-            string bridgeName = "bridge";
-            if (Resources.Contains(bridgeName)
+            
+            if (Resources.Contains(DisplayConstants.StyleBridgeName)
                 && DataContext is StatsViewModel dc
-                && Resources[bridgeName] is Bridge bridge)
+                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
             }
@@ -59,42 +59,46 @@ namespace Effanville.FPD.UI.Windows.Stats
         /// </summary>
         private async void UpdateDataGrid(object sender, PropertyChangedEventArgs e)
         {
-            if (DataContext is StatsViewModel vm)
+            if (DataContext is not StatsViewModel vm)
             {
-                if (_isDataGridSet && (!vm.ModelData?.IsAlteredSinceSave ?? true))
+                return;
+            }
+
+            if (_isDataGridSet && (!vm.ModelData?.IsAlteredSinceSave ?? true))
+            {
+                return;
+            }
+
+            DataTable dt = await Task.Run(GetTable);
+
+            StatsBox.ItemsSource = dt.DefaultView;
+            _isDataGridSet = true;
+            return;
+
+            DataTable GetTable()
+            {
+                DataTable dataTable = new DataTable();
+
+                // First add the column header names from the statistics names.
+                IReadOnlyList<Statistic> statisticNames = vm.Stats.First().StatisticNames;
+                foreach (Statistic statisticName in statisticNames)
                 {
-                    return;
+                    dataTable.Columns.Add(new DataColumn(statisticName.ToString(), typeof(string)));
                 }
 
-                DataTable dt = await Task.Run(() => GetTable(vm.Stats));
-                DataTable GetTable(List<AccountStatistics> statistics)
+                // Now add the statistics values.
+                foreach (AccountStatistics val in vm.Stats)
                 {
-                    DataTable dt = new DataTable();
-
-                    // First add the column header names from the statistics names.
-                    IReadOnlyList<Statistic> statisticNames = vm.Stats.First().StatisticNames;
-                    foreach (Statistic statisticName in statisticNames)
-                    {
-                        dt.Columns.Add(new DataColumn(statisticName.ToString(), typeof(string)));
-                    }
-
-                    // Now add the statistics values.
-                    foreach (AccountStatistics val in vm.Stats)
-                    {
-                        _ = dt.Rows.Add(val.StatValuesAsObjects.ToArray());
-                    }
+                    _ = dataTable.Rows.Add(val.StatValuesAsObjects.ToArray());
+                }
                     
-                    return dt;
-                }
-
-                StatsBox.ItemsSource = dt.DefaultView;
-                _isDataGridSet = true;
+                return dataTable;
             }
         }
 
-        private SortDirection ConvertFromVisual(ListSortDirection sD)
+        private static SortDirection ConvertFromVisual(ListSortDirection sortDirection)
         {
-            switch (sD)
+            switch (sortDirection)
             {
                 case ListSortDirection.Ascending:
                     return SortDirection.Ascending;
@@ -104,9 +108,9 @@ namespace Effanville.FPD.UI.Windows.Stats
             }
         }
 
-        private ListSortDirection ConvertToVisual(SortDirection sD)
+        private static ListSortDirection ConvertToVisual(SortDirection sortDirection)
         {
-            switch (sD)
+            switch (sortDirection)
             {
                 case SortDirection.Ascending:
                     return ListSortDirection.Ascending;
@@ -118,9 +122,17 @@ namespace Effanville.FPD.UI.Windows.Stats
 
         private void dg_Sorting(object sender, DataGridSortingEventArgs e)
         {
-            Statistic sortColumnStatistic = System.Enum.Parse<Statistic>(e.Column.Header.ToString());
+            if (e.Column == null || e.Column.Header == null)
+            {
+                return;
+            }
+
+            string sortColumnString = e.Column.Header.ToString() ?? Statistic.Company.ToString();
+            Statistic sortColumnStatistic = System.Enum.Parse<Statistic>(sortColumnString);
             ListSortDirection? previousVisualSortDirection = e.Column.SortDirection;
-            SortDirection sortDirection = SortDirectionHelpers.Invert(ConvertFromVisual(previousVisualSortDirection ?? ListSortDirection.Descending));
+            SortDirection sortDirection =
+                SortDirectionHelpers.Invert(
+                    ConvertFromVisual(previousVisualSortDirection ?? ListSortDirection.Descending));
             if (DataContext is StatsViewModel vm)
             {
                 vm.Stats.Sort((x, y) => x.CompareTo(y, sortColumnStatistic, sortDirection));
@@ -137,7 +149,7 @@ namespace Effanville.FPD.UI.Windows.Stats
                 }
             }
 
-            //Show the ascending icon when acending sort is done
+            //Show the ascending icon when ascending sort is done
             e.Column.SortDirection = ConvertToVisual(sortDirection);
             if (sender is DataGrid dg)
             {

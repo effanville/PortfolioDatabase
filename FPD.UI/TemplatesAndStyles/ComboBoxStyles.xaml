@@ -84,10 +84,10 @@
                     <Grid>
                         <ToggleButton Name="ToggleButton"
                                       Template="{StaticResource ComboBoxToggleButton}"
-                                      Grid.Column="2"
                                       Focusable="false"
                                       IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
-                                      ClickMode="Press"></ToggleButton>
+                                      ClickMode="Press">
+                        </ToggleButton>
                         <ContentPresenter Name="ContentSite"
                                           IsHitTestVisible="False"
                                           Content="{TemplateBinding SelectionBoxItem}"
@@ -170,6 +170,5 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers></Style.Triggers>
     </Style>
 </ResourceDictionary>

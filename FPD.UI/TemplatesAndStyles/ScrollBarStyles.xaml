@@ -116,7 +116,7 @@
                                   Command="ScrollBar.PageDownCommand" />
                 </Track.IncreaseRepeatButton>
             </Track>
-            <RepeatButton Grid.Row="3"
+            <RepeatButton Grid.Row="2"
                           Style="{StaticResource ScrollBarLineButton}"
                           Height="18"
                           Command="ScrollBar.LineDownCommand"
@@ -157,7 +157,7 @@
                                   Command="ScrollBar.PageRightCommand" />
                 </Track.IncreaseRepeatButton>
             </Track>
-            <RepeatButton Grid.Column="3"
+            <RepeatButton Grid.Column="2"
                           Style="{StaticResource ScrollBarLineButton}"
                           Width="18"
                           Command="ScrollBar.LineRightCommand"
@@ -191,7 +191,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="FavsScrollViewer"
+    <Style x:Key="{x:Type ScrollViewer}"
            TargetType="{x:Type ScrollViewer}">
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
@@ -209,6 +209,8 @@
                         </Grid.RowDefinitions>
                         <ScrollContentPresenter Grid.Column="1" />
                         <ScrollBar Name="PART_VerticalScrollBar"
+                                   Grid.Row="0"
+                                   Grid.Column="0"
                                    Value="{TemplateBinding VerticalOffset}"
                                    Maximum="{TemplateBinding ScrollableHeight}"
                                    ViewportSize="{TemplateBinding ViewportHeight}"

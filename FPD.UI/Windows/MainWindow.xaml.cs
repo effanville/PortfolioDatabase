@@ -26,8 +26,8 @@ namespace Effanville.FPD.UI.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        bool ResizeInProcess = false;
-        private readonly UiGlobals fUiGlobals;
+        private bool _resizeInProcess;
+        private readonly UiGlobals _uiGlobals;
 
         /// <summary>
         /// Construct an instance of the main window.
@@ -35,14 +35,23 @@ namespace Effanville.FPD.UI.Windows
         public MainWindow()
         {
             bool isLightTheme = IsLightTheme();
-            FileInteractionService FileInteractionService = new FileInteractionService(this);
-            DialogCreationService DialogCreationService = new DialogCreationService(this);
-            fUiGlobals = new UiGlobals(null, new DispatcherInstance(), new FileSystem(), FileInteractionService, DialogCreationService, null);
-            MainWindowViewModel viewModel = new MainWindowViewModel(fUiGlobals, new BackgroundUpdater<IPortfolio>(), isLightTheme);
+            FileInteractionService fileInteractionService = new FileInteractionService(this);
+            DialogCreationService dialogCreationService = new DialogCreationService(this);
+            _uiGlobals = new UiGlobals(
+                null,
+                new DispatcherInstance(),
+                new FileSystem(),
+                fileInteractionService,
+                dialogCreationService, null);
+            MainWindowViewModel viewModel = new MainWindowViewModel(
+                _uiGlobals,
+                new BackgroundUpdater<IPortfolio>(),
+                isLightTheme);
             InitializeComponent();
 
             Assembly assembly = Assembly.GetExecutingAssembly();
-            string informationVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            string informationVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                .InformationalVersion;
             Title = "Financial Database v" + informationVersion;
 
             DataContext = viewModel;
@@ -50,7 +59,8 @@ namespace Effanville.FPD.UI.Windows
 
         private static bool IsLightTheme()
         {
-            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            using var key =
+                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
             object value = key?.GetValue("AppsUseLightTheme");
             return value is int i && i > 0;
         }
@@ -61,20 +71,23 @@ namespace Effanville.FPD.UI.Windows
         /// <param name="exception"></param>
         public void PrintErrorLog(Exception exception)
         {
-            FileInteractionResult result = fUiGlobals.FileInteractionService.SaveFile("log", string.Empty, fUiGlobals.CurrentWorkingDirectory, filter: "log Files|*.log|All Files|*.*");
-            if (result.Success)
+            FileInteractionResult result = _uiGlobals.FileInteractionService.SaveFile("log", string.Empty,
+                _uiGlobals.CurrentWorkingDirectory, filter: "log Files|*.log|All Files|*.*");
+            if (!result.Success)
             {
-                using (Stream stream = fUiGlobals.CurrentFileSystem.FileStream.Create(result.FilePath, FileMode.Create))
-                using (TextWriter writer = new StreamWriter(stream))
-                {
-                    foreach (ErrorReport report in fUiGlobals.ReportLogger.Reports.GetReports())
-                    {
-                        writer.WriteLine(report.ToString());
-                    }
+                return;
+            }
 
-                    writer.WriteLine(exception.Message);
-                    writer.WriteLine(exception.StackTrace);
+            using (Stream stream = _uiGlobals.CurrentFileSystem.FileStream.Create(result.FilePath, FileMode.Create))
+            using (TextWriter writer = new StreamWriter(stream))
+            {
+                foreach (ErrorReport report in _uiGlobals.ReportLogger.Reports.GetReports())
+                {
+                    writer.WriteLine(report.ToString());
                 }
+
+                writer.WriteLine(exception.Message);
+                writer.WriteLine(exception.StackTrace);
             }
         }
 
@@ -87,24 +100,34 @@ namespace Effanville.FPD.UI.Windows
         /// </remarks>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            MainWindowViewModel VM = DataContext as MainWindowViewModel;
-            VM.SaveConfig();
-            MessageBoxOutcome result = VM.ProgramPortfolio.IsAlteredSinceSave
-                ? fUiGlobals.DialogCreationService.ShowMessageBox("Data has changed since last saved. Would you like to save changes before closing?", $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning)
-                : fUiGlobals.DialogCreationService.ShowMessageBox("There is a small chance that the data has changed since last save (due to neglect on my part). Would you like to save before closing?", $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning);
+            if (DataContext is not MainWindowViewModel viewModel)
+            {
+                return;
+            }
+
+            viewModel.SaveConfig();
+            MessageBoxOutcome result = viewModel.ProgramPortfolio.IsAlteredSinceSave
+                ? _uiGlobals.DialogCreationService.ShowMessageBox(
+                    "Data has changed since last saved. Would you like to save changes before closing?",
+                    $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning)
+                : _uiGlobals.DialogCreationService.ShowMessageBox(
+                    "There is a small chance that the data has changed since last save (due to neglect on my part). Would you like to save before closing?",
+                    $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning);
 
             if (result == MessageBoxOutcome.Yes)
             {
-                FileInteractionResult savingResult = fUiGlobals.FileInteractionService.SaveFile("xml", VM.ProgramPortfolio.Name, filter: "XML Files|*.xml|All Files|*.*");
+                FileInteractionResult savingResult = _uiGlobals.FileInteractionService.SaveFile("xml",
+                    viewModel.ProgramPortfolio.Name, filter: "XML Files|*.xml|All Files|*.*");
                 if (savingResult.Success)
                 {
-                    VM.ProgramPortfolio.Name = fUiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
-                    MainWindowViewModel vm = DataContext as MainWindowViewModel;
+                    viewModel.ProgramPortfolio.Name =
+                        _uiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
                     var xmlPersistence = new XmlPortfolioPersistence();
-                    var options = new XmlFilePersistenceOptions(savingResult.FilePath, fUiGlobals.CurrentFileSystem);
-                    xmlPersistence.Save(vm.ProgramPortfolio, options, vm.ReportLogger);
+                    var options = new XmlFilePersistenceOptions(savingResult.FilePath, _uiGlobals.CurrentFileSystem);
+                    xmlPersistence.Save(viewModel.ProgramPortfolio, options, viewModel.ReportLogger);
                 }
             }
+
             if (result == MessageBoxOutcome.Cancel)
             {
                 e.Cancel = true;
@@ -113,41 +136,59 @@ namespace Effanville.FPD.UI.Windows
 
         private void CloseTabCommand(object sender, RoutedEventArgs e)
         {
-            MainWindowViewModel VM = DataContext as MainWindowViewModel;
-            if (MainTabControl.SelectedIndex != 0)
+            if (DataContext is not MainWindowViewModel viewModel
+                || MainTabControl.SelectedIndex == 0)
             {
-                if (VM.Tabs[MainTabControl.SelectedIndex] is DataDisplayViewModelBase vmBase && vmBase.Closable)
-                {
-                    VM.Tabs.RemoveAt(MainTabControl.SelectedIndex);
-                }
+                return;
+            }
+
+            if (viewModel.Tabs[MainTabControl.SelectedIndex] is DataDisplayViewModelBase vmBase
+                && vmBase.Closable)
+            {
+                viewModel.Tabs.RemoveAt(MainTabControl.SelectedIndex);
             }
         }
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
+            if (Application.Current != null
+                && Application.Current.MainWindow != null)
             {
-                Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
-                Application.Current.MainWindow.WindowState = WindowState.Normal;
-            }
-            else if (Application.Current.MainWindow.WindowState == WindowState.Normal)
-            {
-                Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
-                Application.Current.MainWindow.WindowState = WindowState.Maximized;
-                Application.Current.MainWindow.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - 13;
+                Application.Current.MainWindow.WindowState = WindowState.Minimized;
             }
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow.Close();
+    private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (Application.Current == null
+            || Application.Current.MainWindow == null)
+        {
+            return;
+        }
 
-        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e) => Application.Current.MainWindow.DragMove();
+        if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
+        {
+            Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
+            Application.Current.MainWindow.WindowState = WindowState.Normal;
+        }
+        else if (Application.Current.MainWindow.WindowState == WindowState.Normal)
+        {
+            Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+            Application.Current.MainWindow.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - 13;
+        }
+    }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow?.Close();
+
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e) =>
+            Application.Current.MainWindow?.DragMove();
 
         private void Resize_Init(object sender, MouseButtonEventArgs e)
         {
             if (sender is Rectangle senderRect)
             {
-                ResizeInProcess = true;
+                _resizeInProcess = true;
                 senderRect.CaptureMouse();
             }
         }
@@ -156,59 +197,65 @@ namespace Effanville.FPD.UI.Windows
         {
             if (sender is Rectangle senderRect)
             {
-                ResizeInProcess = false; ;
+                _resizeInProcess = false;
                 senderRect.ReleaseMouseCapture();
             }
         }
 
         private void Resizeing_Form(object sender, MouseEventArgs e)
         {
-            if (ResizeInProcess)
+            if (!_resizeInProcess)
             {
-                double temp;
-                Rectangle senderRect = sender as Rectangle;
-                Window mainWindow = senderRect.Tag as Window;
-                if (senderRect != null)
+                return;
+            }
+
+            Rectangle senderRect = sender as Rectangle;
+            if (senderRect?.Tag is not Window mainWindow)
+            {
+                return;
+            }
+
+            double width = e.GetPosition(mainWindow).X;
+            double height = e.GetPosition(mainWindow).Y;
+            senderRect.CaptureMouse();
+            if (senderRect.Name.Contains("right", StringComparison.OrdinalIgnoreCase))
+            {
+                width += 5;
+                if (width > 0)
                 {
-                    double width = e.GetPosition(mainWindow).X;
-                    double height = e.GetPosition(mainWindow).Y;
-                    senderRect.CaptureMouse();
-                    if (senderRect.Name.Contains("right", StringComparison.OrdinalIgnoreCase))
-                    {
-                        width += 5;
-                        if (width > 0)
-                        {
-                            mainWindow.Width = width;
-                        }
-                    }
-                    if (senderRect.Name.Contains("left", StringComparison.OrdinalIgnoreCase))
-                    {
-                        width -= 5;
-                        temp = mainWindow.Width - width;
-                        if ((temp > mainWindow.MinWidth) && (temp < mainWindow.MaxWidth))
-                        {
-                            mainWindow.Width = temp;
-                            mainWindow.Left += width;
-                        }
-                    }
-                    if (senderRect.Name.Contains("bottom", StringComparison.OrdinalIgnoreCase))
-                    {
-                        height += 5;
-                        if (height > 0)
-                        {
-                            mainWindow.Height = height;
-                        }
-                    }
-                    if (senderRect.Name.ToLower().Contains("top", StringComparison.OrdinalIgnoreCase))
-                    {
-                        height -= 5;
-                        temp = mainWindow.Height - height;
-                        if ((temp > mainWindow.MinHeight) && (temp < mainWindow.MaxHeight))
-                        {
-                            mainWindow.Height = temp;
-                            mainWindow.Top += height;
-                        }
-                    }
+                    mainWindow.Width = width;
+                }
+            }
+
+            double temp;
+            if (senderRect.Name.Contains("left", StringComparison.OrdinalIgnoreCase))
+            {
+                width -= 5;
+                temp = mainWindow.Width - width;
+                if ((temp > mainWindow.MinWidth) && (temp < mainWindow.MaxWidth))
+                {
+                    mainWindow.Width = temp;
+                    mainWindow.Left += width;
+                }
+            }
+
+            if (senderRect.Name.Contains("bottom", StringComparison.OrdinalIgnoreCase))
+            {
+                height += 5;
+                if (height > 0)
+                {
+                    mainWindow.Height = height;
+                }
+            }
+
+            if (senderRect.Name.ToLower().Contains("top", StringComparison.OrdinalIgnoreCase))
+            {
+                height -= 5;
+                temp = mainWindow.Height - height;
+                if ((temp > mainWindow.MinHeight) && (temp < mainWindow.MaxHeight))
+                {
+                    mainWindow.Height = temp;
+                    mainWindow.Top += height;
                 }
             }
         }

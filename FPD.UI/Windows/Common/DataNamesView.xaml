@@ -36,11 +36,11 @@
                     Grid.Column="0">
             <Button Content="Download"
                     FontSize="{Binding Styles.MediumFontSize}"
-                    Style="{StaticResource ResourceKey=defaultButton}"
+                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding DownloadCommand}"
                     ToolTip="Press here to download data for selected." />
             <Button Content="Delete"
-                    Style="{StaticResource ResourceKey=defaultButton}"
+                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding DeleteCommand}"
                     ToolTip="Delete the highlighted." />
         </StackPanel>
@@ -70,7 +70,7 @@
             </DataGrid.Resources>
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DGR_Style}">
+                       BasedOn="{StaticResource DgrStyle}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Selected}"
                                      Value="False">
@@ -89,7 +89,7 @@
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
                 <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DGC_Style}">
+                       BasedOn="{StaticResource DgcStyle}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Selected}"
                                      Value="False">

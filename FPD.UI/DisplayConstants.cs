@@ -12,6 +12,8 @@ namespace Effanville.FPD.UI
     /// </summary>
     public sealed class DisplayConstants
     {
+        public const string StyleBridgeName = "Bridge";
+            
         /// <summary>
         /// A list of all possible <see cref="TradeType"/> values.
         /// </summary>

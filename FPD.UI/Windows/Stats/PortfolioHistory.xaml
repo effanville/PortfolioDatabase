@@ -29,7 +29,7 @@
                   ScrollViewer.VerticalScrollBarVisibility="Visible">
             <DataGrid.CellStyle>
                 <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DGC_Style}">
+                       BasedOn="{StaticResource DgcStyle}">
                     <Setter Property="Background"
                             Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
                     <Setter Property="Foreground"
@@ -38,7 +38,7 @@
             </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DGR_Style}">
+                       BasedOn="{StaticResource DgrStyle}">
                     <Setter Property="Background"
                             Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
                     <Setter Property="Foreground"

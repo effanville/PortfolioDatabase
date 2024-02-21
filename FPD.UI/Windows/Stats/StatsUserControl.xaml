@@ -67,7 +67,7 @@
                   Sorting="dg_Sorting">
 			<DataGrid.RowStyle>
 				<Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DGR_Style}">
+                       BasedOn="{StaticResource DgrStyle}">
 					<Setter Property="Background"
                             Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
 					<Setter Property="Foreground"
@@ -76,7 +76,7 @@
 			</DataGrid.RowStyle>
 			<DataGrid.CellStyle>
 				<Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DGC_Style}">
+                       BasedOn="{StaticResource DgcStyle}">
 					<Setter Property="Foreground"
                             Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
 					<Setter Property="Background"

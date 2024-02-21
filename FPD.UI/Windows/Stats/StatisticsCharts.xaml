@@ -25,20 +25,19 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <controls:BindableChart Title="Total Value Over TIme"
-                            Style="{StaticResource ChartStyle1}"
-                            Height="Auto"
-                            Width="Auto"
-                            Grid.Column="0"
-                            Grid.Row="0"
-                            SeriesSource="{Binding TotalLines}" />
-        <controls:BindableChart x:Name="securityCarChart"
-                            Title="Sector IRR over time"
-                            Style="{StaticResource ChartStyle1}"
-                            Height="Auto"
-                            Width="Auto"
-                            Grid.Row="0"
-                            SeriesSource="{Binding IRRLines}"
-                            Grid.Column="1" />
+                                Style="{StaticResource ChartStyle1}"
+                                Height="Auto"
+                                Width="Auto"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                SeriesSource="{Binding TotalLines}" />
+        <controls:BindableChart Title="Sector IRR over time"
+                                Style="{StaticResource ChartStyle1}"
+                                Height="Auto"
+                                Width="Auto"
+                                Grid.Row="0"
+                                SeriesSource="{Binding IRRLines}"
+                                Grid.Column="1" />
         <Grid Grid.Row="1"
               Grid.Column="0">
             <Grid.ColumnDefinitions>

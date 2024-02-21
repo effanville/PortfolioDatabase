@@ -19,7 +19,7 @@
           DataContextChanged="UC_DataContextChanged"
           VerticalAlignment="Stretch">
     <Expander.Resources>
-        <ui:Bridge x:Key="bridge"
+        <ui:Bridge x:Key="Bridge"
                       Styles="{Binding Styles}" />
     </Expander.Resources>
     <Grid HorizontalAlignment="Stretch"
@@ -31,7 +31,7 @@
         <Grid Background="{Binding Styles.BackgroundSecondaryBrush}"
               Grid.Column="0">
             <StackPanel VerticalAlignment="Top">
-                <Button Style="{StaticResource ResourceKey=defaultButton}"
+                <Button Style="{StaticResource ResourceKey=DefaultButton}"
                         Content="Clear"
                         FontSize="{Binding Styles.SmallFontSize}"
                         Command="{Binding ClearReportsCommand}" />
@@ -50,7 +50,7 @@
                           SelectedValue="{Binding Path=ReportingSeverity}" />
                 <Button Content="Export"
                         FontSize="{Binding Styles.SmallFontSize}"
-                        Style="{StaticResource ResourceKey=defaultButton}"
+                        Style="{StaticResource ResourceKey=DefaultButton}"
                         Command="{Binding ExportReportsCommand}" />
             </StackPanel>
         </Grid>
@@ -67,20 +67,20 @@
                   ScrollViewer.VerticalScrollBarVisibility="Auto">
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DGR_Style}">
+                       BasedOn="{StaticResource DgrStyle}">
                     <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                     <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
                 <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DGC_Style}">
+                       BasedOn="{StaticResource DgcStyle}">
                     <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                     <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
