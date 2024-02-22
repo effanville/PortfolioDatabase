@@ -17,8 +17,8 @@ namespace Effanville.FPD.Logic.Tests
     [TestFixture]
     public sealed class ConfigurationTests
     {
-        private readonly string DefaultSerializedConfiguration =
-@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/FPD.Logic.Configuration"">
+        private readonly string _defaultSerializedConfiguration =
+@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/Effanville.FPD.Logic.Configuration"">
   <ProgramVersion xmlns:d2p1=""http://schemas.datacontract.org/2004/07/System"">
     <d2p1:_Build>3</d2p1:_Build>
     <d2p1:_Major>1</d2p1:_Major>
@@ -83,8 +83,8 @@ namespace Effanville.FPD.Logic.Tests
   </ChildConfigurations>
 </UserConfiguration>";
 
-        private readonly string ExampleSerializedConfiguration =
-@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/FPD.Logic.Configuration"">
+        private readonly string _exampleSerializedConfiguration =
+@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/Effanville.FPD.Logic.Configuration"">
   <ProgramVersion xmlns:d2p1=""http://schemas.datacontract.org/2004/07/System"">
     <d2p1:_Build>3</d2p1:_Build>
     <d2p1:_Major>1</d2p1:_Major>
@@ -636,7 +636,7 @@ namespace Effanville.FPD.Logic.Tests
             config.SaveConfiguration(testPath, tempFileSystem);
 
             string file = tempFileSystem.File.ReadAllText(testPath);
-            Assert.AreEqual(DefaultSerializedConfiguration, file);
+            Assert.AreEqual(_defaultSerializedConfiguration, file);
         }
 
         [Test]
@@ -653,7 +653,7 @@ namespace Effanville.FPD.Logic.Tests
             vm.SaveConfig(testConfigPath, tempFileSystem);
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);
-            Assert.AreEqual(ExampleSerializedConfiguration, file);
+            Assert.AreEqual(_exampleSerializedConfiguration, file);
         }
 
         [Test]
@@ -666,7 +666,7 @@ namespace Effanville.FPD.Logic.Tests
             config.SaveConfiguration(testPath, tempFileSystem);
 
             string file = tempFileSystem.File.ReadAllText(testPath);
-            Assert.AreEqual(DefaultSerializedConfiguration, file);
+            Assert.AreEqual(_defaultSerializedConfiguration, file);
 
             UserConfiguration newConfig = UserConfiguration.LoadFromUserConfigFile(testPath, tempFileSystem);
 
