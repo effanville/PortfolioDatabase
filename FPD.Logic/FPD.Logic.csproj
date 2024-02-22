@@ -1,24 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net7.0-windows</TargetFrameworks>
+    </PropertyGroup>
 
-  <PropertyGroup>
-	  <VersionPrefix>23.07.0</VersionPrefix>
-	  <VersionSuffix>$([System.DateTime]::UtcNow.ToString(`yyyyMMdd-HHmm`))</VersionSuffix>
-  </PropertyGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
-		<PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
+        <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
-		<ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
-	</ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>FPD.Logic.Tests</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Common\src\Common.UI\Common.UI.csproj" />
+        <ProjectReference Include="..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
+    </ItemGroup>
 
 </Project>

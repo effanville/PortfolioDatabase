@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Common.Structure.DisplayClasses;
-using FPD.Logic.ViewModels.Stats;
-using FinancialStructures.Database.Statistics;
 
-namespace FPD.Logic.Configuration
+using Effanville.Common.Structure.DisplayClasses;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.ViewModels.Stats;
+
+namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
     /// Configuration for the stats display

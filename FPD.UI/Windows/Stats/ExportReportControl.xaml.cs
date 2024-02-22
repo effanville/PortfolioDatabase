@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FPD.UI.Windows.Stats
+namespace Effanville.FPD.UI.Windows.Stats
 {
     /// <summary>
     /// Interaction logic for ExportReportControl.xaml

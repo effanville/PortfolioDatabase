@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.History;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FinancialStructures.Database;
-using FinancialStructures.Database.Export.History;
-
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// Contains settings and ability to generate a history of portfolio object.

@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FinancialStructures.DataStructures;
 
-namespace FPD.UI
+namespace Effanville.FPD.UI
 {
     /// <summary>
     /// Container class for various constant values to be used in the display.
     /// </summary>
     public sealed class DisplayConstants
     {
+        public const string StyleBridgeName = "Bridge";
+            
         /// <summary>
         /// A list of all possible <see cref="TradeType"/> values.
         /// </summary>

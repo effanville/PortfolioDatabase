@@ -4,18 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
-using Common.Structure.DataStructures;
-using Common.Structure.Reporting;
-using Common.UI.Commands;
-using FPD.Logic.TemplatesAndStyles;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions.Values;
-using FinancialStructures.NamingStructures;
-using Common.Structure.DataEdit;
-using Common.UI;
 
-namespace FPD.Logic.ViewModels.Common
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Extensions.Values;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.

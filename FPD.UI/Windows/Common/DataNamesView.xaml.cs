@@ -1,10 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-using FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows.Common
 {
     /// <summary>
     /// Interaction logic for DataNamesView.xaml
@@ -21,8 +20,7 @@ namespace FPD.UI.Windows
 
         private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
-            if (DataContext != null 
-                && DataContext is DataNamesViewModel vm 
+            if (DataContext  is DataNamesViewModel vm 
                 && vm.DataNames != null)
             {
                 e.NewItem = vm.DefaultRow();
@@ -41,8 +39,7 @@ namespace FPD.UI.Windows
                 return;
             }
 
-            if (DataContext != null 
-                && DataContext is DataNamesViewModel vm)
+            if (DataContext is DataNamesViewModel vm)
             {
                 vm.ExecuteDelete();
             }

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Windows.Input;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
-using FPD.Logic.Configuration;
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Export.History;
 
-namespace FPD.Logic.ViewModels.Stats
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.History;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
+
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// View model for the options for exporting the portfolio history.

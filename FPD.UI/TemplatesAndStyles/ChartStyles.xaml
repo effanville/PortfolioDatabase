@@ -3,7 +3,6 @@
                     xmlns:cht="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
                     xmlns:chartingPrimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=DotNetProjects.DataVisualization.Toolkit">
     <Style x:Key="ChartStyle1"
-           x:Name="AlignTop"
            TargetType="cht:Chart">
         <Setter Property="BorderBrush"
                 Value="{Binding Styles.BackgroundSecondaryBrush}" />
@@ -113,7 +112,6 @@
         </Setter>
     </Style>
     <Style x:Key="NoLegendChart"
-           x:Name="AlignTop"
            TargetType="cht:Chart">
         <Setter Property="BorderBrush"
                 Value="{Binding Styles.BackgroundSecondaryBrush}" />
@@ -229,7 +227,7 @@
         <Setter Property="Template"
                 Value="{x:Null}" />
     </Style>
-        <Style x:Key="InvisibleDataPointPurple"
+    <Style x:Key="InvisibleDataPointPurple"
            TargetType="{x:Type cht:DataPoint}">
         <Setter Property="Background"
                 Value="{Binding Styles.ChartLineColour5}" />

@@ -2,11 +2,10 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting;
+using Effanville.FPD.Logic.ViewModels;
 
-using FPD.Logic.ViewModels;
-
-namespace FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows
 {
     /// <summary>
     /// Interaction logic for ReportingWindow.xaml
@@ -33,35 +32,36 @@ namespace FPD.UI.Windows
                 return;
             }
 
-            if (DataContext != null
-                && DataContext is ReportingWindowViewModel vm)
+            if (DataContext == null
+                || DataContext is not ReportingWindowViewModel vm)
             {
-                if (dg.SelectedItems.Count > 1)
-                {
-                    var reports = new List<ErrorReport>();
-                    foreach (object item in dg.SelectedItems)
-                    {
-                        if (item is ErrorReport report)
-                        {
-                            reports.Add(report);
-                        }
-                    }
+                return;
+            }
 
-                    vm.DeleteReports(reports);
-                }
-                else if (dg.CurrentItem is ErrorReport selectedItem)
+            if (dg.SelectedItems.Count > 1)
+            {
+                var reports = new List<ErrorReport>();
+                foreach (object item in dg.SelectedItems)
                 {
-                    vm.DeleteReport(selectedItem);
+                    if (item is ErrorReport report)
+                    {
+                        reports.Add(report);
+                    }
                 }
+
+                vm.DeleteReports(reports);
+            }
+            else if (dg.CurrentItem is ErrorReport selectedItem)
+            {
+                vm.DeleteReport(selectedItem);
             }
         }
 
         private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            string bridgeName = "bridge";
-            if (Resources.Contains(bridgeName)
+            if (Resources.Contains(DisplayConstants.StyleBridgeName)
                 && DataContext is ReportingWindowViewModel dc
-                && Resources[bridgeName] is Bridge bridge)
+                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
             }

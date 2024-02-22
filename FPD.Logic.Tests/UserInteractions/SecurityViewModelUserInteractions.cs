@@ -1,8 +1,7 @@
-using FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FPD.Logic.ViewModels.Security;
 
-using FPD.Logic.ViewModels.Security;
-
-namespace FPD.Logic.Tests.UserInteractions;
+namespace Effanville.FPD.Logic.Tests.UserInteractions;
 
 public static class SecurityViewModelUserInteractions
 {

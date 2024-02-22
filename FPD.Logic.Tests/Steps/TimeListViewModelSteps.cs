@@ -1,17 +1,16 @@
 using System;
 
-using Common.Structure.DataStructures;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.Tests.Context;
-using FPD.Logic.Tests.UserInteractions;
-using FPD.Logic.ViewModels.Common;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.Tests.Context;
+using Effanville.FPD.Logic.Tests.UserInteractions;
+using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 
 using TechTalk.SpecFlow;
 
-namespace FPD.Logic.Tests.Steps;
+namespace Effanville.FPD.Logic.Tests.Steps;
 
 [Binding]
 public class TimeListViewModelSteps

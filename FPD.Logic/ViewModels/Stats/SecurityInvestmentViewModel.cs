@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Common.Structure.DataStructures;
-using Common.Structure.NamingStructures;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.NamingStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Extensions.Values;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions.Values;
-using FinancialStructures.NamingStructures;
-
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// Contains data and ability to export the investments into the portfolio.

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "FPDconsole": {
-      "commandName": "Project",
-      "commandLineArgs": "download --filepath \"../database/url-address.xml\""
-    }
-  }
-}

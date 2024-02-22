@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using FPD.Logic.ViewModels;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
-using FinancialStructures.Database;
 
-namespace FPD.Logic.Tests.ViewModelExtensions
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Common;
+
+namespace Effanville.FPD.Logic.Tests.ViewModelExtensions
 {
     public static class MainWindowViewModelExtensions
     {

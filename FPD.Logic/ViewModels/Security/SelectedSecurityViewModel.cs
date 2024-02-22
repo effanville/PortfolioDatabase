@@ -3,30 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-using Common.Structure.DataStructures;
-using Common.Structure.FileAccess;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.FileAccess;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Extensions.DataEdit;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions;
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
-using FinancialStructures;
-
-using FPD.Logic.ViewModels.Stats;
-
-using Common.Structure.DataEdit;
-
-namespace FPD.Logic.ViewModels.Security
+namespace Effanville.FPD.Logic.ViewModels.Security
 {
     /// <summary>
     /// View model for the display of a security data.

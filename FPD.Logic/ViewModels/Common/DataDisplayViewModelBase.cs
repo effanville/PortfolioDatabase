@@ -1,11 +1,9 @@
-﻿using Common.UI;
+﻿using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-using FinancialStructures.Database;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.TemplatesAndStyles;
-
-namespace FPD.Logic.ViewModels.Common
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// Wraps a base view model with a account type record.

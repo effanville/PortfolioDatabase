@@ -28,6 +28,7 @@ jobs:
           token: ${{ secrets.INTERNAL_PAT }}
           submodules: recursive
           fetch-depth: 0
+          
       - name: Cache .nuke/temp, ~/.nuget/packages
         uses: actions/cache@v3
         with:
@@ -35,5 +36,29 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
+          
       - name: Run './build.cmd Release'
         run: ./build.cmd Release
+        
+      - uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Test results
+          path: '**/*.trx'
+          reporter: dotnet-trx
+          
+      - name: Restore local tools
+        run: dotnet tool restore
+
+      - name: Generate code coverage Markdown report
+        run: dotnet reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./coverage -reporttypes:MarkdownSummary
+        
+      - name: Create check run with code coverage Markdown report
+        uses: LouisBrunner/checks-action@v1.2.0
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Code coverage
+          conclusion: ${{ job.status }}
+          output: '{"summary":"Code coverage"}'
+          output_text_description_file: coverage/Summary.md

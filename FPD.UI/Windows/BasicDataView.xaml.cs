@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Input;
-using FPD.Logic.ViewModels;
-using FinancialStructures.DataStructures;
 
-namespace FPD.UI.Windows
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FPD.Logic.ViewModels;
+
+namespace Effanville.FPD.UI.Windows
 {
     /// <summary>
     /// Interaction logic for Page1.xaml
@@ -33,20 +34,17 @@ namespace FPD.UI.Windows
             }
         }
 
-        private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
-        {
-            e.NewItem = new Note()
+        private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e) 
+            => e.NewItem = new Note()
             {
                 TimeStamp = DateTime.Today
             };
-        }
 
         private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            string bridgeName = "bridge";
-            if (Resources.Contains(bridgeName)
+            if (Resources.Contains(DisplayConstants.StyleBridgeName)
                 && DataContext is BasicDataViewModel dc
-                && Resources[bridgeName] is Bridge bridge)
+                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
             }

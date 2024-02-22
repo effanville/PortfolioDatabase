@@ -1,11 +1,13 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using Common.UI;
-using FPD.Logic.ViewModels;
-using FinancialStructures.Database;
+
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.ViewModels;
+
 using NUnit.Framework;
 
-namespace FPD.Logic.Tests.TestHelpers
+namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
     public abstract class MainWindowViewModelTestHelper
     {

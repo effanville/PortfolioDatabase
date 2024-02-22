@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
 
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
-
-using FPD.Logic.Tests.TestHelpers;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Tests.TestHelpers;
 
 using TechTalk.SpecFlow;
 
-namespace FPD.Logic.Tests.Steps;
+namespace Effanville.FPD.Logic.Tests.Steps;
 
 public static class PortfolioGeneratorHelper
 {

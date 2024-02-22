@@ -3,25 +3,23 @@ using System.IO.Abstractions.TestingHelpers;
 
 using Autofac;
 
-using Common.Structure.DataEdit;
-using Common.Structure.Reporting;
-using Common.UI;
-
-using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.Tests.Context;
-using FPD.Logic.ViewModels;
-using FPD.Logic.ViewModels.Asset;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.Tests.Context;
+using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Asset;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Security;
 
 using Moq;
 
 using SpecFlow.Autofac;
 
-namespace FPD.Logic.Tests.Support;
+namespace Effanville.FPD.Logic.Tests.Support;
 
 public static class TestDependencies
 {

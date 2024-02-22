@@ -1,9 +1,8 @@
-using Common.UI;
-using Common.UI.ViewModelBases;
+using Effanville.Common.UI;
+using Effanville.Common.UI.ViewModelBases;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-using FPD.Logic.TemplatesAndStyles;
-
-namespace FPD.Logic.ViewModels.Common;
+namespace Effanville.FPD.Logic.ViewModels.Common;
 
 public abstract class StyledViewModelBase<TModel, TUpdate> : ViewModelBase<TModel, TUpdate>
     where TModel : class where TUpdate : class

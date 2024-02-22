@@ -2,21 +2,23 @@
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using Common.UI;
-using FPD.Logic.Configuration;
-using FPD.Logic.ViewModels;
-using FPD.Logic.Tests.TestHelpers;
-using FinancialStructures.Database.Statistics;
-using NUnit.Framework;
-using FinancialStructures.Database;
 
-namespace FPD.Logic.Tests
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.Tests.TestHelpers;
+using Effanville.FPD.Logic.ViewModels;
+
+using NUnit.Framework;
+
+namespace Effanville.FPD.Logic.Tests
 {
     [TestFixture]
     public sealed class ConfigurationTests
     {
-        private readonly string DefaultSerializedConfiguration =
-@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/FPD.Logic.Configuration"">
+        private readonly string _defaultSerializedConfiguration =
+@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/Effanville.FPD.Logic.Configuration"">
   <ProgramVersion xmlns:d2p1=""http://schemas.datacontract.org/2004/07/System"">
     <d2p1:_Build>3</d2p1:_Build>
     <d2p1:_Major>1</d2p1:_Major>
@@ -39,18 +41,18 @@ namespace FPD.Logic.Tests
           <d2p1:KeyValueOfstringanyType>
             <d2p1:Key>ExportStatsViewModel</d2p1:Key>
             <d2p1:Value i:type=""ExportStatsConfiguration"">
-              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <AssetDirection>Ascending</AssetDirection>
               <AssetSortingField>AccountType</AssetSortingField>
-              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>AccountType</BankSortingField>
-              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <HasLoaded>false</HasLoaded>
-              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <SectorDirection>Ascending</SectorDirection>
               <SectorSortingField>AccountType</SectorSortingField>
-              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"" />
+              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <SecurityDirection>Ascending</SecurityDirection>
               <SecuritySortingField>AccountType</SecuritySortingField>
             </d2p1:Value>
@@ -81,8 +83,8 @@ namespace FPD.Logic.Tests
   </ChildConfigurations>
 </UserConfiguration>";
 
-        private readonly string ExampleSerializedConfiguration =
-@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/FPD.Logic.Configuration"">
+        private readonly string _exampleSerializedConfiguration =
+@"<UserConfiguration xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns=""http://schemas.datacontract.org/2004/07/Effanville.FPD.Logic.Configuration"">
   <ProgramVersion xmlns:d2p1=""http://schemas.datacontract.org/2004/07/System"">
     <d2p1:_Build>3</d2p1:_Build>
     <d2p1:_Major>1</d2p1:_Major>
@@ -96,127 +98,127 @@ namespace FPD.Logic.Tests
         <ChildConfigurations />
         <DisplayValueFunds>true</DisplayValueFunds>
         <HasLoaded>true</HasLoaded>
-        <StatisticNames xmlns:d5p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+        <StatisticNames xmlns:d5p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>AccountType</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Company</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Name</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Currency</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>LatestValue</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>UnitPrice</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>NumberUnits</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>MeanSharePrice</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>RecentChange</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>FundFraction</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>FundCompanyFraction</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Investment</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Profit</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Debt</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>IRR3M</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>IRR6M</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>IRR1Y</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>IRR5Y</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>IRRTotal</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>DrawDown</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>MDD</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Sectors</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>NumberOfAccounts</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>FirstDate</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>LastInvestmentDate</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>LastPurchaseDate</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>LatestDate</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>NumberEntries</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>EntryYearDensity</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
-          <d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Notes</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
-          </d5p1:SelectableOfStatisticKZb_SPP6u>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
         </StatisticNames>
       </d2p1:Value>
     </d2p1:KeyValueOfstringanyType>
@@ -227,103 +229,103 @@ namespace FPD.Logic.Tests
           <d2p1:KeyValueOfstringanyType>
             <d2p1:Key>ExportStatsViewModel</d2p1:Key>
             <d2p1:Value i:type=""ExportStatsConfiguration"">
-              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+              <AssetColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Name</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>RecentChange</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Investment</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Profit</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Debt</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR3M</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR6M</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR1Y</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR5Y</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRRTotal</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FirstDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Notes</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
               </AssetColumnNames>
               <AssetDirection>Ascending</AssetDirection>
               <AssetSortingField>Company</AssetSortingField>
-              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+              <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Name</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Currency</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Notes</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
               </BankColumnNames>
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>Company</BankSortingField>
-              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
+              <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>DisplayValueFunds</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
@@ -358,175 +360,175 @@ namespace FPD.Logic.Tests
                 </d8p1:SelectableOfstring>
               </DisplayConditions>
               <HasLoaded>true</HasLoaded>
-              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+              <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Name</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>RecentChange</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Profit</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR3M</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR6M</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR1Y</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR5Y</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRRTotal</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>NumberOfAccounts</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FirstDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Notes</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
               </SectorColumnNames>
               <SectorDirection>Ascending</SectorDirection>
               <SectorSortingField>Name</SectorSortingField>
-              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Common.Structure.DisplayClasses"">
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+              <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Company</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Name</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Currency</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestValue</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>UnitPrice</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>NumberUnits</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>MeanSharePrice</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>RecentChange</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FundFraction</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FundCompanyFraction</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Investment</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Profit</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR3M</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR6M</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR1Y</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRR5Y</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>IRRTotal</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>DrawDown</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>MDD</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FirstDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LastInvestmentDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LastPurchaseDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>NumberEntries</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>EntryYearDensity</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
-                <d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Notes</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticKZb_SPP6u>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
               </SecurityColumnNames>
               <SecurityDirection>Ascending</SecurityDirection>
               <SecuritySortingField>Company</SecuritySortingField>
@@ -634,7 +636,7 @@ namespace FPD.Logic.Tests
             config.SaveConfiguration(testPath, tempFileSystem);
 
             string file = tempFileSystem.File.ReadAllText(testPath);
-            Assert.AreEqual(DefaultSerializedConfiguration, file);
+            Assert.AreEqual(_defaultSerializedConfiguration, file);
         }
 
         [Test]
@@ -651,7 +653,7 @@ namespace FPD.Logic.Tests
             vm.SaveConfig(testConfigPath, tempFileSystem);
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);
-            Assert.AreEqual(ExampleSerializedConfiguration, file);
+            Assert.AreEqual(_exampleSerializedConfiguration, file);
         }
 
         [Test]
@@ -664,7 +666,7 @@ namespace FPD.Logic.Tests
             config.SaveConfiguration(testPath, tempFileSystem);
 
             string file = tempFileSystem.File.ReadAllText(testPath);
-            Assert.AreEqual(DefaultSerializedConfiguration, file);
+            Assert.AreEqual(_defaultSerializedConfiguration, file);
 
             UserConfiguration newConfig = UserConfiguration.LoadFromUserConfigFile(testPath, tempFileSystem);
 

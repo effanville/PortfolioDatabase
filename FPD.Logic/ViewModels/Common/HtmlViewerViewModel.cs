@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Windows.Input;
 
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
-
-namespace FPD.Logic.ViewModels
+namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// Enables the display and selection of a html file in a closable tab.

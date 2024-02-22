@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "FPDconsole": {
+      "commandName": "Project",
+      "commandLineArgs": "stats --filepath \"../database/url-address.xml\" --outputPath \"../database/stats.html\" --mailTo \"env:mailToName\"",
+      "environmentVariables": {
+        "mailToName": ""
+      }
+    }
+  }
+}

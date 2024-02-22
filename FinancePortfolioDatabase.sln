@@ -3,14 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures.Tests", "FinancialStructures\FinancialStructures.Tests\FinancialStructures.Tests.csproj", "{709294DA-0BBE-4ACD-9C5E-29773FD18735}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures.Tests", "FinancialStructures\test\FinancialStructures.Tests\FinancialStructures.Tests.csproj", "{709294DA-0BBE-4ACD-9C5E-29773FD18735}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B86EADB1-3561-470B-9421-2E6992A25346} = {B86EADB1-3561-470B-9421-2E6992A25346}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPDconsole", "FPDconsole\FPDconsole.csproj", "{7FA607A1-AF11-48A7-B410-07E9875685D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Console", "src\FPD.Console\FPD.Console.csproj", "{7FA607A1-AF11-48A7-B410-07E9875685D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures", "FinancialStructures\FinancialStructures\FinancialStructures.csproj", "{B86EADB1-3561-470B-9421-2E6992A25346}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialStructures", "FinancialStructures\src\FinancialStructures\FinancialStructures.csproj", "{B86EADB1-3561-470B-9421-2E6992A25346}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89F98A9D-5FE5-4238-A7FA-AA2C4ABC5077}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,17 +28,35 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic", "FPD.Logic\FPD.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic.Tests", "FPD.Logic.Tests\FPD.Logic.Tests.csproj", "{90EDA2DB-996B-497B-8562-C311F37B8A5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Structure", "Common\Common.Structure\Common.Structure.csproj", "{A2CB7343-EE36-451E-A71B-5CC4E38C2589}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Structure", "Common\src\Common.Structure\Common.Structure.csproj", "{A2CB7343-EE36-451E-A71B-5CC4E38C2589}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5F985C0F-B939-463C-BCCF-060883E478B5}"
+	ProjectSection(SolutionItems) = preProject
+		Common\Directory.Build.props = Common\Directory.Build.props
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI", "Common\Common.UI\Common.UI.csproj", "{037B9B7D-83E3-4395-9C8C-A1D528C39FA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI", "Common\src\Common.UI\Common.UI.csproj", "{037B9B7D-83E3-4395-9C8C-A1D528C39FA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Console", "Common\Common.Console\Common.Console.csproj", "{B86DCF20-F414-4900-817B-3A4B812E9FB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Console", "Common\src\Common.Console\Common.Console.csproj", "{B86DCF20-F414-4900-817B-3A4B812E9FB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "BuildProcess\source\_build.csproj", "{D313AFE2-7B03-4896-9C64-C6C70834D6C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI.Wpf", "Common\Common.UI.Wpf\Common.UI.Wpf.csproj", "{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI.Wpf", "Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj", "{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Console.Tests", "Common\test\Common.Console.Tests\Common.Console.Tests.csproj", "{57281CA2-6721-4042-BE87-31097A5F9C93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Structure.Tests", "Common\test\Common.Structure.Tests\Common.Structure.Tests.csproj", "{B6877373-B71C-457B-9381-4098368D3DEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Wpf.Tests", "Common\test\Common.UI.Wpf.Tests\Common.UI.Wpf.Tests.csproj", "{B3DF818A-95CC-4717-9423-B5668A05C68E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common\test\Common.UI.Tests\Common.UI.Tests.csproj", "{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPD.Console.Tests", "test\FPD.Console.Tests\FPD.Console.Tests.csproj", "{53D9FAAF-B0C1-4205-A70F-D26141858EE9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FinanceStructures", "FinanceStructures", "{6F626A7B-2A01-4FC5-8844-A9D7C70CF2E3}"
+	ProjectSection(SolutionItems) = preProject
+		FinancialStructures\Directory.Build.props = FinancialStructures\Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,17 +127,52 @@ Global
 		{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}.Debug|x64.Build.0 = Debug|x64
 		{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}.Release|x64.ActiveCfg = Release|x64
 		{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7}.Release|x64.Build.0 = Release|x64
+		{57281CA2-6721-4042-BE87-31097A5F9C93}.Debug(Tests)|x64.ActiveCfg = Debug|x64
+		{57281CA2-6721-4042-BE87-31097A5F9C93}.Debug(Tests)|x64.Build.0 = Debug|x64
+		{57281CA2-6721-4042-BE87-31097A5F9C93}.Debug|x64.ActiveCfg = Debug|x64
+		{57281CA2-6721-4042-BE87-31097A5F9C93}.Debug|x64.Build.0 = Debug|x64
+		{57281CA2-6721-4042-BE87-31097A5F9C93}.Release|x64.ActiveCfg = Release|x64
+		{57281CA2-6721-4042-BE87-31097A5F9C93}.Release|x64.Build.0 = Release|x64
+		{B6877373-B71C-457B-9381-4098368D3DEC}.Debug(Tests)|x64.ActiveCfg = Debug|x64
+		{B6877373-B71C-457B-9381-4098368D3DEC}.Debug(Tests)|x64.Build.0 = Debug|x64
+		{B6877373-B71C-457B-9381-4098368D3DEC}.Debug|x64.ActiveCfg = Debug|x64
+		{B6877373-B71C-457B-9381-4098368D3DEC}.Debug|x64.Build.0 = Debug|x64
+		{B6877373-B71C-457B-9381-4098368D3DEC}.Release|x64.ActiveCfg = Release|x64
+		{B6877373-B71C-457B-9381-4098368D3DEC}.Release|x64.Build.0 = Release|x64
+		{B3DF818A-95CC-4717-9423-B5668A05C68E}.Debug(Tests)|x64.ActiveCfg = Debug|x64
+		{B3DF818A-95CC-4717-9423-B5668A05C68E}.Debug(Tests)|x64.Build.0 = Debug|x64
+		{B3DF818A-95CC-4717-9423-B5668A05C68E}.Debug|x64.ActiveCfg = Debug|x64
+		{B3DF818A-95CC-4717-9423-B5668A05C68E}.Debug|x64.Build.0 = Debug|x64
+		{B3DF818A-95CC-4717-9423-B5668A05C68E}.Release|x64.ActiveCfg = Release|x64
+		{B3DF818A-95CC-4717-9423-B5668A05C68E}.Release|x64.Build.0 = Release|x64
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}.Debug(Tests)|x64.ActiveCfg = Debug|x64
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}.Debug(Tests)|x64.Build.0 = Debug|x64
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}.Debug|x64.ActiveCfg = Debug|x64
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}.Debug|x64.Build.0 = Debug|x64
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}.Release|x64.ActiveCfg = Release|x64
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB}.Release|x64.Build.0 = Release|x64
+		{53D9FAAF-B0C1-4205-A70F-D26141858EE9}.Debug(Tests)|x64.ActiveCfg = Debug|x64
+		{53D9FAAF-B0C1-4205-A70F-D26141858EE9}.Debug(Tests)|x64.Build.0 = Debug|x64
+		{53D9FAAF-B0C1-4205-A70F-D26141858EE9}.Debug|x64.ActiveCfg = Debug|x64
+		{53D9FAAF-B0C1-4205-A70F-D26141858EE9}.Debug|x64.Build.0 = Debug|x64
+		{53D9FAAF-B0C1-4205-A70F-D26141858EE9}.Release|x64.ActiveCfg = Release|x64
+		{53D9FAAF-B0C1-4205-A70F-D26141858EE9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8989B308-837A-402C-BE70-82764592AC9C} = {89F98A9D-5FE5-4238-A7FA-AA2C4ABC5077}
 		{A2CB7343-EE36-451E-A71B-5CC4E38C2589} = {5F985C0F-B939-463C-BCCF-060883E478B5}
 		{037B9B7D-83E3-4395-9C8C-A1D528C39FA2} = {5F985C0F-B939-463C-BCCF-060883E478B5}
 		{B86DCF20-F414-4900-817B-3A4B812E9FB5} = {5F985C0F-B939-463C-BCCF-060883E478B5}
 		{D313AFE2-7B03-4896-9C64-C6C70834D6C4} = {8989B308-837A-402C-BE70-82764592AC9C}
 		{94DD3B77-34BB-4A2F-A25B-704AD7B8E1D7} = {5F985C0F-B939-463C-BCCF-060883E478B5}
+		{57281CA2-6721-4042-BE87-31097A5F9C93} = {5F985C0F-B939-463C-BCCF-060883E478B5}
+		{B6877373-B71C-457B-9381-4098368D3DEC} = {5F985C0F-B939-463C-BCCF-060883E478B5}
+		{B3DF818A-95CC-4717-9423-B5668A05C68E} = {5F985C0F-B939-463C-BCCF-060883E478B5}
+		{D377C9F5-0FAD-4ECE-B931-0A2F736CE7EB} = {5F985C0F-B939-463C-BCCF-060883E478B5}
+		{B86EADB1-3561-470B-9421-2E6992A25346} = {6F626A7B-2A01-4FC5-8844-A9D7C70CF2E3}
+		{709294DA-0BBE-4ACD-9C5E-29773FD18735} = {6F626A7B-2A01-4FC5-8844-A9D7C70CF2E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93C86412-6CF8-4AE6-823D-068DDC6A6B87}

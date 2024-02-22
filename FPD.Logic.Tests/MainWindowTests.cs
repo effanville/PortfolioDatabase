@@ -1,10 +1,10 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 
-using FPD.Logic.Tests.TestHelpers;
+using Effanville.FPD.Logic.Tests.TestHelpers;
 
 using NUnit.Framework;
 
-namespace FPD.Logic.Tests
+namespace Effanville.FPD.Logic.Tests
 {
     /// <summary>
     /// Tests for the MainWindowViewModel.

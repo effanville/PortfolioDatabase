@@ -3,7 +3,7 @@
   "Solution": "FinancePortfolioDatabase.sln",
   "ExecutablePublishProjects": [
     "FPD.UI",
-    "FPDconsole"
+    "FPD.Console"
   ],
   "NugetPackageProjects": [
     "FinancialStructures"

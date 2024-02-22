@@ -1,8 +1,8 @@
 ﻿using System.Windows.Media;
 
-using Common.UI.ViewModelBases;
+using Effanville.Common.UI.ViewModelBases;
 
-namespace FPD.Logic.TemplatesAndStyles
+namespace Effanville.FPD.Logic.TemplatesAndStyles
 {
     /// <summary>
     /// Contains styling info for the UI.

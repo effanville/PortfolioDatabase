@@ -1,12 +1,10 @@
-using Common.Structure.DataEdit;
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels;
 
-using FinancialStructures.Database;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels;
-
-namespace FPD.Logic.Tests.Context;
+namespace Effanville.FPD.Logic.Tests.Context;
 
 public class ViewModelTestContext<TModelData, TViewModel> where TModelData : class where TViewModel : class
 {

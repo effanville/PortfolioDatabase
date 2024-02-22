@@ -2,9 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-using FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-namespace FPD.UI
+namespace Effanville.FPD.UI
 {
     public sealed class Bridge : FrameworkElement, INotifyPropertyChanged
     {
@@ -13,7 +13,8 @@ namespace FPD.UI
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static readonly DependencyProperty StylesProperty = DependencyProperty.Register("Styles", typeof(UiStyles), typeof(Bridge));
+        public static readonly DependencyProperty StylesProperty 
+            = DependencyProperty.Register(nameof(Styles), typeof(UiStyles), typeof(Bridge));
 
         public UiStyles Styles
         {
@@ -25,17 +26,11 @@ namespace FPD.UI
             }
         }
 
-        public Bridge()
-        {
-        }
-
         /// <summary>
         /// invokes the event for property changed.
         /// </summary>
-        public void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        private void OnPropertyChanged(string propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         /// <summary>
         /// Updates the existing value if different from the new value
@@ -47,11 +42,13 @@ namespace FPD.UI
         /// <param name="propertyName">The name of the property being changed.</param>
         public void SetAndNotify<T>(ref T existingValue, T newValue, [CallerMemberName] string propertyName = null)
         {
-            if (!Equals(existingValue, newValue))
+            if (Equals(existingValue, newValue))
             {
-                existingValue = newValue;
-                OnPropertyChanged(propertyName);
+                return;
             }
+
+            existingValue = newValue;
+            OnPropertyChanged(propertyName);
         }
     }
 }

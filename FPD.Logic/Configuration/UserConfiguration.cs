@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
-using Common.Structure.Reporting;
-using FPD.Logic.ViewModels.Stats;
 
-namespace FPD.Logic.Configuration
+using Effanville.Common.Structure.Reporting;
+using Effanville.FPD.Logic.ViewModels.Stats;
+
+namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
     /// Contains user specific configuration for the ui.

@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFrameworks>net7.0-windows</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>true</SelfContained>
@@ -11,10 +12,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
+    <AssemblyName>FPD.UI</AssemblyName>
     <Product>FinancePortfolioDatabase</Product>
-    <VersionPrefix>23.12.01</VersionPrefix>
-    <VersionSuffix>
-    </VersionSuffix>
+	<Version>23.12.01</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
@@ -23,9 +23,9 @@
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\Common\Common.UI.Wpf\Common.UI.Wpf.csproj" />
-    <ProjectReference Include="..\FinancialStructures\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\Common\src\Common.UI\Common.UI.csproj" />
+    <ProjectReference Include="..\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
+    <ProjectReference Include="..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
     <ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>

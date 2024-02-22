@@ -1,8 +1,7 @@
-using FinancialStructures.NamingStructures;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.Tests.UserInteractions;
+namespace Effanville.FPD.Logic.Tests.UserInteractions;
 
 public static class DataNamesViewModelUserInteractions
 {

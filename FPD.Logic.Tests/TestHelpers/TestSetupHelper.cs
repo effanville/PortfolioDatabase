@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 
-using Common.Structure.DataEdit;
-using Common.Structure.DataStructures;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Services;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions;
-using FinancialStructures.DataStructures;
-using FinancialStructures.NamingStructures;
-
-using FPD.Logic.Tests.Support;
-using FPD.Logic.ViewModels;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Extensions.DataEdit;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Tests.Support;
+using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
 
-namespace FPD.Logic.Tests.TestHelpers
+namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
     public static class TestSetupHelper
     {

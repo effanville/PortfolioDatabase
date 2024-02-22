@@ -7,23 +7,21 @@ using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
 
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.History;
+using Effanville.FinancialStructures.Database.Extensions.Values;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FinancialStructures.Database;
-using FinancialStructures.Database.Export.History;
-using FinancialStructures.Database.Extensions.Values;
-
-using Common.UI;
-
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// Contains data for chart display.
     /// </summary>
     public sealed class StatisticsChartsViewModel : DataDisplayViewModelBase
     {
-        private int _historyGapDays = 25;
+        private int _historyGapDays = 30;
         private List<PortfolioDaySnapshot> _historyStats;
 
         /// <summary>
@@ -98,6 +96,11 @@ namespace FPD.Logic.ViewModels.Stats
             {
                 base.UpdateData(modelData);
             }
+            
+            if (HistoryStats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true))
+            {
+                return;
+            }
 
             DateTime firstDate = modelData.FirstValueDate(Totals.All);
             if (firstDate < new DateTime(1980, 1, 1))
@@ -113,7 +116,8 @@ namespace FPD.Logic.ViewModels.Stats
 
             int numDays = (lastDate - firstDate).Days;
             int snapshotGap = numDays / 100;
-
+            var earliest = new DateTime(2010, 1, 1);
+            firstDate = firstDate < earliest ? earliest : firstDate;
             PortfolioHistory history = new PortfolioHistory(
                 ModelData,
                 new PortfolioHistory.Settings(

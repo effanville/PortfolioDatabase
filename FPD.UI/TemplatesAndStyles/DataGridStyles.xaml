@@ -101,7 +101,7 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type DataGridCell}"
-           x:Key="DGC_Style">
+           x:Key="DgcStyle">
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
         <Setter Property="Background"
@@ -110,7 +110,7 @@
                 Value="{Binding Styles.ForegroundBrush}" />
     </Style>
     <Style TargetType="{x:Type DataGridRow}"
-           x:Key="DGR_Style">
+           x:Key="DgrStyle">
         <Setter Property="Background"
                 Value="{Binding Styles.BackgroundBrush}" />
         <Setter Property="Foreground"

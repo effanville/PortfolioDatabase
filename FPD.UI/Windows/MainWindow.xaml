@@ -1,12 +1,12 @@
-﻿<Window x:Class="FPD.UI.Windows.MainWindow"
+﻿<Window x:Class="Effanville.FPD.UI.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FPD.UI.Windows"
-        xmlns:vm="clr-namespace:FPD.Logic.ViewModels;assembly=FPD.Logic"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        xmlns:viewModels="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
+        xmlns:windows="clr-namespace:Effanville.FPD.UI.Windows"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         mc:Ignorable="d"
         MinHeight="400"
         MinWidth="400"
@@ -63,9 +63,9 @@
                 <TextBlock Width="40"
                            Grid.Column="0"
                            MinWidth="40" />
-                <local:OptionsToolbar Grid.Column="1"
-                                      DataContext="{Binding OptionsToolbarCommands}"
-                                      Background="{Binding Styles.BackgroundBrush}" />
+                <windows:OptionsToolbar Grid.Column="1"
+                                        DataContext="{Binding OptionsToolbarCommands}"
+                                        Background="{Binding Styles.BackgroundBrush}" />
                 <StackPanel Grid.Column="2" />
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="3"
@@ -285,49 +285,49 @@
                              Content="{Binding ReportsViewModel}" />
             </Grid>
         </Grid>
-        <Rectangle x:Name="leftSizeGrip"
+        <Rectangle x:Name="LeftSizeGrip"
                    Width="5"
                    HorizontalAlignment="Left"
                    Cursor="SizeWE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle x:Name="rightSizeGrip"
+        <Rectangle x:Name="RightSizeGrip"
                    Width="5"
                    HorizontalAlignment="Right"
                    Cursor="SizeWE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle x:Name="topSizeGrip"
+        <Rectangle x:Name="TopSizeGrip"
                    Height="5"
                    VerticalAlignment="Top"
                    Cursor="SizeNS"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle x:Name="bottomSizeGrip"
+        <Rectangle x:Name="BottomSizeGrip"
                    Height="5"
                    VerticalAlignment="Bottom"
                    Cursor="SizeNS"
                    Style="{StaticResource RectBorderStyle}" />
         <!--  Corners  -->
-        <Rectangle Name="topLeftSizeGrip"
+        <Rectangle Name="TopLeftSizeGrip"
                    Width="7"
                    Height="7"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Cursor="SizeNWSE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle Name="bottomRightSizeGrip"
+        <Rectangle Name="BottomRightSizeGrip"
                    Width="7"
                    Height="7"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Bottom"
                    Cursor="SizeNWSE"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle Name="topRightSizeGrip"
+        <Rectangle Name="TopRightSizeGrip"
                    Width="7"
                    Height="7"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Cursor="SizeNESW"
                    Style="{StaticResource RectBorderStyle}" />
-        <Rectangle Name="bottomLeftSizeGrip"
+        <Rectangle Name="BottomLeftSizeGrip"
                    Width="7"
                    Height="7"
                    HorizontalAlignment="Left"

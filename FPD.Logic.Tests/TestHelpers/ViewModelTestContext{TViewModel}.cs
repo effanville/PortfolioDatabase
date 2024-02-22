@@ -1,20 +1,18 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 
-using Common.Structure.DataEdit;
-using Common.UI;
-using Common.UI.Services;
-using Common.UI.ViewModelBases;
-
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.ViewModels;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
+using Effanville.Common.UI.ViewModelBases;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
 
-namespace FPD.Logic.Tests.TestHelpers
+namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
     internal sealed class ViewModelTestContext<TData, TViewModel>
         where TViewModel : ViewModelBase<TData, IPortfolio>

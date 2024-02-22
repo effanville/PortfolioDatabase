@@ -1,10 +1,9 @@
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.Configuration;
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.ViewModels;
+namespace Effanville.FPD.Logic.ViewModels;
 
 public interface IViewModelFactory
 {

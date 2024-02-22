@@ -1,25 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
-using Common.Structure.DisplayClasses;
-using Common.Structure.Extensions;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
+using Effanville.Common.Structure.DisplayClasses;
+using Effanville.Common.Structure.Extensions;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.ReportWriting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Export.Statistics;
+using Effanville.FinancialStructures.Database.Statistics;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FPD.Logic.Configuration;
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-using FinancialStructures.Database;
-using FinancialStructures.Database.Statistics;
-using FinancialStructures.Database.Export.Statistics;
-using System.Linq;
-using Common.Structure.ReportWriting;
-
-namespace FPD.Logic.ViewModels.Stats
+namespace Effanville.FPD.Logic.ViewModels.Stats
 {
     /// <summary>
     /// View model for the stats options page.

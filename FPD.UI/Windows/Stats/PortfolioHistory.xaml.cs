@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-using FPD.Logic.ViewModels.Stats;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-namespace FPD.UI.Windows.Stats
+namespace Effanville.FPD.UI.Windows.Stats
 {
     /// <summary>
     /// Interaction logic for PortfolioHistory.xaml
@@ -19,10 +19,9 @@ namespace FPD.UI.Windows.Stats
         }
         private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            string bridgeName = "bridge";
-            if (Resources.Contains(bridgeName)
+            if (Resources.Contains(DisplayConstants.StyleBridgeName)
                 && DataContext is PortfolioHistoryViewModel dc
-                && Resources[bridgeName] is Bridge bridge)
+                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
             }

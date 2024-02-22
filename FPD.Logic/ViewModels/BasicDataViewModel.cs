@@ -4,23 +4,21 @@ using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 
-using Common.Structure.DataEdit;
-using Common.Structure.DataStructures;
-using Common.Structure.NamingStructures;
-using Common.UI;
-using Common.UI.Commands;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.DataStructures;
+using Effanville.Common.Structure.NamingStructures;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.FinancialStructures;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Extensions.Values;
+using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FinancialStructures;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Extensions.Values;
-using FinancialStructures.DataStructures;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.ViewModels
+namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
     /// The homepage of the program, detailing main holdings in the portfolio.

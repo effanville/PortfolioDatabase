@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FPD.Logic.Tests.TestHelpers
+namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
     public static class TestConstants
     {

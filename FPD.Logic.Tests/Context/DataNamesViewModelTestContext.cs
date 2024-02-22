@@ -1,12 +1,10 @@
-using Common.Structure.DataEdit;
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-using FinancialStructures.Database;
-
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-
-namespace FPD.Logic.Tests.Context;
+namespace Effanville.FPD.Logic.Tests.Context;
 
 public sealed class DataNamesViewModelTestContext : ViewModelTestContext<IPortfolio, DataNamesViewModel>
 {

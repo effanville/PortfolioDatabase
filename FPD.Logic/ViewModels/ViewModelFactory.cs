@@ -1,18 +1,16 @@
-using Common.Structure.DataEdit;
-using Common.UI;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Asset;
+using Effanville.FPD.Logic.ViewModels.Common;
+using Effanville.FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
-using FinancialStructures.Database;
-using FinancialStructures.FinanceStructures;
-using FinancialStructures.NamingStructures;
-
-using FPD.Logic.Configuration;
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Asset;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.ViewModels.Security;
-using FPD.Logic.ViewModels.Stats;
-
-namespace FPD.Logic.ViewModels;
+namespace Effanville.FPD.Logic.ViewModels;
 
 public class ViewModelFactory : IViewModelFactory
 {

@@ -1,14 +1,15 @@
-﻿using Common.Structure.DisplayClasses;
-using FPD.Logic.ViewModels;
-using FPD.Logic.ViewModels.Common;
-using FPD.Logic.Tests.TestHelpers;
-using FPD.Logic.Tests.ViewModelExtensions;
-using FinancialStructures.Database;
-using FinancialStructures.NamingStructures;
-using NUnit.Framework;
-using FPD.Logic.Tests.UserInteractions;
+﻿using Effanville.Common.Structure.DisplayClasses;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Tests.TestHelpers;
+using Effanville.FPD.Logic.Tests.UserInteractions;
+using Effanville.FPD.Logic.Tests.ViewModelExtensions;
+using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace FPD.Logic.Tests
+using NUnit.Framework;
+
+namespace Effanville.FPD.Logic.Tests
 {
     /// <summary>
     /// Tests to ensure the entire ViewModel system integrates together.

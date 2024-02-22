@@ -1,9 +1,9 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-using FPD.Logic.ViewModels.Security;
+using Effanville.FPD.Logic.ViewModels.Security;
 
-namespace FPD.UI.Windows.Security
+namespace Effanville.FPD.UI.Windows.Security
 {
     /// <summary>
     /// Interaction logic for SelectedSecurityView.xaml
@@ -21,15 +21,19 @@ namespace FPD.UI.Windows.Security
 
         private void DataGrid_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete || e.Key == Key.Back)
+            if (e.Key != Key.Delete && e.Key != Key.Back)
             {
-                if (e.OriginalSource is DataGridCell)
-                {
-                    if (DataContext is SelectedSecurityViewModel vm)
-                    {
-                        vm.DeleteTrade();
-                    }
-                }
+                return;
+            }
+
+            if (e.OriginalSource is not DataGridCell)
+            {
+                return;
+            }
+
+            if (DataContext is SelectedSecurityViewModel vm)
+            {
+                vm.DeleteTrade();
             }
         }
 
@@ -43,10 +47,9 @@ namespace FPD.UI.Windows.Security
 
         private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            string bridgeName = "bridge";
-            if (Resources.Contains(bridgeName)
+            if (Resources.Contains(DisplayConstants.StyleBridgeName)
                 && DataContext is SelectedSecurityViewModel dc
-                && Resources[bridgeName] is Bridge bridge)
+                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
             }

@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Common.Structure.Reporting;
-using Common.UI;
-using Common.UI.Commands;
-using Common.UI.Services;
-using FPD.Logic.TemplatesAndStyles;
-using FPD.Logic.ViewModels.Common;
-using FinancialStructures.Database;
-using FinancialStructures.Database.Download;
-using FinancialStructures.Database.Extensions;
-using System.ComponentModel;
-using Common.Structure.DataEdit;
 
-using FinancialStructures.Persistence;
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Database.Extensions;
+using Effanville.FinancialStructures.Persistence;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace FPD.Logic.ViewModels
+namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
     /// View model for the top toolbar.
@@ -105,7 +105,7 @@ namespace FPD.Logic.ViewModels
             }
             if (result == MessageBoxOutcome.Yes)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(userInitiated: true, programPortfolio => programPortfolio.Clear(ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(userInitiated: true, programPortfolio => programPortfolio.Clear()));
                 DisplayGlobals.CurrentWorkingDirectory = "";
             }
         }
@@ -117,22 +117,24 @@ namespace FPD.Logic.ViewModels
         private void ExecuteSaveDatabase()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Saving", $"Saving database {_fileName} called.");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|All Files|*.*");
-            if (result.Success)
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
+            if (!result.Success)
             {
-                _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
-
-                _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                    true, 
-                    portfo => portfo.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
-                var portfolioPersistence = new XmlPortfolioPersistence();
-                var options = new XmlFilePersistenceOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                    false, 
-                    portfo => portfolioPersistence.Save(portfo, options, ReportLogger)));
-                DisplayGlobals.CurrentWorkingDirectory = _directory;
+                return;
             }
+
+            _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+
+            _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                true, 
+                portfolio => portfolio.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
+            var portfolioPersistence = new PortfolioPersistence();
+            var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                false, 
+                portfolio => portfolioPersistence.Save(portfolio, options, ReportLogger)));
+            DisplayGlobals.CurrentWorkingDirectory = _directory;
         }
 
         /// <summary>
@@ -143,23 +145,27 @@ namespace FPD.Logic.ViewModels
         private void ExecuteLoadDatabase()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loading database.");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
-            if (result.Success)
+            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
+            if (!result.Success)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                    true, 
-                    programPortfolio => programPortfolio.FillDetailsFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger)));
-                var portfolioPersistence = new XmlPortfolioPersistence();
-                var options = new XmlFilePersistenceOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                    false, 
-                    programPortfolio => portfolioPersistence.Save(programPortfolio, options, ReportLogger)));
-                DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-                _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
-                _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-
-                ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loaded database {_fileName} successfully.");
+                return;
             }
+
+            var portfolioPersistence = new PortfolioPersistence();
+            var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                true, 
+                programPortfolio => portfolioPersistence.Load(programPortfolio, options, ReportLogger)));
+            
+            var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+                false, 
+                programPortfolio => portfolioPersistence.Save(programPortfolio, backupOptions, ReportLogger)));
+            DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+            _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
+            _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
+
+            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loaded database {_fileName} successfully.");
         }
 
         /// <summary>
@@ -182,7 +188,9 @@ namespace FPD.Logic.ViewModels
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                IPortfolio otherPortfolio = PortfolioFactory.CreateFromFile(DisplayGlobals.CurrentFileSystem, result.FilePath, ReportLogger);
+                var portfolioPersistence = new PortfolioPersistence();
+                var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+                IPortfolio otherPortfolio = portfolioPersistence.Load(options, ReportLogger);
                 OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.ImportValuesFrom(otherPortfolio, ReportLogger)));
             }
         }
