@@ -6,7 +6,6 @@
     "FPD.Console"
   ],
   "NugetPackageProjects": [
-    "FinancialStructures"
   ],
   "Configuration": "Release",
   "Framework": "net7.0-windows",

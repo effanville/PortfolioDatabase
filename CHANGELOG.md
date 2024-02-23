@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.02.00] - 2024-02-22
+
+### Bug Fixes
+
+- Tweaks to chart viewing to reduce regeneration of stats.
+- Update financial structures to remove dodgy download tests.
+- Add logging to mail sender class.
+- Trimming options
+- Prepend author name to namespace.
+- Update common location and console namespace.
+- Code style in importCommand.
+- Update common for missing using statements.
+- Improve default stats filepath in download command.
+- Updates to common and Financial structures for reporting and stats defaults.
+- Ensure that TradeCosts can be edited.
+- Ensure that IRR returns correct value when stock no longer has any shares.
+- Ensure console logging using friendly string.
+
+### Build Changes
+
+- Enable parsing of version tag in build process.
+- Enable reporting of test results.
+- Remove default package creation.
+- Update build to ensure publish to version folder.
+- Add ability to record code coverage in test projects.
+- Change checks reporting.
+- Ensure FPDConsole builds with partial trimming.
+
+### Features
+
+- Add ability to email from console once stats update performed.
+- Enable loading and saving of binary portfolio files.
+
+### Miscellaneous Tasks
+
+- Make common test packages part of directory.build.props file.
+- Tidy target framework properties.
+- Misc fixes for build process.
+- Update common location.
+- Update Common project namespaces.
+- Rearrange solution layout.
+- Move FinancialStructures into src folder.
+- Fix broken tests from namespace changes.
+- Tidy csproj files.
+- Update naming of dependent dlls to include author.
+- Update FPD.Logic.Tests namespaces.
+- Update FinancialStructures namespace to append Author.
+
+### Refactor
+
+- Update FPD.UI and FPD.Logic namespaces to append author.
+- Address code style comments in FPD.UI.
+
+### Testing
+
+- Add unit tests for console command validation.
+- Update config tests for namespace changes.
+
 ## [23.12.01] - 2023-12-27
 
 ### Build Changes
