@@ -5,9 +5,8 @@
     <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishReadyToRun>true</PublishReadyToRun>
-    <PublishTrimmed>false</PublishTrimmed>
-    <TrimMode>CopyUsed</TrimMode>
     <UseWPF>true</UseWPF>
+    <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
     <ApplicationIcon>self_drawn_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
