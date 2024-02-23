@@ -6,7 +6,6 @@
     "FPD.Console"
   ],
   "NugetPackageProjects": [
-    "FinancialStructures"
   ],
   "Configuration": "Release",
   "Framework": "net7.0-windows",
@@ -14,7 +13,12 @@
   "TagRepo": true,
   "PushTag": false,
   "TestProjects": [
+    "Common.Structure.Tests",
+    "Common.Console.Tests",
+    "Common.UI.Tests",
+    "Common.UI.Wpf.Tests",
     "FinancialStructures.Tests",
-    "FPD.Logic.Tests"
+    "FPD.Logic.Tests",
+    "FPD.Console.Tests"
   ]
 }
