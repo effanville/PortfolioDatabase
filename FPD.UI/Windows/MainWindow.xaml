@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:shell="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
         xmlns:viewModels="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
         xmlns:windows="clr-namespace:Effanville.FPD.UI.Windows"
         d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
@@ -20,8 +21,7 @@
         AllowsTransparency="True"
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
-        Closing="Window_Closing"
-        Style="{StaticResource ResourceKey=StandardStyle}">
+        Closing="Window_Closing">
     <Grid Height="Auto"
           Width="Auto">
         <Grid.Resources>
@@ -39,6 +39,28 @@
                              Handler="Resize_End" />
                 <EventSetter Event="MouseMove"
                              Handler="Resizeing_Form" />
+            </Style>    
+            <Style TargetType="{x:Type windows:MainWindow}">
+                <Setter Property="shell:WindowChrome.WindowChrome">
+                    <Setter.Value>
+                        <shell:WindowChrome CaptionHeight="0"
+                                            CornerRadius="20"
+                                            GlassFrameThickness="0"
+                                            NonClientFrameEdges="None"
+                                            ResizeBorderThickness="5" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type windows:MainWindow}">
+                            <Grid>
+                                <Border Background="White">
+                                    <ContentPresenter Content="{TemplateBinding Content}" />
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </Grid.Resources>
         <Grid Height="Auto"
@@ -60,9 +82,15 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Width="40"
-                           Grid.Column="0"
-                           MinWidth="40" />
+                <Image Grid.Column="0" 
+                       Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Icon}"
+                       ToolTip="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Title}"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Left"
+                       Width="100"
+                       Margin="2"
+                       Height="31"
+                       shell:WindowChrome.IsHitTestVisibleInChrome="True" />
                 <windows:OptionsToolbar Grid.Column="1"
                                         DataContext="{Binding OptionsToolbarCommands}"
                                         Background="{Binding Styles.BackgroundBrush}" />

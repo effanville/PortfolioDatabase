@@ -14,7 +14,7 @@
                 DataContextChanged="UC_DataContextChanged">
     <ContentControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
-        <ui:Bridge x:Key="bridge"
+        <ui:Bridge x:Key="Bridge"
                       Styles="{Binding Styles}" />
     </ContentControl.Resources>
     <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
@@ -34,18 +34,18 @@
                 <Style TargetType="{x:Type DataGridCell}"
                        BasedOn="{StaticResource DgcStyle}">
                     <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                     <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}"
                        BasedOn="{StaticResource DgrStyle}">
                     <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                     <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                 </Style>
             </DataGrid.RowStyle>
             <i:Interaction.Triggers>

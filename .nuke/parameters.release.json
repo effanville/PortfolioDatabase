@@ -14,7 +14,12 @@
   "TagRepo": true,
   "PushTag": true,
   "TestProjects": [
+    "Common.Structure.Tests",
+    "Common.Console.Tests",
+    "Common.UI.Tests",
+    "Common.UI.Wpf.Tests",
     "FinancialStructures.Tests",
-    "FPD.Logic.Tests"
+    "FPD.Logic.Tests",
+    "FPD.Console.Tests"
   ]
 }

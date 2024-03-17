@@ -18,8 +18,7 @@
     <UserControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
         <ui:DisplayConstants x:Key="Consts" />
-        <ui:Bridge x:Key="bridge"
-                      x:Name="bridge"
+        <ui:Bridge x:Key="Bridge"
                       Styles="{Binding Styles}" />
     </UserControl.Resources>
     <Grid Width="Auto">
@@ -85,18 +84,18 @@
                             <Style TargetType="{x:Type DataGridRow}"
                                    BasedOn="{StaticResource DgrStyle}">
                                 <Setter Property="Background"
-                                        Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                                        Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                                 <Setter Property="Foreground"
-                                        Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                                        Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                             </Style>
                         </DataGrid.RowStyle>
                         <DataGrid.CellStyle>
                             <Style TargetType="{x:Type DataGridCell}"
                                    BasedOn="{StaticResource DgcStyle}">
                                 <Setter Property="Foreground"
-                                        Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
+                                        Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
                                 <Setter Property="Background"
-                                        Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
+                                        Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
                             </Style>
                         </DataGrid.CellStyle>
                         <i:Interaction.Triggers>
@@ -197,7 +196,7 @@
                        Grid.RowSpan="2">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=Values}"
-                                    Background="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}"
+                                    Background="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}"
                                     DataPointStyle="{StaticResource InvisibleDataPointBlue}"
                                     IndependentValueBinding="{Binding Path=Day}"
                                     DependentValueBinding="{Binding Path=Value}"></cht:LineSeries>
