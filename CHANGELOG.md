@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [24.02.00] - 2024-02-22
+## [24.03.00] - 2024-03-17
+
+### Bug Fixes
+
+- Update build runners to include all test projects.
+- Update Publish properties to fix font missing errors.
+- Update Style bridge name to ensure style is inherited correctly.
+- Ensure gridsplitter can alter location.
+
+## [24.02.00] - 2024-02-23
 
 ### Bug Fixes
 
