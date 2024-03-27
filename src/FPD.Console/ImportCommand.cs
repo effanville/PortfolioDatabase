@@ -8,11 +8,15 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Persistence;
 
+using Microsoft.Extensions.Logging;
+
 namespace Effanville.FPD.Console
 {
     internal sealed class ImportCommand : ICommand
     {
         private readonly IFileSystem _fileSystem;
+        private readonly ILogger<ImportCommand> _logger;
+        private readonly IReportLogger _reportLogger;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<string> _otherDatabaseFilepath;
 
@@ -24,51 +28,51 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public ImportCommand(IFileSystem fileSystem)
+        public ImportCommand(IFileSystem fileSystem, ILogger<ImportCommand> logger, IReportLogger reportLogger)
         {
             _fileSystem = fileSystem;
+            _logger = logger;
+            _reportLogger = reportLogger;
             _filepathOption =
-                new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
+                new CommandOption<string>(
+                    "filepath", 
+                    "The path to the portfolio.",
+                    required: true,
+                    FileValidator);
             Options.Add(_filepathOption);
-            _otherDatabaseFilepath = new CommandOption<string>("importfilepath",
-                "Filepath for that database to import from.", required: true, FileValidator);
+            _otherDatabaseFilepath = new CommandOption<string>(
+                "importfilepath",
+                "Filepath for that database to import from.", 
+                required: true, 
+                FileValidator);
             Options.Add(_otherDatabaseFilepath);
             return;
             bool FileValidator(string filepath) => fileSystem.File.Exists(filepath);
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, string[] args = null) => Execute(console, null, args);
-
-        /// <inheritdoc/>
-        public int Execute(IConsole console, IReportLogger logger, string[] args = null)
+        public int Execute(IConsole console, string[] args = null)
         {
             var portfolioPersistence = new PortfolioPersistence();
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
-            IPortfolio portfolio = portfolioPersistence.Load(portfolioOptions, logger);
-            logger.Log(ReportType.Information, $"{ReportLocation.Loading}",
-                $"Successfully loaded portfolio from {_filepathOption.Value}");
+            IPortfolio portfolio = portfolioPersistence.Load(portfolioOptions, _reportLogger);
+            _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_filepathOption.Value}");
 
             var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem);
-            IPortfolio otherPortfolio = portfolioPersistence.Load(otherPortfolioOptions, logger);
-            logger.Log(ReportType.Information, $"{ReportLocation.Loading}",
-                $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
+            IPortfolio otherPortfolio = portfolioPersistence.Load(otherPortfolioOptions, _reportLogger);
+            _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
 
-            portfolio.ImportValuesFrom(otherPortfolio, logger);
+            portfolio.ImportValuesFrom(otherPortfolio, _reportLogger);
 
             var xmlPersistence = new XmlPortfolioPersistence();
-            xmlPersistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), logger);
+            xmlPersistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), _reportLogger);
             return 0;
         }
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, string[] args) => Validate(console, null, args);
+        public bool Validate(IConsole console, string[] args) => this.Validate(args, console, _logger);
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, IReportLogger logger, string[] args) =>
-            this.Validate(args, console, logger);
-
-        /// <inheritdoc/>
-        public void WriteHelp(IConsole console) => CommandExtensions.WriteHelp(this, console);
+        public void WriteHelp(IConsole console) => this.WriteHelp(console, _logger);
     }
 }
