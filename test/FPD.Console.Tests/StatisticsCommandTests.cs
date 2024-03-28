@@ -6,6 +6,7 @@ using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Moq;
@@ -38,8 +39,13 @@ public sealed class StatisticsCommandTests
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var mock = new Mock<ILogger<StatisticsCommand>>();
         ILogger<StatisticsCommand> logger = mock.Object;
+        IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
+            .AddEnvironmentVariables()
+            .Build();
         var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger);
-        bool isValidated = statisticsCommand.Validate(consoleInstance, args);
+        bool isValidated = statisticsCommand.Validate(consoleInstance, config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

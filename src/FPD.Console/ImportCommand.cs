@@ -8,6 +8,7 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Persistence;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Console
@@ -51,7 +52,7 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, string[] args = null)
+        public int Execute(IConsole console, IConfiguration config)
         {
             var portfolioPersistence = new PortfolioPersistence();
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
@@ -70,7 +71,7 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, string[] args) => this.Validate(args, console, _logger);
+        public bool Validate(IConsole console, IConfiguration config) => this.Validate(config, console, _logger);
 
         /// <inheritdoc/>
         public void WriteHelp(IConsole console) => this.WriteHelp(console, _logger);

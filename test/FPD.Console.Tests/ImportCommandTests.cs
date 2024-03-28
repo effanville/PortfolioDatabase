@@ -6,6 +6,8 @@ using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 
+using Microsoft.Extensions.Configuration;
+
 using NUnit.Framework;
 
 namespace Effanville.FPD.Console.Tests;
@@ -34,7 +36,11 @@ public sealed class ImportCommandTests
         var consoleInstance = new ConsoleInstance(null, null);
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var importCommand = new ImportCommand(mockFileSystem, null, reportLogger);
-        bool isValidated = importCommand.Validate(consoleInstance, args);
+        IConfiguration config = new ConfigurationBuilder()
+            .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
+            .AddEnvironmentVariables()
+            .Build();
+        bool isValidated = importCommand.Validate(consoleInstance, config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }
