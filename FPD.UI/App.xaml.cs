@@ -1,7 +1,16 @@
 ﻿using System;
+using System.IO.Abstractions;
 using System.Windows;
 using System.Windows.Threading;
 
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
+using Effanville.Common.UI.Wpf;
+using Effanville.Common.UI.Wpf.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.UI.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +33,21 @@ namespace Effanville.FPD.UI
             _host = new HostBuilder()
                 .ConfigureServices(serviceCollection =>
                 {
-                    serviceCollection.AddSingleton<MainWindow>();
+                    serviceCollection.AddSingleton<MainWindow>()
+                        .AddSingleton<Window>(x => x.GetService<MainWindow>())
+                        .AddSingleton<IDispatcher, DispatcherInstance>()
+                        .AddSingleton<IFileSystem, FileSystem>()
+                        .AddSingleton<IFileInteractionService, FileInteractionService>()
+                        .AddSingleton<DialogCreationService>()
+                        .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
+                        .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
+                        .AddSingleton<UiGlobals>()
+                        .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
+                        .AddSingleton<MainWindowViewModel>();
+                })
+                .ConfigureLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddReportLogger();
                 })
                 .Build();
         }
@@ -38,6 +61,8 @@ namespace Effanville.FPD.UI
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             await _host.StartAsync();
             var mainWindow = _host.Services.GetService<MainWindow>();
+            var viewModel = _host.Services.GetService<MainWindowViewModel>();
+            mainWindow.DataContext = viewModel;
             mainWindow.Show();
         }
 

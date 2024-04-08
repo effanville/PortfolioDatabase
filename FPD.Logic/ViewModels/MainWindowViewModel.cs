@@ -48,7 +48,7 @@ namespace Effanville.FPD.Logic.ViewModels
             }
         }
 
-        private readonly UiGlobals _uiGlobals;
+        public UiGlobals Globals { get; }
         internal UserConfiguration _userConfiguration;
         private string _configLocation;
         private readonly IUpdater<IPortfolio> _updater;
@@ -131,34 +131,34 @@ namespace Effanville.FPD.Logic.ViewModels
             Styles = new UiStyles(isLightTheme);
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
-            _uiGlobals = globals;
-            _uiGlobals.ReportLogger = ReportLogger;
+            Globals = globals;
+            Globals.ReportLogger = ReportLogger;
             _updater = updater;
             _updater.Database = ProgramPortfolio;
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
             LoadConfig();
-            var viewModelFactory = new ViewModelFactory(Styles, _uiGlobals, _updater);
-            OptionsToolbarCommands = new OptionsToolbarViewModel(_uiGlobals, Styles, ProgramPortfolio);
+            var viewModelFactory = new ViewModelFactory(Styles, Globals, _updater);
+            OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = isLightTheme;
-            Tabs.Add(new BasicDataViewModel(_uiGlobals, Styles, ProgramPortfolio));
-            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Securities", Account.Security,
+            Tabs.Add(new BasicDataViewModel(Globals, Styles, ProgramPortfolio));
+            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Securities", Account.Security,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Bank Accounts",
+            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Bank Accounts",
                 Account.BankAccount, _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
+            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
+            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
+            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
                 _updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(_uiGlobals, Styles, ProgramPortfolio, "Assets", Account.Asset,
+            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
                 _updater, viewModelFactory));
-            Tabs.Add(new StatsViewModel(_uiGlobals, Styles,
+            Tabs.Add(new StatsViewModel(Globals, Styles,
                 _userConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
-            Tabs.Add(new StatisticsChartsViewModel(_uiGlobals, ProgramPortfolio, Styles));
-            Tabs.Add(new StatsCreatorWindowViewModel(_uiGlobals, Styles,
+            Tabs.Add(new StatisticsChartsViewModel(Globals, ProgramPortfolio, Styles));
+            Tabs.Add(new StatsCreatorWindowViewModel(Globals, Styles,
                 _userConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio,
                 AddObjectAsMainTab));
 
@@ -188,16 +188,16 @@ namespace Effanville.FPD.Logic.ViewModels
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             AssemblyName name = assembly.GetName();
-            _configLocation = _uiGlobals.CurrentFileSystem.Path.Combine(
+            _configLocation = Globals.CurrentFileSystem.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
             _userConfiguration =
-                UserConfiguration.LoadFromUserConfigFile(_configLocation, _uiGlobals.CurrentFileSystem, ReportLogger);
+                UserConfiguration.LoadFromUserConfigFile(_configLocation, Globals.CurrentFileSystem, ReportLogger);
         }
 
         /// <summary>
         /// Saves the user configuration to the local appData folder.
         /// </summary>
-        public void SaveConfig() => SaveConfig(_configLocation, _uiGlobals.CurrentFileSystem);
+        public void SaveConfig() => SaveConfig(_configLocation, Globals.CurrentFileSystem);
 
         internal void SaveConfig(string filePath, IFileSystem fileSystem) =>
             _userConfiguration.SaveConfiguration(filePath, fileSystem);
@@ -245,7 +245,7 @@ namespace Effanville.FPD.Logic.ViewModels
             
             foreach (object tab in tabsToRemove)
             {
-                _uiGlobals.CurrentDispatcher.BeginInvoke(() => RemoveTab(tab, EventArgs.Empty));
+                Globals.CurrentDispatcher.BeginInvoke(() => RemoveTab(tab, EventArgs.Empty));
             }
             
             OptionsToolbarCommands.UpdateData(ProgramPortfolio);
