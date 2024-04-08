@@ -31,7 +31,14 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             FileSystem.AddFile(testPath, new MockFileData(file));
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
-            ViewModel = new MainWindowViewModel(new UiStyles(false), globals, new SynchronousUpdater<IPortfolio>());
+            
+            var updater = new SynchronousUpdater<IPortfolio>();
+            var styles = new UiStyles(false);
+            ViewModel = new MainWindowViewModel(
+                PortfolioFactory.GenerateEmpty(),
+                styles, globals,
+                new ViewModelFactory(styles, globals, updater),
+                updater);
         }
 
         [TearDown]

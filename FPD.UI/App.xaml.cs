@@ -45,6 +45,8 @@ namespace Effanville.FPD.UI
                         .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
                         .AddSingleton<UiGlobals>()
                         .AddSingleton(_ => new UiStyles(IsLightTheme()))
+                        .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
+                        .AddSingleton<IViewModelFactory, ViewModelFactory>()
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
                         .AddSingleton<MainWindowViewModel>();
                 })

@@ -648,7 +648,14 @@ namespace Effanville.FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            var vm = new MainWindowViewModel(new UiStyles(false), globals, new SynchronousUpdater<IPortfolio>());
+            var updater = new SynchronousUpdater<IPortfolio>();
+            var styles = new UiStyles(false);
+            var vm = new MainWindowViewModel(
+                PortfolioFactory.GenerateEmpty(),
+                styles,
+                globals, 
+                new ViewModelFactory(styles, globals, updater),
+                updater);
             vm._userConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
             string testConfigPath = "c:/temp/saved/user.config";
             vm.SaveConfig(testConfigPath, tempFileSystem);

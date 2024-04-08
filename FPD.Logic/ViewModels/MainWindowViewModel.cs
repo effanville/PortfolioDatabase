@@ -77,7 +77,7 @@ namespace Effanville.FPD.Logic.ViewModels
         {
             get;
             set;
-        } = PortfolioFactory.GenerateEmpty();
+        }
 
         private OptionsToolbarViewModel fOptionsToolbarCommands;
 
@@ -123,19 +123,23 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiStyles styles, UiGlobals globals, IUpdater<IPortfolio> updater)
+        public MainWindowViewModel(
+            IPortfolio portfolio,
+            UiStyles styles,
+            UiGlobals globals,
+            IViewModelFactory viewModelFactory,
+            IUpdater<IPortfolio> updater)
         {
+            ProgramPortfolio = portfolio;
             fStyles = styles;
+            Globals = globals;
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
-            Globals = globals;
             Globals.ReportLogger = ReportLogger;
             _updater = updater;
-            _updater.Database = ProgramPortfolio;
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
             LoadConfig();
-            var viewModelFactory = new ViewModelFactory(Styles, Globals, _updater);
             OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
