@@ -34,7 +34,6 @@ namespace Effanville.FPD.UI.Windows
         /// </summary>
         public MainWindow()
         {
-            bool isLightTheme = IsLightTheme();
             FileInteractionService fileInteractionService = new FileInteractionService(this);
             DialogCreationService dialogCreationService = new DialogCreationService(this);
             _uiGlobals = new UiGlobals(
@@ -45,8 +44,7 @@ namespace Effanville.FPD.UI.Windows
                 dialogCreationService, null);
             MainWindowViewModel viewModel = new MainWindowViewModel(
                 _uiGlobals,
-                new BackgroundUpdater<IPortfolio>(),
-                isLightTheme);
+                new BackgroundUpdater<IPortfolio>());
             InitializeComponent();
 
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -55,14 +53,6 @@ namespace Effanville.FPD.UI.Windows
             Title = "Financial Database v" + informationVersion;
 
             DataContext = viewModel;
-        }
-
-        private static bool IsLightTheme()
-        {
-            using var key =
-                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            object value = key?.GetValue("AppsUseLightTheme");
-            return value is int i && i > 0;
         }
 
         /// <summary>

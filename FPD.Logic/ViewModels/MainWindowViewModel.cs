@@ -20,6 +20,8 @@ using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
+using Microsoft.Win32;
+
 namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
@@ -123,8 +125,9 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals, IUpdater<IPortfolio> updater, bool isLightTheme = true)
+        public MainWindowViewModel(UiGlobals globals, IUpdater<IPortfolio> updater)
         {
+            bool isLightTheme = IsLightTheme();
             Styles = new UiStyles(isLightTheme);
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
@@ -173,6 +176,14 @@ namespace Effanville.FPD.Logic.ViewModels
             _timer.Start();
         }
 
+        private static bool IsLightTheme()
+        {
+            using var key =
+                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            object value = key?.GetValue("AppsUseLightTheme");
+            return value is int i && i > 0;
+        }
+        
         private void LoadConfig()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
