@@ -31,21 +31,8 @@ namespace Effanville.FPD.UI
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            if (CultureInfo.CurrentUICulture.IetfLanguageTag == "en-US")
-            {
-                CultureInfo ukEnglishCulture = new CultureInfo("en-GB");
-                FrameworkElement.LanguageProperty.OverrideMetadata(
-                    typeof(FrameworkElement),
-                    new FrameworkPropertyMetadata(
-                        XmlLanguage.GetLanguage(ukEnglishCulture.IetfLanguageTag)));
-            }
-            else
-            {
-                FrameworkElement.LanguageProperty.OverrideMetadata(
-                    typeof(FrameworkElement),
-                    new FrameworkPropertyMetadata(
-                        XmlLanguage.GetLanguage(CultureInfo.CurrentUICulture.IetfLanguageTag)));
-            }
+            var window = new MainWindow();
+            window.Show();
         }
 
         /// <summary>
@@ -79,6 +66,10 @@ namespace Effanville.FPD.UI
 
             MainWindow main = Current.MainWindow as MainWindow;
             main?.PrintErrorLog(ex);
+        }
+
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
         }
     }
 }
