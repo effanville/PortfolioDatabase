@@ -34,6 +34,7 @@ namespace Effanville.FPD.UI
         /// </summary>
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
+            DispatcherUnhandledException += Application_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             await _host.StartAsync();
             var mainWindow = _host.Services.GetService<MainWindow>();
