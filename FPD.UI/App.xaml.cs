@@ -1,38 +1,43 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 using Effanville.FPD.UI.Windows;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Effanville.FPD.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
+        private readonly IHost _host;
+        
         /// <summary>
         /// Constructor for the application.
         /// </summary>
         public App()
         {
-            Timeline.DesiredFrameRateProperty.OverrideMetadata(
-                typeof(Timeline),
-                new FrameworkPropertyMetadata { DefaultValue = 10 }
-            );
+            _host = new HostBuilder()
+                .ConfigureServices(serviceCollection =>
+                {
+                    serviceCollection.AddSingleton<MainWindow>();
+                })
+                .Build();
         }
 
         /// <summary>
         /// This fires on startup of the application. Used to set the culture of the program.
         /// </summary>
-        private void Application_Startup(object sender, StartupEventArgs e)
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            var window = new MainWindow();
-            window.Show();
+            await _host.StartAsync();
+            var mainWindow = _host.Services.GetService<MainWindow>();
+            mainWindow.Show();
         }
 
         /// <summary>
@@ -46,10 +51,13 @@ namespace Effanville.FPD.UI
                 return;
             }
 
-            _ = MessageBox.Show(e.Exception?.Message + Environment.NewLine + e.Exception?.StackTrace,
-                "Exception Caught", MessageBoxButton.OK, MessageBoxImage.Error);
+            _ = MessageBox.Show(
+                e.Exception?.Message + Environment.NewLine + e.Exception?.StackTrace,
+                "Exception Caught", 
+                MessageBoxButton.OK, 
+                MessageBoxImage.Error);
 
-            MainWindow main = Current.MainWindow as MainWindow;
+            MainWindow main = _host.Services.GetService<MainWindow>();
             main?.PrintErrorLog(e.Exception);
 
             e.Handled = true;
@@ -60,16 +68,23 @@ namespace Effanville.FPD.UI
             Exception ex = e.ExceptionObject as Exception;
             if (ex != null)
             {
-                _ = MessageBox.Show(ex.Message, "Uncaught Thread Exception", MessageBoxButton.OK,
+                _ = MessageBox.Show(
+                    ex.Message, 
+                    "Uncaught Thread Exception",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
 
-            MainWindow main = Current.MainWindow as MainWindow;
+            MainWindow main = _host.Services.GetService<MainWindow>();
             main?.PrintErrorLog(ex);
         }
 
-        private void App_OnExit(object sender, ExitEventArgs e)
+        private async void App_OnExit(object sender, ExitEventArgs e)
         {
+            using (_host)
+            {
+                await _host.StopAsync();
+            }
         }
     }
 }
