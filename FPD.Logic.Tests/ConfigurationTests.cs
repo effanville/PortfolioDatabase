@@ -7,6 +7,7 @@ using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
 
@@ -647,7 +648,7 @@ namespace Effanville.FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            var vm = new MainWindowViewModel(globals, new SynchronousUpdater<IPortfolio>());
+            var vm = new MainWindowViewModel(new UiStyles(false), globals, new SynchronousUpdater<IPortfolio>());
             vm._userConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
             string testConfigPath = "c:/temp/saved/user.config";
             vm.SaveConfig(testConfigPath, tempFileSystem);

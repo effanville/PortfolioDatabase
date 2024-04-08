@@ -20,8 +20,6 @@ using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
-using Microsoft.Win32;
-
 namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
@@ -125,10 +123,9 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals, IUpdater<IPortfolio> updater)
+        public MainWindowViewModel(UiStyles styles, UiGlobals globals, IUpdater<IPortfolio> updater)
         {
-            bool isLightTheme = IsLightTheme();
-            Styles = new UiStyles(isLightTheme);
+            fStyles = styles;
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
             ReportLogger = new LogReporter(UpdateReport);
             Globals = globals;
@@ -141,7 +138,7 @@ namespace Effanville.FPD.Logic.ViewModels
             var viewModelFactory = new ViewModelFactory(Styles, Globals, _updater);
             OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
-            OptionsToolbarCommands.IsLightTheme = isLightTheme;
+            OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
             Tabs.Add(new BasicDataViewModel(Globals, Styles, ProgramPortfolio));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Securities", Account.Security,
                 _updater, viewModelFactory));
@@ -174,14 +171,6 @@ namespace Effanville.FPD.Logic.ViewModels
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
-        }
-
-        private static bool IsLightTheme()
-        {
-            using var key =
-                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            object value = key?.GetValue("AppsUseLightTheme");
-            return value is int i && i > 0;
         }
         
         private void LoadConfig()

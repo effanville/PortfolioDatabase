@@ -10,11 +10,13 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.UI.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Win32;
 
 namespace Effanville.FPD.UI
 {
@@ -42,6 +44,7 @@ namespace Effanville.FPD.UI
                         .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
                         .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
                         .AddSingleton<UiGlobals>()
+                        .AddSingleton(_ => new UiStyles(IsLightTheme()))
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
                         .AddSingleton<MainWindowViewModel>();
                 })
@@ -52,6 +55,13 @@ namespace Effanville.FPD.UI
                 .Build();
         }
 
+        private static bool IsLightTheme()
+        {
+            using var key =
+                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            object value = key?.GetValue("AppsUseLightTheme");
+            return value is int i && i > 0;
+        }
         /// <summary>
         /// This fires on startup of the application. Used to set the culture of the program.
         /// </summary>

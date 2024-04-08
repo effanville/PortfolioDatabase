@@ -3,6 +3,7 @@ using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             FileSystem.AddFile(testPath, new MockFileData(file));
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
-            ViewModel = new MainWindowViewModel(globals, new SynchronousUpdater<IPortfolio>());
+            ViewModel = new MainWindowViewModel(new UiStyles(false), globals, new SynchronousUpdater<IPortfolio>());
         }
 
         [TearDown]
