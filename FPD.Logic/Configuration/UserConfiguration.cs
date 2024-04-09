@@ -16,7 +16,7 @@ namespace Effanville.FPD.Logic.Configuration
     /// Contains user specific configuration for the ui.
     /// </summary>
     [DataContract]
-    public sealed partial class UserConfiguration : IConfiguration
+    public sealed class UserConfiguration : IConfiguration
     {
         private string _configLocation;
         private IFileSystem _fileSystem;

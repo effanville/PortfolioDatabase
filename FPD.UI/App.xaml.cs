@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -10,6 +11,7 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.UI.Windows;
@@ -48,6 +50,7 @@ namespace Effanville.FPD.UI
                         .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
                         .AddSingleton<IViewModelFactory, ViewModelFactory>()
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
+                        .AddSingleton(LoadConfig)
                         .AddSingleton<MainWindowViewModel>();
                 })
                 .ConfigureLogging(loggingBuilder =>
@@ -73,6 +76,20 @@ namespace Effanville.FPD.UI
             object value = key?.GetValue("AppsUseLightTheme");
             return value is int i && i > 0;
         }
+        
+        private IConfiguration LoadConfig(IServiceProvider provider)
+        {
+            var globals = provider.GetService<UiGlobals>();
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            AssemblyName name = assembly.GetName();
+            string configLocation = globals.CurrentFileSystem.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
+            return UserConfiguration.LoadFromUserConfigFile(
+                configLocation, 
+                globals.CurrentFileSystem, 
+                globals.ReportLogger);
+        }
+        
         /// <summary>
         /// This fires on startup of the application. Used to set the culture of the program.
         /// </summary>

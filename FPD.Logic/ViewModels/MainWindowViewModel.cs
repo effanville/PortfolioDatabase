@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
@@ -46,8 +45,7 @@ namespace Effanville.FPD.Logic.ViewModels
         }
 
         public UiGlobals Globals { get; }
-        internal UserConfiguration _userConfiguration;
-        private string _configLocation;
+        internal IConfiguration _userConfiguration;
         private readonly IUpdater<IPortfolio> _updater;
 
         /// <summary>
@@ -127,7 +125,8 @@ namespace Effanville.FPD.Logic.ViewModels
             UiStyles styles,
             UiGlobals globals,
             IViewModelFactory viewModelFactory,
-            IUpdater<IPortfolio> updater)
+            IUpdater<IPortfolio> updater,
+            IConfiguration configuration)
         {
             ProgramPortfolio = portfolio;
             fStyles = styles;
@@ -136,7 +135,7 @@ namespace Effanville.FPD.Logic.ViewModels
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
-            LoadConfig();
+            _userConfiguration = configuration;
             OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
             OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
@@ -172,16 +171,6 @@ namespace Effanville.FPD.Logic.ViewModels
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
-        }
-        
-        private void LoadConfig()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            AssemblyName name = assembly.GetName();
-            _configLocation = Globals.CurrentFileSystem.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
-            _userConfiguration =
-                UserConfiguration.LoadFromUserConfigFile(_configLocation, Globals.CurrentFileSystem, ReportLogger);
         }
 
         /// <summary>

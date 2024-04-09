@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+using Effanville.Common.Structure.Reporting;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
 namespace Effanville.FPD.Logic.Configuration
@@ -55,5 +56,7 @@ namespace Effanville.FPD.Logic.Configuration
                 vm.DisplayValueFunds = DisplayValueFunds;
             }
         }
+
+        public void SaveConfiguration(IReportLogger logger = null) => throw new System.NotImplementedException();
     }
 }

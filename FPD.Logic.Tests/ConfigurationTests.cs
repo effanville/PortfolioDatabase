@@ -651,15 +651,20 @@ namespace Effanville.FPD.Logic.Tests
 
             var updater = new SynchronousUpdater<IPortfolio>();
             var styles = new UiStyles(false);
+            string testConfigPath = "c:/temp/saved/user.config";
+            UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
+                testConfigPath,
+                globals.CurrentFileSystem,
+                globals.ReportLogger);
+            
+            config.ProgramVersion = new Version(1, 2, 3, 4);
             var vm = new MainWindowViewModel(
                 PortfolioFactory.GenerateEmpty(),
                 styles,
                 globals, 
                 new ViewModelFactory(styles, globals, updater),
-                updater);
-            vm._userConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
-            string testConfigPath = "c:/temp/saved/user.config";
-            vm._userConfiguration.SetConfigLocation(testConfigPath, tempFileSystem);
+                updater,
+                config);
             vm.SaveConfig();
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);

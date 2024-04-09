@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 using Effanville.Common.Structure.DisplayClasses;
+using Effanville.Common.Structure.Reporting;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
@@ -132,5 +133,7 @@ namespace Effanville.FPD.Logic.Configuration
                 }
             }
         }
+
+        public void SaveConfiguration(IReportLogger logger = null) => throw new System.NotImplementedException();
     }
 }
