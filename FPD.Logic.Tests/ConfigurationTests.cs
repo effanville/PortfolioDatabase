@@ -634,7 +634,8 @@ namespace Effanville.FPD.Logic.Tests
 
             config.ProgramVersion = new Version(1, 2, 3, 4);
             string testPath = "c:/temp/saved/user.config";
-            config.SaveConfiguration(testPath, tempFileSystem);
+            config.SetConfigLocation(testPath, tempFileSystem);
+            config.SaveConfiguration();
 
             string file = tempFileSystem.File.ReadAllText(testPath);
             Assert.AreEqual(_defaultSerializedConfiguration, file);
@@ -658,7 +659,8 @@ namespace Effanville.FPD.Logic.Tests
                 updater);
             vm._userConfiguration.ProgramVersion = new Version(1, 2, 3, 4);
             string testConfigPath = "c:/temp/saved/user.config";
-            vm.SaveConfig(testConfigPath, tempFileSystem);
+            vm._userConfiguration.SetConfigLocation(testConfigPath, tempFileSystem);
+            vm.SaveConfig();
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);
             Assert.AreEqual(_exampleSerializedConfiguration, file);
@@ -671,7 +673,8 @@ namespace Effanville.FPD.Logic.Tests
             UserConfiguration config = new UserConfiguration();
             config.ProgramVersion = new Version(1, 2, 3, 4);
             string testPath = "c:/temp/saved/user.config";
-            config.SaveConfiguration(testPath, tempFileSystem);
+            config.SetConfigLocation(testPath, tempFileSystem);
+            config.SaveConfiguration();
 
             string file = tempFileSystem.File.ReadAllText(testPath);
             Assert.AreEqual(_defaultSerializedConfiguration, file);

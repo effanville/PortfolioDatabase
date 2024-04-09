@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -188,10 +187,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Saves the user configuration to the local appData folder.
         /// </summary>
-        public void SaveConfig() => SaveConfig(_configLocation, Globals.CurrentFileSystem);
-
-        internal void SaveConfig(string filePath, IFileSystem fileSystem) =>
-            _userConfiguration.SaveConfiguration(filePath, fileSystem);
+        public void SaveConfig() => _userConfiguration.SaveConfiguration();
 
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
