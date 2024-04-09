@@ -41,12 +41,10 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             var portfolio = PortfolioFactory.GenerateEmpty();
             var updater = new SynchronousUpdater<IPortfolio>(portfolio);
             var styles = new UiStyles(false);
-            ViewModel = new MainWindowViewModel(
+            ViewModel = new MainWindowViewModel(globals,
+                styles,
                 portfolio,
-                styles, globals,
-                new ViewModelFactory(styles, globals, updater),
-                updater,
-                config);
+                updater, new ViewModelFactory(styles, globals, updater), config);
         }
 
         [TearDown]

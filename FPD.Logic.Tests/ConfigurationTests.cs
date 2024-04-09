@@ -658,13 +658,10 @@ namespace Effanville.FPD.Logic.Tests
                 globals.ReportLogger);
             
             config.ProgramVersion = new Version(1, 2, 3, 4);
-            var vm = new MainWindowViewModel(
-                PortfolioFactory.GenerateEmpty(),
+            var vm = new MainWindowViewModel(globals, 
                 styles,
-                globals, 
-                new ViewModelFactory(styles, globals, updater),
-                updater,
-                config);
+                PortfolioFactory.GenerateEmpty(),
+                updater, new ViewModelFactory(styles, globals, updater), config);
             vm.SaveConfig();
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);

@@ -25,189 +25,150 @@ namespace Effanville.FPD.Logic.ViewModels
     /// </summary>
     public class MainWindowViewModel : PropertyChangedBase
     {
+        private readonly object _tabsLock = new object();
         private readonly Timer _timer = new Timer(100);
-
-        private PortfolioEventArgs AggEventArgs = new PortfolioEventArgs(Account.Unknown);
-
-        private Action<object> AddObjectAsMainTab => obj => AddTabAction(obj);
-
-        private void AddTabAction(object obj)
-        {
-            lock (TabsLock)
-            {
-                if (obj is DataDisplayViewModelBase vmb)
-                {
-                    vmb.RequestClose += RemoveTab;
-                }
-
-                Tabs.Add(obj);
-            }
-        }
+        private bool _isUpdating;
+        private PortfolioEventArgs _aggEventArgs = new PortfolioEventArgs(Account.Unknown);
+        internal readonly IConfiguration UserConfiguration;
 
         public UiGlobals Globals { get; }
-        internal IConfiguration _userConfiguration;
-        private readonly IUpdater<IPortfolio> _updater;
 
-        /// <summary>
-        /// The logging mechanism for the program.
-        /// </summary>
-        public IReportLogger ReportLogger
-        {
-            get;
-        }
-
-        private UiStyles fStyles;
+        private UiStyles _styles;
 
         /// <summary>
         /// The styles for the Ui.
         /// </summary>
         public UiStyles Styles
         {
-            get => fStyles;
-            set => SetAndNotify(ref fStyles, value, nameof(Styles));
+            get => _styles;
+            set => SetAndNotify(ref _styles, value);
         }
 
         /// <summary>
         /// The portfolio for the view model instance.
         /// </summary>
-        public IPortfolio ProgramPortfolio
-        {
-            get;
-            set;
-        }
+        public IPortfolio ProgramPortfolio { get; }
 
-        private OptionsToolbarViewModel fOptionsToolbarCommands;
+        private readonly OptionsToolbarViewModel _optionsToolbarCommands;
 
         /// <summary>
         /// view model for the top toolbar.
         /// </summary>
         public OptionsToolbarViewModel OptionsToolbarCommands
         {
-            get => fOptionsToolbarCommands;
-            set => SetAndNotify(ref fOptionsToolbarCommands, value, nameof(OptionsToolbarCommands));
+            get => _optionsToolbarCommands;
+            private init => SetAndNotify(ref _optionsToolbarCommands, value);
         }
 
-        private ReportingWindowViewModel fReports;
+        private readonly ReportingWindowViewModel _reports;
 
         /// <summary>
         /// View model for the reports view.
         /// </summary>
         public ReportingWindowViewModel ReportsViewModel
         {
-            get => fReports;
-            set => SetAndNotify(ref fReports, value, nameof(ReportsViewModel));
+            get => _reports;
+            private init => SetAndNotify(ref _reports, value);
         }
 
         /// <summary>
-        /// The collection of tabs to hold the data and interactions for the various subwindows.
+        /// The collection of tabs to hold the data and interactions for the various sub-windows.
         /// </summary>
-        public ObservableCollection<object> Tabs
-        {
-            get;
-            set;
-        } = new ObservableCollection<object>();
-
-        private readonly object TabsLock = new object();
-
-        private List<object> TabsShallowCopy()
-        {
-            lock (TabsLock)
-            {
-                return Tabs.ToList();
-            }
-        }
+        public ObservableCollection<object> Tabs { get; } = new ();
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(
-            IPortfolio portfolio,
+        public MainWindowViewModel(UiGlobals globals,
             UiStyles styles,
-            UiGlobals globals,
-            IViewModelFactory viewModelFactory,
+            IPortfolio portfolio,
             IUpdater<IPortfolio> updater,
+            IViewModelFactory viewModelFactory,
             IConfiguration configuration)
         {
             ProgramPortfolio = portfolio;
-            fStyles = styles;
+            _styles = styles;
             Globals = globals;
-            _updater = updater;
+            UserConfiguration = configuration;
+            
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
-            _userConfiguration = configuration;
             OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
-            OptionsToolbarCommands.UpdateRequest += _updater.PerformUpdate;
+            OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
             Tabs.Add(new BasicDataViewModel(Globals, Styles, ProgramPortfolio));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Securities", Account.Security,
-                _updater, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Bank Accounts",
-                Account.BankAccount, _updater, viewModelFactory));
+                Account.BankAccount, updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
-                _updater, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
-                _updater, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
-                _updater, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
-                _updater, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new StatsViewModel(Globals, Styles,
-                _userConfiguration.ChildConfigurations[UserConfiguration.StatsDisplay], ProgramPortfolio, Account.All));
+                UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsDisplay], ProgramPortfolio));
             Tabs.Add(new StatisticsChartsViewModel(Globals, ProgramPortfolio, Styles));
             Tabs.Add(new StatsCreatorWindowViewModel(Globals, Styles,
-                _userConfiguration.ChildConfigurations[UserConfiguration.StatsCreator], ProgramPortfolio,
-                AddObjectAsMainTab));
+                UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsCreator], ProgramPortfolio,
+                AddTab));
 
             foreach (object tab in Tabs)
             {
-                if (tab is DataDisplayViewModelBase vmb)
+                if (tab is not DataDisplayViewModelBase vmb)
                 {
-                    vmb.UpdateRequest += _updater.PerformUpdate;
-                    vmb.RequestClose += RemoveTab;
+                    continue;
                 }
+
+                vmb.UpdateRequest += updater.PerformUpdate;
+                vmb.RequestClose += RemoveTab;
             }
 
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
-            _timer.Elapsed += _timer_Elapsed;
+            _timer.Elapsed += OnTimerElapsed;
             _timer.Start();
         }
 
         /// <summary>
         /// Saves the user configuration to the local appData folder.
         /// </summary>
-        public void SaveConfig() => _userConfiguration.SaveConfiguration();
+        public void SaveConfig() => UserConfiguration.SaveConfiguration();
 
+        public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
+            => ReportsViewModel?.UpdateReport(severity, type, location, message);
+        
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
             var changeType =
-                AggEventArgs.ChangedAccount == Account.All
-                || (AggEventArgs.ChangedAccount != Account.Unknown && AggEventArgs.ChangedAccount != e.ChangedAccount)
+                _aggEventArgs.ChangedAccount == Account.All
+                || (_aggEventArgs.ChangedAccount != Account.Unknown && _aggEventArgs.ChangedAccount != e.ChangedAccount)
                     ? Account.All
                     : e.ChangedAccount;
-            AggEventArgs = e.ChangedPortfolio
+            _aggEventArgs = e.ChangedPortfolio
                 ? new PortfolioEventArgs(Account.All, e.UserInitiated)
                 : new PortfolioEventArgs(changeType, e.UserInitiated);
         }
-
-        private void _timer_Elapsed(object sender, ElapsedEventArgs e) =>
-            Task.Run(() => UpdateChildViewModels(AggEventArgs));
-
-        private bool isUpdating = false;
-
-        private async void UpdateChildViewModels(PortfolioEventArgs e)
+        
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e) =>
+            Task.Run(() => UpdateChildViewModels(_aggEventArgs));
+        
+        private void UpdateChildViewModels(PortfolioEventArgs e)
         {
             if (e.ChangedAccount == Account.Unknown)
             {
                 return;
             }
 
-            if (isUpdating)
+            if (_isUpdating)
             {
                 return;
             }
 
-            isUpdating = true;
+            _isUpdating = true;
 
             var tabs = TabsShallowCopy();
             List<object> tabsToRemove = new List<object>();
@@ -231,16 +192,34 @@ namespace Effanville.FPD.Logic.ViewModels
                 ReportsViewModel?.ClearReportsCommand.Execute(null);
             }
 
-            AggEventArgs = new PortfolioEventArgs(Account.Unknown);
-            isUpdating = false;
+            _aggEventArgs = new PortfolioEventArgs(Account.Unknown);
+            _isUpdating = false;
         }
 
-        public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
-            => ReportsViewModel?.UpdateReport(severity, type, location, message);
+        private List<object> TabsShallowCopy()
+        {
+            lock (_tabsLock)
+            {
+                return Tabs.ToList();
+            }
+        }
+        
+        private void AddTab(object obj)
+        {
+            lock (_tabsLock)
+            {
+                if (obj is DataDisplayViewModelBase vmb)
+                {
+                    vmb.RequestClose += RemoveTab;
+                }
 
+                Tabs.Add(obj);
+            }
+        }
+        
         private void RemoveTab(object obj, EventArgs args)
         {
-            lock (TabsLock)
+            lock (_tabsLock)
             {
                 Tabs.Remove(obj);
             }

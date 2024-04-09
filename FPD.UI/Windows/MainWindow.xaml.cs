@@ -98,7 +98,7 @@ namespace Effanville.FPD.UI.Windows
                         viewModel.Globals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
                     var xmlPersistence = new XmlPortfolioPersistence();
                     var options = new XmlFilePersistenceOptions(savingResult.FilePath, viewModel.Globals.CurrentFileSystem);
-                    xmlPersistence.Save(viewModel.ProgramPortfolio, options, viewModel.ReportLogger);
+                    xmlPersistence.Save(viewModel.ProgramPortfolio, options, viewModel.Globals.ReportLogger);
                 }
             }
 
