@@ -133,10 +133,8 @@ namespace Effanville.FPD.Logic.ViewModels
             ProgramPortfolio = portfolio;
             fStyles = styles;
             Globals = globals;
-            ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
-            ReportLogger = new LogReporter(UpdateReport);
-            Globals.ReportLogger = ReportLogger;
             _updater = updater;
+            ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
             LoadConfig();
@@ -252,7 +250,7 @@ namespace Effanville.FPD.Logic.ViewModels
             isUpdating = false;
         }
 
-        private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
+        public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
             => ReportsViewModel?.UpdateReport(severity, type, location, message);
 
         private void RemoveTab(object obj, EventArgs args)

@@ -52,9 +52,18 @@ namespace Effanville.FPD.UI
                 })
                 .ConfigureLogging(loggingBuilder =>
                 {
-                    loggingBuilder.AddReportLogger();
+                    loggingBuilder.AddReportLogger(UpdateReport);
                 })
                 .Build();
+        }
+
+        void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
+        {
+            Current.Dispatcher.BeginInvoke(() =>
+            {
+                var viewModel = _host.Services.GetService<MainWindowViewModel>();
+                viewModel.UpdateReport(severity, type, location, message);
+            });
         }
 
         private static bool IsLightTheme()
