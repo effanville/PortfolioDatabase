@@ -98,7 +98,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out var vl)
+                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out IValueList vl)
                         || vl is not ISecurity security)
                     {
                         return false;
@@ -110,7 +110,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 case StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> viewModel3:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out var vl)
+                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out IValueList vl)
                         || vl is not IAmortisableAsset asset)
                     {
                         return false;
@@ -122,7 +122,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 case StyledClosableViewModelBase<IValueList, IPortfolio> viewModel4:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel4.ModelData.Names, out var vl))
+                    if (!modelData.TryGetAccount(DataType, viewModel4.ModelData.Names, out IValueList vl))
                     {
                         return false;
                     }
@@ -146,34 +146,50 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (ModelData.TryGetAccount(DataType, name, out IValueList valueList))
             {
                 switch (valueList)
-            {
+                {
                     case ISecurity security:
                     {
-                        var newVM = _viewModelFactory.GenerateViewModel(security, security.Names, DataType,  ModelData);
-                        newVM.RequestClose += RemoveTab;
-                        Tabs.Add(newVM);
+                        var newViewModel = _viewModelFactory.GenerateViewModel(
+                            security, 
+                            security.Names,
+                            DataType,
+                            ModelData);
+                        newViewModel.RequestClose += RemoveTab;
+                        Tabs.Add(newViewModel);
                         break;
                     }
                     case IAmortisableAsset asset:
                     {
-                        var newVM = _viewModelFactory.GenerateViewModel(asset, asset.Names, DataType,  ModelData);
-                        newVM.RequestClose += RemoveTab;
-                        Tabs.Add(newVM);
+                        var newViewModel = _viewModelFactory.GenerateViewModel(
+                            asset, 
+                            asset.Names,
+                            DataType, 
+                            ModelData);
+                        newViewModel.RequestClose += RemoveTab;
+                        Tabs.Add(newViewModel);
                         break;
                     }
                     default:
                     {
-                        var newVM = _viewModelFactory.GenerateViewModel(valueList,valueList.Names, DataType, ModelData);
-                        newVM.RequestClose += RemoveTab;
-                        Tabs.Add(newVM);
+                        var newViewModel = _viewModelFactory.GenerateViewModel(
+                            valueList,
+                            valueList.Names,
+                            DataType,
+                            ModelData);
+                        newViewModel.RequestClose += RemoveTab;
+                        Tabs.Add(newViewModel);
                         break;
                     }
                 }
             }
             else
             {
-                StyledClosableViewModelBase<IPortfolio, IPortfolio> newVM;
-                newVM =  _viewModelFactory.GenerateViewModel(ModelData, null, DataType, ModelData);
+                var newViewModel =  _viewModelFactory.GenerateViewModel(
+                    ModelData, 
+                    null,
+                    DataType, 
+                    ModelData);
+                Tabs.Add(newViewModel);
             }
 
         }

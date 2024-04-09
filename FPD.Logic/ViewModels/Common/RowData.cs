@@ -20,16 +20,12 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Is the row a new row.
         /// </summary>
-        public bool IsNew
-        {
-            get;
-            init;
-        }
+        public bool IsNew { get; init; }
 
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
-        public UiStyles Styles { get; set; }
+        public UiStyles Styles { get; private set; }
 
         /// <summary>
         /// Function which updates the main data store.
@@ -69,7 +65,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             _updater.PerformUpdate(null,
                 new UpdateRequestArgs<IPortfolio>(true,
                     programPortfolio =>
-                        programPortfolio.TryEditName(_typeOfAccount, _preEditSelectedName, name, null)));
+                        programPortfolio.TryEditName(_typeOfAccount, _preEditSelectedName, name)));
         }
 
         /// <inheritdoc/>

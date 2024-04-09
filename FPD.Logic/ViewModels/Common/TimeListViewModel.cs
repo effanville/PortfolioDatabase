@@ -83,11 +83,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Command to update the selected item.
         /// </summary>
-        public ICommand SelectionChangedCommand
-        {
-            get;
-            set;
-        }
+        public ICommand SelectionChangedCommand { get; set; }
         private void ExecuteSelectionChanged(object obj)
         {
             if (Valuations != null && obj is DailyValuation data)
@@ -100,22 +96,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// Called prior to an edit occurring in a row. This is used
         /// to record the state of the row before editing.
         /// </summary>
-        public ICommand PreEditCommand
-        {
-            get;
-            set;
-        }
+        public ICommand PreEditCommand { get; set; }
 
         private void ExecutePreEdit() => _oldSelectedValuation = SelectedValuation?.Copy();
 
         /// <summary>
         /// Command to add or edit data to the <see cref="TimeList"/>
         /// </summary>
-        public ICommand AddEditDataCommand
-        {
-            get;
-            set;
-        }
+        public ICommand AddEditDataCommand { get; set; }
 
         private void ExecuteAddEditData()
         {
