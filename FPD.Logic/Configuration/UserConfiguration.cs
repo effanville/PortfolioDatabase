@@ -16,8 +16,10 @@ namespace Effanville.FPD.Logic.Configuration
     /// Contains user specific configuration for the ui.
     /// </summary>
     [DataContract]
-    public sealed partial class UserConfiguration : IConfiguration
+    public sealed class UserConfiguration : IConfiguration
     {
+        private string _configLocation;
+        private IFileSystem _fileSystem;
         private readonly IReadOnlyList<Migration<UserConfiguration>> fMigrations;
         private readonly Type[] fExpectedConfigurationTypes = new Type[]
         {
@@ -107,6 +109,7 @@ namespace Effanville.FPD.Logic.Configuration
                 userConfig.LoadConfiguration(filePath, fileSystem, logger);
             }
 
+            userConfig.SetConfigLocation(filePath, fileSystem);
             return userConfig;
         }
 
@@ -120,6 +123,12 @@ namespace Effanville.FPD.Logic.Configuration
         public void RestoreFromConfiguration(object viewModel)
         {
             throw new NotImplementedException();
+        }
+
+        public void SetConfigLocation(string filePath, IFileSystem fileSystem)
+        {
+            _configLocation = filePath;
+            _fileSystem = fileSystem;
         }
 
         /// <inheritdoc/>
@@ -148,7 +157,7 @@ namespace Effanville.FPD.Logic.Configuration
         }
 
         /// <inheritdoc/>
-        public void SaveConfiguration(string filePath, IFileSystem fileSystem, IReportLogger logger = null)
+        public void SaveConfiguration(IReportLogger logger = null)
         {
             try
             {
@@ -158,10 +167,10 @@ namespace Effanville.FPD.Logic.Configuration
                     ProgramVersion = assembly.GetName().Version;
                 }
 
-                string dir = fileSystem.Path.GetDirectoryName(filePath);
-                _ = fileSystem.Directory.CreateDirectory(dir);
+                string dir = _fileSystem.Path.GetDirectoryName(_configLocation);
+                _ = _fileSystem.Directory.CreateDirectory(dir);
                 DataContractSerializer serializer = new DataContractSerializer(typeof(UserConfiguration), fExpectedConfigurationTypes);
-                using (Stream stream = fileSystem.FileStream.Create(filePath, FileMode.Create))
+                using (Stream stream = _fileSystem.FileStream.Create(_configLocation, FileMode.Create))
                 using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                 {
                     writer.Formatting = Formatting.Indented; // indent the Xml so it's human readable

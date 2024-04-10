@@ -5,6 +5,12 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.FinancialStructures.Database;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -28,39 +34,18 @@ public sealed class DownloadCommandTests
     [TestCaseSource(nameof(ValidationSource))]
     public void CanValidateTest(string[] args, bool expectedValidation)
     {
-        string error;
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
-        var consoleInstance = new ConsoleInstance(WriteError, WriteReport);
-        var logReporter = new LogReporter(ReportAction, new SingleTaskQueue(), saveInternally: true);
-
-        var downloadCommand = new DownloadCommand(mockFileSystem);
-        bool isValidated = downloadCommand.Validate(consoleInstance, logReporter, args);
+        var consoleInstance = new ConsoleInstance(null, null);
+        var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
+        var mock = new Mock<ILogger<DownloadCommand>>();
+        ILogger<DownloadCommand> logger = mock.Object;
+        IConfiguration config = new ConfigurationBuilder()
+            .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
+            .AddEnvironmentVariables()
+            .Build();
+        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger);
+        bool isValidated = downloadCommand.Validate(consoleInstance, config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
-        
-        return;
-        void WriteError(string err)
-        {
-            error = err;
-        }
-
-        void WriteReport(string rep)
-        {
-        }
-
-        void ReportAction(ReportSeverity severity, ReportType reportType, string location, string text)
-        {
-            string message = $"({reportType}) - [{location}] - {text}";
-            if (reportType == ReportType.Error)
-            {
-                WriteError(message);
-            }
-            else
-            {
-                WriteReport(message);
-            }
-        }
     }
-    
-    
 }

@@ -14,12 +14,15 @@ using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Console
 {
     internal sealed class DownloadCommand : ICommand
     {
         private readonly IFileSystem _fileSystem;
+        private readonly ILogger _logger;
+        private readonly IReportLogger _reportLogger;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<bool> _updateStatsOption;
         private readonly CommandOption<string> _mailRecipientOption;
@@ -32,9 +35,11 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public DownloadCommand(IFileSystem fileSystem)
+        public DownloadCommand(IFileSystem fileSystem, ILogger<DownloadCommand> logger, IReportLogger reportLogger)
         {
             _fileSystem = fileSystem;
+            _logger = logger;
+            _reportLogger = reportLogger;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _updateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
@@ -47,24 +52,16 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, string[] args = null) 
-            => Execute(console, null, args);
-
-        /// <inheritdoc/>
-        public int Execute(IConsole console, IReportLogger logger, string[] args = null)
+        public int Execute(IConsole console, IConfiguration config)
         {
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .Build();
             PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
             PersistenceOptions persistenceOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
             IPortfolio portfolio = portfolioPersistence.Load(
                 persistenceOptions,
-                logger);
-            logger.Log(ReportType.Information, $"{ReportLocation.Loading}", $"Successfully loaded portfolio from {_filepathOption.Value}");
+                _reportLogger);
+            _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_filepathOption.Value}");
 
-            PortfolioDataUpdater.Download(Account.All, portfolio, null, logger).Wait();
+            PortfolioDataUpdater.Download(Account.All, portfolio, null, _reportLogger).Wait();
 
             if (_updateStatsOption.Value)
             {
@@ -75,15 +72,15 @@ namespace Effanville.FPD.Console
                 var settings = PortfolioStatisticsSettings.DefaultSettings();
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
-                stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, logger);
+                stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, _reportLogger);
                 
-                logger.Log(ReportType.Information, "Mailing", $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
+                _logger.Log(LogLevel.Information, $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
-                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
+                    _logger.Log(LogLevel.Information, $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
-                    logger.Log(ReportType.Information, "Mailing", $"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
+                    _logger.Log(LogLevel.Information,$"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
                     var smtpInfo = SmtpInfo.GmailHost();
                     smtpInfo.AuthUser = smtpAuthUser;
                     smtpInfo.AuthPassword = smtpAuthPassword;
@@ -95,25 +92,21 @@ namespace Effanville.FPD.Console
                         Recipients = new List<string>{_mailRecipientOption.Value},
                         AttachmentFileNames = new List<string> {filePath}
                     };
-                    logger.Log(ReportType.Information, "Mailing", $"Setup content for mailing.");
-                    MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, logger);
+                    _logger.Log(LogLevel.Information, $"Setup content for mailing.");
+                    MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
                 }
             }
 
-            bool saved = portfolioPersistence.Save(portfolio, persistenceOptions, logger);
+            bool saved = portfolioPersistence.Save(portfolio, persistenceOptions, _reportLogger);
             return saved ? 0 : 1;
         }
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, string[] args) 
-            => Validate(console, null, args);
-
-        /// <inheritdoc/>
-        public bool Validate(IConsole console, IReportLogger logger, string[] args) 
-            => this.Validate(args, console, logger);
+        public bool Validate(IConsole console, IConfiguration config) 
+            => this.Validate(config, console, _logger);
 
         /// <inheritdoc/>
         public void WriteHelp(IConsole console) 
-            => CommandExtensions.WriteHelp(this, console);
+            => this.WriteHelp(console, _logger);
     }
 }

@@ -1,23 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.IO.Abstractions;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
 using Effanville.Common.Structure.Reporting;
-using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
-using Effanville.Common.UI.Wpf;
-using Effanville.Common.UI.Wpf.Services;
-using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Common;
-
-using Microsoft.Win32;
 
 namespace Effanville.FPD.UI.Windows
 {
@@ -27,42 +20,18 @@ namespace Effanville.FPD.UI.Windows
     public partial class MainWindow : Window
     {
         private bool _resizeInProcess;
-        private readonly UiGlobals _uiGlobals;
 
         /// <summary>
         /// Construct an instance of the main window.
         /// </summary>
         public MainWindow()
         {
-            bool isLightTheme = IsLightTheme();
-            FileInteractionService fileInteractionService = new FileInteractionService(this);
-            DialogCreationService dialogCreationService = new DialogCreationService(this);
-            _uiGlobals = new UiGlobals(
-                null,
-                new DispatcherInstance(),
-                new FileSystem(),
-                fileInteractionService,
-                dialogCreationService, null);
-            MainWindowViewModel viewModel = new MainWindowViewModel(
-                _uiGlobals,
-                new BackgroundUpdater<IPortfolio>(),
-                isLightTheme);
             InitializeComponent();
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             string informationVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                 .InformationalVersion;
             Title = "Financial Database v" + informationVersion;
-
-            DataContext = viewModel;
-        }
-
-        private static bool IsLightTheme()
-        {
-            using var key =
-                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            object value = key?.GetValue("AppsUseLightTheme");
-            return value is int i && i > 0;
         }
 
         /// <summary>
@@ -71,17 +40,22 @@ namespace Effanville.FPD.UI.Windows
         /// <param name="exception"></param>
         public void PrintErrorLog(Exception exception)
         {
-            FileInteractionResult result = _uiGlobals.FileInteractionService.SaveFile("log", string.Empty,
-                _uiGlobals.CurrentWorkingDirectory, filter: "log Files|*.log|All Files|*.*");
+            if (DataContext is not MainWindowViewModel viewModel)
+            {
+                return;
+            }
+            
+            FileInteractionResult result = viewModel.Globals.FileInteractionService.SaveFile("log", string.Empty,
+                viewModel.Globals.CurrentWorkingDirectory, filter: "log Files|*.log|All Files|*.*");
             if (!result.Success)
             {
                 return;
             }
 
-            using (Stream stream = _uiGlobals.CurrentFileSystem.FileStream.Create(result.FilePath, FileMode.Create))
+            using (Stream stream = viewModel.Globals.CurrentFileSystem.FileStream.Create(result.FilePath, FileMode.Create))
             using (TextWriter writer = new StreamWriter(stream))
             {
-                foreach (ErrorReport report in _uiGlobals.ReportLogger.Reports.GetReports())
+                foreach (ErrorReport report in viewModel.Globals.ReportLogger.Reports.GetReports())
                 {
                     writer.WriteLine(report.ToString());
                 }
@@ -107,24 +81,24 @@ namespace Effanville.FPD.UI.Windows
 
             viewModel.SaveConfig();
             MessageBoxOutcome result = viewModel.ProgramPortfolio.IsAlteredSinceSave
-                ? _uiGlobals.DialogCreationService.ShowMessageBox(
+                ? viewModel.Globals.DialogCreationService.ShowMessageBox(
                     "Data has changed since last saved. Would you like to save changes before closing?",
                     $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning)
-                : _uiGlobals.DialogCreationService.ShowMessageBox(
+                : viewModel.Globals.DialogCreationService.ShowMessageBox(
                     "There is a small chance that the data has changed since last save (due to neglect on my part). Would you like to save before closing?",
                     $"Closing {Title}.", BoxButton.YesNoCancel, BoxImage.Warning);
 
             if (result == MessageBoxOutcome.Yes)
             {
-                FileInteractionResult savingResult = _uiGlobals.FileInteractionService.SaveFile("xml",
+                FileInteractionResult savingResult = viewModel.Globals.FileInteractionService.SaveFile("xml",
                     viewModel.ProgramPortfolio.Name, filter: "XML Files|*.xml|All Files|*.*");
                 if (savingResult.Success)
                 {
                     viewModel.ProgramPortfolio.Name =
-                        _uiGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
+                        viewModel.Globals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
                     var xmlPersistence = new XmlPortfolioPersistence();
-                    var options = new XmlFilePersistenceOptions(savingResult.FilePath, _uiGlobals.CurrentFileSystem);
-                    xmlPersistence.Save(viewModel.ProgramPortfolio, options, viewModel.ReportLogger);
+                    var options = new XmlFilePersistenceOptions(savingResult.FilePath, viewModel.Globals.CurrentFileSystem);
+                    xmlPersistence.Save(viewModel.ProgramPortfolio, options, viewModel.Globals.ReportLogger);
                 }
             }
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Effanville.Common.Structure.Reporting;
+
 namespace Effanville.FPD.Logic.Configuration
 {
     /// <summary>
@@ -37,5 +39,10 @@ namespace Effanville.FPD.Logic.Configuration
         /// </summary>
         /// <param name="viewModel"></param>
         void RestoreFromConfiguration(object viewModel);
+
+        /// <summary>
+        /// Save the configuration to file.
+        /// </summary>
+        void SaveConfiguration(IReportLogger logger = null);
     }
 }

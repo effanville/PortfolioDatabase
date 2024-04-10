@@ -6,6 +6,8 @@ using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 
+using Microsoft.Extensions.Configuration;
+
 using NUnit.Framework;
 
 namespace Effanville.FPD.Console.Tests;
@@ -28,40 +30,17 @@ public sealed class ImportCommandTests
     [TestCaseSource(nameof(ValidationSource))]
     public void CanValidateTest(string[] args, bool expectedValidation)
     {
-        string error;
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
         mockFileSystem.AddFile(@"c:\\temp\\other-file.xml", new MockFileData("some other contents"));
-        var consoleInstance = new ConsoleInstance(WriteError, WriteReport);
-        var logReporter = new LogReporter(ReportAction, new SingleTaskQueue(), saveInternally: true);
-
-        var importCommand = new ImportCommand(mockFileSystem);
-        bool isValidated = importCommand.Validate(consoleInstance, logReporter, args);
+        var consoleInstance = new ConsoleInstance(null, null);
+        var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
+        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger);
+        IConfiguration config = new ConfigurationBuilder()
+            .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
+            .AddEnvironmentVariables()
+            .Build();
+        bool isValidated = importCommand.Validate(consoleInstance, config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
-        
-        return;
-        void WriteError(string err)
-        {
-            error = err;
-        }
-
-        void WriteReport(string rep)
-        {
-        }
-
-        void ReportAction(ReportSeverity severity, ReportType reportType, string location, string text)
-        {
-            string message = $"({reportType}) - [{location}] - {text}";
-            if (reportType == ReportType.Error)
-            {
-                WriteError(message);
-            }
-            else
-            {
-                WriteReport(message);
-            }
-        }
     }
-    
-    
 }
