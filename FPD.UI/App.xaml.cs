@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO.Abstractions;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -11,14 +10,12 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
-using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.UI.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Win32;
 
 namespace Effanville.FPD.UI
 {
@@ -28,7 +25,7 @@ namespace Effanville.FPD.UI
     public partial class App
     {
         private readonly IHost _host;
-        
+
         /// <summary>
         /// Constructor for the application.
         /// </summary>
@@ -46,11 +43,11 @@ namespace Effanville.FPD.UI
                         .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
                         .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
                         .AddSingleton<UiGlobals>()
-                        .AddSingleton(_ => new UiStyles(IsLightTheme()))
+                        .AddSingleton(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
                         .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
                         .AddSingleton<IViewModelFactory, ViewModelFactory>()
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
-                        .AddSingleton(LoadConfig)
+                        .AddSingleton(ConfigurationFactory.LoadConfig)
                         .AddSingleton<MainWindowViewModel>();
                 })
                 .ConfigureLogging(loggingBuilder =>
@@ -60,7 +57,7 @@ namespace Effanville.FPD.UI
                 .Build();
         }
 
-        void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
+        private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
         {
             Current.Dispatcher.BeginInvoke(() =>
             {
@@ -69,27 +66,6 @@ namespace Effanville.FPD.UI
             });
         }
 
-        private static bool IsLightTheme()
-        {
-            using var key =
-                Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            object value = key?.GetValue("AppsUseLightTheme");
-            return value is int i && i > 0;
-        }
-        
-        private IConfiguration LoadConfig(IServiceProvider provider)
-        {
-            var globals = provider.GetService<UiGlobals>();
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            AssemblyName name = assembly.GetName();
-            string configLocation = globals.CurrentFileSystem.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
-            return UserConfiguration.LoadFromUserConfigFile(
-                configLocation, 
-                globals.CurrentFileSystem, 
-                globals.ReportLogger);
-        }
-        
         /// <summary>
         /// This fires on startup of the application. Used to set the culture of the program.
         /// </summary>
