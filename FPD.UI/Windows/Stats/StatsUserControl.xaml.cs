@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-using Effanville.Common.UI.Wpf.Controls;
+using Effanville.Common.Structure.Reporting;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
@@ -15,10 +16,8 @@ namespace Effanville.FPD.UI.Windows.Stats
     /// <summary>
     /// Interaction logic for StatsUserControl.xaml
     /// </summary>
-    public partial class StatsUserControl : AutoGenColumnControl
+    public partial class StatsUserControl
     {
-        private bool _isDataGridSet;
-        
         /// <summary>
         /// Construct an instance.
         /// </summary>
@@ -52,6 +51,8 @@ namespace Effanville.FPD.UI.Windows.Stats
             {
                 bridge.Styles = dc.Styles;
             }
+            
+            DataContextChanged -= OnDataContextChanged;
         }
         
         /// <summary>
@@ -59,12 +60,9 @@ namespace Effanville.FPD.UI.Windows.Stats
         /// </summary>
         private async void UpdateDataGrid(object sender, PropertyChangedEventArgs e)
         {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
             if (DataContext is not StatsViewModel vm)
-            {
-                return;
-            }
-
-            if (_isDataGridSet && (!vm.ModelData?.IsAlteredSinceSave ?? true))
             {
                 return;
             }
@@ -72,7 +70,9 @@ namespace Effanville.FPD.UI.Windows.Stats
             DataTable dt = await Task.Run(GetTable);
 
             StatsBox.ItemsSource = dt.DefaultView;
-            _isDataGridSet = true;
+            stopwatch.Stop();
+            vm.ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "UIhere", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");
+
             return;
 
             DataTable GetTable()

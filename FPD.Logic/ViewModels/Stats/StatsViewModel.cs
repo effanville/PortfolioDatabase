@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Effanville.Common.Structure.DisplayClasses;
+using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Statistics;
@@ -115,27 +117,30 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             UserConfiguration.StoreConfiguration(this);
             if (!_updateDataInProgress)
             {
-                await Task.Run(() => UpdateData(null));
+                await Task.Run(() => UpdateData(null, force: true));
             }
         }
 
-        /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        private void UpdateData(IPortfolio modelData, bool force)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            stopwatch.Start();
             _updateDataInProgress = true;
             if (modelData != null)
             {
                 base.UpdateData(modelData);
             }
 
-            if (Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true))
-            {
+            if ((Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)) && !force)
+            {_updateDataInProgress = false;
                 return;
             }
 
             var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
             DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
             _updateDataInProgress = false;
+            stopwatch.Stop();
+            ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "here", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");
             return;
 
             void AssignStats(List<AccountStatistics> statistics)
@@ -143,5 +148,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 Stats = statistics;
             }
         }
+
+        /// <inheritdoc/>
+        public override void UpdateData(IPortfolio modelData) => UpdateData(modelData, force: false);
     }
 }

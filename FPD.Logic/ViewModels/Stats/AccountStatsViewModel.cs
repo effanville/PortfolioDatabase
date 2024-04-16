@@ -27,7 +27,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         public override void UpdateData(AccountStatistics accStats)
         {
             Statistics = null;
-            Statistics = accStats?.Statistics.ToList() ?? new List<IStatistic>();
+            Statistics = accStats?.Statistics?.ToList() ?? new List<IStatistic>();
         }
     }
 }
