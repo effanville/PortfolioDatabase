@@ -22,7 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
-        private bool _updateDataInProgress = true;
+        private bool _updateDataInProgress = false;
         private List<AccountStatistics> _stats;
 
         private bool _displayValueFunds = true;
@@ -117,7 +117,9 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             UserConfiguration.StoreConfiguration(this);
             if (!_updateDataInProgress)
             {
+                _updateDataInProgress = true;
                 await Task.Run(() => UpdateData(null, force: true));
+                _updateDataInProgress = false;
             }
         }
 
@@ -125,20 +127,18 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             stopwatch.Start();
-            _updateDataInProgress = true;
             if (modelData != null)
             {
                 base.UpdateData(modelData);
             }
 
             if ((Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)) && !force)
-            {_updateDataInProgress = false;
+            {
                 return;
             }
 
             var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
             DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
-            _updateDataInProgress = false;
             stopwatch.Stop();
             ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "here", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");
             return;
@@ -150,6 +150,14 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData) => UpdateData(modelData, force: false);
+        public override async void UpdateData(IPortfolio modelData)
+        {
+            if (!_updateDataInProgress)
+            {
+                _updateDataInProgress = true;
+                await Task.Run(() => UpdateData(null, force: false));
+                _updateDataInProgress = false;
+            }
+        }
     }
 }
