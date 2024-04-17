@@ -293,7 +293,12 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             }
 
             TLVM?.UpdateData(ModelData.UnitPrice);
-            Trades = ModelData.Trades.ToList();
+            var trades = ModelData.Trades.ToList();
+            if (Trades == null || !trades.SequenceEqual(Trades))
+            {
+                Trades = trades;
+            }
+
             var securityStats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today,

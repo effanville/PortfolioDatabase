@@ -57,8 +57,12 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public override void UpdateData(TimeList modelData)
         {
             base.UpdateData(modelData);
-            Valuations = null;
-            Valuations = modelData?.Values() ?? new List<DailyValuation>();
+            var newValuations = modelData?.Values() ?? new List<DailyValuation>();
+            if (Valuations == null || !newValuations.SequenceEqual(Valuations))
+            {
+                Valuations = null;
+                Valuations = modelData?.Values() ?? new List<DailyValuation>();
+            }
         }
 
         /// <summary>
