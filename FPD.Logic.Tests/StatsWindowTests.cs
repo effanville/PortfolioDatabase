@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
+using System.Threading.Tasks;
 
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
@@ -21,7 +22,7 @@ namespace Effanville.FPD.Logic.Tests
         /// The defaults are loaded correctly.
         /// </summary>
         [Test]
-        public void CanLoadWithNames()
+        public async Task CanLoadWithNames()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
 
@@ -34,6 +35,9 @@ namespace Effanville.FPD.Logic.Tests
                 portfolio,
                 viewModelFactory);
             context.ViewModel.UpdateData(context.Portfolio);
+
+            await Task.Delay(3000);
+            
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(ExpectedNumberTabs, context.ViewModel.Stats.Count);
@@ -46,7 +50,7 @@ namespace Effanville.FPD.Logic.Tests
         /// </summary>
         [TestCase(false)]
         [TestCase(true)]
-        public void CanStoreConfig(bool valueFunds)
+        public async Task CanStoreConfig(bool valueFunds)
         {
             var configuration = new StatsDisplayConfiguration();
             var portfolio = TestSetupHelper.CreateBasicDataBase();
@@ -61,6 +65,7 @@ namespace Effanville.FPD.Logic.Tests
                 viewModelFactory);
             context.ViewModel.UpdateData(context.Portfolio);
 
+            await Task.Delay(3000);
             Assert.AreEqual(ExpectedNumberTabs, context.ViewModel.Stats.Count);
             Assert.AreEqual(true, context.ViewModel.DisplayValueFunds);
 
@@ -70,6 +75,7 @@ namespace Effanville.FPD.Logic.Tests
             context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration, context.Portfolio));
 
             context.ViewModel.UpdateData(context.Portfolio);
+            await Task.Delay(3000);
             Assert.AreEqual(valueFunds, context.ViewModel.DisplayValueFunds);
             Assert.AreEqual(ExpectedNumberTabs, context.ViewModel.Stats.Count);
         }
