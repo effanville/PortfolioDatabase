@@ -18,6 +18,7 @@ namespace Effanville.FPD.UI.Windows.Stats
     /// </summary>
     public partial class StatsUserControl
     {
+        private bool _isVisible;
         /// <summary>
         /// Construct an instance.
         /// </summary>
@@ -30,11 +31,13 @@ namespace Effanville.FPD.UI.Windows.Stats
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue is bool isVisibleChanged && !isVisibleChanged)
+            if(e.NewValue is bool isVisible && !isVisible)
             {
+                _isVisible = false;
                 return;
             }
 
+            _isVisible = true;
             UpdateDataGrid(null, null);
         }
 
@@ -60,9 +63,14 @@ namespace Effanville.FPD.UI.Windows.Stats
         /// </summary>
         private async void UpdateDataGrid(object sender, PropertyChangedEventArgs e)
         {
+            if (!_isVisible)
+            {
+                return;
+            }
+
             Stopwatch stopwatch = new();
             stopwatch.Start();
-            if (DataContext is not StatsViewModel vm)
+            if (DataContext is not StatsViewModel vm || vm.Stats == null)
             {
                 return;
             }
