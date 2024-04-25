@@ -1,51 +1,83 @@
 ﻿using System;
-using System.Globalization;
+using System.IO.Abstractions;
 using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.Reporting;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
+using Effanville.Common.UI.Wpf;
+using Effanville.Common.UI.Wpf.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.UI.Windows;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Effanville.FPD.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
+        private readonly IHost _host;
+
         /// <summary>
         /// Constructor for the application.
         /// </summary>
         public App()
         {
-            Timeline.DesiredFrameRateProperty.OverrideMetadata(
-                typeof(Timeline),
-                new FrameworkPropertyMetadata { DefaultValue = 10 }
-            );
+            _host = new HostBuilder()
+                .ConfigureServices(serviceCollection =>
+                {
+                    serviceCollection.AddSingleton<MainWindow>()
+                        .AddSingleton<Window>(x => x.GetService<MainWindow>())
+                        .AddSingleton<IDispatcher, DispatcherInstance>()
+                        .AddSingleton<IFileSystem, FileSystem>()
+                        .AddSingleton<IFileInteractionService, FileInteractionService>()
+                        .AddSingleton<DialogCreationService>()
+                        .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
+                        .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
+                        .AddSingleton<UiGlobals>()
+                        .AddSingleton(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
+                        .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
+                        .AddSingleton<IViewModelFactory, ViewModelFactory>()
+                        .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
+                        .AddSingleton(ConfigurationFactory.LoadConfig)
+                        .AddSingleton<MainWindowViewModel>();
+                })
+                .ConfigureLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddReportLogger(UpdateReport);
+                })
+                .Build();
+        }
+
+        private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
+        {
+            Current.Dispatcher.BeginInvoke(() =>
+            {
+                var viewModel = _host.Services.GetService<MainWindowViewModel>();
+                viewModel.UpdateReport(severity, type, location, message);
+            });
         }
 
         /// <summary>
         /// This fires on startup of the application. Used to set the culture of the program.
         /// </summary>
-        private void Application_Startup(object sender, StartupEventArgs e)
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
+            DispatcherUnhandledException += Application_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            if (CultureInfo.CurrentUICulture.IetfLanguageTag == "en-US")
-            {
-                CultureInfo ukEnglishCulture = new CultureInfo("en-GB");
-                FrameworkElement.LanguageProperty.OverrideMetadata(
-                    typeof(FrameworkElement),
-                    new FrameworkPropertyMetadata(
-                        XmlLanguage.GetLanguage(ukEnglishCulture.IetfLanguageTag)));
-            }
-            else
-            {
-                FrameworkElement.LanguageProperty.OverrideMetadata(
-                    typeof(FrameworkElement),
-                    new FrameworkPropertyMetadata(
-                        XmlLanguage.GetLanguage(CultureInfo.CurrentUICulture.IetfLanguageTag)));
-            }
+            await _host.StartAsync();
+            var mainWindow = _host.Services.GetService<MainWindow>();
+            var viewModel = _host.Services.GetService<MainWindowViewModel>();
+            mainWindow.DataContext = viewModel;
+            mainWindow.Show();
         }
 
         /// <summary>
@@ -59,10 +91,13 @@ namespace Effanville.FPD.UI
                 return;
             }
 
-            _ = MessageBox.Show(e.Exception?.Message + Environment.NewLine + e.Exception?.StackTrace,
-                "Exception Caught", MessageBoxButton.OK, MessageBoxImage.Error);
+            _ = MessageBox.Show(
+                e.Exception?.Message + Environment.NewLine + e.Exception?.StackTrace,
+                "Exception Caught", 
+                MessageBoxButton.OK, 
+                MessageBoxImage.Error);
 
-            MainWindow main = Current.MainWindow as MainWindow;
+            MainWindow main = _host.Services.GetService<MainWindow>();
             main?.PrintErrorLog(e.Exception);
 
             e.Handled = true;
@@ -73,12 +108,23 @@ namespace Effanville.FPD.UI
             Exception ex = e.ExceptionObject as Exception;
             if (ex != null)
             {
-                _ = MessageBox.Show(ex.Message, "Uncaught Thread Exception", MessageBoxButton.OK,
+                _ = MessageBox.Show(
+                    ex.Message, 
+                    "Uncaught Thread Exception",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
 
-            MainWindow main = Current.MainWindow as MainWindow;
+            MainWindow main = _host.Services.GetService<MainWindow>();
             main?.PrintErrorLog(ex);
+        }
+
+        private async void App_OnExit(object sender, ExitEventArgs e)
+        {
+            using (_host)
+            {
+                await _host.StopAsync();
+            }
         }
     }
 }

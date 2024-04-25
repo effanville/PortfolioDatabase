@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Effanville.Common.Structure.DisplayClasses;
+using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Statistics;
@@ -20,7 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
-        private bool _updateDataInProgress = true;
+        private bool _updateDataInProgress = false;
         private List<AccountStatistics> _stats;
 
         private bool _displayValueFunds = true;
@@ -115,32 +117,46 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             UserConfiguration.StoreConfiguration(this);
             if (!_updateDataInProgress)
             {
-                await Task.Run(() => UpdateData(null));
+                _updateDataInProgress = true;
+                await Task.Run(() => UpdateData(null, force: true));
+                _updateDataInProgress = false;
             }
         }
 
-        /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        private void UpdateData(IPortfolio modelData, bool force)
         {
-            _updateDataInProgress = true;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            stopwatch.Start();
             if (modelData != null)
             {
                 base.UpdateData(modelData);
             }
 
-            if (Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true))
+            if ((Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)) && !force)
             {
                 return;
             }
 
             var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
             DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
-            _updateDataInProgress = false;
+            stopwatch.Stop();
+            ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "here", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");
             return;
 
             void AssignStats(List<AccountStatistics> statistics)
             {
                 Stats = statistics;
+            }
+        }
+
+        /// <inheritdoc/>
+        public override async void UpdateData(IPortfolio modelData)
+        {
+            if (!_updateDataInProgress)
+            {
+                _updateDataInProgress = true;
+                await Task.Run(() => UpdateData(null, force: false));
+                _updateDataInProgress = false;
             }
         }
     }

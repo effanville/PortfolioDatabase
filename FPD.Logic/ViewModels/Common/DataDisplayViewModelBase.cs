@@ -18,10 +18,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// The Account type the view model stores data pertaining to.
         /// </summary>
-        public Account DataType
-        {
-            get;
-        }
+        public Account DataType { get; }
 
         /// <summary>
         /// Default constructor.

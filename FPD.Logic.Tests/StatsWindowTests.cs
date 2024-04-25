@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
+using System.Threading.Tasks;
 
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
@@ -21,7 +22,7 @@ namespace Effanville.FPD.Logic.Tests
         /// The defaults are loaded correctly.
         /// </summary>
         [Test]
-        public void CanLoadWithNames()
+        public async Task CanLoadWithNames()
         {
             var portfolio = TestSetupHelper.CreateBasicDataBase();
 
@@ -34,10 +35,13 @@ namespace Effanville.FPD.Logic.Tests
                 portfolio,
                 viewModelFactory);
             context.ViewModel.UpdateData(context.Portfolio);
+
+            await Task.Delay(3000);
+            
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(ExpectedNumberTabs, context.ViewModel.Stats.Count);
-                Assert.AreEqual(true, context.ViewModel.DisplayValueFunds);
+                Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(true));
             });
         }
 
@@ -46,7 +50,7 @@ namespace Effanville.FPD.Logic.Tests
         /// </summary>
         [TestCase(false)]
         [TestCase(true)]
-        public void CanStoreConfig(bool valueFunds)
+        public async Task CanStoreConfig(bool valueFunds)
         {
             var configuration = new StatsDisplayConfiguration();
             var portfolio = TestSetupHelper.CreateBasicDataBase();
@@ -61,17 +65,24 @@ namespace Effanville.FPD.Logic.Tests
                 viewModelFactory);
             context.ViewModel.UpdateData(context.Portfolio);
 
-            Assert.AreEqual(ExpectedNumberTabs, context.ViewModel.Stats.Count);
-            Assert.AreEqual(true, context.ViewModel.DisplayValueFunds);
-
+            await Task.Delay(3000);
+            Assert.Multiple(() =>
+            {
+                Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(true));
+            });
             context.ViewModel.DisplayValueFunds = valueFunds;
-            Assert.AreEqual(valueFunds, context.ViewModel.DisplayValueFunds);
+            Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
 
             context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration, context.Portfolio));
 
             context.ViewModel.UpdateData(context.Portfolio);
-            Assert.AreEqual(valueFunds, context.ViewModel.DisplayValueFunds);
-            Assert.AreEqual(ExpectedNumberTabs, context.ViewModel.Stats.Count);
+            await Task.Delay(3000);
+            Assert.Multiple(() =>
+            {
+                Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
+                Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+            });
         }
     }
 }
