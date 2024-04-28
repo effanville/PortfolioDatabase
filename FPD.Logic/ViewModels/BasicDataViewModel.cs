@@ -153,6 +153,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public override void UpdateData(IPortfolio modelData)
         {
             ModelData = modelData;
+            
             PortfolioNameText = string.IsNullOrWhiteSpace(modelData.Name) ? "Unsaved database" : modelData.Name;
             HasValues = modelData.NumberOf(Account.All) != 0;
             SecurityTotalText = $"Total Securities: {modelData.NumberOf(Account.Security)}";
@@ -160,13 +161,34 @@ namespace Effanville.FPD.Logic.ViewModels
             List<ISecurity> securities = modelData.Funds.ToList();
 
             securities.Sort((fund, otherFund) => fund.ValueComparison(otherFund, DateTime.Today));
-            TopSecurities = securities.Take(5).Select(name => new Labelled<TwoName, DailyValuation>(new TwoName(name.Names.Company, name.Names.Name), name.Value(DateTime.Today))).ToList();
+            var securitiesTop = new List<Labelled<TwoName, DailyValuation>>(5);
+            foreach (var sec in securities.Take(5))
+            {
+                ICurrency currency = modelData.Currency(sec);
+                Labelled<TwoName, DailyValuation> temp = new Labelled<TwoName, DailyValuation>(
+                    new TwoName(sec.Names.Company, sec.Names.Name),
+                    sec.Value(DateTime.Today, currency));
+                securitiesTop.Add(temp);
+            }
+
+            TopSecurities = securitiesTop;
 
             BankAccountTotalText = $"Total Bank Accounts: {modelData.NumberOf(Account.BankAccount)}";
             BankAccountAmountText = $"Total Value: {modelData.TotalValue(Totals.BankAccount).WithCurrencySymbol(modelData.BaseCurrency)}";
             List<IExchangableValueList> bankAccounts = modelData.BankAccounts.ToList();
             bankAccounts.Sort((bank, otherBank) => bank.ValueComparison(otherBank, DateTime.Today));
-            TopBankAccounts = bankAccounts.Take(5).Select(name => new Labelled<TwoName, DailyValuation>(new TwoName(name.Names.Company, name.Names.Name), name.Value(DateTime.Today) ?? new DailyValuation(DateTime.Today, 0.0m))).ToList();
+
+            var bankAccountsTop = new List<Labelled<TwoName, DailyValuation>>(5);
+            foreach (var bank in bankAccounts.Take(5))
+            {
+                ICurrency currency = modelData.Currency(bank);
+                var temp = new Labelled<TwoName, DailyValuation>(
+                    new TwoName(bank.Names.Company, bank.Names.Name),
+                    bank.Value(DateTime.Today, currency));
+                bankAccountsTop.Add(temp);
+            }
+
+            TopBankAccounts = bankAccountsTop;
             Notes = modelData.Notes.ToList();
         }
 
