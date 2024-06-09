@@ -105,8 +105,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             var stats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today, 
-                _dataType, 
-                SelectedName,
+                modelData,
                 AccountStatisticsHelpers.AllStatistics());
             Stats.UpdateData(stats);
         }

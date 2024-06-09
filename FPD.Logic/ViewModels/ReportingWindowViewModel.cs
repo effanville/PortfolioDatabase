@@ -111,7 +111,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// </summary>
         public ICommand ExportReportsCommand { get; }
 
-        private void ExecuteExportReportsCommand() => _ = Task.Factory.StartNew(ExecuteExportReports);
+        private void ExecuteExportReportsCommand() => ExecuteExportReports();
 
         private void ExecuteExportReports()
         {
