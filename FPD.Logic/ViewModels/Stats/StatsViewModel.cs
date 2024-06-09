@@ -148,7 +148,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 return;
             }
 
-            var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
+            var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView, logger: ReportLogger);
             DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
             stopwatch.Stop();
             ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "here", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");

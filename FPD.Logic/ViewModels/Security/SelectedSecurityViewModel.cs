@@ -303,7 +303,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 _portfolio,
                 DateTime.Today,
                 modelData,
-                AccountStatisticsHelpers.AllStatistics());
+                AccountStatisticsHelpers.AllStatistics(),
+                ReportLogger);
             SecurityStats.UpdateData(securityStats);
             Values = modelData.ListOfValues().ToList();
         }

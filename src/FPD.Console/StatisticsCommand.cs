@@ -71,7 +71,7 @@ namespace Effanville.FPD.Console
                 $"{DateTime.Today.FileSuitableUKDateString()}{portfolio.Name}.{docType}");
 
             var settings = PortfolioStatisticsSettings.DefaultSettings();
-            PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
+            PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem, _reportLogger);
             var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
             stats.ExportToFile(_fileSystem, filePath, docType, exportSettings, _reportLogger);
             _logger.Log(LogLevel.Information, $"Successfully generated statistics page {filePath}");

@@ -70,7 +70,7 @@ namespace Effanville.FPD.Console
                     directory,
                     $"{DateTime.Today:yyyy-MM-dd}-{portfolio.Name}.html");
                 var settings = PortfolioStatisticsSettings.DefaultSettings();
-                PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
+                PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem, _reportLogger);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
                 stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, _reportLogger);
                 

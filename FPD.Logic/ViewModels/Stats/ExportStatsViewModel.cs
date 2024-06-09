@@ -308,7 +308,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowAssets),
                     assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList());
 
-                PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, DisplayGlobals.CurrentFileSystem);
+                PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, DisplayGlobals.CurrentFileSystem, DisplayGlobals.ReportLogger);
                 string extension = DisplayGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
                 DocumentType type = extension.ToEnum<DocumentType>();
 
