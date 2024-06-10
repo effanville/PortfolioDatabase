@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.06.00] - 2024-06-10
+
+### Bug Fixes
+
+- Move exception handling subscription to code behind.
+- Move IsLightTheme checking to ViewModel.
+- Move UiStyles creation outside of MainWindowViewModel.
+- Migrate Reporter instantiation into DI container.
+- Store config location in IConfiguration to avoid repeated use of filepath.
+- Tidy code in MainWindowViewModel.
+- Miscellaneous code tidies.
+- Split app class into constituent parts.
+- Only update UI trades and values when difference occurs.
+- Alter stats window update restricting.
+- Restrict update event firing when timelist data is unchanged.
+- Add delays to stats window tests to ensure they pass.
+- Address code style in stats window tests.
+- Ensure StatsUserWindow does not react when not visible.
+- Ensure start display converts values into correct currency.
+- Update common library to ensure downloading prices works.
+
+### Features
+
+- Use IConfiguration for command line arguments.
+- Place window startup in code behind.
+- Add basic hosting for the main window.
+- Add MainWindowViewModel to DI container and resolve using service collection.
+- Move styles and ViewModelFactory creation oustide of MainViewModel.
+- Move Configuration loading out of MainWindowViewModel.
+- Improve performance of stats window.
+
+### Miscellaneous Tasks
+
+- Update build process repo to fix single file and version issues.
+
 ## [24.03.00] - 2024-03-17
 
 ### Bug Fixes
