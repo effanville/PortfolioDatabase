@@ -96,29 +96,85 @@ namespace Effanville.FPD.Logic.Configuration
             if (HasLoaded && viewModel is ExportStatsViewModel vm)
             {
                 if (SecurityColumnNames != null && SecurityColumnNames.Any())
-                {
-                    vm.SecurityColumnNames = SecurityColumnNames;
+                {                    
+                    if(vm.SecurityColumnNames == null)
+                    {
+                        vm.SecurityColumnNames = SecurityColumnNames;
+                    }
+                    else
+                    {
+                        foreach (Selectable<Statistic> name in vm.SecurityColumnNames)
+                        {
+                            Selectable<Statistic> configName = SecurityColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
+                            if (configName != null)
+                            {
+                                name.Selected = configName.Selected;
+                            }
+                        }
+                    }
                 }
                 vm.SecuritySortingField = SecuritySortingField;
                 vm.SecurityDirection = SecurityDirection;
 
                 if (SectorColumnNames != null && SectorColumnNames.Any())
-                {
-                    vm.SectorColumnNames = SectorColumnNames;
+                {                    
+                    if(vm.SectorColumnNames == null)
+                    {
+                        vm.SectorColumnNames = SectorColumnNames;
+                    }
+                    else
+                    {
+                        foreach (Selectable<Statistic> name in vm.SectorColumnNames)
+                        {
+                            Selectable<Statistic> configName = SectorColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
+                            if (configName != null)
+                            {
+                                name.Selected = configName.Selected;
+                            }
+                        }
+                    }
                 }
                 vm.SectorSortingField = SectorSortingField;
                 vm.SectorDirection = SectorDirection;
 
                 if (BankColumnNames != null && BankColumnNames.Any())
                 {
-                    vm.BankColumnNames = BankColumnNames;
+                    if(vm.BankColumnNames == null)
+                    {
+                        vm.BankColumnNames = BankColumnNames;
+                    }
+                    else
+                    {
+                        foreach (Selectable<Statistic> name in vm.BankColumnNames)
+                        {
+                            Selectable<Statistic> configName = BankColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
+                            if (configName != null)
+                            {
+                                name.Selected = configName.Selected;
+                            }
+                        }
+                    }
                 }
                 vm.BankSortingField = BankSortingField;
                 vm.BankDirection = BankDirection;
 
                 if (AssetColumnNames != null && AssetColumnNames.Any())
-                {
-                    vm.AssetColumnNames = AssetColumnNames;
+                {                    
+                    if(vm.AssetColumnNames == null)
+                    {
+                        vm.AssetColumnNames = AssetColumnNames;
+                    }
+                    else
+                    {
+                        foreach (Selectable<Statistic> name in vm.AssetColumnNames)
+                        {
+                            Selectable<Statistic> configName = AssetColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
+                            if (configName != null)
+                            {
+                                name.Selected = configName.Selected;
+                            }
+                        }
+                    }
                 }
                 vm.AssetSortingField = AssetSortingField;
                 vm.AssetDirection = AssetDirection;

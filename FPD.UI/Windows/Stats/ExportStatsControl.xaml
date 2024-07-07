@@ -98,6 +98,7 @@
                 <DataTemplate>
                     <CheckBox Content="{Binding Path=Instance}"
                               IsChecked="{Binding Path=Selected, Mode=TwoWay}"
+                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
                               Tag="{RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
@@ -126,6 +127,7 @@
                 <DataTemplate>
                     <CheckBox Content="{Binding Path=Instance}"
                               IsChecked="{Binding Path=Selected, Mode=TwoWay}"
+                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
                               Tag="{RelativeSource FindAncestor,
                   AncestorType={x:Type ComboBox}}" />
                 </DataTemplate>
@@ -154,6 +156,7 @@
                 <DataTemplate>
                     <CheckBox Content="{Binding Path=Instance}"
                               IsChecked="{Binding Path=Selected, Mode=TwoWay}"
+                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
                               Tag="{RelativeSource FindAncestor,
                   AncestorType={x:Type ComboBox}}" />
                 </DataTemplate>
@@ -182,6 +185,7 @@
                     <DataTemplate>
                         <CheckBox Content="{Binding Path=Instance}"
                                   IsChecked="{Binding Path=Selected, Mode=TwoWay}"
+                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
                                   Tag="{RelativeSource FindAncestor,
                   AncestorType={x:Type ComboBox}}" />
                     </DataTemplate>
