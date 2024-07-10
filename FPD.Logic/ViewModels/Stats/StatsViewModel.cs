@@ -69,12 +69,20 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All, Statistic[] statsToView = null)
+        public StatsViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
             : base(globals, styles, userConfiguration, portfolio, "Statistics", account)
         {
-            StatisticNames = statsToView != null
-                ? statsToView.Select(stat => new Selectable<Statistic>(stat, true)).ToList()
-                : AccountStatisticsHelpers.AllStatistics().Select(stat => new Selectable<Statistic>(stat, true)).ToList();
+            StatisticNames = AccountStatisticsHelpers.AllStatistics()
+                .Select(stat =>
+                    {
+                        if (stat == Statistic.DrawDown || stat == Statistic.MDD)
+                        {
+                            return new Selectable<Statistic>(stat, false);
+                        }
+                        
+                        return new Selectable<Statistic>(stat, true);
+                    })
+                .ToList();
             if (UserConfiguration.HasLoaded)
             {
                 UserConfiguration.RestoreFromConfiguration(this);
@@ -85,7 +93,10 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 UserConfiguration.HasLoaded = true;
             }
 
-            _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
+            _statsToView = StatisticNames
+                .Where(stat => stat.Selected)
+                .Select(stat => stat.Instance)
+                .ToArray();
 
             StatisticNames.ForEach(stat => stat.SelectedChanged += OnSelectedChanged);
             PropertyChanged += OnPropertyChanged;
