@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +22,21 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatisticsChartsViewModel : DataDisplayViewModelBase
     {
-        private int _historyGapDays = 30;
+        private int _historyGapDays;
+        private DateTime _earliestViewDate = new DateTime(DateTime.Today.AddYears(-10).Year, 1, 1);
         private List<PortfolioDaySnapshot> _historyStats;
+
+        public int HistoryGapDays
+        {
+            get => _historyGapDays;
+            set => SetAndNotify(ref _historyGapDays, value);
+        }
+
+        public DateTime EarliestViewDate
+        {
+            get => _earliestViewDate;
+            set => SetAndNotify(ref _earliestViewDate, value);
+        }
 
         /// <summary>
         /// The history information.
@@ -36,26 +50,32 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// The current value of each security.
         /// </summary>
-        public Dictionary<string, decimal> SecurityValues => HistoryStats?[HistoryStats.Count - 1].SecurityValues
-                                                                 .Where(x => x.Value > 0)
-                                                                 .ToDictionary(x => x.Key, x => x.Value)
-                                                             ?? new Dictionary<string, decimal>();
+        public Dictionary<string, decimal> SecurityValues
+            => HistoryStats?.Count > 0
+                ? HistoryStats?[HistoryStats.Count - 1].SecurityValues
+                    .Where(x => x.Value > 0)
+                    .ToDictionary(x => x.Key, x => x.Value)
+                : new Dictionary<string, decimal>();
 
         /// <summary>
         /// The current value of each bank account.
         /// </summary>
-        public Dictionary<string, decimal> BankAccountValues => HistoryStats?[HistoryStats.Count - 1].BankAccValues
-                                                                    .Where(x => x.Value > 0)
-                                                                    .ToDictionary(x => x.Key, x => x.Value)
-                                                                ?? new Dictionary<string, decimal>();
+        public Dictionary<string, decimal> BankAccountValues
+            => HistoryStats?.Count > 0
+                ? HistoryStats[HistoryStats.Count - 1].BankAccValues
+                    .Where(x => x.Value > 0)
+                    .ToDictionary(x => x.Key, x => x.Value)
+                : new Dictionary<string, decimal>();
 
         /// <summary>
         /// The current value of each sector.
         /// </summary>
-        public Dictionary<string, decimal> SectorValues => HistoryStats?[HistoryStats.Count - 1].SectorValues
-                                                               .Where(x => x.Value > 0)
-                                                               .ToDictionary(x => x.Key, x => x.Value)
-                                                           ?? new Dictionary<string, decimal>();
+        public Dictionary<string, decimal> SectorValues
+            => HistoryStats?.Count > 0
+                ? HistoryStats[HistoryStats.Count - 1].SectorValues
+                    .Where(x => x.Value > 0)
+                    .ToDictionary(x => x.Key, x => x.Value)
+                : new Dictionary<string, decimal>();
 
         private ObservableCollection<LineSeries> _IRRlines = new ObservableCollection<LineSeries>();
 
@@ -85,6 +105,16 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, UiStyles styles)
             : base(uiGlobals, styles, portfolio, "Charts", Account.All)
         {
+            PropertyChanged += OnPropertyChanged;
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(EarliestViewDate)
+                || e.PropertyName == nameof(HistoryGapDays))
+            {
+                UpdateData(force: true);
+            }
         }
 
         /// <summary>
@@ -97,33 +127,41 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 base.UpdateData(modelData);
             }
             
-            if (HistoryStats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true))
+            UpdateData();
+        }
+
+        private void UpdateData(bool force = false)
+        {
+            if (!force && (HistoryStats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)))
             {
                 return;
             }
 
-            DateTime firstDate = modelData.FirstValueDate(Totals.All);
+            DateTime firstDate = ModelData.FirstValueDate(Totals.All);
             if (firstDate < new DateTime(1980, 1, 1))
             {
                 firstDate = new DateTime(1980, 1, 1);
             }
 
-            DateTime lastDate = modelData.LatestDate(Totals.All);
-            if (lastDate == default(DateTime))
+            DateTime lastDate = ModelData.LatestDate(Totals.All);
+            if (lastDate == default)
             {
                 lastDate = DateTime.Today;
             }
 
             int numDays = (lastDate - firstDate).Days;
-            int snapshotGap = numDays / 100;
-            var earliest = new DateTime(2010, 1, 1);
-            firstDate = firstDate < earliest ? earliest : firstDate;
+            if (HistoryGapDays == 0 && numDays > 0)
+            { 
+                HistoryGapDays = numDays / 100;
+            }
+
+            firstDate = firstDate < EarliestViewDate ? EarliestViewDate : firstDate;
             PortfolioHistory history = new PortfolioHistory(
                 ModelData,
                 new PortfolioHistory.Settings(
                     firstDate,
                     lastDate,
-                    snapshotIncrement: snapshotGap,
+                    snapshotIncrement: HistoryGapDays,
                     generateSecurityRates: false,
                     generateSectorRates: true));
             HistoryStats = history.Snapshots.Where(stat => stat.Date > new DateTime(1000, 1, 1)).ToList();
@@ -134,7 +172,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Updates the data for the rate of return chart.
         /// </summary>
-        public void UpdateChart()
+        private void UpdateChart()
         {
             var rnd = new Random(12345);
             IRRLines = null;

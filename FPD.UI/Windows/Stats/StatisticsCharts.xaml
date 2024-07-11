@@ -17,6 +17,7 @@
           HorizontalAlignment="Stretch"
           ScrollViewer.VerticalScrollBarVisibility="Visible">
         <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -24,21 +25,44 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" 
+              Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Gap between history records" Margin="1" />
+            <TextBox Grid.Column="1" 
+                     MinWidth="100"
+                     Background="{Binding Styles.BackgroundBrush}"
+                     Foreground="{Binding Styles.ForegroundBrush}"
+                     Text="{Binding HistoryGapDays}" />
+            <TextBlock Grid.Column="2"
+                       Text="Earliest Date In Chart" />
+            <TextBox Grid.Column="3"
+                     MinWidth="100"
+                     Background="{Binding Styles.BackgroundBrush}"
+                     Foreground="{Binding Styles.ForegroundBrush}"
+                     Text="{Binding EarliestViewDate}" />
+        </Grid>
         <controls:BindableChart Title="Total Value Over TIme"
                                 Style="{StaticResource ChartStyle1}"
                                 Height="Auto"
                                 Width="Auto"
                                 Grid.Column="0"
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 SeriesSource="{Binding TotalLines}" />
         <controls:BindableChart Title="Sector IRR over time"
                                 Style="{StaticResource ChartStyle1}"
                                 Height="Auto"
                                 Width="Auto"
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 SeriesSource="{Binding IRRLines}"
                                 Grid.Column="1" />
-        <Grid Grid.Row="1"
+        <Grid Grid.Row="2"
               Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -68,7 +92,7 @@
                    Style="{StaticResource ChartStyle1}"
                    Height="Auto"
                    Width="Auto"
-                   Grid.Row="1"
+                   Grid.Row="2"
                    Grid.Column="1">
             <cht:Chart.LegendStyle>
                 <Style TargetType="cht:Legend">
