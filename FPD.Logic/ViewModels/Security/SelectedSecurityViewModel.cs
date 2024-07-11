@@ -302,8 +302,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             var securityStats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today,
-                _dataType,
-                ModelData.Names,
+                modelData,
                 AccountStatisticsHelpers.AllStatistics());
             SecurityStats.UpdateData(securityStats);
             Values = modelData.ListOfValues().ToList();

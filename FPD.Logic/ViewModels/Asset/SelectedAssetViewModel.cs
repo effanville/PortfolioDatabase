@@ -273,8 +273,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             var stats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today,
-                _dataType,
-                SelectedName,
+                modelData,
                 AccountStatisticsHelpers.DefaultAssetStats());
             Statistics.UpdateData(stats);
             Values = modelData.ListOfValues();
