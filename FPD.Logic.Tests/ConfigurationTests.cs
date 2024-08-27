@@ -178,11 +178,11 @@ namespace Effanville.FPD.Logic.Tests
           </d5p1:SelectableOfStatisticAUSmO6kd>
           <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>DrawDown</d5p1:Instance>
-            <d5p1:Selected>true</d5p1:Selected>
+            <d5p1:Selected>false</d5p1:Selected>
           </d5p1:SelectableOfStatisticAUSmO6kd>
           <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>MDD</d5p1:Instance>
-            <d5p1:Selected>true</d5p1:Selected>
+            <d5p1:Selected>false</d5p1:Selected>
           </d5p1:SelectableOfStatisticAUSmO6kd>
           <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>Sectors</d5p1:Instance>
@@ -316,7 +316,35 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>RecentChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FundFraction</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FundCompanyFraction</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Sectors</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FirstDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>LatestDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberEntries</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>EntryYearDensity</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
@@ -412,6 +440,14 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberEntries</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>EntryYearDensity</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
