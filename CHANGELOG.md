@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.09.00-20240905T0010] - 2024-09-05
+
+### Bug Fixes
+
+- Default to not calculate MDD and Drawdown for stats view.
+- Update submodules to latest develop versions.
+- Fixes to downloading to ensure it works for yahoo.
+- Update downloaders for non uk instruments.
+
+### Features
+
+- Add new statistics into Bank Account output options.
+- Add scroll bars into stats creator page.
+- Provide options in Charts window for duration and frequency of valuations.
+- Improve Stats generation apis.
+
+### Testing
+
+- Fix broken config tests.
+
 ## [24.06.00] - 2024-06-10
 
 ### Bug Fixes
