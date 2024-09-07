@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 
-using Effanville.Common.Console;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Extensions;
@@ -55,7 +54,7 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, IConfiguration config)
+        public int Execute(IConfiguration config)
         {
             var portfolioPersistence = new PortfolioPersistence();
             var portfolio = portfolioPersistence.Load(
@@ -99,11 +98,11 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, IConfiguration config)
-            => this.Validate(config, console, _logger);
+        public bool Validate(IConfiguration config)
+            => this.Validate(config, _logger);
 
         /// <inheritdoc/>
-        public void WriteHelp(IConsole console)
-            => this.WriteHelp(console, _logger);
+        public void WriteHelp()
+            => this.WriteHelp(_logger);
     }
 }

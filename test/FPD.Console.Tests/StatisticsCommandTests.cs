@@ -35,7 +35,6 @@ public sealed class StatisticsCommandTests
     {
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
-        var consoleInstance = new ConsoleInstance(null, null);
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var mock = new Mock<ILogger<StatisticsCommand>>();
         ILogger<StatisticsCommand> logger = mock.Object;
@@ -45,7 +44,7 @@ public sealed class StatisticsCommandTests
             .AddEnvironmentVariables()
             .Build();
         var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger);
-        bool isValidated = statisticsCommand.Validate(consoleInstance, config);
+        bool isValidated = statisticsCommand.Validate(config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

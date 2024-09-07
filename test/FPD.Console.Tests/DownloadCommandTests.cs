@@ -5,7 +5,6 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
-using Effanville.FinancialStructures.Database;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -36,7 +35,6 @@ public sealed class DownloadCommandTests
     {
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
-        var consoleInstance = new ConsoleInstance(null, null);
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var mock = new Mock<ILogger<DownloadCommand>>();
         ILogger<DownloadCommand> logger = mock.Object;
@@ -45,7 +43,7 @@ public sealed class DownloadCommandTests
             .AddEnvironmentVariables()
             .Build();
         var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger);
-        bool isValidated = downloadCommand.Validate(consoleInstance, config);
+        bool isValidated = downloadCommand.Validate(config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

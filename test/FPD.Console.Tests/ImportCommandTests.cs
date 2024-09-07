@@ -33,14 +33,13 @@ public sealed class ImportCommandTests
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
         mockFileSystem.AddFile(@"c:\\temp\\other-file.xml", new MockFileData("some other contents"));
-        var consoleInstance = new ConsoleInstance(null, null);
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var importCommand = new ImportCommand(mockFileSystem, null, reportLogger);
         IConfiguration config = new ConfigurationBuilder()
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        bool isValidated = importCommand.Validate(consoleInstance, config);
+        bool isValidated = importCommand.Validate(config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }
