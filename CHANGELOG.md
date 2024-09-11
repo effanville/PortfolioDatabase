@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.09.00-20240911T0003] - 2024-09-11
+
+### Bug Fixes
+
+- Remove obsolete consoleInstance class from console commands
+- Update FinancialStructures for downloading improvements
+- Improve downloading and date formatting.
+
 ## [24.09.00-20240905T0010] - 2024-09-05
 
 ### Bug Fixes
