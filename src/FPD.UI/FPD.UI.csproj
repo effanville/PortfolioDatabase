@@ -24,10 +24,10 @@
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\src\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
-    <ProjectReference Include="..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
-    <ProjectReference Include="..\FPD.Logic\FPD.Logic.csproj" />
+    <ProjectReference Include="..\..\Common\src\Common.UI\Common.UI.csproj" />
+    <ProjectReference Include="..\..\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
+    <ProjectReference Include="..\..\src\FPD.Logic\FPD.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="self_drawn_icon.ico">

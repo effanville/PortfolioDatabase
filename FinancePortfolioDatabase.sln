@@ -22,11 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{8989B308
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.UI", "FPD.UI\FPD.UI.csproj", "{EF488959-0392-44B2-A810-5BA18903AC33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.UI", "src\FPD.UI\FPD.UI.csproj", "{EF488959-0392-44B2-A810-5BA18903AC33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic", "FPD.Logic\FPD.Logic.csproj", "{128CC750-D915-4EA1-A23F-46EA530B6807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic", "src\FPD.Logic\FPD.Logic.csproj", "{128CC750-D915-4EA1-A23F-46EA530B6807}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic.Tests", "FPD.Logic.Tests\FPD.Logic.Tests.csproj", "{90EDA2DB-996B-497B-8562-C311F37B8A5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPD.Logic.Tests", "test\FPD.Logic.Tests\FPD.Logic.Tests.csproj", "{90EDA2DB-996B-497B-8562-C311F37B8A5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Structure", "Common\src\Common.Structure\Common.Structure.csproj", "{A2CB7343-EE36-451E-A71B-5CC4E38C2589}"
 EndProject
