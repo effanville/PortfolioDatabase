@@ -98,8 +98,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out IValueList vl)
-                        || vl is not ISecurity security)
+                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out ISecurity security))
                     {
                         return false;
                     }
@@ -110,8 +109,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 case StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> viewModel3:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out IValueList vl)
-                        || vl is not IAmortisableAsset asset)
+                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out IAmortisableAsset asset))
                     {
                         return false;
                     }
