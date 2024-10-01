@@ -75,7 +75,7 @@ public static class TestDependencies
 
     private static IReportLogger SetupReportLogger()
     {
-        var reportLogger = new LogReporter(LogAction, saveInternally: true);
+        LogReporter reportLogger = new LogReporter(LogAction, saveInternally: true);
         return reportLogger;
 
         void LogAction(ReportSeverity sev, ReportType error, string loc, string msg)

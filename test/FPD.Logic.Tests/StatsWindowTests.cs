@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.Tests.TestHelpers;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
 using NUnit.Framework;
@@ -24,10 +25,10 @@ namespace Effanville.FPD.Logic.Tests
         [Test]
         public async Task CanLoadWithNames()
         {
-            var portfolio = TestSetupHelper.CreateBasicDataBase();
+            IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
 
-            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
-            var context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
+            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
                 null,
                 Account.All,
                 new StatsDisplayConfiguration(),
@@ -52,11 +53,11 @@ namespace Effanville.FPD.Logic.Tests
         [TestCase(true)]
         public async Task CanStoreConfig(bool valueFunds)
         {
-            var configuration = new StatsDisplayConfiguration();
-            var portfolio = TestSetupHelper.CreateBasicDataBase();
-            var viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            StatsDisplayConfiguration configuration = new StatsDisplayConfiguration();
+            IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
+            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
 
-            var context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
+            ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
                 null,
                 Account.All,
                 configuration,

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.FinancialStructures.Database;
@@ -28,12 +29,12 @@ public class SelectedSecurityViewModelSteps
     [Given(@"I have a SelectedSecurityViewModel with account (.*) and name (.*) and no data")]
     public void GivenIHaveASelectedSecurityViewModelWithNameBarclaysCurrentAndNoData(Account account, string name)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(account, nameData, out var valueList);
-        _testContext.ModelData = valueList as ISecurity;
+        portfolio.TryGetAccount(account, nameData, out ISecurity valueList);
+        _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSecurityViewModel(
             portfolio,
@@ -48,28 +49,27 @@ public class SelectedSecurityViewModelSteps
     [Given(@"I have a SelectedSecurityViewModel with account (.*) and name (.*) and data")]
     public void GivenIHaveASelectedAssetViewModelWithAccountSecurityAndData(Account account, string name, Table table)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(account, nameData, out var valueList);
-        var security = valueList as ISecurity;
-        foreach (var row in table.Rows)
+        portfolio.TryGetAccount(account, nameData, out ISecurity security);
+        foreach (TableRow row in table.Rows)
         {
-            var date = row["Date"];
-            DateTime.TryParse(date, out var actualDate);
+            string date = row["Date"];
+            DateTime.TryParse(date, out DateTime actualDate);
 
-            var value = row["UnitPrice"];
-            decimal.TryParse(value, out var decimalValue);
+            string value = row["UnitPrice"];
+            decimal.TryParse(value, out decimal decimalValue);
 
-            var type = row["Type"];
+            string type = row["Type"];
             if (type == "UnitPrice")
             {
                 security.SetData(actualDate, decimalValue);
             }
             else if (type == "Trade")
             {
-                var trade = FromRow(nameData, row);
+                SecurityTrade trade = FromRow(nameData, row);
                 security.TryAddOrEditTradeData(trade, trade);
             }
         }
@@ -88,18 +88,18 @@ public class SelectedSecurityViewModelSteps
 
     private SecurityTrade FromRow(NameData name, TableRow row)
     {
-        var date = row["Date"];
-        DateTime.TryParse(date, out var actualDate);
+        string date = row["Date"];
+        DateTime.TryParse(date, out DateTime actualDate);
 
-        var value = row["UnitPrice"];
-        decimal.TryParse(value, out var decimalValue);
-        var tradeType = row["TradeType"];
-        var eff = Enum.Parse<TradeType>(tradeType);
-        var numShares = row["NumShares"];
-        decimal.TryParse(numShares, out var decimalNumShares);
-        var costs = row["Costs"];
-        decimal.TryParse(costs, out var decimalCosts);
-        var trade = new SecurityTrade(
+        string value = row["UnitPrice"];
+        decimal.TryParse(value, out decimal decimalValue);
+        string tradeType = row["TradeType"];
+        TradeType eff = Enum.Parse<TradeType>(tradeType);
+        string numShares = row["NumShares"];
+        decimal.TryParse(numShares, out decimal decimalNumShares);
+        string costs = row["Costs"];
+        decimal.TryParse(costs, out decimal decimalCosts);
+        SecurityTrade trade = new SecurityTrade(
             eff,
             name.ToTwoName(),
             actualDate,
@@ -118,23 +118,23 @@ public class SelectedSecurityViewModelSteps
 
     [Then(@"the SelectedSecurityViewModel has (.*) unitprices displayed")]
     public void ThenTheSelectedSecurityViewModelHasUnitpricesDisplayed(int p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.TLVM.Valuations.Count);
+        => Assert.That(_testContext.ViewModel.TLVM.Valuations.Count, Is.EqualTo(p0));
 
     [Then(@"the SelectedSecurityViewModel has (.*) trades displayed")]
     public void ThenTheSelectedSecurityViewModelHasTradesDisplayed(int p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.Trades.Count);
+        => Assert.That(_testContext.ViewModel.Trades.Count, Is.EqualTo(p0));
 
     [When(@"I add SelectedSecurityViewModel data with")]
     public void WhenIAddSelectedSingleDataViewModelDataWith(Table table)
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["UnitPrice"];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["UnitPrice"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             _testContext.ViewModel.TLVM.AddValuation(new DailyValuation(actualDate, decimalValue));
         }
     }
@@ -156,21 +156,21 @@ public class SelectedSecurityViewModelSteps
     [Then(@"the SSVM values are")]
     public void ThenTheSSVMValuesAre(Table table)
     {
-        var valuations = _testContext.ViewModel.TLVM.Valuations;
-        Assert.AreEqual(table.RowCount, valuations.Count);
+        List<DailyValuation> valuations = _testContext.ViewModel.TLVM.Valuations;
+        Assert.That(valuations.Count, Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            var valuation = valuations[index];
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["UnitPrice"];
+            DailyValuation valuation = valuations[index];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["UnitPrice"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(actualDate, valuation.Day);
-                Assert.AreEqual(decimalValue, valuation.Value);
+                Assert.That(valuation.Day, Is.EqualTo(actualDate));
+                Assert.That(valuation.Value, Is.EqualTo(decimalValue));
             });
         }
     }
@@ -179,10 +179,10 @@ public class SelectedSecurityViewModelSteps
     public void WhenIAddSelectedSecurityViewModelTradeDataWith(string name, Table table)
     {
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
-        foreach (var row in table.Rows)
+        NameData nameData = new NameData(names[0], names[1]);
+        foreach (TableRow row in table.Rows)
         {
-            var trade = FromRow(nameData, row);
+            SecurityTrade trade = FromRow(nameData, row);
             _testContext.ViewModel.AddNewTrade(trade);
         }
     }
@@ -190,24 +190,24 @@ public class SelectedSecurityViewModelSteps
     [Then(@"the SSVM trade values are")]
     public void ThenTheSsvmTradeValuesAre(Table table)
     {
-        var name = _testContext.ViewModel.ModelData.Names;
-        var valuations = _testContext.ViewModel.Trades;
-        Assert.AreEqual(table.RowCount, valuations.Count);
+        NameData name = _testContext.ViewModel.ModelData.Names;
+        List<SecurityTrade> valuations = _testContext.ViewModel.Trades;
+        Assert.That(valuations.Count, Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            var actualTrade = valuations[index];
-            var row = table.Rows[index];
-            var expectedTrade = FromRow(name, row);
+            SecurityTrade actualTrade = valuations[index];
+            TableRow row = table.Rows[index];
+            SecurityTrade expectedTrade = FromRow(name, row);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(expectedTrade.TradeType, actualTrade.TradeType);
-                Assert.AreEqual(expectedTrade.Company, actualTrade.Company);
-                Assert.AreEqual(expectedTrade.Name, actualTrade.Name);
+                Assert.That(actualTrade.TradeType, Is.EqualTo(expectedTrade.TradeType));
+                Assert.That(actualTrade.Company, Is.EqualTo(expectedTrade.Company));
+                Assert.That(actualTrade.Name, Is.EqualTo(expectedTrade.Name));
                 
-                Assert.AreEqual(expectedTrade.Day, actualTrade.Day);
-                Assert.AreEqual(expectedTrade.NumberShares, actualTrade.NumberShares);
-                Assert.AreEqual(expectedTrade.UnitPrice, actualTrade.UnitPrice);
-                Assert.AreEqual(expectedTrade.TradeCosts, actualTrade.TradeCosts);
+                Assert.That(actualTrade.Day, Is.EqualTo(expectedTrade.Day));
+                Assert.That(actualTrade.NumberShares, Is.EqualTo(expectedTrade.NumberShares));
+                Assert.That(actualTrade.UnitPrice, Is.EqualTo(expectedTrade.UnitPrice));
+                Assert.That(actualTrade.TradeCosts, Is.EqualTo(expectedTrade.TradeCosts));
             });
         }
     }
@@ -215,8 +215,8 @@ public class SelectedSecurityViewModelSteps
     [When(@"I edit SelectedSecurityViewModel trade data (.*) to")]
     public void WhenIEditSelectedSecurityViewModelTradeDataForBarclaysCurrentTo(int p0, Table table)
     {
-        var oldTrade = _testContext.ViewModel.Trades[p0 - 1];
-        var newTrade = FromRow(_testContext.ViewModel.ModelData.Names, table.Rows[0]);
+        SecurityTrade oldTrade = _testContext.ViewModel.Trades[p0 - 1];
+        SecurityTrade newTrade = FromRow(_testContext.ViewModel.ModelData.Names, table.Rows[0]);
         _testContext.ViewModel.EditTrade(oldTrade, newTrade );
     }
 

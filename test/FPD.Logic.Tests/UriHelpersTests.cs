@@ -19,7 +19,7 @@ public class UriHelpersTests
     [TestCaseSource(nameof(TestUriCases))]
     public void TestUri(string text, bool created, Uri expectedUri)
     {
-        bool actualCreate = UriHelpers.IsValidUri(text, out var actual);
+        bool actualCreate = UriHelpers.IsValidUri(text, out Uri actual);
         Assert.AreEqual(created,actualCreate);
         Assert.AreEqual(expectedUri, actual);
     }

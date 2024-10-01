@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 using Effanville.FinancialStructures.Database;
@@ -40,7 +41,7 @@ public class DataNamesViewModelSteps
 
     private void Create(Account account, Table table)
     {
-        var portfolio = PortfolioGeneratorHelper.CreateFromTable(table);
+        IPortfolio portfolio = PortfolioGeneratorHelper.CreateFromTable(table);
         _testContext.ModelData = portfolio;
         _testContext.Updater.Database = portfolio;
 
@@ -85,14 +86,14 @@ public class DataNamesViewModelSteps
     [When(@"I select the names row with data")]
     public void WhenISelectTheNamesRowWithData(Table table)
     {
-        var nameData = FromRow(table.Rows[0]);
+        NameData nameData = FromRow(table.Rows[0]);
         _testContext.ViewModel.SelectName(nameData);
     }
 
     [When(@"I add a name with data")]
     public void WhenIAddANameWithData(Table table)
     {
-        var nameData = FromRow(table.Rows[0]);
+        NameData nameData = FromRow(table.Rows[0]);
         _testContext.ViewModel.AddName(nameData);
     }
 
@@ -103,11 +104,11 @@ public class DataNamesViewModelSteps
     [Then(@"the user can see the DataNames are")]
     public void ThenTheUserCanSeeTheDataNamesAre(Table table)
     {
-        var dataNames = _testContext.ViewModel.DataNames;
-        var rows = table.Rows;
+        List<RowData> dataNames = _testContext.ViewModel.DataNames;
+        TableRows rows = table.Rows;
         for (int index = 0; index < rows.Count; index++)
         {
-            var name = FromRow(rows[index]);
+            NameData name = FromRow(rows[index]);
             AreNameDataEqual(name, dataNames[index].Instance);
         }
     }
@@ -115,8 +116,8 @@ public class DataNamesViewModelSteps
     [When(@"I edit the (.*) name data to")]
     public void WhenIEditTheNameDataTo(int index, Table table)
     {
-        var newName = FromRow(table.Rows[0]);
-        var selectedRow = _testContext.ViewModel.DataNames[index - 1];
+        NameData newName = FromRow(table.Rows[0]);
+        RowData selectedRow = _testContext.ViewModel.DataNames[index - 1];
         _testContext.ViewModel.EditName(selectedRow, newName);
     }
     
@@ -131,14 +132,14 @@ public class DataNamesViewModelSteps
     [When(@"I remove the (.*) data name")]
     public void WhenIRemoveTheDataName(int p0)
     {
-        var selectedRow = _testContext.ViewModel.DataNames[p0 - 1];
+        RowData selectedRow = _testContext.ViewModel.DataNames[p0 - 1];
         _testContext.ViewModel.DeleteName(selectedRow.Instance);
     }
     
     [Then(@"the dataNames portfolio has only (.*) of type (.*)")]
     public void ThenThePortfolioHasOnlyOfTypeSecurity(int p0, Account account)
     {
-        var numberAccounts = _testContext.ModelData.NameDataForAccount(account);
+        IReadOnlyList<NameData> numberAccounts = _testContext.ModelData.NameDataForAccount(account);
         Assert.AreEqual(p0, numberAccounts.Count);
     }
 

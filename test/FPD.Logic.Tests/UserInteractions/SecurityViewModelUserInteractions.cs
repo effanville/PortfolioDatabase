@@ -8,7 +8,7 @@ public static class SecurityViewModelUserInteractions
     public static void AddNewTrade(this SelectedSecurityViewModel viewModel, SecurityTrade trade)
     {
         viewModel.SelectTrade(null);
-        var newTrade = viewModel.DefaultTradeValue();
+        SecurityTrade newTrade = viewModel.DefaultTradeValue();
         viewModel.Trades.Add(newTrade);
         viewModel.SelectTrade(newTrade);
 

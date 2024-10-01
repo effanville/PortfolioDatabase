@@ -50,7 +50,7 @@ public class ViewModelFactory : IViewModelFactory
                 account, _updater) as StyledClosableViewModelBase<T, IPortfolio>,
             ISecurity security => new SelectedSecurityViewModel(portfolio, security, _styles, _globals, names, account,
                 _updater) as StyledClosableViewModelBase<T, IPortfolio>,
-            IExchangableValueList exchangeableValueList => new SelectedSingleDataViewModel(portfolio,
+            IExchangeableValueList exchangeableValueList => new SelectedSingleDataViewModel(portfolio,
                 exchangeableValueList, _styles, _globals, exchangeableValueList.Names, account,
                 _updater) as StyledClosableViewModelBase<T, IPortfolio>,
             IValueList valueList => new SelectedSingleDataViewModel(portfolio, valueList, _styles, _globals,

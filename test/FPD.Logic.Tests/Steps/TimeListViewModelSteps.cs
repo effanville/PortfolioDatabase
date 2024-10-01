@@ -38,8 +38,8 @@ public class TimeListViewModelSteps
     [StepDefinition("I have a TimeListViewModel with name (.*) and (.*) entries")]
     public void InstantiateBasicViewModel(string name, int numberEntries)
     {
-        var timeList = new TimeList();
-        var date = new DateTime(2022, 1, 1);
+        TimeList timeList = new TimeList();
+        DateTime date = new DateTime(2022, 1, 1);
         for (int index = 0; index < numberEntries; index++)
         {
             date = date.AddDays(index);
@@ -73,7 +73,7 @@ public class TimeListViewModelSteps
     [Then(@"the (.*) value has date (.*) and value (.*)")]
     public void ThenTheValueHasDateAndValue(int p0, DateTime p1, int p2)
     {
-        var valuation = _testContext.ViewModel.Valuations[p0 - 1];
+        DailyValuation valuation = _testContext.ViewModel.Valuations[p0 - 1];
         Assert.Multiple(() =>
         {
             Assert.AreEqual(p1, valuation.Day);

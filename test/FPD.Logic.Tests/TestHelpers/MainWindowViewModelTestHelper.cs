@@ -38,9 +38,9 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 testConfigPath,
                 globals.CurrentFileSystem,
                 globals.ReportLogger);
-            var portfolio = PortfolioFactory.GenerateEmpty();
-            var updater = new SynchronousUpdater<IPortfolio>(portfolio);
-            var styles = new UiStyles(false);
+            IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
+            SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>(portfolio);
+            UiStyles styles = new UiStyles(false);
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,

@@ -175,7 +175,7 @@ namespace Effanville.FPD.Logic.ViewModels
 
             BankAccountTotalText = $"Total Bank Accounts: {modelData.NumberOf(Account.BankAccount)}";
             BankAccountAmountText = $"Total Value: {modelData.TotalValue(Totals.BankAccount).WithCurrencySymbol(modelData.BaseCurrency)}";
-            List<IExchangableValueList> bankAccounts = modelData.BankAccounts.ToList();
+            List<IExchangeableValueList> bankAccounts = modelData.BankAccounts.ToList();
             bankAccounts.Sort((bank, otherBank) => bank.ValueComparison(otherBank, DateTime.Today));
 
             var bankAccountsTop = new List<Labelled<TwoName, DailyValuation>>(5);

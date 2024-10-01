@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Effanville.Common.Structure.Reporting;
@@ -62,9 +63,9 @@ public class ReportingViewModelSteps
             return;
         }
 
-        foreach (var row in table.Rows)
+        foreach (TableRow row in table.Rows)
         {
-            var report = FromRow(row);
+            ErrorReport report = FromRow(row);
             _testContext.ViewModel.UpdateReport(report.ErrorSeverity, report.ErrorType, report.ErrorLocation,
                 report.Message);
         }
@@ -73,13 +74,13 @@ public class ReportingViewModelSteps
     [Then(@"the reports in the RVM display have data")]
     public void ThenTheReportsInTheRvmDisplayHaveData(Table table)
     {
-        var actualViewReports = _testContext.ViewModel.ReportsToView;
+        List<ErrorReport> actualViewReports = _testContext.ViewModel.ReportsToView;
         Assert.AreEqual(table.RowCount, actualViewReports.Count());
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var expectedReport = FromRow(row);
-            var actualReport = actualViewReports[index];
+            TableRow row = table.Rows[index];
+            ErrorReport expectedReport = FromRow(row);
+            ErrorReport actualReport = actualViewReports[index];
             Assert.AreEqual(expectedReport.ErrorSeverity, actualReport.ErrorSeverity);
             Assert.AreEqual(expectedReport.ErrorType, actualReport.ErrorType);
             Assert.AreEqual(expectedReport.ErrorLocation, actualReport.ErrorLocation);
@@ -90,13 +91,13 @@ public class ReportingViewModelSteps
     [Then(@"the reports in the RVM have data")]
     public void ThenTheReportsInTheRvmHaveData(Table table)
     {
-        var actualReports = _testContext.ModelData;
+        ErrorReports actualReports = _testContext.ModelData;
         Assert.AreEqual(table.RowCount, actualReports.Count());
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var expectedReport = FromRow(row);
-            var actualReport = actualReports[index];
+            TableRow row = table.Rows[index];
+            ErrorReport expectedReport = FromRow(row);
+            ErrorReport actualReport = actualReports[index];
             Assert.AreEqual(expectedReport.ErrorSeverity, actualReport.ErrorSeverity);
             Assert.AreEqual(expectedReport.ErrorType, actualReport.ErrorType);
             Assert.AreEqual(expectedReport.ErrorLocation, actualReport.ErrorLocation);
@@ -106,8 +107,8 @@ public class ReportingViewModelSteps
 
     private static ErrorReport FromRow(TableRow row)
     {
-        var severity = Enum.Parse<ReportSeverity>(row["Severity"]);
-        var reportType = Enum.Parse<ReportType>(row["Type"]);
+        ReportSeverity severity = Enum.Parse<ReportSeverity>(row["Severity"]);
+        ReportType reportType = Enum.Parse<ReportType>(row["Type"]);
         string location = row["Location"];
         string message = row["Message"];
         return new ErrorReport(severity, reportType, location, message);
@@ -120,7 +121,7 @@ public class ReportingViewModelSteps
     [When(@"the (.*) report is cleared from the RVM")]
     public void WhenTheReportIsClearedFromTheRvm(int p0)
     {
-        var report = _testContext.ViewModel.ReportsToView[p0 - 1];
+        ErrorReport report = _testContext.ViewModel.ReportsToView[p0 - 1];
         _testContext.ViewModel.DeleteReport(report);
     }
 }
