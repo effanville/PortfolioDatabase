@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.10.00-20241002T1424] - 2024-10-02
+
+### Bug Fixes
+
+- Move code into src and test folders.
+
+### Refactor
+
+- Update to use collection lists.
+
 ## [24.09.00-20240911T0003] - 2024-09-11
 
 ### Bug Fixes
