@@ -52,7 +52,7 @@ public class TimeListViewModelSteps
 
     [StepDefinition("It is brought into focus")]
     public void NavigateToViewModel() 
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"the user can view the length of the data is (.*)")]
     public void AssertViewModelHasEntryCount(int numberEntries) 

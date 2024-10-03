@@ -35,7 +35,7 @@ namespace Effanville.FPD.Logic.Tests
                 nameof(StatsViewModel),
                 portfolio,
                 viewModelFactory);
-            context.ViewModel.UpdateData(context.Portfolio);
+            context.ViewModel.UpdateData(context.Portfolio, false);
 
             await Task.Delay(3000);
             
@@ -64,7 +64,7 @@ namespace Effanville.FPD.Logic.Tests
                 nameof(StatsViewModel),
                 portfolio,
                 viewModelFactory);
-            context.ViewModel.UpdateData(context.Portfolio);
+            context.ViewModel.UpdateData(context.Portfolio, false);
 
             await Task.Delay(3000);
             Assert.Multiple(() =>
@@ -77,7 +77,7 @@ namespace Effanville.FPD.Logic.Tests
 
             context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration, context.Portfolio));
 
-            context.ViewModel.UpdateData(context.Portfolio);
+            context.ViewModel.UpdateData(context.Portfolio, false);
             await Task.Delay(3000);
             Assert.Multiple(() =>
             {

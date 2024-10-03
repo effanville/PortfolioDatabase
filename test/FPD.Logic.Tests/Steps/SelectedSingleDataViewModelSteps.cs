@@ -81,7 +81,7 @@ public class SelectedSingleDataViewModelSteps
     
     [StepDefinition(@"the SelectedSingleDataViewModel is brought into focus")]
     public void GivenTheSelectedSingleDataViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"the SelectedSingleDataViewModel has (.*) valuation displayed")]
     public void ThenTheSelectedSingleDataViewModelHasValuationDisplayed(int p0) 

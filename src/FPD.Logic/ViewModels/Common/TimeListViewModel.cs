@@ -54,9 +54,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Routine to update the data in the display.
         /// </summary>
-        public override void UpdateData(TimeList modelData)
+        public override void UpdateData(TimeList modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             var newValuations = modelData?.Values() ?? new List<DailyValuation>();
             if (Valuations == null || !newValuations.SequenceEqual(Valuations))
             {

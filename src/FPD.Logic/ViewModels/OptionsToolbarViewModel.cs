@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -22,6 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels
     /// </summary>
     public class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
+        private readonly Action<object, PortfolioEventArgs> _refreshDisplay;
         private string _fileName;
         private string _directory;
         private string _baseCurrency;
@@ -58,9 +60,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
+        public OptionsToolbarViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, Action<object, PortfolioEventArgs> refreshDisplay)
             : base(globals, styles, portfolio, "Options")
         {
+            _refreshDisplay = refreshDisplay;
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
@@ -74,9 +77,9 @@ namespace Effanville.FPD.Logic.ViewModels
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             _fileName = modelData.Name;
             Currencies = modelData.Names(Account.Currency).Concat(modelData.Companies(Account.Currency)).Distinct().ToList();
             if (!Currencies.Contains(modelData.BaseCurrency))
@@ -223,8 +226,8 @@ namespace Effanville.FPD.Logic.ViewModels
         private void ExecuteRefresh()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "DatabaseAccess", $"Execute refresh on the window fo database {_fileName} called.");
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.OnPortfolioChanged(false, new PortfolioEventArgs(Account.All))));
-        }
+            _refreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
+         }
 
         /// <summary>
         /// Command to update the base currency of the database.

@@ -57,7 +57,7 @@ public class DataNamesViewModelSteps
 
     [StepDefinition(@"the DataNamesViewModel is brought into focus")]
     public void GivenTheDataNamesViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"I can see the DataNamesViewModel type is (.*)")]
     public void ThenICanSeeTheTypeIs(Account account)

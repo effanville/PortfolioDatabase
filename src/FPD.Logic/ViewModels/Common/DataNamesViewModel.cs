@@ -127,9 +127,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
 
             List<RowData> values = modelData
                 .NameDataForAccount(DataType)

@@ -24,7 +24,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Routine to update the data in the display.
         /// </summary>
-        public override void UpdateData(AccountStatistics accStats)
+        public override void UpdateData(AccountStatistics accStats, bool force)
         {
             Statistics = null;
             Statistics = accStats?.Statistics?.ToList() ?? new List<IStatistic>();

@@ -111,11 +111,11 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
-            StatsPageExportOptions.UpdateData(modelData);
-            ExportHistoryOptions.UpdateData(modelData);
+            base.UpdateData(modelData, force);
+            StatsPageExportOptions.UpdateData(modelData, force);
+            ExportHistoryOptions.UpdateData(modelData, force);
         }
     }
 }

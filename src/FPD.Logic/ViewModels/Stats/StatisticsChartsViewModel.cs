@@ -120,14 +120,14 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Updates the data for display in the charts.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
             if (modelData != null)
             {
-                base.UpdateData(modelData);
+                base.UpdateData(modelData, force);
             }
             
-            UpdateData();
+            UpdateData(force);
         }
 
         private void UpdateData(bool force = false)

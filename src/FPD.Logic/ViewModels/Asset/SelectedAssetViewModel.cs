@@ -251,11 +251,11 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IAmortisableAsset modelData)
+        public override void UpdateData(IAmortisableAsset modelData, bool force)
         {
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
                 $"Selected {_dataType} {SelectedName} updating data.");
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             if (SelectedName == null)
             {
                 return;
@@ -267,15 +267,15 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                 return;
             }
 
-            ValuesTLVM?.UpdateData(modelData.Values);
-            DebtTLVM?.UpdateData(modelData.Debt);
-            PaymentsTLVM?.UpdateData(modelData.Payments);
+            ValuesTLVM?.UpdateData(modelData.Values, force);
+            DebtTLVM?.UpdateData(modelData.Debt, force);
+            PaymentsTLVM?.UpdateData(modelData.Payments, force);
             var stats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today,
                 modelData,
                 AccountStatisticsHelpers.DefaultAssetStats());
-            Statistics.UpdateData(stats);
+            Statistics.UpdateData(stats, force);
             Values = modelData.ListOfValues();
         }
     }

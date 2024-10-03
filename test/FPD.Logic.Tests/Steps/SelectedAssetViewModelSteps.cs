@@ -114,7 +114,7 @@ public class SelectedAssetViewModelSteps
 
     [Given(@"the SelectedAssetViewModel is brought into focus")]
     public void GivenTheSelectedAssetViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
 
     [Then(@"the SelectedAssetViewModel has (.*) values displayed")]

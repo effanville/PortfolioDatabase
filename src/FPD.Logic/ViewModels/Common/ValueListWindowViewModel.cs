@@ -64,9 +64,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             if (Tabs == null)
             {
                 return;
@@ -93,7 +93,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 case StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1:
                 {
-                    viewModel1.UpdateData(modelData);
+                    viewModel1.UpdateData(modelData, false);
                     return true;
                 }
                 case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
@@ -103,7 +103,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         return false;
                     }
 
-                    viewModel2.UpdateData(security);
+                    viewModel2.UpdateData(security, false);
                     return true;
 
                 }
@@ -114,7 +114,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         return false;
                     }
 
-                    viewModel3.UpdateData(asset);
+                    viewModel3.UpdateData(asset, false);
                     return true;
 
                 }
@@ -125,7 +125,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         return false;
                     }
 
-                    viewModel4.UpdateData(vl);
+                    viewModel4.UpdateData(vl, false);
                     return true;
 
                 }

@@ -94,7 +94,7 @@ namespace Effanville.FPD.Logic.ViewModels
             ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
-            OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
+            OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio, AllData_portfolioChanged);
             OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
             OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
             Tabs.Add(new BasicDataViewModel(Globals, Styles, ProgramPortfolio));
@@ -129,6 +129,7 @@ namespace Effanville.FPD.Logic.ViewModels
             }
 
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
+            ProgramPortfolio.NewPortfolio += OnNewPortfolio;
             _timer.Elapsed += OnTimerElapsed;
             _timer.Start();
         }
@@ -141,6 +142,18 @@ namespace Effanville.FPD.Logic.ViewModels
         public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
             => ReportsViewModel?.UpdateReport(severity, type, location, message);
         
+        private void OnNewPortfolio(object sender, PortfolioEventArgs e)
+        {
+            var changeType =
+                _aggEventArgs.ChangedAccount == Account.All
+                || (_aggEventArgs.ChangedAccount != Account.Unknown && _aggEventArgs.ChangedAccount != e.ChangedAccount)
+                    ? Account.All
+                    : e.ChangedAccount;
+            _aggEventArgs = e.ChangedPortfolio
+                ? new PortfolioEventArgs(Account.All, true)
+                : new PortfolioEventArgs(changeType, true);
+        }
+        
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
             var changeType =
@@ -149,8 +162,8 @@ namespace Effanville.FPD.Logic.ViewModels
                     ? Account.All
                     : e.ChangedAccount;
             _aggEventArgs = e.ChangedPortfolio
-                ? new PortfolioEventArgs(Account.All, e.UserInitiated)
-                : new PortfolioEventArgs(changeType, e.UserInitiated);
+                ? new PortfolioEventArgs(Account.All, e.UserInitiated || _aggEventArgs.UserInitiated)
+                : new PortfolioEventArgs(changeType, e.UserInitiated || _aggEventArgs.UserInitiated);
         }
         
         private void OnTimerElapsed(object sender, ElapsedEventArgs e) =>
@@ -174,7 +187,7 @@ namespace Effanville.FPD.Logic.ViewModels
             List<object> tabsToRemove = new List<object>();
             foreach (object tab in tabs)
             {
-                if (!UpdateTab(tab, ProgramPortfolio, e.ChangedAccount))
+                if (!UpdateTab(tab, ProgramPortfolio, e.ChangedAccount, e.UserInitiated))
                 {
                     tabsToRemove.Add(tab);
                 }
@@ -185,7 +198,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 Globals.CurrentDispatcher.BeginInvoke(() => RemoveTab(tab, EventArgs.Empty));
             }
             
-            OptionsToolbarCommands.UpdateData(ProgramPortfolio);
+            OptionsToolbarCommands.UpdateData(ProgramPortfolio, e.UserInitiated);
 
             if (e.ChangedPortfolio)
             {
@@ -235,10 +248,10 @@ namespace Effanville.FPD.Logic.ViewModels
                 return;
             }
 
-            UpdateTab(list[0], ProgramPortfolio, Account.All);
+            UpdateTab(list[0], ProgramPortfolio, Account.All, force: false);
         }
 
-        private bool UpdateTab(object item, IPortfolio modelData, Account changedAccount)
+        private bool UpdateTab(object item, IPortfolio modelData, Account changedAccount, bool force)
         {
             if (item is not DataDisplayViewModelBase vmb)
             {
@@ -250,7 +263,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 return true;
             }
 
-            vmb.UpdateData(modelData);
+            vmb.UpdateData(modelData, force);
             return true;
         }
     }

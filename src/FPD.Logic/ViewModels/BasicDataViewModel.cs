@@ -150,7 +150,7 @@ namespace Effanville.FPD.Logic.ViewModels
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
             ModelData = modelData;
             

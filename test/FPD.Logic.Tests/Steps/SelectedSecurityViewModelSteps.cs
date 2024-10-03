@@ -114,7 +114,7 @@ public class SelectedSecurityViewModelSteps
 
     [Given(@"the SelectedSecurityViewModel is brought into focus")]
     public void GivenTheSelectedSecurityViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"the SelectedSecurityViewModel has (.*) unitprices displayed")]
     public void ThenTheSelectedSecurityViewModelHasUnitpricesDisplayed(int p0)

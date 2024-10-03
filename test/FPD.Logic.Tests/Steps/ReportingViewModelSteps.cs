@@ -45,7 +45,7 @@ public class ReportingViewModelSteps
 
     [Given(@"the ReportingViewModel is brought into focus")]
     public void GivenTheReportingViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"I can see that the RVM has (.*) reports")]
     public void ThenICanSeeThatTheRvmHasReports(int p0) 

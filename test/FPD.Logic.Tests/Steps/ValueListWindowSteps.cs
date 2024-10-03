@@ -36,7 +36,7 @@ public class ValueListWindowSteps
     
     [StepDefinition(@"the ValueListWindowViewModel is brought into focus")]
     public void GivenTheDataNamesViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
     private void Create(Account account, Table table)
     {
         IPortfolio portfolio = PortfolioGeneratorHelper.CreateFromTable(table);

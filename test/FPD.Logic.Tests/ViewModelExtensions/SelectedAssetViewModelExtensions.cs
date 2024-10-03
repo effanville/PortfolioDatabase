@@ -32,13 +32,13 @@ namespace Effanville.FPD.Logic.Tests.ViewModelExtensions
         public static void CompleteEditTrade(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.DebtTLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(asset);
+            viewModel.UpdateData(asset, false);
         }
 
         public static void DeleteSelectedDebt(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.DebtTLVM.DeleteValuation();
-            viewModel.UpdateData(asset);
+            viewModel.UpdateData(asset, false);
         }
 
         public static DailyValuation AddNewUnitPrice(this SelectedAssetViewModel viewModel)
@@ -61,13 +61,13 @@ namespace Effanville.FPD.Logic.Tests.ViewModelExtensions
         public static void CompleteEdit(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.ValuesTLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(asset);
+            viewModel.UpdateData(asset, false);
         }
 
         public static void DeleteSelected(this SelectedAssetViewModel viewModel, IAmortisableAsset asset)
         {
             viewModel.ValuesTLVM.DeleteValuation();
-            viewModel.UpdateData(asset);
+            viewModel.UpdateData(asset, false);
         }
     }
 }

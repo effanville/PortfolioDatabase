@@ -29,22 +29,22 @@ namespace Effanville.FPD.Logic.Tests
             Assert.AreEqual(1, ViewModel.ProgramPortfolio.BenchMarks.Count);
 
             BasicDataViewModel dataView = ViewModel.Tabs[0] as BasicDataViewModel;
-            dataView.UpdateData(ViewModel.ProgramPortfolio);
+            dataView.UpdateData(ViewModel.ProgramPortfolio, false);
             Assert.That(dataView != null, nameof(dataView) + " != null");
             Assert.AreEqual("saved", dataView.PortfolioNameText);
             Assert.AreEqual("Total Securities: 1", dataView.SecurityTotalText);
             Assert.AreEqual("Total Bank Accounts: 1", dataView.BankAccountTotalText);
 
             ValueListWindowViewModel securityView = ViewModel.SecurityWindow();
-            securityView.UpdateData(ViewModel.ProgramPortfolio);
+            securityView.UpdateData(ViewModel.ProgramPortfolio, false);
             DataNamesViewModel securityNamesView = securityView.GetDataNamesViewModel();
-            securityNamesView.UpdateData(ViewModel.ProgramPortfolio);
+            securityNamesView.UpdateData(ViewModel.ProgramPortfolio, false);
             Assert.AreEqual(1, securityNamesView.DataNames.Count);
 
             ValueListWindowViewModel bankAccView = ViewModel.Window(Account.BankAccount);
-            bankAccView.UpdateData(ViewModel.ProgramPortfolio);
+            bankAccView.UpdateData(ViewModel.ProgramPortfolio, false);
             DataNamesViewModel bankAccNamesView = bankAccView.GetDataNamesViewModel();
-            bankAccView.UpdateData(ViewModel.ProgramPortfolio);
+            bankAccView.UpdateData(ViewModel.ProgramPortfolio, false);
             Assert.AreEqual(1, bankAccNamesView.DataNames.Count);
         }
 
