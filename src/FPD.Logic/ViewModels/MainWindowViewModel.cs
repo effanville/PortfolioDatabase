@@ -84,24 +84,43 @@ namespace Effanville.FPD.Logic.ViewModels
             IPortfolio portfolio,
             IUpdater<IPortfolio> updater,
             IViewModelFactory viewModelFactory,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ReportingWindowViewModel reportsViewModel,
+            OptionsToolbarViewModel optionsViewModel,
+            BasicDataViewModel basicDataViewModel,
+            StatisticsChartsViewModel statisticsChartsViewModel)
         {
             ProgramPortfolio = portfolio;
             _styles = styles;
             Globals = globals;
             UserConfiguration = configuration;
             
-            ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
+            ReportsViewModel = reportsViewModel;
 
             SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
-            OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio, AllData_portfolioChanged);
-            OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
-            OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
-            Tabs.Add(new BasicDataViewModel(Globals, Styles, ProgramPortfolio));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Securities", Account.Security,
-                updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Bank Accounts",
-                Account.BankAccount, updater, viewModelFactory));
+            OptionsToolbarCommands = optionsViewModel;
+            if (OptionsToolbarCommands != null)
+            {
+                OptionsToolbarCommands.RefreshDisplay += AllData_portfolioChanged;
+                OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
+                OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
+            }
+
+            if (basicDataViewModel != null)
+            {
+                Tabs.Add(basicDataViewModel);
+            }
+
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio, 
+                "Securities", 
+                Account.Security,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio, 
+                "Bank Accounts",
+                Account.BankAccount,
+                nameof(ValueListWindowViewModel)));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
                 updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
@@ -110,12 +129,20 @@ namespace Effanville.FPD.Logic.ViewModels
                 updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
                 updater, viewModelFactory));
-            Tabs.Add(new StatsViewModel(Globals, Styles,
-                UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsDisplay], ProgramPortfolio));
-            Tabs.Add(new StatisticsChartsViewModel(Globals, ProgramPortfolio, Styles));
-            Tabs.Add(new StatsCreatorWindowViewModel(Globals, Styles,
-                UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsCreator], ProgramPortfolio,
-                AddTab));
+            Tabs.Add(viewModelFactory.GenerateViewModel(ProgramPortfolio, "", Account.All, nameof(StatsViewModel)));
+            if (statisticsChartsViewModel != null)
+            {
+                Tabs.Add(statisticsChartsViewModel);
+            }
+
+            DataDisplayViewModelBase statsCreatorWindow = viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "",
+                Account.All,
+         nameof(StatsCreatorWindowViewModel));
+            ((StatsCreatorWindowViewModel)statsCreatorWindow).RequestAddTab += AddTab;
+            Tabs.Add(statsCreatorWindow);
+            
 
             foreach (object tab in Tabs)
             {
@@ -217,7 +244,7 @@ namespace Effanville.FPD.Logic.ViewModels
             }
         }
         
-        private void AddTab(object obj)
+        private void AddTab(object obj, EventArgs args)
         {
             lock (_tabsLock)
             {

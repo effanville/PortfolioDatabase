@@ -10,6 +10,7 @@ using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
 using NUnit.Framework;
 
@@ -609,7 +610,7 @@ namespace Effanville.FPD.Logic.Tests
             Assert.AreEqual(2, config.ChildConfigurations.Count);
             Assert.Multiple(() =>
             {
-                StatsDisplayConfiguration statsVM = config.ChildConfigurations[UserConfiguration.StatsDisplay] as StatsDisplayConfiguration;
+                StatsDisplayConfiguration statsVM = config.ChildConfigurations[nameof(StatsViewModel)] as StatsDisplayConfiguration;
                 Assert.AreEqual(0, statsVM.ChildConfigurations.Count);
                 Assert.AreEqual(true, statsVM.HasLoaded);
                 Assert.AreEqual(true, statsVM.DisplayValueFunds);
@@ -642,7 +643,7 @@ namespace Effanville.FPD.Logic.Tests
             Assert.AreEqual(2, config.ChildConfigurations.Count);
             Assert.Multiple(() =>
             {
-                StatsDisplayConfiguration statsVM = config.ChildConfigurations[UserConfiguration.StatsDisplay] as StatsDisplayConfiguration;
+                StatsDisplayConfiguration statsVM = config.ChildConfigurations[nameof(StatsViewModel)] as StatsDisplayConfiguration;
                 Assert.AreEqual(0, statsVM.ChildConfigurations.Count);
                 Assert.AreEqual(false, statsVM.HasLoaded);
                 Assert.AreEqual(false, statsVM.DisplayValueFunds);
@@ -694,10 +695,15 @@ namespace Effanville.FPD.Logic.Tests
                 globals.ReportLogger);
             
             config.ProgramVersion = new Version(1, 2, 3, 4);
-            MainWindowViewModel vm = new MainWindowViewModel(globals, 
+            MainWindowViewModel vm = new MainWindowViewModel(globals,
                 styles,
                 PortfolioFactory.GenerateEmpty(),
-                updater, new ViewModelFactory(styles, globals, updater), config);
+                updater, new ViewModelFactory(styles, globals, updater),
+                config,
+                null,
+                null,
+                null,
+                null);
             vm.SaveConfig();
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);
@@ -722,7 +728,7 @@ namespace Effanville.FPD.Logic.Tests
             Assert.AreEqual(2, newConfig.ChildConfigurations.Count);
             Assert.Multiple(() =>
             {
-                StatsDisplayConfiguration statsVM = newConfig.ChildConfigurations[UserConfiguration.StatsDisplay] as StatsDisplayConfiguration;
+                StatsDisplayConfiguration statsVM = newConfig.ChildConfigurations[nameof(StatsViewModel)] as StatsDisplayConfiguration;
                 Assert.AreEqual(0, statsVM.ChildConfigurations.Count);
                 Assert.AreEqual(false, statsVM.HasLoaded);
                 Assert.AreEqual(false, statsVM.DisplayValueFunds);

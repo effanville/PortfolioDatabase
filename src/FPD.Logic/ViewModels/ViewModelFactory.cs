@@ -16,25 +16,32 @@ public class ViewModelFactory : IViewModelFactory
 {
     private readonly UiGlobals _globals;
     private readonly IUpdater<IPortfolio> _updater;
+    private readonly IConfiguration _configuration;
     private readonly UiStyles _styles;
 
-    public ViewModelFactory(UiStyles styles, UiGlobals globals, IUpdater<IPortfolio> updater)
+    public ViewModelFactory(
+        UiStyles styles,
+        UiGlobals globals,
+        IUpdater<IPortfolio> updater,
+        IConfiguration configuration)
     {
         _styles = styles;
         _globals = globals;
         _updater = updater;
+        _configuration = configuration;
     }
 
     public DataDisplayViewModelBase GenerateViewModel(
-        IPortfolio portfolio, 
-        TwoName names,
+        IPortfolio portfolio,
+        string title,
         Account account,
-        IConfiguration configuration,
         string vmType) 
         => vmType switch
         {
-            nameof(StatsViewModel) => new StatsViewModel(_globals, _styles, configuration, portfolio, account),
+            nameof(StatsViewModel) => new StatsViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsViewModel)], portfolio, account),
             nameof(BasicDataViewModel) => new BasicDataViewModel(_globals, _styles, portfolio),
+            nameof(ValueListWindowViewModel) => new ValueListWindowViewModel(_globals, _styles, portfolio, title, account, _updater, this),
+            nameof(StatsCreatorWindowViewModel) => new StatsCreatorWindowViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsCreatorWindowViewModel)], portfolio),
             _ => null
         };
 

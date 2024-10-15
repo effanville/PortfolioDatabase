@@ -9,9 +9,8 @@ public interface IViewModelFactory
 {
     DataDisplayViewModelBase GenerateViewModel(
         IPortfolio portfolio,
-        TwoName names,
+        string title,
         Account account,
-        IConfiguration configuration,
         string vmType);
     
     StyledClosableViewModelBase<T, IPortfolio> GenerateViewModel<T>(

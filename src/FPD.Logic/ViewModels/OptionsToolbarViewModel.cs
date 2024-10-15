@@ -23,7 +23,6 @@ namespace Effanville.FPD.Logic.ViewModels
     /// </summary>
     public class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
-        private readonly Action<object, PortfolioEventArgs> _refreshDisplay;
         private string _fileName;
         private string _directory;
         private string _baseCurrency;
@@ -57,13 +56,14 @@ namespace Effanville.FPD.Logic.ViewModels
 
         private void UpdateColours(object sender, PropertyChangedEventArgs e) => Styles.UpdateTheme(IsLightTheme);
 
+        public event EventHandler<PortfolioEventArgs> RefreshDisplay;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio, Action<object, PortfolioEventArgs> refreshDisplay)
+        public OptionsToolbarViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Options")
         {
-            _refreshDisplay = refreshDisplay;
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
@@ -226,7 +226,7 @@ namespace Effanville.FPD.Logic.ViewModels
         private void ExecuteRefresh()
         {
             ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "DatabaseAccess", $"Execute refresh on the window fo database {_fileName} called.");
-            _refreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
+            RefreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
          }
 
         /// <summary>

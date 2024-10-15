@@ -6,6 +6,7 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
 using NUnit.Framework;
 
@@ -44,7 +45,12 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,
-                updater, new ViewModelFactory(styles, globals, updater), config);
+                updater, new ViewModelFactory(styles, globals, updater, config),
+                config,
+                new ReportingWindowViewModel(globals, styles),
+                new OptionsToolbarViewModel(globals, styles, portfolio),
+                new BasicDataViewModel(globals, styles, portfolio),
+                new StatisticsChartsViewModel(globals, portfolio, styles));
         }
 
         [TearDown]

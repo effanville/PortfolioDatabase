@@ -12,6 +12,7 @@ using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Stats;
 using Effanville.FPD.UI.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +49,10 @@ namespace Effanville.FPD.UI
                         .AddSingleton<IViewModelFactory, ViewModelFactory>()
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
                         .AddSingleton(ConfigurationFactory.LoadConfig)
+                        .AddSingleton<ReportingWindowViewModel>()
+                        .AddSingleton<OptionsToolbarViewModel>()
+                        .AddSingleton<BasicDataViewModel>()
+                        .AddSingleton<StatisticsChartsViewModel>()
                         .AddSingleton<MainWindowViewModel>();
                 })
                 .ConfigureLogging(loggingBuilder =>
