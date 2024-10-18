@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Effanville.FinancialStructures.Database;
@@ -23,15 +24,16 @@ namespace Effanville.FPD.Logic.Tests
         /// The defaults are loaded correctly.
         /// </summary>
         [Test]
+        [RequiresThread(ApartmentState.STA)]
         public async Task CanLoadWithNames()
         {
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
 
-            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null,
+                new UserConfiguration());
             ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
                 null,
                 Account.All,
-                new StatsDisplayConfiguration(),
                 nameof(StatsViewModel),
                 portfolio,
                 viewModelFactory);
@@ -53,14 +55,14 @@ namespace Effanville.FPD.Logic.Tests
         [TestCase(true)]
         public async Task CanStoreConfig(bool valueFunds)
         {
-            StatsDisplayConfiguration configuration = new StatsDisplayConfiguration();
+            UserConfiguration configuration = new UserConfiguration();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null);
+            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null
+                , configuration);
 
             ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
                 null,
                 Account.All,
-                configuration,
                 nameof(StatsViewModel),
                 portfolio,
                 viewModelFactory);
@@ -75,7 +77,7 @@ namespace Effanville.FPD.Logic.Tests
             context.ViewModel.DisplayValueFunds = valueFunds;
             Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
 
-            context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration, context.Portfolio));
+            context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration.ChildConfigurations[nameof(StatsViewModel)], context.Portfolio));
 
             context.ViewModel.UpdateData(context.Portfolio, false);
             await Task.Delay(3000);

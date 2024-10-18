@@ -17,7 +17,7 @@ public class TimeListViewModelSteps
 {
     private readonly TimeListTestContext _testContext;
 
-    public TimeListViewModelSteps(TimeListTestContext testContext, UiStyles styles)
+    public TimeListViewModelSteps(TimeListTestContext testContext, IUiStyles styles)
     {
         _testContext = testContext;
     }

@@ -30,7 +30,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance
         /// </summary>
-        public SecurityInvestmentViewModel(IPortfolio portfolio, UiStyles styles)
+        public SecurityInvestmentViewModel(IPortfolio portfolio, IUiStyles styles)
             : base(null, styles, portfolio, "Investments", closable: true)
         {
             UpdateData(portfolio, false);

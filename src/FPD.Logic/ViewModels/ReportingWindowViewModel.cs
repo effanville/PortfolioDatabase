@@ -20,12 +20,12 @@ namespace Effanville.FPD.Logic.ViewModels
     {
         private List<ErrorReport> _reportsToView = new List<ErrorReport>();
 
-        private UiStyles _styles;
+        private IUiStyles _styles;
 
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
-        public UiStyles Styles
+        public IUiStyles Styles
         {
             get => _styles;
             set => SetAndNotify(ref _styles, value);
@@ -75,7 +75,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ReportingWindowViewModel(UiGlobals uiGlobals, UiStyles styles)
+        public ReportingWindowViewModel(UiGlobals uiGlobals, IUiStyles styles)
             : base("Reports", new ErrorReports(), uiGlobals)
         {
             Styles = styles;
@@ -84,7 +84,7 @@ namespace Effanville.FPD.Logic.ViewModels
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
         }
 
-        internal void SyncReports()
+        private void SyncReports()
         {
             ReportsToView = null;
             ReportsToView = ModelData.GetReports(ReportingSeverity).ToList();

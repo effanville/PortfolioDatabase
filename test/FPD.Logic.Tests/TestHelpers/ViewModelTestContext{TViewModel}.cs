@@ -7,7 +7,6 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
@@ -18,13 +17,13 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         where TViewModel : ViewModelBase<TData, IPortfolio>
         where TData : class
     {        
-        private MockFileSystem FileSystem { get; set; }
+        private MockFileSystem FileSystem { get;  }
         public UiGlobals Globals { get; private set; }
         public TData Data { get; private set; }
 
-        public IPortfolio Portfolio { get; set; }
+        public IPortfolio Portfolio { get; }
         
-        public NameData Name { get; set; }
+        public NameData Name { get;  }
 
         public TViewModel ViewModel { get; private set; }
 
@@ -54,7 +53,6 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         public ViewModelTestContext(
             NameData name,
             Account account,
-            IConfiguration configuration,
             string viewModelType,
             IPortfolio dataStore,
             IViewModelFactory viewModelFactory)
@@ -68,7 +66,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
             Globals = TestSetupHelper.CreateGlobalsMock(FileSystem, fileMock.Object, dialogMock.Object);
-            ViewModel = viewModelFactory.GenerateViewModel(dataStore, Name, account, configuration, viewModelType) as TViewModel;
+            ViewModel = viewModelFactory.GenerateViewModel(dataStore, "", account, viewModelType) as TViewModel;
             if(ViewModel != null)
             {
                 ViewModel.UpdateRequest += dataUpdater.PerformUpdate;

@@ -41,7 +41,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 globals.ReportLogger);
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>(portfolio);
-            UiStyles styles = new UiStyles(false);
+            IUiStyles styles = null;
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,

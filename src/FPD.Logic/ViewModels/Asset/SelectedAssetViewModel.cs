@@ -97,7 +97,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         public SelectedAssetViewModel(
             IPortfolio portfolio,
             IAmortisableAsset asset,
-            UiStyles styles,
+            IUiStyles styles,
             UiGlobals globals,
             NameData selectedName,
             Account dataType,

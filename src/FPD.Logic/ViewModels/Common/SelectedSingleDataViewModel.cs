@@ -67,7 +67,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public SelectedSingleDataViewModel(
             IPortfolio portfolio,
             IValueList valueList,
-            UiStyles styles,
+            IUiStyles styles,
             UiGlobals globals,
             TwoName selectedName,
             Account accountDataType,

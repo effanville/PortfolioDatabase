@@ -38,14 +38,13 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public TimeListViewModel(
             TimeList timeList,
             string valueName,
-            UiStyles styles,
+            IUiStyles styles,
             Action<DailyValuation> deleteValueAction,
             Action<DailyValuation, DailyValuation> addEditValueAction)
             : base(valueName, timeList, null, styles)
         {
             _deleteValueAction = deleteValueAction;
             _addEditValueAction = addEditValueAction;
-            Styles = styles;
             PreEditCommand = new RelayCommand(ExecutePreEdit);
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);

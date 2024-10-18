@@ -97,7 +97,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public DataNamesViewModel(
             IPortfolio portfolio, 
             UiGlobals uiGlobals, 
-            UiStyles styles, 
+            IUiStyles styles, 
             IUpdater<IPortfolio> dataUpdater,
             Action<object> loadSelectedData, 
             Account dataType)

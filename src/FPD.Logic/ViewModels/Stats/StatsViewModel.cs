@@ -22,7 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
-        private bool _updateDataInProgress = false;
+        private bool _updateDataInProgress;
         private List<AccountStatistics> _stats;
 
         private bool _displayValueFunds = true;
@@ -69,7 +69,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
+        public StatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
             : base(globals, styles, userConfiguration, portfolio, "Statistics", account)
         {
             StatisticNames = AccountStatisticsHelpers.AllStatistics()

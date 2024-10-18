@@ -41,7 +41,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ValueListWindowViewModel(
             UiGlobals globals,
-            UiStyles styles,
+            IUiStyles styles,
             IPortfolio portfolio,
             string title,
             Account accountType,

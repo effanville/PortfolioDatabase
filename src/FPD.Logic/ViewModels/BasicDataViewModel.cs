@@ -142,7 +142,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public BasicDataViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
+        public BasicDataViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Overview", Account.All)
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);

@@ -16,7 +16,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _statistics, value);
         }
 
-        public AccountStatsViewModel(AccountStatistics accStats, UiStyles styles)
+        public AccountStatsViewModel(AccountStatistics accStats, IUiStyles styles)
         : base("Account Stats", accStats, null, styles)
         {
         }

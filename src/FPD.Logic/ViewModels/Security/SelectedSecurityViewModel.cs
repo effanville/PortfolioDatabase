@@ -115,7 +115,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         public SelectedSecurityViewModel(
             IPortfolio portfolio,
             ISecurity security,
-            UiStyles styles,
+            IUiStyles styles,
             UiGlobals globals,
             TwoName selectedName,
             Account account,

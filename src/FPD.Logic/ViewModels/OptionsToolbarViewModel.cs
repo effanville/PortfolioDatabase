@@ -61,7 +61,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
+        public OptionsToolbarViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Options")
         {
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);

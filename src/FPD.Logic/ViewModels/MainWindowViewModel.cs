@@ -33,12 +33,12 @@ namespace Effanville.FPD.Logic.ViewModels
 
         public UiGlobals Globals { get; }
 
-        private UiStyles _styles;
+        private IUiStyles _styles;
 
         /// <summary>
         /// The styles for the Ui.
         /// </summary>
-        public UiStyles Styles
+        public IUiStyles Styles
         {
             get => _styles;
             set => SetAndNotify(ref _styles, value);
@@ -80,7 +80,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Default constructor.
         /// </summary>
         public MainWindowViewModel(UiGlobals globals,
-            UiStyles styles,
+            IUiStyles styles,
             IPortfolio portfolio,
             IUpdater<IPortfolio> updater,
             IViewModelFactory viewModelFactory,

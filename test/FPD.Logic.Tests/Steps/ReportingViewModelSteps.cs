@@ -47,15 +47,15 @@ public class ReportingViewModelSteps
     public void GivenTheReportingViewModelIsBroughtIntoFocus()
         => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
-    [Then(@"I can see that the RVM has (.*) reports")]
+    [Then(@"I can see that the ReportingViewModel has (.*) reports")]
     public void ThenICanSeeThatTheRvmHasReports(int p0) 
-        => Assert.AreEqual(p0, _testContext.ViewModel.ModelData.Count());
+        => Assert.That(_testContext.ViewModel.ModelData.Count(), Is.EqualTo(p0));
 
-    [Then(@"I can see that the RVM display has (.*) reports")]
+    [Then(@"I can see that the ReportingViewModel display has (.*) reports")]
     public void ThenICanSeeThatTheRvmDisplayHasReports(int p0) 
-        => Assert.AreEqual(p0, _testContext.ViewModel.ReportsToView.Count);
+        => Assert.That(_testContext.ViewModel.ReportsToView.Count, Is.EqualTo(p0));
 
-    [When(@"reports are added to the RVM with data")]
+    [When(@"reports are added to the ReportingViewModel with data")]
     public void WhenAReportIsAddedToTheRvmWithData(Table table)
     {
         if (table == null)
@@ -71,37 +71,37 @@ public class ReportingViewModelSteps
         }
     }
 
-    [Then(@"the reports in the RVM display have data")]
+    [Then(@"the reports in the ReportingViewModel display have data")]
     public void ThenTheReportsInTheRvmDisplayHaveData(Table table)
     {
         List<ErrorReport> actualViewReports = _testContext.ViewModel.ReportsToView;
-        Assert.AreEqual(table.RowCount, actualViewReports.Count());
+        Assert.That(actualViewReports.Count(), Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
             TableRow row = table.Rows[index];
             ErrorReport expectedReport = FromRow(row);
             ErrorReport actualReport = actualViewReports[index];
-            Assert.AreEqual(expectedReport.ErrorSeverity, actualReport.ErrorSeverity);
-            Assert.AreEqual(expectedReport.ErrorType, actualReport.ErrorType);
-            Assert.AreEqual(expectedReport.ErrorLocation, actualReport.ErrorLocation);
-            Assert.AreEqual(expectedReport.Message, actualReport.Message);
+            Assert.That(actualReport.ErrorSeverity, Is.EqualTo(expectedReport.ErrorSeverity));
+            Assert.That(actualReport.ErrorType, Is.EqualTo(expectedReport.ErrorType));
+            Assert.That(actualReport.ErrorLocation, Is.EqualTo(expectedReport.ErrorLocation));
+            Assert.That(actualReport.Message, Is.EqualTo(expectedReport.Message));
         }
     }
 
-    [Then(@"the reports in the RVM have data")]
+    [Then(@"the reports in the ReportingViewModel have data")]
     public void ThenTheReportsInTheRvmHaveData(Table table)
     {
         ErrorReports actualReports = _testContext.ModelData;
-        Assert.AreEqual(table.RowCount, actualReports.Count());
+        Assert.That(actualReports.Count(), Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
             TableRow row = table.Rows[index];
             ErrorReport expectedReport = FromRow(row);
             ErrorReport actualReport = actualReports[index];
-            Assert.AreEqual(expectedReport.ErrorSeverity, actualReport.ErrorSeverity);
-            Assert.AreEqual(expectedReport.ErrorType, actualReport.ErrorType);
-            Assert.AreEqual(expectedReport.ErrorLocation, actualReport.ErrorLocation);
-            Assert.AreEqual(expectedReport.Message, actualReport.Message);
+            Assert.That(actualReport.ErrorSeverity, Is.EqualTo(expectedReport.ErrorSeverity));
+            Assert.That(actualReport.ErrorType, Is.EqualTo(expectedReport.ErrorType));
+            Assert.That(actualReport.ErrorLocation, Is.EqualTo(expectedReport.ErrorLocation));
+            Assert.That(actualReport.Message, Is.EqualTo(expectedReport.Message));
         }
     }
 
@@ -114,11 +114,11 @@ public class ReportingViewModelSteps
         return new ErrorReport(severity, reportType, location, message);
     }
 
-    [When(@"reports are cleared from the RVM")]
+    [When(@"reports are cleared from the ReportingViewModel")]
     public void WhenReportsAreClearedFromTheRvm()
         => _testContext.ViewModel.ClearReportsCommand.Execute(null);
 
-    [When(@"the (.*) report is cleared from the RVM")]
+    [When(@"the (.*) report is cleared from the ReportingViewModel")]
     public void WhenTheReportIsClearedFromTheRvm(int p0)
     {
         ErrorReport report = _testContext.ViewModel.ReportsToView[p0 - 1];

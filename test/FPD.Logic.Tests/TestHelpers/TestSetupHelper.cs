@@ -11,6 +11,7 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.Tests.Support;
 using Effanville.FPD.Logic.ViewModels;
 
@@ -35,11 +36,13 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             IFileSystem fileSystem,
             IFileInteractionService fileService,
             IBaseDialogCreationService dialogCreationService,
+            IConfiguration config,
             IReportLogger logger = null) 
             => new ViewModelFactory(
                 null, 
                 CreateGlobalsMock(fileSystem, fileService, dialogCreationService, logger), 
-                CreateUpdater(portfolio));
+                CreateUpdater(portfolio),
+                config);
 
         public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
         {

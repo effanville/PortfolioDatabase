@@ -23,7 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IConfiguration config, IPortfolio database, string header, Account dataType, bool closable = false)
+        protected DataDisplayViewModelBase(UiGlobals globals, IUiStyles styles, IConfiguration config, IPortfolio database, string header, Account dataType, bool closable = false)
             : base(header, database, globals, styles, closable)
         {
             UserConfiguration = config;
@@ -33,7 +33,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string title, Account dataType, bool closable = false)
+        protected DataDisplayViewModelBase(UiGlobals globals, IUiStyles styles, IPortfolio database, string title, Account dataType, bool closable = false)
             : base(title, database, globals, styles, closable)
         {
             DataType = dataType;
@@ -42,7 +42,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected DataDisplayViewModelBase(UiGlobals globals, UiStyles styles, IPortfolio database, string title, bool closable = false)
+        protected DataDisplayViewModelBase(UiGlobals globals, IUiStyles styles, IPortfolio database, string title, bool closable = false)
             : base(title, database, globals, styles, closable)
         {
             DataType = Account.All;

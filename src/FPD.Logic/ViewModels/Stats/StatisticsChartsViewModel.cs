@@ -102,7 +102,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, UiStyles styles)
+        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUiStyles styles)
             : base(uiGlobals, styles, portfolio, "Charts", Account.All)
         {
             PropertyChanged += OnPropertyChanged;

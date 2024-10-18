@@ -17,10 +17,10 @@ public class ViewModelFactory : IViewModelFactory
     private readonly UiGlobals _globals;
     private readonly IUpdater<IPortfolio> _updater;
     private readonly IConfiguration _configuration;
-    private readonly UiStyles _styles;
+    private readonly IUiStyles _styles;
 
     public ViewModelFactory(
-        UiStyles styles,
+        IUiStyles styles,
         UiGlobals globals,
         IUpdater<IPortfolio> updater,
         IConfiguration configuration)
