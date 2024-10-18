@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -97,7 +97,7 @@ namespace Effanville.FPD.Logic.ViewModels
             
             ReportsViewModel = reportsViewModel;
 
-            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
+            SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
             OptionsToolbarCommands = optionsViewModel;
             if (OptionsToolbarCommands != null)
             {
@@ -267,9 +267,8 @@ namespace Effanville.FPD.Logic.ViewModels
 
         public ICommand SelectionChanged { get; }
 
-        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
+        private void ExecuteSelectionChanged(IList source)
         {
-            var source = e.AddedItems;
             if (source is not object[] list || list.Length != 1)
             {
                 return;
