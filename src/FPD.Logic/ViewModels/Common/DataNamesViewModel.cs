@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -191,7 +190,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
             else
             {
-                if (args == CollectionView.NewItemPlaceholder)
+                if (args == null)
                 {
                     SelectedName = null;
                 }

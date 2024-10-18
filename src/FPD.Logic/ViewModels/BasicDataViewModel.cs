@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -203,7 +202,7 @@ namespace Effanville.FPD.Logic.ViewModels
             {
                 _selectedNote = note;
             }
-            else if (args == CollectionView.NewItemPlaceholder)
+            else if (args == null)
             {
                 _selectedNote = null;
             }

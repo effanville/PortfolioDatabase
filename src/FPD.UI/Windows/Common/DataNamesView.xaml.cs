@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -42,6 +43,18 @@ namespace Effanville.FPD.UI.Windows.Common
             if (DataContext is DataNamesViewModel vm)
             {
                 vm.ExecuteDelete();
+            }
+        }
+        
+        private void DataGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is DataNamesViewModel dc && sender is DataGrid dataGrid)
+            {
+                object currentItem = dataGrid.CurrentItem;
+
+                dc.SelectionChangedCommand.Execute(currentItem == CollectionView.NewItemPlaceholder
+                    ? null
+                    : dataGrid.CurrentItem);
             }
         }
     }
