@@ -76,6 +76,7 @@ namespace Effanville.FPD.Console
                 _logger.Log(LogLevel.Information, $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
+                    var exportString = stats.ExportString(true, DocumentType.Html, exportSettings);
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
                     _logger.Log(LogLevel.Information, $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
@@ -87,9 +88,8 @@ namespace Effanville.FPD.Console
                     {
                         Sender = smtpAuthUser,
                         Subject = "[Update] Stats auto update",
-                        Body = $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
-                        Recipients = new List<string>{_mailRecipientOption.Value},
-                        AttachmentFileNames = new List<string> {filePath}
+                        Body = exportString.ToString(),
+                        Recipients = new List<string>{_mailRecipientOption.Value}
                     };
                     _logger.Log(LogLevel.Information, $"Setup content for mailing.");
                     MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);

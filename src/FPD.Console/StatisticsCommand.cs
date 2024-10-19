@@ -77,6 +77,7 @@ namespace Effanville.FPD.Console
 
             if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
             {
+                var exportString = stats.ExportString(true, docType, exportSettings);
                 string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
                 string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
                 var smtpInfo = SmtpInfo.GmailHost();
@@ -86,10 +87,8 @@ namespace Effanville.FPD.Console
                 {
                     Sender = smtpAuthUser,
                     Subject = "[Update] Stats auto update",
-                    Body =
-                        $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
-                    Recipients = new List<string> { _mailRecipientOption.Value },
-                    AttachmentFileNames = new List<string> { filePath }
+                    Body = exportString.ToString(),
+                    Recipients = new List<string> { _mailRecipientOption.Value }
                 };
                 MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
             }
