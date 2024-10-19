@@ -1,5 +1,7 @@
 ﻿using System.Windows.Controls;
 
+using Effanville.FPD.Logic.ViewModels.Common;
+
 namespace Effanville.FPD.UI.Windows.Common
 {
     /// <summary>
@@ -13,6 +15,15 @@ namespace Effanville.FPD.UI.Windows.Common
         public SingleValueEditWindow()
         {
             InitializeComponent();
+        }
+
+        private void TabMain_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is ValueListWindowViewModel valueListWindowViewModel)
+            {
+                var addedItems = e.AddedItems;
+                valueListWindowViewModel.SelectionChanged.Execute(addedItems);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -25,9 +25,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         public ICommand SelectionChanged { get; }
 
-        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
+        private void ExecuteSelectionChanged(IList source)
         {
-            var source = e.AddedItems;
             if (source is not object[] list || list.Length != 1)
             {
                 return;
@@ -60,7 +59,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             Tabs.Add(dataNames);
             dataNames.UpdateRequest += dataUpdater.PerformUpdate;
             dataNames.RequestClose += RemoveTab;
-            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
+            SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
         }
 
         /// <inheritdoc/>
