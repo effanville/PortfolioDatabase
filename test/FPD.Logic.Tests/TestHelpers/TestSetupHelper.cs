@@ -12,6 +12,7 @@ using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Support;
 using Effanville.FPD.Logic.ViewModels;
 
@@ -31,6 +32,12 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
+        public static IUiStyles SetupDefaultStyles()
+        {
+            Mock<IUiStyles> styles = new Mock<IUiStyles>();
+            styles.SetupGet(x => x.IsLightTheme).Returns(true);
+            return styles.Object;
+        }
         internal static IViewModelFactory CreateViewModelFactory(
             IPortfolio portfolio,
             IFileSystem fileSystem,
