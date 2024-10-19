@@ -45,6 +45,13 @@ namespace Effanville.FPD.Logic.Configuration
         [DataMember(EmitDefaultValue = false)]
         private List<Selectable<Statistic>> AssetColumnNames = new List<Selectable<Statistic>>();
 
+        [DataMember]
+        private Statistic CurrencySortingField;
+        [DataMember]
+        private SortDirection CurrencyDirection;
+        [DataMember(EmitDefaultValue = false)]
+        private List<Selectable<Statistic>> CurrencyColumnNames = new List<Selectable<Statistic>>();
+
         /// <inheritdoc/>
         [DataMember]
         public bool HasLoaded
@@ -86,6 +93,9 @@ namespace Effanville.FPD.Logic.Configuration
                 AssetColumnNames = vm.AssetColumnNames;
                 AssetSortingField = vm.AssetSortingField;
                 AssetDirection = vm.AssetDirection;
+                CurrencyColumnNames = vm.CurrencyColumnNames;
+                CurrencySortingField = vm.CurrencySortingField;
+                CurrencyDirection = vm.CurrencyDirection;
                 DisplayConditions = vm.DisplayConditions;
             }
         }
@@ -178,6 +188,28 @@ namespace Effanville.FPD.Logic.Configuration
                 }
                 vm.AssetSortingField = AssetSortingField;
                 vm.AssetDirection = AssetDirection;
+                
+                
+                if (CurrencyColumnNames != null && CurrencyColumnNames.Any())
+                {                    
+                    if(vm.CurrencyColumnNames == null)
+                    {
+                        vm.CurrencyColumnNames = CurrencyColumnNames;
+                    }
+                    else
+                    {
+                        foreach (Selectable<Statistic> name in vm.CurrencyColumnNames)
+                        {
+                            Selectable<Statistic> configName = CurrencyColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
+                            if (configName != null)
+                            {
+                                name.Selected = configName.Selected;
+                            }
+                        }
+                    }
+                }
+                vm.CurrencySortingField = CurrencySortingField;
+                vm.CurrencyDirection = CurrencyDirection;
 
                 if (DisplayConditions != null && DisplayConditions.Any())
                 {

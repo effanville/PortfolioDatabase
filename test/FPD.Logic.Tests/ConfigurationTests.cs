@@ -49,6 +49,9 @@ namespace Effanville.FPD.Logic.Tests
               <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>AccountType</BankSortingField>
+              <CurrencyColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
+              <CurrencyDirection>Ascending</CurrencyDirection>
+              <CurrencySortingField>AccountType</CurrencySortingField>
               <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <HasLoaded>false</HasLoaded>
               <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
@@ -363,6 +366,66 @@ namespace Effanville.FPD.Logic.Tests
               </BankColumnNames>
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>Company</BankSortingField>
+              <CurrencyColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Company</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Name</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>LatestValue</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>RecentChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Investment</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Profit</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FundFraction</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberOfAccounts</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FirstDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>LatestDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Sectors</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberEntries</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>EntryYearDensity</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Notes</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+              </CurrencyColumnNames>
+              <CurrencyDirection>Ascending</CurrencyDirection>
+              <CurrencySortingField>Name</CurrencySortingField>
               <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>DisplayValueFunds</d8p1:Instance>
@@ -394,6 +457,10 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfstring>
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>ShowAssets</d8p1:Instance>
+                  <d8p1:Selected>false</d8p1:Selected>
+                </d8p1:SelectableOfstring>
+                <d8p1:SelectableOfstring>
+                  <d8p1:Instance>ShowCurrencies</d8p1:Instance>
                   <d8p1:Selected>false</d8p1:Selected>
                 </d8p1:SelectableOfstring>
               </DisplayConditions>

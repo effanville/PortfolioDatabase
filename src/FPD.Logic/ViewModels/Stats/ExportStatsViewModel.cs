@@ -34,6 +34,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         private const string ShowSectors = "ShowSectors";
 
         private const string ShowAssets = "ShowAssets";
+        private const string ShowCurrencies = "ShowCurrencies";
         private const string ShowBenchmarks = "ShowBenchmarks";
         private const string ValueFunds = "DisplayValueFunds";
         private const string Colouring = "Colours";
@@ -81,15 +82,15 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _securityColumnNames, value);
         }
 
-        private Statistic fBankSortingField;
+        private Statistic _bankSortingField;
 
         /// <summary>
         /// The statistic to sort the bank account data by.
         /// </summary>
         public Statistic BankSortingField
         {
-            get => fBankSortingField;
-            set => SetAndNotify(ref fBankSortingField, value);
+            get => _bankSortingField;
+            set => SetAndNotify(ref _bankSortingField, value);
         }
 
         private SortDirection _bankDirection;
@@ -148,7 +149,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _sectorColumnNames, value);
         }
 
-
         private Statistic _assetSortingField;
 
         /// <summary>
@@ -159,7 +159,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get => _assetSortingField;
             set => SetAndNotify(ref _assetSortingField, value);
         }
-
 
         private SortDirection _assetDirection;
 
@@ -183,6 +182,38 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _assetColumnNames, value);
         }
 
+        private Statistic _currencySortingField;
+
+        /// <summary>
+        /// The statistic to sort the Asset data by.
+        /// </summary>
+        public Statistic CurrencySortingField
+        {
+            get => _currencySortingField;
+            set => SetAndNotify(ref _currencySortingField, value);
+        }
+        
+        private SortDirection _currencyDirection;
+
+        /// <summary>
+        /// The direction to sort the Asset data in.
+        /// </summary>
+        public SortDirection CurrencyDirection
+        {
+            get => _currencyDirection;
+            set => SetAndNotify(ref _currencyDirection, value);
+        }
+
+        private List<Selectable<Statistic>> _currencyColumnNames = new List<Selectable<Statistic>>();
+
+        /// <summary>
+        /// The possible columns for Asset export, and which ones are selected.
+        /// </summary>
+        public List<Selectable<Statistic>> CurrencyColumnNames
+        {
+            get => _currencyColumnNames;
+            set => SetAndNotify(ref _currencyColumnNames, value);
+        }
 
         /// <summary>
         /// Default constructor.
@@ -218,9 +249,16 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             {
                 AssetColumnNames.Add(new Selectable<Statistic>(stat, true));
             }
-
+            
             AssetSortingField = Statistic.Company;
-
+            
+            foreach (Statistic stat in AccountStatisticsHelpers.DefaultCurrencyStats())
+            {
+                CurrencyColumnNames.Add(new Selectable<Statistic>(stat, true));
+            }
+            
+            CurrencySortingField = Statistic.Name;
+            
             DisplayConditions.Add(new Selectable<string>(ValueFunds, true));
             DisplayConditions.Add(new Selectable<string>(Spacing, true));
             DisplayConditions.Add(new Selectable<string>(Colouring, true));
@@ -229,6 +267,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             DisplayConditions.Add(new Selectable<string>(ShowSectors, true));
             DisplayConditions.Add(new Selectable<string>(ShowBenchmarks, false));
             DisplayConditions.Add(new Selectable<string>(ShowAssets, false));
+            DisplayConditions.Add(new Selectable<string>(ShowCurrencies, false));
 
             if (UserConfiguration.HasLoaded)
             {
@@ -295,6 +334,15 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     }
                 }
 
+                List<Statistic> currencySelected = new List<Statistic>();
+                foreach (Selectable<Statistic> column in CurrencyColumnNames)
+                {
+                    if (column.Selected || column.Instance == Statistic.Company || column.Instance == Statistic.Name)
+                    {
+                        currencySelected.Add(column.Instance);
+                    }
+                }
+
                 PortfolioStatisticsSettings settings = new PortfolioStatisticsSettings(
                     DateTime.Today,
                     SelectableHelpers.GetData(DisplayConditions, ValueFunds),
@@ -306,7 +354,9 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowSectors),
                     sectorSelected.Union(new List<Statistic>() { SectorSortingField }).ToList(),
                     SelectableHelpers.GetData(DisplayConditions, ShowAssets),
-                    assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList());
+                    assetSelected.Union(new List<Statistic>() { AssetSortingField }).ToList(),
+                    SelectableHelpers.GetData(DisplayConditions, ShowCurrencies),
+                    currencySelected.Union(new List<Statistic>() { CurrencySortingField }).ToList());
 
                 PortfolioStatistics stats = new PortfolioStatistics(ModelData, settings, DisplayGlobals.CurrentFileSystem);
                 string extension = DisplayGlobals.CurrentFileSystem.Path.GetExtension(result.FilePath).Trim('.');
@@ -330,7 +380,11 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     SelectableHelpers.GetData(DisplayConditions, ShowAssets),
                     AssetSortingField,
                     AssetDirection,
-                    assetSelected);
+                    assetSelected,
+                    SelectableHelpers.GetData(DisplayConditions, ShowCurrencies),
+                    CurrencySortingField,
+                    CurrencyDirection,
+                    currencySelected);
 
                 stats.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
