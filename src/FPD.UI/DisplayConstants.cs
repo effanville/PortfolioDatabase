@@ -17,32 +17,32 @@ namespace Effanville.FPD.UI
         /// <summary>
         /// A list of all possible <see cref="TradeType"/> values.
         /// </summary>
-        public static List<TradeType> TradeTypes => Enum.GetValues(typeof(TradeType)).Cast<TradeType>().ToList();
+        public static IReadOnlyList<TradeType> TradeTypes => Enum.GetValues(typeof(TradeType)).Cast<TradeType>().ToList();
 
         /// <summary>
         /// List of all applicable statistics for Securities.
         /// </summary>
-        public static List<Statistic> SecurityFieldNames => AccountStatisticsHelpers.AllStatistics().ToList();
+        public static IReadOnlyList<Statistic> SecurityFieldNames => AccountStatisticsHelpers.AllStatistics();
 
         /// <summary>
         /// List of all applicable statistics for Bank accounts.
         /// </summary>
-        public static List<Statistic> BankFieldNames => AccountStatisticsHelpers.DefaultBankAccountStats().ToList();
+        public static IReadOnlyList<Statistic> BankFieldNames => AccountStatisticsHelpers.DefaultBankAccountStats();
 
         /// <summary>
         /// List of all applicable statistics for sectors.
         /// </summary>
-        public static List<Statistic> SectorFieldNames => AccountStatisticsHelpers.DefaultSectorStats().ToList();
+        public static IReadOnlyList<Statistic> SectorFieldNames => AccountStatisticsHelpers.DefaultSectorStats();
 
         /// <summary>
         /// List of all applicable statistics for sectors.
         /// </summary>
-        public static List<Statistic> AssetFieldNames => AccountStatisticsHelpers.DefaultAssetStats().ToList();
+        public static IReadOnlyList<Statistic> AssetFieldNames => AccountStatisticsHelpers.DefaultAssetStats();
 
         /// <summary>
         /// List of all possible sorting directions.
         /// </summary>
-        public static List<SortDirection> SortDirections => Enum.GetValues(typeof(SortDirection)).Cast<SortDirection>().ToList();
+        public static IReadOnlyList<SortDirection> SortDirections => Enum.GetValues(typeof(SortDirection)).Cast<SortDirection>().ToList();
 
         /// <summary>
         /// Default constructor.

@@ -6,6 +6,10 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.ViewModels;
 
+using Microsoft.Extensions.Logging;
+
+using Moq;
+
 using NUnit.Framework;
 
 using TechTalk.SpecFlow;
@@ -36,7 +40,9 @@ public class ReportingViewModelSteps
 
     private void Instantiate(ReportSeverity reportSeverity, Table table)
     {
+        ILogger<ReportingWindowViewModel> loggerMock = new Mock<ILogger<ReportingWindowViewModel>>().Object;
         _testContext.ViewModel = new ReportingWindowViewModel(
+            loggerMock,
             _testContext.Globals,
             _testContext.Styles) { ReportingSeverity = reportSeverity };
         WhenAReportIsAddedToTheRvmWithData(table);

@@ -8,6 +8,8 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
 
+using Microsoft.Extensions.Logging;
+
 using Moq;
 
 using NUnit.Framework;
@@ -20,11 +22,13 @@ namespace Effanville.FPD.Logic.Tests
         public void CanOpenNewDatabase()
         {
             FileSystem fileSystem = new FileSystem();
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.NewDatabaseCommand.Execute(1);
             //Check that data held is an empty database
@@ -38,6 +42,7 @@ namespace Effanville.FPD.Logic.Tests
         [Test]
         public void CanOpenDatabase()
         {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             MockFileSystem tempFileSystem = new MockFileSystem();
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
             string testPath = "c:/temp/saved.xml";
@@ -49,7 +54,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
@@ -63,6 +68,7 @@ namespace Effanville.FPD.Logic.Tests
         [Test]
         public void CanOpenAndSaveDatabase()
         {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             MockFileSystem tempFileSystem = new MockFileSystem();
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
             string testPath = "c:/temp/database.xml";
@@ -75,7 +81,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
@@ -94,6 +100,7 @@ namespace Effanville.FPD.Logic.Tests
         [Test]
         public void CanSaveDatabase()
         {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             MockFileSystem tempFileSystem = new MockFileSystem();
             string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
             string testPath = "c:/temp/database.xml";
@@ -103,7 +110,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.SaveDatabaseCommand.Execute(1);
             //Input prespecified example database
@@ -119,13 +126,14 @@ namespace Effanville.FPD.Logic.Tests
         [Ignore("IncompeteArchitecture - Downloader does not currently allow for use in test environment.")]
         public void CanUpdateDatabase()
         {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             FileSystem fileSystem = new FileSystem();
             string testFilePath = TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml";
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testFilePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.UpdateDataCommand.Execute(1);
             //Input prespecified example database
@@ -139,12 +147,13 @@ namespace Effanville.FPD.Logic.Tests
         [Test]
         public void CanRefreshDatabase()
         {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             FileSystem fileSystem = new FileSystem();
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.RefreshCommand.Execute(1);
             //Check that data held is an empty database

@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-using Effanville.Common.Structure.Reporting;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
@@ -31,7 +29,7 @@ namespace Effanville.FPD.UI.Windows.Stats
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue is bool isVisible && !isVisible)
+            if(e.NewValue is bool isVisible and false)
             {
                 _isVisible = false;
                 return;
@@ -67,9 +65,6 @@ namespace Effanville.FPD.UI.Windows.Stats
             {
                 return;
             }
-
-            Stopwatch stopwatch = new();
-            stopwatch.Start();
             if (DataContext is not StatsViewModel vm || vm.Stats == null)
             {
                 return;
@@ -78,9 +73,6 @@ namespace Effanville.FPD.UI.Windows.Stats
             DataTable dt = await Task.Run(GetTable);
 
             StatsBox.ItemsSource = dt.DefaultView;
-            stopwatch.Stop();
-            vm.ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "UIhere", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");
-
             return;
 
             DataTable GetTable()

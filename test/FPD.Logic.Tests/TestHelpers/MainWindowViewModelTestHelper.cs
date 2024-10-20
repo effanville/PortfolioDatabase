@@ -8,6 +8,10 @@ using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
+using Microsoft.Extensions.Logging;
+
+using Moq;
+
 using NUnit.Framework;
 
 namespace Effanville.FPD.Logic.Tests.TestHelpers
@@ -33,6 +37,8 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
             FileSystem.AddFile(testPath, new MockFileData(file));
 
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            Mock<ILogger<ReportingWindowViewModel>> loggerReportMock = new Mock<ILogger<ReportingWindowViewModel>>();
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
             
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
@@ -47,8 +53,8 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 portfolio,
                 updater, new ViewModelFactory(styles, globals, updater, config),
                 config,
-                new ReportingWindowViewModel(globals, styles),
-                new OptionsToolbarViewModel(globals, styles, portfolio),
+                new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
+                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio),
                 new BasicDataViewModel(globals, styles, portfolio),
                 new StatisticsChartsViewModel(globals, portfolio, styles));
         }

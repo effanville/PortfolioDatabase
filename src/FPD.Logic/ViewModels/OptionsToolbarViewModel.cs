@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-
 using Effanville.Common.Structure.DataEdit;
-using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
@@ -15,14 +13,16 @@ using Effanville.FinancialStructures.Database.Extensions;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
     /// View model for the top toolbar.
     /// </summary>
-    public class OptionsToolbarViewModel : DataDisplayViewModelBase
+    public sealed class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
+        private readonly ILogger<OptionsToolbarViewModel> _logger;
         private string _fileName;
         private string _directory;
         private string _baseCurrency;
@@ -61,9 +61,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
+        public OptionsToolbarViewModel(ILogger<OptionsToolbarViewModel> logger, UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Options")
         {
+            _logger = logger;
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
@@ -96,7 +97,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand NewDatabaseCommand { get; }
         private void ExecuteNewDatabase()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"ExecuteNewDatabase called.");
+            _logger.LogInformation("ExecuteNewDatabase called.");
             MessageBoxOutcome result;
             if (ModelData.IsAlteredSinceSave)
             {
@@ -119,7 +120,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand SaveDatabaseCommand { get; }
         private void ExecuteSaveDatabase()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Saving", $"Saving database {_fileName} called.");
+            _logger.LogInformation($"Saving database {_fileName} called.");
             FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
             {
@@ -127,7 +128,6 @@ namespace Effanville.FPD.Logic.ViewModels
             }
 
             _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
-
             _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
                 true, 
@@ -147,7 +147,7 @@ namespace Effanville.FPD.Logic.ViewModels
 
         private void ExecuteLoadDatabase()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loading database.");
+            _logger.LogInformation("Loading database.");
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
             {
@@ -168,7 +168,7 @@ namespace Effanville.FPD.Logic.ViewModels
             _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
             _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
 
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Loading", $"Loaded database {_fileName} successfully.");
+            _logger.LogInformation($"Loaded database {_fileName} successfully.");
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand UpdateDataCommand { get; }
         private void ExecuteUpdateData()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Downloading", $"Execute update data for database {_fileName} called.");
+            _logger.LogInformation($"Execute update data for database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(Account.All, programPortfolio, null, ReportLogger).ConfigureAwait(false)));
         }
 
@@ -187,7 +187,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand ImportFromOtherDatabaseCommand { get; }
         private void ImportFromOtherDatabase()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "Importing", $"Execute import data for database {_fileName} called.");
+            _logger.LogInformation($"Execute import data for database {_fileName} called.");
             FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
@@ -204,7 +204,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand CleanDataCommand { get; }
         private void ExecuteCleanData()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "EditingData", $"Execute clean database for database {_fileName} called.");
+            _logger.LogInformation($"Execute clean database for database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.CleanData()));
         }
 
@@ -214,7 +214,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand RepriceResetCommand { get; }
         private void ExecuteRepriceReset()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "EditingData", $"Execute clean database for database {_fileName} called.");
+            _logger.LogInformation($"Execute clean database for database {_fileName} called.");
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.MigrateRepriceToReset()));
         }
 
@@ -225,7 +225,7 @@ namespace Effanville.FPD.Logic.ViewModels
 
         private void ExecuteRefresh()
         {
-            ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, "DatabaseAccess", $"Execute refresh on the window fo database {_fileName} called.");
+            _logger.LogInformation($"Execute refresh on the window fo database {_fileName} called.");
             RefreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
          }
 
