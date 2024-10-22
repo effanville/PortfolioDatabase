@@ -22,6 +22,7 @@ namespace Effanville.FPD.Console
         readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
         private readonly IReportLogger _reportLogger;
+        private readonly IMailSender _mailSender;
         readonly CommandOption<string> _filepathOption;
         readonly CommandOption<string> _outputPathOption;
         readonly CommandOption<DocumentType> _fileTypeOption;
@@ -38,11 +39,12 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public StatisticsCommand(IFileSystem fileSystem, ILogger<StatisticsCommand> logger, IReportLogger reportLogger)
+        public StatisticsCommand(IFileSystem fileSystem, ILogger<StatisticsCommand> logger, IReportLogger reportLogger, IMailSender mailSender)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
+            _mailSender = mailSender;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _outputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
@@ -94,7 +96,7 @@ namespace Effanville.FPD.Console
                     Body = exportString.ToString(),
                     Recipients = new List<string> { _mailRecipientOption.Value }
                 };
-                MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
+                _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
             }
 
             return 0;

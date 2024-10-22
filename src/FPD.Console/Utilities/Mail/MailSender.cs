@@ -7,9 +7,9 @@ using Effanville.Common.Structure.Reporting;
 
 namespace Effanville.FPD.Console.Utilities.Mail;
 
-public static class MailSender
+public class MailSender : IMailSender
 {
-    public static void WriteEmail(
+    public void WriteEmail(
         IFileSystem fileSystem,
         SmtpInfo smtpInfo,
         MailInfo mailInfo,

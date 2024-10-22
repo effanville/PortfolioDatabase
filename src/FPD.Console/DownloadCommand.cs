@@ -23,6 +23,7 @@ namespace Effanville.FPD.Console
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
         private readonly IReportLogger _reportLogger;
+        private readonly IMailSender _mailSender;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<bool> _updateStatsOption;
         private readonly CommandOption<string> _mailRecipientOption;
@@ -36,11 +37,12 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public DownloadCommand(IFileSystem fileSystem, ILogger<DownloadCommand> logger, IReportLogger reportLogger)
+        public DownloadCommand(IFileSystem fileSystem, ILogger<DownloadCommand> logger, IReportLogger reportLogger, IMailSender mailSender)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
+            _mailSender = mailSender;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _updateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
@@ -95,7 +97,7 @@ namespace Effanville.FPD.Console
                         Recipients = new List<string>{_mailRecipientOption.Value}
                     };
                     _logger.Log(LogLevel.Information, $"Setup content for mailing.");
-                    MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
+                    _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
                 }
             }
 
