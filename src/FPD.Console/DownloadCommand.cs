@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting.LogAspect;
 using Effanville.Common.Structure.ReportWriting;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Download;
@@ -17,7 +18,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Console
 {
-    internal sealed class DownloadCommand : ICommand
+    internal sealed class DownloadCommand : ICommand, ILogInterceptable
     {
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
@@ -28,6 +29,7 @@ namespace Effanville.FPD.Console
 
         public string Name => "download";
 
+        public ILogger Logger => _logger;
         /// <inheritdoc/>
         public IList<CommandOption> Options { get; } = new List<CommandOption>();
 
@@ -51,6 +53,7 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
+        [LogIntercept]
         public int Execute(IConfiguration config)
         {
             PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
@@ -101,10 +104,12 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
+        [LogIntercept]
         public bool Validate( IConfiguration config) 
             => this.Validate(config, _logger);
 
         /// <inheritdoc/>
+        [LogIntercept]
         public void WriteHelp() 
             => this.WriteHelp( _logger);
     }
