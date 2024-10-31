@@ -74,7 +74,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// The collection of tabs to hold the data and interactions for the various sub-windows.
         /// </summary>
-        public ObservableCollection<object> Tabs { get; } = new ();
+        public ObservableCollection<object> Tabs { get; } = new();
 
         /// <summary>
         /// Default constructor.
@@ -94,7 +94,7 @@ namespace Effanville.FPD.Logic.ViewModels
             _styles = styles;
             Globals = globals;
             UserConfiguration = configuration;
-            
+
             ReportsViewModel = reportsViewModel;
 
             SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
@@ -112,12 +112,12 @@ namespace Effanville.FPD.Logic.ViewModels
             }
 
             Tabs.Add(viewModelFactory.GenerateViewModel(
-                ProgramPortfolio, 
-                "Securities", 
+                ProgramPortfolio,
+                "Securities",
                 Account.Security,
                 nameof(ValueListWindowViewModel)));
             Tabs.Add(viewModelFactory.GenerateViewModel(
-                ProgramPortfolio, 
+                ProgramPortfolio,
                 "Bank Accounts",
                 Account.BankAccount,
                 nameof(ValueListWindowViewModel)));
@@ -139,10 +139,10 @@ namespace Effanville.FPD.Logic.ViewModels
                 ProgramPortfolio,
                 "",
                 Account.All,
-         nameof(StatsCreatorWindowViewModel));
+                nameof(StatsCreatorWindowViewModel));
             ((StatsCreatorWindowViewModel)statsCreatorWindow).RequestAddTab += AddTab;
             Tabs.Add(statsCreatorWindow);
-            
+
 
             foreach (object tab in Tabs)
             {
@@ -168,7 +168,7 @@ namespace Effanville.FPD.Logic.ViewModels
 
         public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
             => ReportsViewModel?.UpdateReport(severity, type, location, message);
-        
+
         private void OnNewPortfolio(object sender, PortfolioEventArgs e)
         {
             var changeType =
@@ -180,7 +180,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 ? new PortfolioEventArgs(Account.All, true)
                 : new PortfolioEventArgs(changeType, true);
         }
-        
+
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
             var changeType =
@@ -192,10 +192,10 @@ namespace Effanville.FPD.Logic.ViewModels
                 ? new PortfolioEventArgs(Account.All, e.UserInitiated || _aggEventArgs.UserInitiated)
                 : new PortfolioEventArgs(changeType, e.UserInitiated || _aggEventArgs.UserInitiated);
         }
-        
+
         private void OnTimerElapsed(object sender, ElapsedEventArgs e) =>
             Task.Run(() => UpdateChildViewModels(_aggEventArgs));
-        
+
         private void UpdateChildViewModels(PortfolioEventArgs e)
         {
             if (e.ChangedAccount == Account.Unknown)
@@ -219,12 +219,12 @@ namespace Effanville.FPD.Logic.ViewModels
                     tabsToRemove.Add(tab);
                 }
             }
-            
+
             foreach (object tab in tabsToRemove)
             {
                 Globals.CurrentDispatcher.BeginInvoke(() => RemoveTab(tab, EventArgs.Empty));
             }
-            
+
             OptionsToolbarCommands.UpdateData(ProgramPortfolio, e.UserInitiated);
 
             if (e.ChangedPortfolio)
@@ -243,7 +243,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 return Tabs.ToList();
             }
         }
-        
+
         private void AddTab(object obj, EventArgs args)
         {
             lock (_tabsLock)
@@ -256,7 +256,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 Tabs.Add(obj);
             }
         }
-        
+
         private void RemoveTab(object obj, EventArgs args)
         {
             lock (_tabsLock)

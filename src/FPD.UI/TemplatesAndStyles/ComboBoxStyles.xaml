@@ -121,8 +121,10 @@
                                         BorderThickness="1"
                                         BorderBrush="{Binding Styles.BackgroundSecondaryBrush}" />
                                 <ScrollViewer Margin="4,6,4,6"
-                                              SnapsToDevicePixels="True">
+                                              SnapsToDevicePixels="True"
+                                              FlowDirection="RightToLeft">
                                     <StackPanel IsItemsHost="True"
+                                                FlowDirection="LeftToRight"
                                                 KeyboardNavigation.DirectionalNavigation="Contained" />
                                 </ScrollViewer>
                             </Grid>

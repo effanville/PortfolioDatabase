@@ -22,7 +22,7 @@ namespace Effanville.FPD.UI
         /// <summary>
         /// List of all applicable statistics for Securities.
         /// </summary>
-        public static IReadOnlyList<Statistic> SecurityFieldNames => AccountStatisticsHelpers.AllStatistics();
+        public static IReadOnlyList<Statistic> SecurityFieldNames => AccountStatisticsHelpers.DefaultSecurityStats();
 
         /// <summary>
         /// List of all applicable statistics for Bank accounts.

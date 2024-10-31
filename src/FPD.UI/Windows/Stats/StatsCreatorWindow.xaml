@@ -8,52 +8,18 @@
       mc:Ignorable="d"
       VerticalAlignment="Stretch"
       Background="{Binding Styles.BackgroundBrush}">
-    <Grid.Resources>
-        <Style TargetType="{x:Type ScrollViewer}">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <ScrollContentPresenter Grid.Column="0" />
-
-                            <ScrollBar Grid.Row="0"
-                                       Grid.Column="1"
-                                       Value="{TemplateBinding VerticalOffset}"
-                                       Maximum="{TemplateBinding ScrollableHeight}"
-                                       ViewportSize="{TemplateBinding ViewportHeight}"
-                                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
-                            <ScrollBar Orientation="Horizontal"
-                                       Grid.Row="1"
-                                       Grid.Column="1"
-                                       Value="{TemplateBinding HorizontalOffset}"
-                                       Maximum="{TemplateBinding ScrollableWidth}"
-                                       ViewportSize="{TemplateBinding ViewportWidth}"
-                                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Grid.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Auto">
-        <Grid>
+                  HorizontalScrollBarVisibility="Auto"
+                  FlowDirection="RightToLeft">
+        <Grid FlowDirection="LeftToRight">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*"
-                               MinHeight="60" />
+                               MinHeight="60"
+                               MaxHeight="60" />
                 <RowDefinition Height="*"
-                               MinHeight="60" />
+                               MinHeight="70"
+                               MaxHeight="70" />
                 <RowDefinition Height="3*"
                                MinHeight="220" />
             </Grid.RowDefinitions>
@@ -70,18 +36,21 @@
             <UserControl Grid.Row="1"
                          Height="Auto"
                          BorderThickness="2"
+                         Margin="2"
                          BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                          Background="{Binding Styles.BackgroundBrush}"
                          Content="{Binding ExportReportOptions}" />
             <UserControl Grid.Row="2"
                          Height="Auto"
                          BorderThickness="2"
+                         Margin="2"
                          BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                          Background="{Binding Styles.BackgroundBrush}"
                          Content="{Binding ExportHistoryOptions}" />
             <UserControl Grid.Row="3"
                          Height="Auto"
                          BorderThickness="2"
+                         Margin="2"
                          BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                          Background="{Binding Styles.BackgroundBrush}"
                          Content="{Binding StatsPageExportOptions}" />
