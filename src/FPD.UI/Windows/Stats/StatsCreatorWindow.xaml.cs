@@ -1,18 +1,12 @@
-﻿using System.Windows.Controls;
+﻿namespace Effanville.FPD.UI.Windows.Stats;
 
-namespace Effanville.FPD.UI.Windows.Stats
+/// <summary>
+/// Interaction logic for StatsCreatorWindow.xaml
+/// </summary>
+public partial class StatsCreatorWindow
 {
     /// <summary>
-    /// Interaction logic for StatsCreatorWindow.xaml
+    /// Construct an instance.
     /// </summary>
-    public partial class StatsCreatorWindow : Grid
-    {
-        /// <summary>
-        /// Construct an instance.
-        /// </summary>
-        public StatsCreatorWindow()
-        {
-            InitializeComponent();
-        }
-    }
+    public StatsCreatorWindow() => InitializeComponent();
 }
