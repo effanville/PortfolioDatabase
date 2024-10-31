@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.10.01-20241031T1422] - 2024-10-31
+
+### Bug Fixes
+
+- Correct wrong scrolling behaviour in stats creator window
+
 ## [24.10.01-20241027T1447] - 2024-10-27
 
 ### Bug Fixes
