@@ -9,7 +9,7 @@
     <Authors>Effanville</Authors>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>24.11.00</Version>
+    <Version>24.11.01</Version>
   </PropertyGroup>
   <PropertyGroup>
     <Deterministic>false</Deterministic>
