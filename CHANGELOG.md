@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.11.00] - 2024-11-18
+
+### Bug Fixes
+
+- Ensure Chart and stats window update when a new portfolio is loaded
+- Move UiStyles into ui project to reduce viewModel dependency on windows.
+- Remove dependency on System.Windows.Data for datagrid views.
+- Remove view model dependency on System.Windows.Controls
+- Update FinancialStructures for tweaks to statistic calculations.
+- Add stats output to body of email
+- Remove windows dependencies from FPD.Logic completely
+- Ensure can send email with no attachements
+- Use Microsoft logger where possible, and remove creation of new lists
+- Make MailSender an injectable service.
+- Update submodule
+- Correct wrong scrolling behaviour in stats creator window
+- Update for new yahoo cookie
+
+### Features
+
+- Expose calculating currency statistics.
+- Add aspect logging into console commands.
+
+### Testing
+
+- Fix broken unit tests
+
 ## [24.10.00-20241002T1424] - 2024-10-02
 
 ### Bug Fixes
