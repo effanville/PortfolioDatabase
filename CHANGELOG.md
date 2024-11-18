@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [24.10.00-20241002T1424] - 2024-10-02
+
+### Bug Fixes
+
+- Move code into src and test folders.
+
+### Refactor
+
+- Update to use collection lists.
+
+## [24.09.00-20240911T0003] - 2024-09-11
+
+### Bug Fixes
+
+- Remove obsolete consoleInstance class from console commands
+- Update FinancialStructures for downloading improvements
+- Improve downloading and date formatting.
+
+## [24.09.00-20240905T0010] - 2024-09-05
+
+### Bug Fixes
+
+- Default to not calculate MDD and Drawdown for stats view.
+- Update submodules to latest develop versions.
+- Fixes to downloading to ensure it works for yahoo.
+- Update downloaders for non uk instruments.
+
+### Features
+
+- Add new statistics into Bank Account output options.
+- Add scroll bars into stats creator page.
+- Provide options in Charts window for duration and frequency of valuations.
+- Improve Stats generation apis.
+
+### Testing
+
+- Fix broken config tests.
+
 ## [24.06.00] - 2024-06-10
 
 ### Bug Fixes

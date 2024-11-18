@@ -7,9 +7,9 @@ using Effanville.Common.Structure.Reporting;
 
 namespace Effanville.FPD.Console.Utilities.Mail;
 
-public static class MailSender
+public class MailSender : IMailSender
 {
-    public static void WriteEmail(
+    public void WriteEmail(
         IFileSystem fileSystem,
         SmtpInfo smtpInfo,
         MailInfo mailInfo,
@@ -36,22 +36,26 @@ public static class MailSender
             newMail.Subject = mailInfo.Subject;
             newMail.IsBodyHtml = true;
             newMail.Body = mailInfo.Body;
-            foreach (string file in mailInfo.AttachmentFileNames)
+            if (mailInfo.AttachmentFileNames != null)
             {
-                Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
-
-                // Add time stamp information for the file.
-                ContentDisposition disposition = data.ContentDisposition;
-                if (disposition != null)
+                foreach (string file in mailInfo.AttachmentFileNames)
                 {
-                    disposition.CreationDate = fileSystem.File.GetCreationTime(file);
-                    disposition.ModificationDate = fileSystem.File.GetLastWriteTime(file);
-                    disposition.ReadDate = fileSystem.File.GetLastAccessTime(file);
-                }
+                    Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
 
-                // Add the file attachment to this email message.
-                newMail.Attachments.Add(data);
+                    // Add time stamp information for the file.
+                    ContentDisposition disposition = data.ContentDisposition;
+                    if (disposition != null)
+                    {
+                        disposition.CreationDate = fileSystem.File.GetCreationTime(file);
+                        disposition.ModificationDate = fileSystem.File.GetLastWriteTime(file);
+                        disposition.ReadDate = fileSystem.File.GetLastAccessTime(file);
+                    }
+
+                    // Add the file attachment to this email message.
+                    newMail.Attachments.Add(data);
+                }
             }
+
             logger.Log(ReportType.Information, "Emailing", "Added all attachments.");
 
             client.EnableSsl = true;

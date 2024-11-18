@@ -1,0 +1,167 @@
+﻿using System.IO;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
+
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI.Services;
+using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.Tests.TestHelpers;
+using Effanville.FPD.Logic.ViewModels;
+
+using Microsoft.Extensions.Logging;
+
+using Moq;
+
+using NUnit.Framework;
+
+namespace Effanville.FPD.Logic.Tests
+{
+    public class OptionsToolbarTests
+    {
+        [Test]
+        public void CanOpenNewDatabase()
+        {
+            FileSystem fileSystem = new FileSystem();
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
+            IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
+            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.NewDatabaseCommand.Execute(1);
+            //Check that data held is an empty database
+
+            Assert.AreEqual(null, portfolio.Name);
+            Assert.AreEqual(0, portfolio.Funds.Count);
+            Assert.AreEqual(0, portfolio.BankAccounts.Count);
+            Assert.AreEqual(0, portfolio.BenchMarks.Count);
+        }
+
+        [Test]
+        public void CanOpenDatabase()
+        {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            MockFileSystem tempFileSystem = new MockFileSystem();
+            string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
+            string testPath = "c:/temp/saved.xml";
+
+            string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
+            tempFileSystem.AddFile(testPath, new MockFileData(file));
+
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
+            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.LoadDatabaseCommand.Execute(1);
+            //Input prespecified example database
+
+            Assert.AreEqual(name, portfolio.Name);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+        }
+
+        [Test]
+        public void CanOpenAndSaveDatabase()
+        {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            MockFileSystem tempFileSystem = new MockFileSystem();
+            string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
+            string testPath = "c:/temp/database.xml";
+            string savePath = "c:/temp/saved.xml";
+
+            tempFileSystem.AddFile(testPath, new MockFileData(file));
+            string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
+
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath, savePath);
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
+            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.LoadDatabaseCommand.Execute(1);
+            //Input prespecified example database
+
+            Assert.AreEqual(name, portfolio.Name);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+
+            viewModel.SaveDatabaseCommand.Execute(1);
+
+            MockFileData savedFile = tempFileSystem.GetFile(savePath);
+            Assert.AreEqual(file, savedFile.TextContents);
+        }
+
+        [Test]
+        public void CanSaveDatabase()
+        {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            MockFileSystem tempFileSystem = new MockFileSystem();
+            string file = File.ReadAllText(TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml");
+            string testPath = "c:/temp/database.xml";
+            string name = tempFileSystem.Path.GetFileNameWithoutExtension(testPath);
+
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
+            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.SaveDatabaseCommand.Execute(1);
+            //Input prespecified example database
+
+            Assert.AreEqual(name, portfolio.Name);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+            Assert.AreEqual(1, portfolio.Assets.Count);
+        }
+
+        [Test]
+        [Ignore("IncompeteArchitecture - Downloader does not currently allow for use in test environment.")]
+        public void CanUpdateDatabase()
+        {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            FileSystem fileSystem = new FileSystem();
+            string testFilePath = TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml";
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testFilePath);
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
+            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.UpdateDataCommand.Execute(1);
+            //Input prespecified example database
+
+            Assert.AreEqual(testFilePath, portfolio.Name);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+        }
+
+        [Test]
+        public void CanRefreshDatabase()
+        {
+            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
+            FileSystem fileSystem = new FileSystem();
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
+            IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
+            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.RefreshCommand.Execute(1);
+            //Check that data held is an empty database
+
+            Assert.AreEqual("TestFilePath", portfolio.Name);
+            Assert.AreEqual(1, portfolio.Funds.Count);
+            Assert.AreEqual(1, portfolio.BankAccounts.Count);
+            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+        }
+    }
+}

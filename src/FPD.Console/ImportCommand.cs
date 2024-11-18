@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 
-using Effanville.Common.Console;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting.LogAspect;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Persistence;
 
@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Console
 {
-    internal sealed class ImportCommand : ICommand
+    internal sealed class ImportCommand : ICommand, ILogInterceptable
     {
         private readonly IFileSystem _fileSystem;
         private readonly ILogger<ImportCommand> _logger;
@@ -22,6 +22,8 @@ namespace Effanville.FPD.Console
         private readonly CommandOption<string> _otherDatabaseFilepath;
 
         public string Name => "import";
+
+        public ILogger Logger => _logger;
 
         /// <inheritdoc/>
         public IList<CommandOption> Options { get; } = new List<CommandOption>();
@@ -52,7 +54,8 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public int Execute(IConsole console, IConfiguration config)
+        [LogIntercept]
+        public int Execute(IConfiguration config)
         {
             var portfolioPersistence = new PortfolioPersistence();
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
@@ -71,9 +74,11 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
-        public bool Validate(IConsole console, IConfiguration config) => this.Validate(config, console, _logger);
+        [LogIntercept]
+        public bool Validate(IConfiguration config) => this.Validate(config, _logger);
 
         /// <inheritdoc/>
-        public void WriteHelp(IConsole console) => this.WriteHelp(console, _logger);
+        [LogIntercept]
+        public void WriteHelp() => this.WriteHelp(_logger);
     }
 }
