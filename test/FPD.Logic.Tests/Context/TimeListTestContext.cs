@@ -21,7 +21,7 @@ public sealed class TimeListTestContext
     }
 
     public TimeListTestContext(
-        UiStyles uiStyles,
+        IUiStyles uiStyles,
         UiGlobals globals,
         IUpdater<IPortfolio> updater) 
         : base(uiStyles, globals, updater, null)

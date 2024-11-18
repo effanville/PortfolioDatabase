@@ -31,11 +31,6 @@ namespace Effanville.FPD.Logic.Configuration
         };
 
         /// <summary>
-        /// Name of the child configuration for the stats window.
-        /// </summary>
-        public const string StatsDisplay = nameof(StatsViewModel);
-
-        /// <summary>
         /// Name of the child configuration for the <see cref="StatsCreatorWindowViewModel"/>.
         /// </summary>
         public const string StatsCreator = nameof(StatsCreatorWindowViewModel);
@@ -87,7 +82,7 @@ namespace Effanville.FPD.Logic.Configuration
         {
             ChildConfigurations = new Dictionary<string, IConfiguration>
             {
-                { StatsDisplay, new StatsDisplayConfiguration() },
+                { nameof(StatsViewModel), new StatsDisplayConfiguration() },
                 { StatsCreator, new StatsCreatorConfiguration() }
             };
             fMigrations = new List<Migration<UserConfiguration>>() { new Migration<UserConfiguration>(new Version(), AddExportCommandMigration) };

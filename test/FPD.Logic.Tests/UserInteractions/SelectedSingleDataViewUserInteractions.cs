@@ -35,13 +35,13 @@ namespace Effanville.FPD.Logic.Tests.UserInteractions
         public static void CompleteEdit(this SelectedSingleDataViewModel viewModel, IValueList valueList)
         {
             viewModel.TLVM.AddEditDataCommand?.Execute(null);
-            viewModel.UpdateData(valueList);
+            viewModel.UpdateData(valueList, false);
         }
 
         public static void DeleteSelected(this SelectedSingleDataViewModel viewModel, IValueList valueList)
         {
             viewModel.DeleteValuationCommand?.Execute(null);
-            viewModel.UpdateData(valueList);
+            viewModel.UpdateData(valueList, false);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -231,6 +232,15 @@ namespace Effanville.FPD.UI.Windows
                     mainWindow.Height = temp;
                     mainWindow.Top += height;
                 }
+            }
+        }
+
+        private void MainTabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is MainWindowViewModel mainWindowViewModel)
+            {
+                var addedItems = e.AddedItems;
+                mainWindowViewModel.SelectionChanged.Execute(addedItems);
             }
         }
     }

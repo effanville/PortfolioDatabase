@@ -22,7 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
-        private bool _updateDataInProgress = false;
+        private bool _updateDataInProgress;
         private List<AccountStatistics> _stats;
 
         private bool _displayValueFunds = true;
@@ -69,7 +69,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
+        public StatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
             : base(globals, styles, userConfiguration, portfolio, "Statistics", account)
         {
             StatisticNames = AccountStatisticsHelpers.AllStatistics()
@@ -111,7 +111,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
             if (!_updateDataInProgress)
             {
-                await Task.Run(() => UpdateData(null));
+                await Task.Run(() => UpdateData(null, false));
             }
         }
 
@@ -134,13 +134,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             }
         }
 
-        private void UpdateData(IPortfolio modelData, bool force)
+        private void UpdateDataInternal(IPortfolio modelData, bool force)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             stopwatch.Start();
             if (modelData != null)
             {
-                base.UpdateData(modelData);
+                base.UpdateData(modelData, false);
             }
 
             if ((Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)) && !force)
@@ -161,12 +161,12 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         }
 
         /// <inheritdoc/>
-        public override async void UpdateData(IPortfolio modelData)
+        public override async void UpdateData(IPortfolio modelData, bool force)
         {
             if (!_updateDataInProgress)
             {
                 _updateDataInProgress = true;
-                await Task.Run(() => UpdateData(null, force: false));
+                await Task.Run(() => UpdateDataInternal(null, force));
                 _updateDataInProgress = false;
             }
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Effanville.FinancialStructures.Database;
@@ -13,14 +14,14 @@ public static class PortfolioGeneratorHelper
 {
     public static IPortfolio CreateFromTable(Table table)
     {
-        var portfolio = TestSetupHelper.CreateEmptyDataBase();
+        IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
         if (table != null)
         {
             foreach (TableRow row in table.Rows)
             {
                 string accountAsString = row["Account"];
-                var eff = Enum.Parse<Account>(accountAsString);
-                var nameData = NameDataFromRow(row);
+                Account eff = Enum.Parse<Account>(accountAsString);
+                NameData nameData = NameDataFromRow(row);
                 portfolio.TryAdd(eff, nameData);
             }
         }
@@ -34,8 +35,8 @@ public static class PortfolioGeneratorHelper
             foreach (TableRow row in table.Rows)
             {
                 string accountAsString = row["Account"];
-                var eff = Enum.Parse<Account>(accountAsString);
-                var nameData = NameDataFromRow(row);
+                Account eff = Enum.Parse<Account>(accountAsString);
+                NameData nameData = NameDataFromRow(row);
                 portfolio.TryAdd(eff, nameData);
             }
         }
@@ -48,8 +49,8 @@ public static class PortfolioGeneratorHelper
             foreach (TableRow row in table.Rows)
             {
                 string accountAsString = row["Account"];
-                var eff = Enum.Parse<Account>(accountAsString);
-                var nameData = NameDataFromRow(row);
+                Account eff = Enum.Parse<Account>(accountAsString);
+                NameData nameData = NameDataFromRow(row);
                 portfolio.TryRemove(eff, nameData);
             }
         }
@@ -57,10 +58,10 @@ public static class PortfolioGeneratorHelper
 
     public static NameData NameDataFromRow(TableRow row)
     { 
-        row.TryGetValue("Currency", out var currency);
-        row.TryGetValue("Url", out var url);
-        row.TryGetValue("Sectors", out var sectors);
-        var sectorsSet = !string.IsNullOrEmpty(sectors)
+        row.TryGetValue("Currency", out string currency);
+        row.TryGetValue("Url", out string url);
+        row.TryGetValue("Sectors", out string sectors);
+        HashSet<string> sectorsSet = !string.IsNullOrEmpty(sectors)
             ? sectors?.Split(',').ToHashSet()
             : null;
         return new NameData(

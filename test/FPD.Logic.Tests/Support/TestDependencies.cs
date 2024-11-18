@@ -8,6 +8,7 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.ViewModels;
@@ -31,11 +32,13 @@ public static class TestDependencies
         builder.RegisterInstance(SetupReportLogger());
         builder.RegisterInstance(SetupGlobalsMock());
         builder.RegisterInstance(SetupUpdater());
+        builder.RegisterInstance<IConfiguration>(new UserConfiguration());
         builder.Register(
             b => SetupViewModelFactory(
-                b.Resolve<UiStyles>(),
+                b.Resolve<IUiStyles>(),
                 b.Resolve<UiGlobals>(),
-                b.Resolve<IUpdater<IPortfolio>>()));
+                b.Resolve<IUpdater<IPortfolio>>(),
+                b.Resolve<IConfiguration>()));
 
         builder.RegisterType<ViewModelTestContext<ErrorReports, ReportingWindowViewModel>>();
         builder.RegisterType<ViewModelTestContext<IPortfolio, HtmlViewerViewModel>>();
@@ -46,8 +49,12 @@ public static class TestDependencies
         builder.RegisterType<ViewModelTestContext<ISecurity, SelectedSecurityViewModel>>();
     }
 
-    private static UiStyles SetupDefaultStyles()
-        => new UiStyles(isLightTheme: false);
+    private static IUiStyles SetupDefaultStyles()
+    {
+        Mock<IUiStyles> styles = new Mock<IUiStyles>();
+        styles.SetupGet(x => x.IsLightTheme).Returns(true);
+        return styles.Object;
+    }
 
     internal static IDispatcher SetupDispatcher()
     {
@@ -69,13 +76,14 @@ public static class TestDependencies
             null, null,
             SetupReportLogger());
 
-    private static IViewModelFactory SetupViewModelFactory(UiStyles styles, UiGlobals globals,
-        IUpdater<IPortfolio> updater)
-        => new ViewModelFactory(styles, globals, updater);
+    private static IViewModelFactory SetupViewModelFactory(IUiStyles styles, UiGlobals globals,
+        IUpdater<IPortfolio> updater,
+        IConfiguration config)
+        => new ViewModelFactory(styles, globals, updater, config);
 
     private static IReportLogger SetupReportLogger()
     {
-        var reportLogger = new LogReporter(LogAction, saveInternally: true);
+        LogReporter reportLogger = new LogReporter(LogAction, saveInternally: true);
         return reportLogger;
 
         void LogAction(ReportSeverity sev, ReportType error, string loc, string msg)

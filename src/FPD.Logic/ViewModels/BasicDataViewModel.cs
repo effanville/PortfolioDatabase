@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -142,7 +141,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public BasicDataViewModel(UiGlobals globals, UiStyles styles, IPortfolio portfolio)
+        public BasicDataViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
             : base(globals, styles, portfolio, "Overview", Account.All)
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
@@ -150,7 +149,7 @@ namespace Effanville.FPD.Logic.ViewModels
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
             ModelData = modelData;
             
@@ -175,7 +174,7 @@ namespace Effanville.FPD.Logic.ViewModels
 
             BankAccountTotalText = $"Total Bank Accounts: {modelData.NumberOf(Account.BankAccount)}";
             BankAccountAmountText = $"Total Value: {modelData.TotalValue(Totals.BankAccount).WithCurrencySymbol(modelData.BaseCurrency)}";
-            List<IExchangableValueList> bankAccounts = modelData.BankAccounts.ToList();
+            List<IExchangeableValueList> bankAccounts = modelData.BankAccounts.ToList();
             bankAccounts.Sort((bank, otherBank) => bank.ValueComparison(otherBank, DateTime.Today));
 
             var bankAccountsTop = new List<Labelled<TwoName, DailyValuation>>(5);
@@ -203,7 +202,7 @@ namespace Effanville.FPD.Logic.ViewModels
             {
                 _selectedNote = note;
             }
-            else if (args == CollectionView.NewItemPlaceholder)
+            else if (args == null)
             {
                 _selectedNote = null;
             }

@@ -8,7 +8,7 @@ public static class DataNamesViewModelUserInteractions
     public static void AddName(this DataNamesViewModel viewModel, NameData name)
     {
         viewModel.SelectName(null);
-        var newItem = viewModel.DefaultRow();
+        RowData newItem = viewModel.DefaultRow();
         viewModel.DataNames.Add(newItem);
         viewModel.SelectRow(newItem);
 

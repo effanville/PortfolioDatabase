@@ -25,7 +25,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
-        public UiStyles Styles { get; private set; }
+        public IUiStyles Styles { get; private set; }
 
         /// <summary>
         /// Function which updates the main data store.
@@ -35,7 +35,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public RowData(NameData name, bool isThis, Account accType, IUpdater<IPortfolio> update, UiStyles styles)
+        public RowData(NameData name, bool isThis, Account accType, IUpdater<IPortfolio> update, IUiStyles styles)
             : base(name, isThis)
         {
             Styles = styles;

@@ -8,7 +8,7 @@ namespace Effanville.FPD.Logic.Tests.Context;
 
 public class ViewModelTestContext<TModelData, TViewModel> where TModelData : class where TViewModel : class
 {
-    public UiStyles Styles { get; }
+    public IUiStyles Styles { get; }
     public UiGlobals Globals { get; }
     public IUpdater<IPortfolio> Updater { get; }
     public TModelData ModelData { get; set; }
@@ -17,7 +17,7 @@ public class ViewModelTestContext<TModelData, TViewModel> where TModelData : cla
     public IViewModelFactory ViewModelFactory { get; }
     
     public ViewModelTestContext(
-        UiStyles uiStyles, 
+        IUiStyles uiStyles, 
         UiGlobals globals,
         IUpdater<IPortfolio> updater, 
         IViewModelFactory viewModelFactory)

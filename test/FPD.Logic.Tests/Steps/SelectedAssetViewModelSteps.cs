@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.FinancialStructures.Database;
@@ -27,12 +28,12 @@ public class SelectedAssetViewModelSteps
     [Given(@"I have a SelectedAssetViewModel with name Barclays-Current and no data")]
     public void GivenIHaveASelectedAssetViewModelWithNameAndNoData(string name)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(Account.Asset, nameData, out var valueList);
-        _testContext.ModelData = valueList as IAmortisableAsset;
+        portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
+        _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedAssetViewModel(
             portfolio,
@@ -50,21 +51,20 @@ public class SelectedAssetViewModelSteps
     [Given(@"I have a SelectedAssetViewModel with name (.*) and data")]
     public void GivenIHaveASelectedAssetViewModelWithAccountSecurityAndData(string name, Table table)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(Account.Asset, nameData, out var valueList);
-        var asset = valueList as IAmortisableAsset;
-        foreach (var row in table.Rows)
+        portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset asset);
+        foreach (TableRow row in table.Rows)
         {
-            var date = row["Date"];
-            var value = row["Value"];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
 
-            var type = row["Type"];
+            string type = row["Type"];
             if (type == "Value")
             {
                 asset.SetData(actualDate, decimalValue);
@@ -94,14 +94,14 @@ public class SelectedAssetViewModelSteps
     [Given(@"I have a SelectedAssetViewModel with name (.*) and no data")]
     public void GivenIHaveASelectedSingleDataViewModelWithAccountAndNameAndNoData(string name)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(Account.Asset, nameData, out var valueList);
+        portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
 
         _testContext.Updater.Database = portfolio;
-        _testContext.ModelData = valueList as IAmortisableAsset;
+        _testContext.ModelData = valueList;
         _testContext.ViewModel = new SelectedAssetViewModel(
             portfolio,
             _testContext.ModelData,
@@ -114,32 +114,32 @@ public class SelectedAssetViewModelSteps
 
     [Given(@"the SelectedAssetViewModel is brought into focus")]
     public void GivenTheSelectedAssetViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
 
     [Then(@"the SelectedAssetViewModel has (.*) values displayed")]
     public void ThenTheSelectedAssetViewModelHasValuationDisplayed(int p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.ValuesTLVM.Valuations.Count);
+        => Assert.That(_testContext.ViewModel.ValuesTLVM.Valuations.Count, Is.EqualTo(p0));
 
     [Then(@"the SelectedAssetViewModel has (.*) debt values displayed")]
     public void ThenTheSelectedAssetViewModelHasDebtValuationDisplayed(int p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.DebtTLVM.Valuations.Count);
+        => Assert.That(_testContext.ViewModel.DebtTLVM.Valuations.Count, Is.EqualTo(p0));
 
     [Then(@"the SelectedAssetViewModel has (.*) payment values displayed")]
     public void ThenTheSelectedAssetViewModelHasPaymentValuationDisplayed(int p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.PaymentsTLVM.Valuations.Count);
+        => Assert.That(_testContext.ViewModel.PaymentsTLVM.Valuations.Count, Is.EqualTo(p0));
 
     [When(@"I add SAVM data with")]
     public void WhenIAddSelectedSingleDataViewModelDataWith(Table table)
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             _testContext.ViewModel.ValuesTLVM.AddValuation(new DailyValuation(actualDate, decimalValue));
         }
     }
@@ -160,12 +160,12 @@ public class SelectedAssetViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             _testContext.ViewModel.DebtTLVM.AddValuation(new DailyValuation(actualDate, decimalValue));
         }
     }
@@ -185,12 +185,12 @@ public class SelectedAssetViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             _testContext.ViewModel.PaymentsTLVM.AddValuation(new DailyValuation(actualDate, decimalValue));
         }
     }
@@ -208,21 +208,21 @@ public class SelectedAssetViewModelSteps
     [Then(@"the SAVM values are")]
     public void ThenTheSavmValuesAre(Table table)
     {
-        var valuations = _testContext.ViewModel.ValuesTLVM.Valuations;
-        Assert.AreEqual(table.RowCount, valuations.Count);
+        List<DailyValuation> valuations = _testContext.ViewModel.ValuesTLVM.Valuations;
+        Assert.That(valuations.Count, Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            var valuation = valuations[index];
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            DailyValuation valuation = valuations[index];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(actualDate, valuation.Day);
-                Assert.AreEqual(decimalValue, valuation.Value);
+                Assert.That(valuation.Day, Is.EqualTo(actualDate));
+                Assert.That(valuation.Value, Is.EqualTo(decimalValue));
             });
         }
     }
@@ -230,21 +230,21 @@ public class SelectedAssetViewModelSteps
     [Then(@"the SAVM payment values are")]
     public void ThenTheSavmPaymentsValuesAre(Table table)
     {
-        var valuations = _testContext.ViewModel.PaymentsTLVM.Valuations;
-        Assert.AreEqual(table.RowCount, valuations.Count);
+        List<DailyValuation> valuations = _testContext.ViewModel.PaymentsTLVM.Valuations;
+        Assert.That(valuations.Count, Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            var valuation = valuations[index];
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            DailyValuation valuation = valuations[index];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(actualDate, valuation.Day);
-                Assert.AreEqual(decimalValue, valuation.Value);
+                Assert.That(valuation.Day, Is.EqualTo(actualDate));
+                Assert.That(valuation.Value, Is.EqualTo(decimalValue));
             });
         }
     }
@@ -252,21 +252,21 @@ public class SelectedAssetViewModelSteps
     [Then(@"the SAVM debt values are")]
     public void ThenTheSavmDebtValuesAre(Table table)
     {
-        var valuations = _testContext.ViewModel.DebtTLVM.Valuations;
-        Assert.AreEqual(table.RowCount, valuations.Count);
+        List<DailyValuation> valuations = _testContext.ViewModel.DebtTLVM.Valuations;
+        Assert.That(valuations.Count, Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            var valuation = valuations[index];
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            DailyValuation valuation = valuations[index];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(actualDate, valuation.Day);
-                Assert.AreEqual(decimalValue, valuation.Value);
+                Assert.That(valuation.Day, Is.EqualTo(actualDate));
+                Assert.That(valuation.Value, Is.EqualTo(decimalValue));
             });
         }
     }

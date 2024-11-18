@@ -175,13 +175,8 @@
                             TabStripPlacement="Top"
                             Margin="0"
                             ItemsSource="{Binding Tabs}"
+                            SelectionChanged="MainTabControl_OnSelectionChanged"
                             SelectedIndex="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding SelectionChanged}"
-                                                   PassEventArgsToCommand="true" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                     <TabControl.Resources>
                         <Style TargetType="{x:Type TabControl}">
                             <Setter Property="Padding"

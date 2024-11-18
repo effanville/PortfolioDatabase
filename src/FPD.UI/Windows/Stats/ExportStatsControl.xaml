@@ -74,6 +74,8 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock Margin="5"
                    Grid.Column="0"
@@ -181,6 +183,35 @@
                       Grid.Row="9"
                       Margin="5"
                       ItemsSource="{Binding AssetColumnNames}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Path=Instance}"
+                                  IsChecked="{Binding Path=Selected, Mode=TwoWay}"
+                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
+                                  Tag="{RelativeSource FindAncestor,
+                  AncestorType={x:Type ComboBox}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Margin="5"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="3"
+                       Grid.Row="10"
+                       Text="Currency Sorting Properties" />
+            <ComboBox Grid.Column="0"
+                      Grid.Row="11"
+                      Margin="5"
+                      ItemsSource="{Binding Source={StaticResource Consts}, Path=AssetFieldNames}"
+                      SelectedItem="{Binding CurrencySortingField}" />
+            <ComboBox Grid.Column="1"
+                      Grid.Row="11"
+                      Margin="5"
+                      ItemsSource="{Binding Source={StaticResource Consts}, Path=SortDirections}"
+                      SelectedItem="{Binding CurrencyDirection}" />
+            <ComboBox Grid.Column="2"
+                      Grid.Row="11"
+                      Margin="5"
+                      ItemsSource="{Binding CurrencyColumnNames}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <CheckBox Content="{Binding Path=Instance}"

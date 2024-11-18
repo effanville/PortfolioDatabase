@@ -115,7 +115,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         public SelectedSecurityViewModel(
             IPortfolio portfolio,
             ISecurity security,
-            UiStyles styles,
+            IUiStyles styles,
             UiGlobals globals,
             TwoName selectedName,
             Account account,
@@ -281,18 +281,18 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(ISecurity modelData)
+        public override void UpdateData(ISecurity modelData, bool force)
         {
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
                 $"Selected {_dataType} {SelectedName} updating data.");
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             if (SelectedName == null || modelData == null)
             {
                 OnRequestClose(EventArgs.Empty);
                 return;
             }
 
-            TLVM?.UpdateData(ModelData.UnitPrice);
+            TLVM?.UpdateData(ModelData.UnitPrice, force);
             var trades = ModelData.Trades.ToList();
             if (Trades == null || !trades.SequenceEqual(Trades))
             {
@@ -304,7 +304,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 DateTime.Today,
                 modelData,
                 AccountStatisticsHelpers.AllStatistics());
-            SecurityStats.UpdateData(securityStats);
+            SecurityStats.UpdateData(securityStats, force);
             Values = modelData.ListOfValues().ToList();
         }
 

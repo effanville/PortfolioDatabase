@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -33,12 +33,12 @@ namespace Effanville.FPD.Logic.ViewModels
 
         public UiGlobals Globals { get; }
 
-        private UiStyles _styles;
+        private IUiStyles _styles;
 
         /// <summary>
         /// The styles for the Ui.
         /// </summary>
-        public UiStyles Styles
+        public IUiStyles Styles
         {
             get => _styles;
             set => SetAndNotify(ref _styles, value);
@@ -74,34 +74,53 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// The collection of tabs to hold the data and interactions for the various sub-windows.
         /// </summary>
-        public ObservableCollection<object> Tabs { get; } = new ();
+        public ObservableCollection<object> Tabs { get; } = new();
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public MainWindowViewModel(UiGlobals globals,
-            UiStyles styles,
+            IUiStyles styles,
             IPortfolio portfolio,
             IUpdater<IPortfolio> updater,
             IViewModelFactory viewModelFactory,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ReportingWindowViewModel reportsViewModel,
+            OptionsToolbarViewModel optionsViewModel,
+            BasicDataViewModel basicDataViewModel,
+            StatisticsChartsViewModel statisticsChartsViewModel)
         {
             ProgramPortfolio = portfolio;
             _styles = styles;
             Globals = globals;
             UserConfiguration = configuration;
-            
-            ReportsViewModel = new ReportingWindowViewModel(globals, Styles);
 
-            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
-            OptionsToolbarCommands = new OptionsToolbarViewModel(Globals, Styles, ProgramPortfolio);
-            OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
-            OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
-            Tabs.Add(new BasicDataViewModel(Globals, Styles, ProgramPortfolio));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Securities", Account.Security,
-                updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Bank Accounts",
-                Account.BankAccount, updater, viewModelFactory));
+            ReportsViewModel = reportsViewModel;
+
+            SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
+            OptionsToolbarCommands = optionsViewModel;
+            if (OptionsToolbarCommands != null)
+            {
+                OptionsToolbarCommands.RefreshDisplay += AllData_portfolioChanged;
+                OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
+                OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
+            }
+
+            if (basicDataViewModel != null)
+            {
+                Tabs.Add(basicDataViewModel);
+            }
+
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Securities",
+                Account.Security,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Bank Accounts",
+                Account.BankAccount,
+                nameof(ValueListWindowViewModel)));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
                 updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
@@ -110,12 +129,20 @@ namespace Effanville.FPD.Logic.ViewModels
                 updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
                 updater, viewModelFactory));
-            Tabs.Add(new StatsViewModel(Globals, Styles,
-                UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsDisplay], ProgramPortfolio));
-            Tabs.Add(new StatisticsChartsViewModel(Globals, ProgramPortfolio, Styles));
-            Tabs.Add(new StatsCreatorWindowViewModel(Globals, Styles,
-                UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsCreator], ProgramPortfolio,
-                AddTab));
+            Tabs.Add(viewModelFactory.GenerateViewModel(ProgramPortfolio, "", Account.All, nameof(StatsViewModel)));
+            if (statisticsChartsViewModel != null)
+            {
+                Tabs.Add(statisticsChartsViewModel);
+            }
+
+            DataDisplayViewModelBase statsCreatorWindow = viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "",
+                Account.All,
+                nameof(StatsCreatorWindowViewModel));
+            ((StatsCreatorWindowViewModel)statsCreatorWindow).RequestAddTab += AddTab;
+            Tabs.Add(statsCreatorWindow);
+
 
             foreach (object tab in Tabs)
             {
@@ -129,6 +156,7 @@ namespace Effanville.FPD.Logic.ViewModels
             }
 
             ProgramPortfolio.PortfolioChanged += AllData_portfolioChanged;
+            ProgramPortfolio.NewPortfolio += OnNewPortfolio;
             _timer.Elapsed += OnTimerElapsed;
             _timer.Start();
         }
@@ -140,7 +168,19 @@ namespace Effanville.FPD.Logic.ViewModels
 
         public void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
             => ReportsViewModel?.UpdateReport(severity, type, location, message);
-        
+
+        private void OnNewPortfolio(object sender, PortfolioEventArgs e)
+        {
+            var changeType =
+                _aggEventArgs.ChangedAccount == Account.All
+                || (_aggEventArgs.ChangedAccount != Account.Unknown && _aggEventArgs.ChangedAccount != e.ChangedAccount)
+                    ? Account.All
+                    : e.ChangedAccount;
+            _aggEventArgs = e.ChangedPortfolio
+                ? new PortfolioEventArgs(Account.All, true)
+                : new PortfolioEventArgs(changeType, true);
+        }
+
         private void AllData_portfolioChanged(object sender, PortfolioEventArgs e)
         {
             var changeType =
@@ -149,13 +189,13 @@ namespace Effanville.FPD.Logic.ViewModels
                     ? Account.All
                     : e.ChangedAccount;
             _aggEventArgs = e.ChangedPortfolio
-                ? new PortfolioEventArgs(Account.All, e.UserInitiated)
-                : new PortfolioEventArgs(changeType, e.UserInitiated);
+                ? new PortfolioEventArgs(Account.All, e.UserInitiated || _aggEventArgs.UserInitiated)
+                : new PortfolioEventArgs(changeType, e.UserInitiated || _aggEventArgs.UserInitiated);
         }
-        
+
         private void OnTimerElapsed(object sender, ElapsedEventArgs e) =>
             Task.Run(() => UpdateChildViewModels(_aggEventArgs));
-        
+
         private void UpdateChildViewModels(PortfolioEventArgs e)
         {
             if (e.ChangedAccount == Account.Unknown)
@@ -174,18 +214,18 @@ namespace Effanville.FPD.Logic.ViewModels
             List<object> tabsToRemove = new List<object>();
             foreach (object tab in tabs)
             {
-                if (!UpdateTab(tab, ProgramPortfolio, e.ChangedAccount))
+                if (!UpdateTab(tab, ProgramPortfolio, e.ChangedAccount, e.UserInitiated))
                 {
                     tabsToRemove.Add(tab);
                 }
             }
-            
+
             foreach (object tab in tabsToRemove)
             {
                 Globals.CurrentDispatcher.BeginInvoke(() => RemoveTab(tab, EventArgs.Empty));
             }
-            
-            OptionsToolbarCommands.UpdateData(ProgramPortfolio);
+
+            OptionsToolbarCommands.UpdateData(ProgramPortfolio, e.UserInitiated);
 
             if (e.ChangedPortfolio)
             {
@@ -203,8 +243,8 @@ namespace Effanville.FPD.Logic.ViewModels
                 return Tabs.ToList();
             }
         }
-        
-        private void AddTab(object obj)
+
+        private void AddTab(object obj, EventArgs args)
         {
             lock (_tabsLock)
             {
@@ -216,7 +256,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 Tabs.Add(obj);
             }
         }
-        
+
         private void RemoveTab(object obj, EventArgs args)
         {
             lock (_tabsLock)
@@ -227,18 +267,17 @@ namespace Effanville.FPD.Logic.ViewModels
 
         public ICommand SelectionChanged { get; }
 
-        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
+        private void ExecuteSelectionChanged(IList source)
         {
-            var source = e.AddedItems;
             if (source is not object[] list || list.Length != 1)
             {
                 return;
             }
 
-            UpdateTab(list[0], ProgramPortfolio, Account.All);
+            UpdateTab(list[0], ProgramPortfolio, Account.All, force: false);
         }
 
-        private bool UpdateTab(object item, IPortfolio modelData, Account changedAccount)
+        private bool UpdateTab(object item, IPortfolio modelData, Account changedAccount, bool force)
         {
             if (item is not DataDisplayViewModelBase vmb)
             {
@@ -250,7 +289,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 return true;
             }
 
-            vmb.UpdateData(modelData);
+            vmb.UpdateData(modelData, force);
             return true;
         }
     }

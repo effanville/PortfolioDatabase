@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -25,9 +25,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         public ICommand SelectionChanged { get; }
 
-        private void ExecuteSelectionChanged(SelectionChangedEventArgs e)
+        private void ExecuteSelectionChanged(IList source)
         {
-            var source = e.AddedItems;
             if (source is not object[] list || list.Length != 1)
             {
                 return;
@@ -41,7 +40,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ValueListWindowViewModel(
             UiGlobals globals,
-            UiStyles styles,
+            IUiStyles styles,
             IPortfolio portfolio,
             string title,
             Account accountType,
@@ -60,13 +59,13 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             Tabs.Add(dataNames);
             dataNames.UpdateRequest += dataUpdater.PerformUpdate;
             dataNames.RequestClose += RemoveTab;
-            SelectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged);
+            SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             if (Tabs == null)
             {
                 return;
@@ -93,30 +92,28 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 case StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1:
                 {
-                    viewModel1.UpdateData(modelData);
+                    viewModel1.UpdateData(modelData, false);
                     return true;
                 }
                 case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out IValueList vl)
-                        || vl is not ISecurity security)
+                    if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out ISecurity security))
                     {
                         return false;
                     }
 
-                    viewModel2.UpdateData(security);
+                    viewModel2.UpdateData(security, false);
                     return true;
 
                 }
                 case StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> viewModel3:
                 {
-                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out IValueList vl)
-                        || vl is not IAmortisableAsset asset)
+                    if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out IAmortisableAsset asset))
                     {
                         return false;
                     }
 
-                    viewModel3.UpdateData(asset);
+                    viewModel3.UpdateData(asset, false);
                     return true;
 
                 }
@@ -127,7 +124,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         return false;
                     }
 
-                    viewModel4.UpdateData(vl);
+                    viewModel4.UpdateData(vl, false);
                     return true;
 
                 }

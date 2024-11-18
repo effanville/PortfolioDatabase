@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
-using System.Windows.Media;
 
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
@@ -102,7 +99,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, UiStyles styles)
+        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUiStyles styles)
             : base(uiGlobals, styles, portfolio, "Charts", Account.All)
         {
             PropertyChanged += OnPropertyChanged;
@@ -120,14 +117,14 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Updates the data for display in the charts.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
             if (modelData != null)
             {
-                base.UpdateData(modelData);
+                base.UpdateData(modelData, force);
             }
             
-            UpdateData();
+            UpdateData(force);
         }
 
         private void UpdateData(bool force = false)
@@ -174,7 +171,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// </summary>
         private void UpdateChart()
         {
-            var rnd = new Random(12345);
             IRRLines = null;
             ObservableCollection<LineSeries> newValues = new ObservableCollection<LineSeries>();
             if (HistoryStats.Count > 1)
@@ -199,15 +195,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     {
                         DependentValuePath = "Value", IndependentValuePath = "Key", ItemsSource = pc, Title = name
                     };
-                    Style style = new Style(typeof(DataPoint));
-                    Setter st1 = new Setter(Control.TemplateProperty, null);
-                    byte[] b = new byte[3];
-                    rnd.NextBytes(b);
-                    Setter back = new Setter(Control.BackgroundProperty,
-                        new SolidColorBrush(Color.FromRgb(b[0], b[1], b[2])));
-                    style.Setters.Add(st1);
-                    style.Setters.Add(back);
-                    series1.DataPointStyle = style;
                     newValues.Add(series1);
                 }
 
@@ -216,7 +203,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
             // Now populate the total value chart.
             TotalLines = null;
-            ObservableCollection<StackedAreaSeries> newTotalValues = new ObservableCollection<StackedAreaSeries>();
             if (HistoryStats.Count <= 1)
             {
                 return;
@@ -273,6 +259,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             stackedAreaSeries.SeriesDefinitions.Add(pensionSeries);
             stackedAreaSeries.SeriesDefinitions.Add(assetSeries);
 
+            ObservableCollection<StackedAreaSeries> newTotalValues = new ObservableCollection<StackedAreaSeries>();
             newTotalValues.Add(stackedAreaSeries);
             TotalLines = newTotalValues;
         }

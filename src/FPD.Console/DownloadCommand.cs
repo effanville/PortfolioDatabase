@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.Reporting.LogAspect;
 using Effanville.Common.Structure.ReportWriting;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Download;
@@ -17,28 +18,31 @@ using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Console
 {
-    internal sealed class DownloadCommand : ICommand
+    internal sealed class DownloadCommand : ICommand, ILogInterceptable
     {
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
         private readonly IReportLogger _reportLogger;
+        private readonly IMailSender _mailSender;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<bool> _updateStatsOption;
         private readonly CommandOption<string> _mailRecipientOption;
 
         public string Name => "download";
 
+        public ILogger Logger => _logger;
         /// <inheritdoc/>
         public IList<CommandOption> Options { get; } = new List<CommandOption>();
 
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public DownloadCommand(IFileSystem fileSystem, ILogger<DownloadCommand> logger, IReportLogger reportLogger)
+        public DownloadCommand(IFileSystem fileSystem, ILogger<DownloadCommand> logger, IReportLogger reportLogger, IMailSender mailSender)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
+            _mailSender = mailSender;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _updateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
@@ -51,6 +55,7 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
+        [LogIntercept]
         public int Execute(IConfiguration config)
         {
             PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
@@ -76,6 +81,7 @@ namespace Effanville.FPD.Console
                 _logger.Log(LogLevel.Information, $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
+                    var exportString = stats.ExportString(true, DocumentType.Html, exportSettings);
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
                     _logger.Log(LogLevel.Information, $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
@@ -87,12 +93,11 @@ namespace Effanville.FPD.Console
                     {
                         Sender = smtpAuthUser,
                         Subject = "[Update] Stats auto update",
-                        Body = $"<h2>Statistic page update</h2><p>Update for portfolio {portfolio.Name} on date {DateTime.Now:yyyy-MM-dd}</p><p>Auto generated at {DateTime.Now:yyyy-MM-ddTHH:mm:ss}</p>",
-                        Recipients = new List<string>{_mailRecipientOption.Value},
-                        AttachmentFileNames = new List<string> {filePath}
+                        Body = exportString.ToString(),
+                        Recipients = new List<string>{_mailRecipientOption.Value}
                     };
                     _logger.Log(LogLevel.Information, $"Setup content for mailing.");
-                    MailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
+                    _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
                 }
             }
 
@@ -101,10 +106,12 @@ namespace Effanville.FPD.Console
         }
 
         /// <inheritdoc/>
+        [LogIntercept]
         public bool Validate( IConfiguration config) 
             => this.Validate(config, _logger);
 
         /// <inheritdoc/>
+        [LogIntercept]
         public void WriteHelp() 
             => this.WriteHelp( _logger);
     }

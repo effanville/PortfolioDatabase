@@ -2,6 +2,7 @@ using System;
 
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
+using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -35,10 +36,10 @@ public class ValueListWindowSteps
     
     [StepDefinition(@"the ValueListWindowViewModel is brought into focus")]
     public void GivenTheDataNamesViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
     private void Create(Account account, Table table)
     {
-        var portfolio = PortfolioGeneratorHelper.CreateFromTable(table);
+        IPortfolio portfolio = PortfolioGeneratorHelper.CreateFromTable(table);
         _testContext.ModelData = portfolio;
         _testContext.Updater.Database = portfolio;
 
@@ -79,23 +80,23 @@ public class ValueListWindowSteps
     [When(@"the user loads a VLWVM tab from name")]
     public void WhenTheUserLoadsAvlwvmTabFromName(Table table)
     {
-        var name = PortfolioGeneratorHelper.NameDataFromRow(table.Rows[0]);
+        NameData name = PortfolioGeneratorHelper.NameDataFromRow(table.Rows[0]);
         _testContext.ViewModel.LoadTabFunc(name);
     }
 
     [Then(@"the user selects the VLWVM tab index (.*) with name")]
     public void ThenTheUserSelectsTheVlwvmTabIndex(int p0, Table table)
     {
-        var desiredTab = _testContext.ViewModel.Tabs[p0 - 1];
-        var expectedName = PortfolioGeneratorHelper.NameDataFromRow(table.Rows[0]);
+        object desiredTab = _testContext.ViewModel.Tabs[p0 - 1];
+        NameData expectedName = PortfolioGeneratorHelper.NameDataFromRow(table.Rows[0]);
         Assert.IsNotNull(desiredTab);
         switch (_testContext.ViewModel.DataType)
         {
             case Account.Security:
             case Account.Pension:
             {
-                var tab = desiredTab as StyledClosableViewModelBase<ISecurity, IPortfolio>;
-                var actualName = tab.ModelData.Names;
+                StyledClosableViewModelBase<ISecurity, IPortfolio> tab = desiredTab as StyledClosableViewModelBase<ISecurity, IPortfolio>;
+                NameData actualName = tab.ModelData.Names;
                 Assert.AreEqual(expectedName.Company, actualName.Company);
                 Assert.AreEqual(expectedName.Name, actualName.Name);
                 break;
@@ -104,16 +105,16 @@ public class ValueListWindowSteps
             case Account.BankAccount:
             case Account.Currency:
             {
-                var tab = desiredTab as StyledClosableViewModelBase<IValueList, IPortfolio>;
-                var actualName = tab.ModelData.Names;
+                StyledClosableViewModelBase<IValueList, IPortfolio> tab = desiredTab as StyledClosableViewModelBase<IValueList, IPortfolio>;
+                NameData actualName = tab.ModelData.Names;
                 Assert.AreEqual(expectedName.Company, actualName.Company);
                 Assert.AreEqual(expectedName.Name, actualName.Name);
                 break;
             }
             case Account.Asset:
             {
-                var tab = desiredTab as StyledClosableViewModelBase<IAmortisableAsset, IPortfolio>;
-                var actualName = tab.ModelData.Names;
+                StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> tab = desiredTab as StyledClosableViewModelBase<IAmortisableAsset, IPortfolio>;
+                NameData actualName = tab.ModelData.Names;
                 Assert.AreEqual(expectedName.Company, actualName.Company);
                 Assert.AreEqual(expectedName.Name, actualName.Name);
                 break;

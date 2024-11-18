@@ -67,7 +67,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public ExportHistoryViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
+        public ExportHistoryViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
             : base(globals, styles, userConfiguration, portfolio, "", Account.All, closable: true)
         {
             _closeWindowAction = closeWindow;

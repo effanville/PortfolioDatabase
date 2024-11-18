@@ -1,13 +1,14 @@
 ﻿using System.Windows.Media;
 
 using Effanville.Common.UI.ViewModelBases;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 
-namespace Effanville.FPD.Logic.TemplatesAndStyles
+namespace Effanville.FPD.UI.TemplatesAndStyles
 {
     /// <summary>
     /// Contains styling info for the UI.
     /// </summary>
-    public sealed class UiStyles : PropertyChangedBase
+    public sealed class UiStyles : PropertyChangedBase, IUiStyles
     {
         public bool IsLightTheme { get; private set; }
 

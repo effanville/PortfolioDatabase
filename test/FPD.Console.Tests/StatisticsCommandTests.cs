@@ -5,6 +5,7 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.FPD.Console.Utilities.Mail;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -37,13 +38,14 @@ public sealed class StatisticsCommandTests
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var mock = new Mock<ILogger<StatisticsCommand>>();
+        var mailSender = new Mock<IMailSender>();
         ILogger<StatisticsCommand> logger = mock.Object;
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger);
+        var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger, mailSender.Object);
         bool isValidated = statisticsCommand.Validate(config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }

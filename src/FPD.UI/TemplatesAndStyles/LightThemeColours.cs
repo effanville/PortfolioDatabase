@@ -1,11 +1,11 @@
 ﻿using System.Windows.Media;
 
-namespace Effanville.FPD.Logic.TemplatesAndStyles
+namespace Effanville.FPD.UI.TemplatesAndStyles
 {
     /// <summary>
     /// Stores the colours and brushes used in the program.
     /// </summary>
-    public static class DarkThemeColours
+    public static class LightThemeColours
     {
         /// <summary>
         /// A brush to be used for background.
@@ -13,8 +13,7 @@ namespace Effanville.FPD.Logic.TemplatesAndStyles
         public static Brush BackgroundBrush
         {
             get;
-            set;
-        } = new SolidColorBrush(Color.FromRgb(30, 30, 30));
+        } = new SolidColorBrush(Colors.AliceBlue);
 
         /// <summary>
         /// A brush for secondary background colours.
@@ -22,8 +21,7 @@ namespace Effanville.FPD.Logic.TemplatesAndStyles
         public static Brush BackgroundSecondaryBrush
         {
             get;
-            set;
-        } = new SolidColorBrush(Color.FromRgb(60, 60, 60));
+        } = new SolidColorBrush(Colors.LightBlue);
 
         /// <summary>
         /// A brush with the colour for buttons.
@@ -31,8 +29,7 @@ namespace Effanville.FPD.Logic.TemplatesAndStyles
         public static Brush DefaultButtonBrush
         {
             get;
-            set;
-        } = new SolidColorBrush(Color.FromRgb(100, 100, 100));
+        } = new SolidColorBrush(Colors.Lavender);
 
         /// <summary>
         /// A brush for any highlights.
@@ -40,8 +37,7 @@ namespace Effanville.FPD.Logic.TemplatesAndStyles
         public static Brush HighlightBrush
         {
             get;
-            set;
-        } = new SolidColorBrush(Colors.Gray);
+        } = new SolidColorBrush(Colors.DarkSlateBlue);
 
         /// <summary>
         /// A brush for any highlights.
@@ -49,23 +45,22 @@ namespace Effanville.FPD.Logic.TemplatesAndStyles
         public static Brush ForegroundBrush
         {
             get;
-            set;
-        } = new SolidColorBrush(Colors.White);
+        } = new SolidColorBrush(Colors.Black);
 
         public static Brush ChartLine1Brush
         {
             get;
-        } = new SolidColorBrush(Colors.LightBlue);
+        } = new SolidColorBrush(Colors.Blue);
 
         public static Brush ChartLine2Brush
         {
             get;
-        } = new SolidColorBrush(Colors.LightPink);
+        } = new SolidColorBrush(Colors.Red);
 
         public static Brush ChartLine3Brush
         {
             get;
-        } = new SolidColorBrush(Colors.LightGreen);
+        } = new SolidColorBrush(Colors.Green);
 
         public static Brush ChartLine4Brush
         {

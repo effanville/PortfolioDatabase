@@ -24,7 +24,7 @@ public class BasicDayViewModelSteps
     [Given(@"I have a BasicDataViewModel with empty portfolio")]
     public void GivenIHaveABasicDataViewModelWithEmptyPortfolio()
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         _testContext.ModelData = portfolio;
         _testContext.ViewModel = new BasicDataViewModel(
             _testContext.Globals,
@@ -34,7 +34,7 @@ public class BasicDayViewModelSteps
 
     [Given(@"the BasicDataViewModel is brought into focus")]
     public void GivenTheBasicDataViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"the BasicDataViewModel has (.*) notes")]
     public void ThenTheBasicDataViewModelHasNotes(int p0)
@@ -51,7 +51,7 @@ public class BasicDayViewModelSteps
     [Given(@"I have a BasicDataViewModel with basic portfolio")]
     public void GivenIHaveABasicDataViewModelWithBasicPortfolio()
     {
-        var portfolio = TestSetupHelper.CreateBasicDataBase();
+        IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
         _testContext.ModelData = portfolio;
         _testContext.ViewModel = new BasicDataViewModel(
             _testContext.Globals,
@@ -62,7 +62,7 @@ public class BasicDayViewModelSteps
     [When(@"the BasicDataViewModel has database updated to basic portfolio")]
     public void WhenTheBasicDataViewModelHasDatabaseUpdatedToBasicPortfolio()
     {
-        var portfolio = TestSetupHelper.CreateBasicDataBase();
+        IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
         _testContext.ModelData = portfolio;
         GivenTheBasicDataViewModelIsBroughtIntoFocus();
     }

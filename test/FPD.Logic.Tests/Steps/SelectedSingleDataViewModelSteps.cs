@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.FinancialStructures.Database;
@@ -30,19 +31,19 @@ public class SelectedSingleDataViewModelSteps
     [Given(@"I have a SelectedSingleDataViewModel with account (.*) and name (.*) and data")]
     public void GivenIHaveASelectedSingleDataViewModelWithAccountSecurityAndData(Account account, string name, Table table)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(account, nameData, out var valueList);
+        portfolio.TryGetAccount(account, nameData, out IValueList valueList);
 
-        foreach (var row in table.Rows)
+        foreach (TableRow row in table.Rows)
         {
-            var date = row["Date"];
-            var value = row["Value"];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             valueList.SetData(actualDate, decimalValue);
         }
 
@@ -61,11 +62,11 @@ public class SelectedSingleDataViewModelSteps
     [Given(@"I have a SelectedSingleDataViewModel with account (.*) and name (.*) and no data")]
     public void GivenIHaveASelectedSingleDataViewModelWithAccountAndNameAndNoData(Account account, string name)
     {
-        var portfolio = PortfolioFactory.GenerateEmpty();
+        IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
-        var nameData = new NameData(names[0], names[1]);
+        NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
-        portfolio.TryGetAccount(account, nameData, out var valueList);
+        portfolio.TryGetAccount(account, nameData, out IValueList valueList);
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSingleDataViewModel(
@@ -80,30 +81,30 @@ public class SelectedSingleDataViewModelSteps
     
     [StepDefinition(@"the SelectedSingleDataViewModel is brought into focus")]
     public void GivenTheSelectedSingleDataViewModelIsBroughtIntoFocus()
-        => _testContext.ViewModel.UpdateData(_testContext.ModelData);
+        => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"the SelectedSingleDataViewModel has (.*) valuation displayed")]
     public void ThenTheSelectedSingleDataViewModelHasValuationDisplayed(int p0) 
-        => Assert.AreEqual(p0, _testContext.ViewModel.TLVM.Valuations.Count);
+        => Assert.That(_testContext.ViewModel.TLVM.Valuations.Count, Is.EqualTo(p0));
 
     [Then(@"the SelectedSingleDataViewModel values are")]
     public void ThenTheSelectedSingleDataViewModelValuesAre(Table table)
     {
-        var valuations = _testContext.ViewModel.TLVM.Valuations;
-        Assert.AreEqual(table.RowCount, valuations.Count);
+        List<DailyValuation> valuations = _testContext.ViewModel.TLVM.Valuations;
+        Assert.That(valuations.Count, Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            var valuation = valuations[index];
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            DailyValuation valuation = valuations[index];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(actualDate, valuation.Day);
-                Assert.AreEqual(decimalValue, valuation.Value);
+                Assert.That(valuation.Day, Is.EqualTo(actualDate));
+                Assert.That(valuation.Value, Is.EqualTo(decimalValue));
             });
         }
     }
@@ -113,12 +114,12 @@ public class SelectedSingleDataViewModelSteps
     {       
         for (int index = 0; index < table.RowCount; index++)
         {
-            var row = table.Rows[index];
-            var date = row["Date"];
-            var value = row["Value"];
+            TableRow row = table.Rows[index];
+            string date = row["Date"];
+            string value = row["Value"];
 
-            DateTime.TryParse(date, out var actualDate);
-            decimal.TryParse(value, out var decimalValue);
+            DateTime.TryParse(date, out DateTime actualDate);
+            decimal.TryParse(value, out decimal decimalValue);
             _testContext.ViewModel.TLVM.AddValuation(new DailyValuation(actualDate, decimalValue));
         }
     }   

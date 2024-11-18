@@ -51,12 +51,12 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _exportReport, value);
         }
 
-        private readonly Action<object> _loadTab;
+        public event EventHandler RequestAddTab;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsCreatorWindowViewModel(UiGlobals globals, UiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> loadTab)
+        public StatsCreatorWindowViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio)
             : base(globals, styles, userConfiguration, portfolio, "Stats Creator", Account.All)
         {
             UserConfiguration = userConfiguration;
@@ -70,16 +70,14 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 UserConfiguration.HasLoaded = true;
             }
 
-            _loadTab = loadTab;
-
-            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => _loadTab(obj));
+            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
             if (!UserConfiguration.ChildConfigurations.TryGetValue(Configuration.UserConfiguration.ReportOptions, out _))
             {
                 UserConfiguration.ChildConfigurations.Add(Configuration.UserConfiguration.ReportOptions, new ExportReportConfiguration());
             }
 
-            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => _loadTab(obj));
-            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => _loadTab(obj));
+            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
+            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
             CreateInvestmentListCommand = new RelayCommand(ExecuteInvestmentListCommand);
         }
 
@@ -93,6 +91,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
         private void ExecuteInvestmentListCommand()
         {
+            ReportLogger.Log(ReportType.Information, nameof(ExecuteInvestmentListCommand), "Execute called");
             FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", ModelData.Name + "-CSVStats.csv", filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
@@ -102,20 +101,20 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 }
                 PortfolioInvestments portfolioInvestments = new PortfolioInvestments(ModelData, new PortfolioInvestmentSettings());
                 portfolioInvestments.ExportToFile(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger);
-                _loadTab(new SecurityInvestmentViewModel(ModelData, Styles));
+                RequestAddTab?.Invoke(new SecurityInvestmentViewModel(ModelData, Styles), EventArgs.Empty);
             }
             else
             {
-                DisplayGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
+                ReportLogger.Log(ReportType.Error, nameof(ExecuteInvestmentListCommand), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
-            StatsPageExportOptions.UpdateData(modelData);
-            ExportHistoryOptions.UpdateData(modelData);
+            base.UpdateData(modelData, force);
+            StatsPageExportOptions.UpdateData(modelData, force);
+            ExportHistoryOptions.UpdateData(modelData, force);
         }
     }
 }

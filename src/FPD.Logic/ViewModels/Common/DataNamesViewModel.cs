@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -97,7 +96,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public DataNamesViewModel(
             IPortfolio portfolio, 
             UiGlobals uiGlobals, 
-            UiStyles styles, 
+            IUiStyles styles, 
             IUpdater<IPortfolio> dataUpdater,
             Action<object> loadSelectedData, 
             Account dataType)
@@ -127,9 +126,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
 
             List<RowData> values = modelData
                 .NameDataForAccount(DataType)
@@ -191,7 +190,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
             else
             {
-                if (args == CollectionView.NewItemPlaceholder)
+                if (args == null)
                 {
                     SelectedName = null;
                 }

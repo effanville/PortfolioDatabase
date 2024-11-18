@@ -10,6 +10,7 @@ using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
+using Effanville.FPD.Logic.ViewModels.Stats;
 
 using NUnit.Framework;
 
@@ -48,6 +49,9 @@ namespace Effanville.FPD.Logic.Tests
               <BankColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>AccountType</BankSortingField>
+              <CurrencyColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
+              <CurrencyDirection>Ascending</CurrencyDirection>
+              <CurrencySortingField>AccountType</CurrencySortingField>
               <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <HasLoaded>false</HasLoaded>
               <SectorColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
@@ -292,6 +296,14 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberEntries</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>EntryYearDensity</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Notes</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
@@ -328,15 +340,15 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
-                  <d8p1:Instance>Sectors</d8p1:Instance>
-                  <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticAUSmO6kd>
-                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FirstDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
@@ -354,6 +366,66 @@ namespace Effanville.FPD.Logic.Tests
               </BankColumnNames>
               <BankDirection>Ascending</BankDirection>
               <BankSortingField>Company</BankSortingField>
+              <CurrencyColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Company</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Name</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>LatestValue</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>RecentChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Investment</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Profit</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FundFraction</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberOfAccounts</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>FirstDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>LatestDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Sectors</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>NumberEntries</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>EntryYearDensity</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Notes</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+              </CurrencyColumnNames>
+              <CurrencyDirection>Ascending</CurrencyDirection>
+              <CurrencySortingField>Name</CurrencySortingField>
               <DisplayConditions xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"">
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>DisplayValueFunds</d8p1:Instance>
@@ -385,6 +457,10 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfstring>
                 <d8p1:SelectableOfstring>
                   <d8p1:Instance>ShowAssets</d8p1:Instance>
+                  <d8p1:Selected>false</d8p1:Selected>
+                </d8p1:SelectableOfstring>
+                <d8p1:SelectableOfstring>
+                  <d8p1:Instance>ShowCurrencies</d8p1:Instance>
                   <d8p1:Selected>false</d8p1:Selected>
                 </d8p1:SelectableOfstring>
               </DisplayConditions>
@@ -535,10 +611,6 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
-                  <d8p1:Instance>Sectors</d8p1:Instance>
-                  <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfStatisticAUSmO6kd>
-                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FirstDate</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
@@ -552,6 +624,10 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>LatestDate</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>Sectors</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
@@ -606,29 +682,34 @@ namespace Effanville.FPD.Logic.Tests
             tempFileSystem.AddFile(testPath, new MockFileData(file));
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(testPath, tempFileSystem);
 
-            Assert.AreEqual(2, config.ChildConfigurations.Count);
+            Assert.That(config.ChildConfigurations.Count, Is.EqualTo(2));
             Assert.Multiple(() =>
             {
-                StatsDisplayConfiguration statsVM = config.ChildConfigurations[UserConfiguration.StatsDisplay] as StatsDisplayConfiguration;
-                Assert.AreEqual(0, statsVM.ChildConfigurations.Count);
-                Assert.AreEqual(true, statsVM.HasLoaded);
-                Assert.AreEqual(true, statsVM.DisplayValueFunds);
-                Assert.AreEqual(29, statsVM.StatisticNames.Count);
-                Assert.AreEqual(false, statsVM.StatisticNames.First(name => name.Instance == Statistic.AccountType).Selected);
-                Assert.AreEqual(false, statsVM.StatisticNames.First(name => name.Instance == Statistic.FundFraction).Selected);
+                StatsDisplayConfiguration statsVM = config.ChildConfigurations[nameof(StatsViewModel)] as StatsDisplayConfiguration;
+                if (statsVM == null)
+                {
+                    Assert.Fail("Stats config should exist");
+                }
+
+                Assert.That(statsVM.ChildConfigurations.Count, Is.EqualTo(0));
+                Assert.That(statsVM.HasLoaded, Is.EqualTo(true));
+                Assert.That(statsVM.DisplayValueFunds, Is.EqualTo(true));
+                Assert.That(statsVM.StatisticNames.Count, Is.EqualTo(29));
+                Assert.That(statsVM.StatisticNames.First(name => name.Instance == Statistic.AccountType).Selected, Is.EqualTo(false));
+                Assert.That(statsVM.StatisticNames.First(name => name.Instance == Statistic.FundFraction).Selected, Is.EqualTo(false));
             });
 
             Assert.Multiple(() =>
             {
                 StatsCreatorConfiguration statsCreatorVM = config.ChildConfigurations[UserConfiguration.StatsCreator] as StatsCreatorConfiguration;
-                Assert.AreEqual(2, statsCreatorVM.ChildConfigurations.Count);
+                Assert.That(statsCreatorVM.ChildConfigurations.Count, Is.EqualTo(2));
 
                 ExportStatsConfiguration exportStats = statsCreatorVM.ChildConfigurations[UserConfiguration.StatsOptions] as ExportStatsConfiguration;
-                Assert.AreEqual(true, exportStats.HasLoaded);
+                Assert.That(exportStats.HasLoaded, Is.EqualTo(true));
 
                 ExportHistoryConfiguration exportHistory = statsCreatorVM.ChildConfigurations[UserConfiguration.HistoryOptions] as ExportHistoryConfiguration;
-                Assert.AreEqual(20, exportHistory.HistoryGapDays);
-                Assert.AreEqual(true, exportHistory.HasLoaded);
+                Assert.That(exportHistory.HistoryGapDays, Is.EqualTo(20));
+                Assert.That(exportHistory.HasLoaded, Is.EqualTo(true));
             });
         }
 
@@ -639,26 +720,26 @@ namespace Effanville.FPD.Logic.Tests
             string testPath = "c:/temp/user.config";
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(testPath, tempFileSystem);
 
-            Assert.AreEqual(2, config.ChildConfigurations.Count);
+            Assert.That(config.ChildConfigurations.Count, Is.EqualTo(2));
             Assert.Multiple(() =>
             {
-                StatsDisplayConfiguration statsVM = config.ChildConfigurations[UserConfiguration.StatsDisplay] as StatsDisplayConfiguration;
-                Assert.AreEqual(0, statsVM.ChildConfigurations.Count);
-                Assert.AreEqual(false, statsVM.HasLoaded);
-                Assert.AreEqual(false, statsVM.DisplayValueFunds);
+                StatsDisplayConfiguration statsVM = config.ChildConfigurations[nameof(StatsViewModel)] as StatsDisplayConfiguration;
+                Assert.That(statsVM.ChildConfigurations.Count, Is.EqualTo(0));
+                Assert.That(statsVM.HasLoaded, Is.EqualTo(false));
+                Assert.That(statsVM.DisplayValueFunds, Is.EqualTo(false));
             });
 
             Assert.Multiple(() =>
             {
                 StatsCreatorConfiguration statsCreatorVM = config.ChildConfigurations[UserConfiguration.StatsCreator] as StatsCreatorConfiguration;
-                Assert.AreEqual(3, statsCreatorVM.ChildConfigurations.Count);
+                Assert.That(statsCreatorVM.ChildConfigurations.Count, Is.EqualTo(3));
 
                 ExportStatsConfiguration exportStats = statsCreatorVM.ChildConfigurations[UserConfiguration.StatsOptions] as ExportStatsConfiguration;
-                Assert.AreEqual(false, exportStats.HasLoaded);
+                Assert.That(exportStats.HasLoaded, Is.EqualTo(false));
 
                 ExportHistoryConfiguration exportHistory = statsCreatorVM.ChildConfigurations[UserConfiguration.HistoryOptions] as ExportHistoryConfiguration;
-                Assert.AreEqual(0, exportHistory.HistoryGapDays);
-                Assert.AreEqual(false, exportHistory.HasLoaded);
+                Assert.That(exportHistory.HistoryGapDays, Is.EqualTo(0));
+                Assert.That(exportHistory.HasLoaded, Is.EqualTo(false));
             });
         }
 
@@ -674,7 +755,7 @@ namespace Effanville.FPD.Logic.Tests
             config.SaveConfiguration();
 
             string file = tempFileSystem.File.ReadAllText(testPath);
-            Assert.AreEqual(_defaultSerializedConfiguration, file);
+            Assert.That(file, Is.EqualTo(_defaultSerializedConfiguration));
         }
 
         [Test]
@@ -685,8 +766,7 @@ namespace Effanville.FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            var updater = new SynchronousUpdater<IPortfolio>();
-            var styles = new UiStyles(false);
+            SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>();
             string testConfigPath = "c:/temp/saved/user.config";
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
                 testConfigPath,
@@ -694,14 +774,19 @@ namespace Effanville.FPD.Logic.Tests
                 globals.ReportLogger);
             
             config.ProgramVersion = new Version(1, 2, 3, 4);
-            var vm = new MainWindowViewModel(globals, 
-                styles,
+            MainWindowViewModel vm = new MainWindowViewModel(globals,
+                null,
                 PortfolioFactory.GenerateEmpty(),
-                updater, new ViewModelFactory(styles, globals, updater), config);
+                updater, new ViewModelFactory(null, globals, updater, config),
+                config,
+                null,
+                null,
+                null,
+                null);
             vm.SaveConfig();
 
             string file = tempFileSystem.File.ReadAllText(testConfigPath);
-            Assert.AreEqual(_exampleSerializedConfiguration, file);
+            Assert.That(file, Is.EqualTo(_exampleSerializedConfiguration));
         }
 
         [Test]
@@ -715,30 +800,30 @@ namespace Effanville.FPD.Logic.Tests
             config.SaveConfiguration();
 
             string file = tempFileSystem.File.ReadAllText(testPath);
-            Assert.AreEqual(_defaultSerializedConfiguration, file);
+            Assert.That(file, Is.EqualTo(_defaultSerializedConfiguration));
 
             UserConfiguration newConfig = UserConfiguration.LoadFromUserConfigFile(testPath, tempFileSystem);
 
-            Assert.AreEqual(2, newConfig.ChildConfigurations.Count);
+            Assert.That(newConfig.ChildConfigurations.Count, Is.EqualTo(2));
             Assert.Multiple(() =>
             {
-                StatsDisplayConfiguration statsVM = newConfig.ChildConfigurations[UserConfiguration.StatsDisplay] as StatsDisplayConfiguration;
-                Assert.AreEqual(0, statsVM.ChildConfigurations.Count);
-                Assert.AreEqual(false, statsVM.HasLoaded);
-                Assert.AreEqual(false, statsVM.DisplayValueFunds);
+                StatsDisplayConfiguration statsVM = newConfig.ChildConfigurations[nameof(StatsViewModel)] as StatsDisplayConfiguration;
+                Assert.That(statsVM.ChildConfigurations.Count, Is.EqualTo(0));
+                Assert.That(statsVM.HasLoaded, Is.EqualTo(false));
+                Assert.That(statsVM.DisplayValueFunds, Is.EqualTo(false));
             });
 
             Assert.Multiple(() =>
             {
                 StatsCreatorConfiguration statsCreatorVM = newConfig.ChildConfigurations[UserConfiguration.StatsCreator] as StatsCreatorConfiguration;
-                Assert.AreEqual(3, statsCreatorVM.ChildConfigurations.Count);
+                Assert.That(statsCreatorVM.ChildConfigurations.Count, Is.EqualTo(3));
 
                 ExportStatsConfiguration exportStats = statsCreatorVM.ChildConfigurations[UserConfiguration.StatsOptions] as ExportStatsConfiguration;
-                Assert.AreEqual(false, exportStats.HasLoaded);
+                Assert.That(exportStats.HasLoaded, Is.EqualTo(false));
 
                 ExportHistoryConfiguration exportHistory = statsCreatorVM.ChildConfigurations[UserConfiguration.HistoryOptions] as ExportHistoryConfiguration;
-                Assert.AreEqual(0, exportHistory.HistoryGapDays);
-                Assert.AreEqual(false, exportHistory.HasLoaded);
+                Assert.That(exportHistory.HistoryGapDays, Is.EqualTo(0));
+                Assert.That(exportHistory.HasLoaded, Is.EqualTo(false));
             });
         }
     }

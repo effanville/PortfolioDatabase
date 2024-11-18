@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 
 using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FPD.UI.TemplatesAndStyles;
 
 namespace Effanville.FPD.UI
 {
@@ -14,11 +15,11 @@ namespace Effanville.FPD.UI
         public event PropertyChangedEventHandler PropertyChanged;
 
         public static readonly DependencyProperty StylesProperty 
-            = DependencyProperty.Register(nameof(Styles), typeof(UiStyles), typeof(Bridge));
+            = DependencyProperty.Register(nameof(Styles), typeof(IUiStyles), typeof(Bridge));
 
-        public UiStyles Styles
+        public IUiStyles Styles
         {
-            get => (UiStyles)GetValue(StylesProperty);
+            get => (IUiStyles)GetValue(StylesProperty);
             set
             {
                 SetValue(StylesProperty, value);

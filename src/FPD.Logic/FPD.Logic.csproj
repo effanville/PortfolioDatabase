@@ -1,7 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>net7.0-windows</TargetFrameworks>
-    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />

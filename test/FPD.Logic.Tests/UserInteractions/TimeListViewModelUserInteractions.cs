@@ -8,7 +8,7 @@ public static class TimeListViewModelUserInteractions
     public static void AddValuation(this TimeListViewModel viewModel, DailyValuation valuation)
     {
         viewModel.SelectValuation(null);
-        var newItem = viewModel.DefaultNewItem();
+        DailyValuation newItem = viewModel.DefaultNewItem();
         viewModel.Valuations.Add(newItem);
         viewModel.SelectValuation(newItem);
         viewModel.BeginEdit();

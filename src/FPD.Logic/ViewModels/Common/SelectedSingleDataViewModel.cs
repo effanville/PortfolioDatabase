@@ -67,7 +67,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public SelectedSingleDataViewModel(
             IPortfolio portfolio,
             IValueList valueList,
-            UiStyles styles,
+            IUiStyles styles,
             UiGlobals globals,
             TwoName selectedName,
             Account accountDataType,
@@ -92,22 +92,22 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         }
 
         /// <inheritdoc/>
-        public override void UpdateData(IValueList modelData)
+        public override void UpdateData(IValueList modelData, bool force)
         {
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             if (SelectedName == null || modelData == null)
             {
                 OnRequestClose(EventArgs.Empty);
                 return;
             }
 
-            TLVM.UpdateData(ModelData.Values);
+            TLVM.UpdateData(ModelData.Values, force);
             var stats = new AccountStatistics(
                 _portfolio,
                 DateTime.Today, 
                 modelData,
                 AccountStatisticsHelpers.AllStatistics());
-            Stats.UpdateData(stats);
+            Stats.UpdateData(stats, force);
         }
 
         private void ExecuteAddEditData(TwoName name, DailyValuation oldValue, DailyValuation newValue)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.FinancialStructures.DataStructures;
@@ -47,6 +48,18 @@ namespace Effanville.FPD.UI.Windows
                 && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
             {
                 bridge.Styles = dc.Styles;
+            }
+        }
+
+        private void DataGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is BasicDataViewModel dc && sender is DataGrid dataGrid)
+            {
+                object currentItem = dataGrid.CurrentItem;
+
+                dc.SelectionChangedCommand.Execute(currentItem == CollectionView.NewItemPlaceholder
+                    ? null
+                    : dataGrid.CurrentItem);
             }
         }
     }

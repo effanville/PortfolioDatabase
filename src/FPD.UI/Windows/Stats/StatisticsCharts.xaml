@@ -48,14 +48,14 @@
                      Foreground="{Binding Styles.ForegroundBrush}"
                      Text="{Binding EarliestViewDate}" />
         </Grid>
-        <controls:BindableChart Title="Total Value Over TIme"
+        <controls:BindableChart Title="Total Value"
                                 Style="{StaticResource ChartStyle1}"
                                 Height="Auto"
                                 Width="Auto"
                                 Grid.Column="0"
                                 Grid.Row="1"
                                 SeriesSource="{Binding TotalLines}" />
-        <controls:BindableChart Title="Sector IRR over time"
+        <controls:BindableChart Title="Sector IRR"
                                 Style="{StaticResource ChartStyle1}"
                                 Height="Auto"
                                 Width="Auto"

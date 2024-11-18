@@ -38,16 +38,16 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public PortfolioHistoryViewModel(IPortfolio portfolio, UiStyles styles)
+        public PortfolioHistoryViewModel(IPortfolio portfolio, IUiStyles styles)
             : base(null, styles, portfolio, "History", closable: true)
         {
-            UpdateData(portfolio);
+            UpdateData(portfolio, false);
         }
 
         /// <summary>
         /// Updates the data stored in the history.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {
             if (!modelData.Equals(ModelData))
             {
@@ -55,7 +55,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 return;
             }
 
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             PortfolioHistory history = new PortfolioHistory(
                 modelData,
                 new PortfolioHistory.Settings(snapshotIncrement: HistoryGapDays, generateSecurityRates: false,

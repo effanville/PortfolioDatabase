@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.Reporting;
@@ -12,6 +11,8 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 
+using Microsoft.Extensions.Logging;
+
 namespace Effanville.FPD.Logic.ViewModels
 {
     /// <summary>
@@ -19,14 +20,15 @@ namespace Effanville.FPD.Logic.ViewModels
     /// </summary>
     public class ReportingWindowViewModel : ViewModelBase<ErrorReports>
     {
+        private readonly ILogger<ReportingWindowViewModel> _logger;
         private List<ErrorReport> _reportsToView = new List<ErrorReport>();
 
-        private UiStyles _styles;
+        private IUiStyles _styles;
 
         /// <summary>
         /// The style object containing the style for the ui.
         /// </summary>
-        public UiStyles Styles
+        public IUiStyles Styles
         {
             get => _styles;
             set => SetAndNotify(ref _styles, value);
@@ -76,16 +78,17 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ReportingWindowViewModel(UiGlobals uiGlobals, UiStyles styles)
+        public ReportingWindowViewModel(ILogger<ReportingWindowViewModel> logger, UiGlobals uiGlobals, IUiStyles styles)
             : base("Reports", new ErrorReports(), uiGlobals)
         {
+            _logger = logger;
             Styles = styles;
             IsExpanded = false;
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
         }
 
-        internal void SyncReports()
+        private void SyncReports()
         {
             ReportsToView = null;
             ReportsToView = ModelData.GetReports(ReportingSeverity).ToList();
@@ -141,7 +144,7 @@ namespace Effanville.FPD.Logic.ViewModels
             int numberReports = reports.Count;
             if (ModelData.RemoveReports(reports) != numberReports)
             {
-                ReportLogger.Log(ReportType.Error,"Reports","Could not find error report to remove.");
+                _logger.LogError("Could not find error report to remove.");
             }
             SyncReports();
         }
@@ -153,7 +156,7 @@ namespace Effanville.FPD.Logic.ViewModels
         {
             if (!ModelData.RemoveReport(report))
             {
-                ReportLogger.Log(ReportType.Error,"Reports","Could not find error report to remove.");
+                _logger.LogError("Could not find error report to remove.");
             }
             SyncReports();
         }

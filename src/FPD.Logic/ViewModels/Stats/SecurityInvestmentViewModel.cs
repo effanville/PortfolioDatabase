@@ -30,17 +30,17 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance
         /// </summary>
-        public SecurityInvestmentViewModel(IPortfolio portfolio, UiStyles styles)
+        public SecurityInvestmentViewModel(IPortfolio portfolio, IUiStyles styles)
             : base(null, styles, portfolio, "Investments", closable: true)
         {
-            UpdateData(portfolio);
+            UpdateData(portfolio, false);
         }
 
         /// <summary>
         /// The update routine. Updates the values stored.
         /// <inheritdoc/>
         /// </summary>
-        public override void UpdateData(IPortfolio modelData)
+        public override void UpdateData(IPortfolio modelData, bool force)
         {            
             if (!modelData.Equals(ModelData))
             {
@@ -48,7 +48,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 return;
             }
             
-            base.UpdateData(modelData);
+            base.UpdateData(modelData, force);
             SecuritiesInvestments = ModelData.TotalInvestments(Totals.Security);
         }
     }

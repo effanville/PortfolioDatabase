@@ -31,7 +31,7 @@ public class HtmlViewerViewModelSteps
 
     [Given(@"the HtmlViewerViewModel is brought into focus")]
     public void GivenTheHtmlViewerViewModelIsBroughtIntoFocus() 
-        => _testContext.ViewModel.UpdateData(modelData: null);
+        => _testContext.ViewModel.UpdateData(modelData: null, force: false);
 
     [Then(@"the name is (.*)")]
     public void ThenTheNameIs(string name) 

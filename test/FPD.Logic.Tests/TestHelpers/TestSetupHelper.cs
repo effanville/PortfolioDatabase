@@ -11,6 +11,8 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Support;
 using Effanville.FPD.Logic.ViewModels;
 
@@ -30,16 +32,24 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
+        public static IUiStyles SetupDefaultStyles()
+        {
+            Mock<IUiStyles> styles = new Mock<IUiStyles>();
+            styles.SetupGet(x => x.IsLightTheme).Returns(true);
+            return styles.Object;
+        }
         internal static IViewModelFactory CreateViewModelFactory(
             IPortfolio portfolio,
             IFileSystem fileSystem,
             IFileInteractionService fileService,
             IBaseDialogCreationService dialogCreationService,
+            IConfiguration config,
             IReportLogger logger = null) 
             => new ViewModelFactory(
                 null, 
                 CreateGlobalsMock(fileSystem, fileService, dialogCreationService, logger), 
-                CreateUpdater(portfolio));
+                CreateUpdater(portfolio),
+                config);
 
         public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
         {
@@ -76,7 +86,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             portfolio.BaseCurrency = "GBP";
             portfolio.Name = "TestFilePath";
             _ = portfolio.TryAdd(Account.Security, new NameData("Fidelity", "China", "GBP", "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx", new HashSet<string>() { "Bonds", "UK" }), DummyReportLogger);
-            var secName = new TwoName("Fidelity", "China");
+            TwoName secName = new TwoName("Fidelity", "China");
             _ = portfolio.TryAddOrEditTradeData(Account.Security, secName, new SecurityTrade(TradeType.Buy, secName, new DateTime(2000, 1, 1), 1, 1, 1), new SecurityTrade(TradeType.Buy, secName, new DateTime(2000, 1, 1), 1, 1, 2));
             _ = portfolio.TryAddOrEditData(Account.Security, secName, new DailyValuation(new DateTime(2000, 1, 1), 1), new DailyValuation(new DateTime(2000, 1, 1), 1));
             _ = portfolio.TryAdd(Account.BankAccount, new NameData("Barclays", "currentAccount", url: "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx"), DummyReportLogger);
