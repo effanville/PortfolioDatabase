@@ -4,9 +4,9 @@ using System.IO.Abstractions;
 
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
+using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
-using Effanville.Common.Structure.ReportWriting;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Download;
 using Effanville.FinancialStructures.Database.Export.Statistics;
@@ -77,7 +77,7 @@ namespace Effanville.FPD.Console
                 PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
                 var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
                 stats.ExportToFile(_fileSystem, filePath, DocumentType.Html, exportSettings, _reportLogger);
-                
+
                 _logger.Log(LogLevel.Information, $"Attempting to mail to stored recipient '{_mailRecipientOption.Value}'");
                 if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
                 {
@@ -85,7 +85,7 @@ namespace Effanville.FPD.Console
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
                     _logger.Log(LogLevel.Information, $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
-                    _logger.Log(LogLevel.Information,$"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
+                    _logger.Log(LogLevel.Information, $"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
                     var smtpInfo = SmtpInfo.GmailHost();
                     smtpInfo.AuthUser = smtpAuthUser;
                     smtpInfo.AuthPassword = smtpAuthPassword;
@@ -94,7 +94,7 @@ namespace Effanville.FPD.Console
                         Sender = smtpAuthUser,
                         Subject = "[Update] Stats auto update",
                         Body = exportString.ToString(),
-                        Recipients = new List<string>{_mailRecipientOption.Value}
+                        Recipients = new List<string> { _mailRecipientOption.Value }
                     };
                     _logger.Log(LogLevel.Information, $"Setup content for mailing.");
                     _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
@@ -107,12 +107,12 @@ namespace Effanville.FPD.Console
 
         /// <inheritdoc/>
         [LogIntercept]
-        public bool Validate( IConfiguration config) 
+        public bool Validate(IConfiguration config)
             => this.Validate(config, _logger);
 
         /// <inheritdoc/>
         [LogIntercept]
-        public void WriteHelp() 
-            => this.WriteHelp( _logger);
+        public void WriteHelp()
+            => this.WriteHelp(_logger);
     }
 }

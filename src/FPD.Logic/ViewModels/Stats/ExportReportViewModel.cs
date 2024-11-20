@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
 
+using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Reporting;
-using Effanville.Common.Structure.ReportWriting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;

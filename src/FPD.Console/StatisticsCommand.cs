@@ -4,10 +4,10 @@ using System.IO.Abstractions;
 
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
+using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
-using Effanville.Common.Structure.ReportWriting;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
@@ -32,7 +32,7 @@ namespace Effanville.FPD.Console
         public string Name => "stats";
 
         public ILogger Logger => _logger;
-        
+
         /// <inheritdoc/>
         public IList<CommandOption> Options { get; } = new List<CommandOption>();
 
