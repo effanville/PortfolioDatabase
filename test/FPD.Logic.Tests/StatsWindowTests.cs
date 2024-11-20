@@ -40,7 +40,7 @@ namespace Effanville.FPD.Logic.Tests
             context.ViewModel.UpdateData(context.Portfolio, false);
 
             await Task.Delay(3000);
-            
+
             Assert.Multiple(() =>
             {
                 Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));

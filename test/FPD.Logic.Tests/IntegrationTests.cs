@@ -24,28 +24,28 @@ namespace Effanville.FPD.Logic.Tests
         {
             ViewModel.OptionsToolbarCommands.LoadDatabaseCommand.Execute(1);
 
-            Assert.AreEqual(1, ViewModel.ProgramPortfolio.BankAccounts.Count);
-            Assert.AreEqual(1, ViewModel.ProgramPortfolio.Funds.Count);
-            Assert.AreEqual(1, ViewModel.ProgramPortfolio.BenchMarks.Count);
+            Assert.That(ViewModel.ProgramPortfolio.BankAccounts.Count, Is.EqualTo(1));
+            Assert.That(ViewModel.ProgramPortfolio.Funds.Count, Is.EqualTo(1));
+            Assert.That(ViewModel.ProgramPortfolio.BenchMarks.Count, Is.EqualTo(1));
 
             BasicDataViewModel dataView = ViewModel.Tabs[0] as BasicDataViewModel;
             dataView.UpdateData(ViewModel.ProgramPortfolio, false);
             Assert.That(dataView != null, nameof(dataView) + " != null");
-            Assert.AreEqual("saved", dataView.PortfolioNameText);
-            Assert.AreEqual("Total Securities: 1", dataView.SecurityTotalText);
-            Assert.AreEqual("Total Bank Accounts: 1", dataView.BankAccountTotalText);
+            Assert.That(dataView.PortfolioNameText, Is.EqualTo("saved"));
+            Assert.That(dataView.SecurityTotalText, Is.EqualTo("Total Securities: 1"));
+            Assert.That(dataView.BankAccountTotalText, Is.EqualTo("Total Bank Accounts: 1"));
 
             ValueListWindowViewModel securityView = ViewModel.SecurityWindow();
             securityView.UpdateData(ViewModel.ProgramPortfolio, false);
             DataNamesViewModel securityNamesView = securityView.GetDataNamesViewModel();
             securityNamesView.UpdateData(ViewModel.ProgramPortfolio, false);
-            Assert.AreEqual(1, securityNamesView.DataNames.Count);
+            Assert.That(securityNamesView.DataNames.Count, Is.EqualTo(1));
 
             ValueListWindowViewModel bankAccView = ViewModel.Window(Account.BankAccount);
             bankAccView.UpdateData(ViewModel.ProgramPortfolio, false);
             DataNamesViewModel bankAccNamesView = bankAccView.GetDataNamesViewModel();
             bankAccView.UpdateData(ViewModel.ProgramPortfolio, false);
-            Assert.AreEqual(1, bankAccNamesView.DataNames.Count);
+            Assert.That(bankAccNamesView.DataNames.Count, Is.EqualTo(1));
         }
 
 
@@ -61,7 +61,7 @@ namespace Effanville.FPD.Logic.Tests
             securityNames.SelectionChangedCommand.Execute(selectedInitialName);
             Selectable<NameData> selectedEditedName = new Selectable<NameData>(new NameData("Forgotten", "New"), false);
             securityNames.CreateCommand.Execute(selectedEditedName);
-            Assert.AreEqual(1, securityNames.DataNames.Count);
+            Assert.That(securityNames.DataNames.Count, Is.EqualTo(1));
         }
     }
 }

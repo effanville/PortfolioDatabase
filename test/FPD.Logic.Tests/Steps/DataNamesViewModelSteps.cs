@@ -61,15 +61,15 @@ public class DataNamesViewModelSteps
 
     [Then(@"I can see the DataNamesViewModel type is (.*)")]
     public void ThenICanSeeTheTypeIs(Account account)
-        => Assert.AreEqual(account, _testContext.ViewModel.DataType);
+        => Assert.That(_testContext.ViewModel.DataType, Is.EqualTo(account));
 
     [Then(@"I can see the DNVW has header (.*)")]
     public void ThenICanSeeTheDnvwHasHeader(string header)
-        => Assert.AreEqual(header, _testContext.ViewModel.Header);
+        => Assert.That(_testContext.ViewModel.Header, Is.EqualTo(header));
 
     [Then(@"the user can see the number of names is (.*)")]
     public void ThenTheUserCanSeeTheNumberOfNamesIs(int p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.DataNames.Count);
+        => Assert.That(_testContext.ViewModel.DataNames.Count, Is.EqualTo(p0));
 
     [When(@"new names are added to the database")]
     public void WhenNewNamesAreAddedToTheDatabase(Table table)
@@ -77,7 +77,7 @@ public class DataNamesViewModelSteps
 
     [Then(@"the action to open the tab is called\.")]
     public void ThenTheActionToOpenTheTabIsCalled()
-        => Assert.AreEqual(true, _testContext.LoadDataCalled);
+        => Assert.That(_testContext.LoadDataCalled, Is.EqualTo(true));
 
     [When(@"I click on the open data button")]
     public void WhenIClickOnTheOpenDataButton()
@@ -99,7 +99,7 @@ public class DataNamesViewModelSteps
 
     [Then(@"the dataName update event is called")]
     public void ThenTheDataNameUpdateEventIsCalled()
-        => Assert.AreEqual(true, _testContext.LoadDataCalled);
+        => Assert.That(_testContext.LoadDataCalled, Is.EqualTo(true));
 
     [Then(@"the user can see the DataNames are")]
     public void ThenTheUserCanSeeTheDataNamesAre(Table table)
@@ -112,7 +112,7 @@ public class DataNamesViewModelSteps
             AreNameDataEqual(name, dataNames[index].Instance);
         }
     }
-    
+
     [When(@"I edit the (.*) name data to")]
     public void WhenIEditTheNameDataTo(int index, Table table)
     {
@@ -120,7 +120,7 @@ public class DataNamesViewModelSteps
         RowData selectedRow = _testContext.ViewModel.DataNames[index - 1];
         _testContext.ViewModel.EditName(selectedRow, newName);
     }
-    
+
     private static NameData FromRow(TableRow row)
         => new NameData(
             row["Company"],
@@ -135,16 +135,16 @@ public class DataNamesViewModelSteps
         RowData selectedRow = _testContext.ViewModel.DataNames[p0 - 1];
         _testContext.ViewModel.DeleteName(selectedRow.Instance);
     }
-    
+
     [Then(@"the dataNames portfolio has only (.*) of type (.*)")]
     public void ThenThePortfolioHasOnlyOfTypeSecurity(int p0, Account account)
     {
         IReadOnlyList<NameData> numberAccounts = _testContext.ModelData.NameDataForAccount(account);
-        Assert.AreEqual(p0, numberAccounts.Count);
+        Assert.That(numberAccounts.Count, Is.EqualTo(p0));
     }
 
     [When(@"I download the data for the selected DataName")]
-    public void WhenIDownloadTheDataForTheSelectedDataName() 
+    public void WhenIDownloadTheDataForTheSelectedDataName()
         => _testContext.ViewModel.DownloadSelected();
 
     [Then(@"I can see that the data has been downloaded")]
@@ -157,21 +157,21 @@ public class DataNamesViewModelSteps
     {
         if (expected == null)
         {
-            Assert.IsNull(actual);
+            Assert.That(actual, Is.Null);
         }
 
         if (expected != null)
         {
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
         }
 
         Assert.Multiple(() =>
             {
-                Assert.AreEqual(expected.Company, actual.Company);
-                Assert.AreEqual(expected.Name, actual.Name);
-                Assert.AreEqual(expected.Url, actual.Url);
-                Assert.AreEqual(expected.Currency, actual.Currency);
-                Assert.AreEqual(expected.SectorsFlat, actual.SectorsFlat);
+                Assert.That(actual.Company, Is.EqualTo(expected.Company));
+                Assert.That(actual.Name, Is.EqualTo(expected.Name));
+                Assert.That(actual.Url, Is.EqualTo(expected.Url));
+                Assert.That(actual.Currency, Is.EqualTo(expected.Currency));
+                Assert.That(actual.SectorsFlat, Is.EqualTo(expected.SectorsFlat));
             }
         );
     }

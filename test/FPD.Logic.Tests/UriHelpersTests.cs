@@ -15,12 +15,12 @@ public class UriHelpersTests
         yield return new TestCaseData("c:\\users\\docs\\text.html", true, new Uri("file:///c:/users/docs/text.html"));
         yield return new TestCaseData("hi-hi", false, null);
     }
-    
+
     [TestCaseSource(nameof(TestUriCases))]
     public void TestUri(string text, bool created, Uri expectedUri)
     {
         bool actualCreate = UriHelpers.IsValidUri(text, out Uri actual);
-        Assert.AreEqual(created,actualCreate);
-        Assert.AreEqual(expectedUri, actual);
+        Assert.That(actualCreate, Is.EqualTo(created));
+        Assert.That(actual, Is.EqualTo(expectedUri));
     }
 }

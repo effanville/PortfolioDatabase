@@ -22,30 +22,30 @@ public class HtmlViewerViewModelSteps
     public void Reset() => _testContext.Reset();
 
     [Given(@"I have a HtmlViewerViewModel with name (.*) and no webpage")]
-    public void GivenIHaveAHtmlViewerViewModelWithNoWebpage(string name) 
+    public void GivenIHaveAHtmlViewerViewModelWithNoWebpage(string name)
         => GivenIHaveAHtmlViewerViewModelWithNoWebpage(name, null);
 
     [Given(@"I have a HtmlViewerViewModel with name (.*) and webpage (.*)")]
-    public void GivenIHaveAHtmlViewerViewModelWithNoWebpage(string name, string webpage) 
+    public void GivenIHaveAHtmlViewerViewModelWithNoWebpage(string name, string webpage)
         => _testContext.ViewModel = new HtmlViewerViewModel(null, null, name, webpage);
 
     [Given(@"the HtmlViewerViewModel is brought into focus")]
-    public void GivenTheHtmlViewerViewModelIsBroughtIntoFocus() 
+    public void GivenTheHtmlViewerViewModelIsBroughtIntoFocus()
         => _testContext.ViewModel.UpdateData(modelData: null, force: false);
 
     [Then(@"the name is (.*)")]
-    public void ThenTheNameIs(string name) 
-        => Assert.AreEqual(name, _testContext.ViewModel.Header);
+    public void ThenTheNameIs(string name)
+        => Assert.That(_testContext.ViewModel.Header, Is.EqualTo(name));
 
     [Then(@"there is no url selected")]
     public void ThenThereIsNoUrlSelected()
-        => Assert.IsNull(_testContext.ViewModel.HtmlPath);
+        => Assert.That(_testContext.ViewModel.HtmlPath, Is.Null);
 
     [Then(@"the url is (.*)")]
     public void ThenTheUrlIs(string url)
-        => Assert.AreEqual(url, _testContext.ViewModel.HtmlPath.AbsoluteUri);
+        => Assert.That(_testContext.ViewModel.HtmlPath.AbsoluteUri, Is.EqualTo(url));
 
     [When(@"the url is changed to (.*)")]
-    public void WhenTheUrlIsChangedToHttpWwwYahooCom(string htmlPath) 
+    public void WhenTheUrlIsChangedToHttpWwwYahooCom(string htmlPath)
         => _testContext.ViewModel.UrlTextPath = htmlPath;
 }

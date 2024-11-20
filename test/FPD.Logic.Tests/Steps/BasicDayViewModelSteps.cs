@@ -38,15 +38,15 @@ public class BasicDayViewModelSteps
 
     [Then(@"the BasicDataViewModel has (.*) notes")]
     public void ThenTheBasicDataViewModelHasNotes(int p0)
-        => Assert.AreEqual(0, _testContext.ViewModel.Notes.Count);
+        => Assert.That(_testContext.ViewModel.Notes.Count, Is.EqualTo(0));
 
     [Then(@"the BasicDataViewModel has no data")]
     public void ThenTheBasicDataViewModelHasNoData()
-        => Assert.IsFalse(_testContext.ViewModel.HasValues);
+        => Assert.That(_testContext.ViewModel.HasValues, Is.False);
 
     [Then(@"the BasicDataViewModel Name text is (.*)")]
     public void ThenTheBasicDataViewModelNameTextIsUnsavedDatabase(string text)
-        => Assert.AreEqual(text, _testContext.ViewModel.PortfolioNameText);
+        => Assert.That(_testContext.ViewModel.PortfolioNameText, Is.EqualTo(text));
 
     [Given(@"I have a BasicDataViewModel with basic portfolio")]
     public void GivenIHaveABasicDataViewModelWithBasicPortfolio()
@@ -57,8 +57,8 @@ public class BasicDayViewModelSteps
             _testContext.Globals,
             _testContext.Styles,
             _testContext.ModelData);
-    }   
-    
+    }
+
     [When(@"the BasicDataViewModel has database updated to basic portfolio")]
     public void WhenTheBasicDataViewModelHasDatabaseUpdatedToBasicPortfolio()
     {
@@ -69,21 +69,21 @@ public class BasicDayViewModelSteps
 
     [Then(@"the BasicDataViewModel has data")]
     public void ThenTheBasicDataViewModelHasData()
-        => Assert.IsTrue(_testContext.ViewModel.HasValues);
+        => Assert.That(_testContext.ViewModel.HasValues, Is.True);
 
     [Then(@"the BasicDataViewModel has SecurityTotalText (.*)")]
-    public void ThenTheBasicDataViewModelHasSecurityTotalText(string p0) 
-        => Assert.AreEqual(p0, _testContext.ViewModel.SecurityTotalText);
+    public void ThenTheBasicDataViewModelHasSecurityTotalText(string p0)
+        => Assert.That(_testContext.ViewModel.SecurityTotalText, Is.EqualTo(p0));
 
     [Then(@"the BasicDataViewModel has SecurityAmountText (.*)")]
     public void ThenTheBasicDataViewModelHasSecurityAmountText(string p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.SecurityAmountText);
+        => Assert.That(_testContext.ViewModel.SecurityAmountText, Is.EqualTo(p0));
 
     [Then(@"the BasicDataViewModel has BankAccountTotalText (.*)")]
     public void ThenTheBasicDataViewModelHasBankAccountTotalText(string p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.BankAccountTotalText);
+        => Assert.That(_testContext.ViewModel.BankAccountTotalText, Is.EqualTo(p0));
 
     [Then(@"the BasicDataViewModel has BankAccountAmountText (.*)")]
     public void ThenTheBasicDataViewModelHasBankAccountAmountTextTotalValue(string p0)
-        => Assert.AreEqual(p0, _testContext.ViewModel.BankAccountAmountText);
+        => Assert.That(_testContext.ViewModel.BankAccountAmountText, Is.EqualTo(p0));
 }
