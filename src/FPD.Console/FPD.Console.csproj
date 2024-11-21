@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-  </PropertyGroup>
-  <PropertyGroup>
+    <RootNamespace>Effanville.FPD.Console</RootNamespace>
+    <AssemblyName>Effanville.FPD.Console</AssemblyName>
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
   </PropertyGroup>
