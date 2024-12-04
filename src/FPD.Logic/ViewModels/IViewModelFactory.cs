@@ -1,6 +1,5 @@
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels;

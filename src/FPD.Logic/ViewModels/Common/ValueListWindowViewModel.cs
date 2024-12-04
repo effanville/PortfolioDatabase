@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
@@ -146,6 +148,12 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 {
                     case ISecurity security:
                     {
+                        if (Tabs.Where(x => x is ViewModelBase<ISecurity, IPortfolio>)
+                            .Any(y => (y as ViewModelBase<ISecurity, IPortfolio>).ModelData == security))
+                        {
+                            return;
+                        }
+                        
                         var newViewModel = _viewModelFactory.GenerateViewModel(
                             security, 
                             security.Names,
@@ -156,6 +164,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     }
                     case IAmortisableAsset asset:
                     {
+                        if (Tabs.Where(x => x is ViewModelBase<IAmortisableAsset, IPortfolio>)
+                            .Any(y => (y as ViewModelBase<IAmortisableAsset, IPortfolio>).ModelData == asset))
+                        {
+                            return;
+                        }
                         var newViewModel = _viewModelFactory.GenerateViewModel(
                             asset, 
                             asset.Names,
@@ -166,6 +179,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     }
                     default:
                     {
+                        if (Tabs.Where(x => x is ViewModelBase<IValueList, IPortfolio>)
+                            .Any(y => (y as ViewModelBase<IValueList, IPortfolio>).ModelData == valueList))
+                        {
+                            return;
+                        }
                         var newViewModel = _viewModelFactory.GenerateViewModel(
                             valueList,
                             valueList.Names,
