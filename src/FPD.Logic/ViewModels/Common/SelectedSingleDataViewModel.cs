@@ -152,7 +152,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             get;
         }
 
-        private void ExecuteAddCsvData()
+        private async void ExecuteAddCsvData()
         {
             if (_selectedName == null)
             {
@@ -160,7 +160,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
 
             FileInteractionResult result =
-                DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+                await DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
             List<object> outputs = null;
             if (result.Success)
             {
@@ -197,16 +197,17 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             get;
         }
 
-        private void ExecuteExportCsvData()
+        private async void ExecuteExportCsvData()
         {
             if (_selectedName == null)
             {
                 return;
             }
 
-            FileInteractionResult result =
-                DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty,
-                    filter: "Csv Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                "csv",
+                string.Empty,
+                filter: "Csv Files|*.csv|All Files|*.*");
             if (!result.Success)
             {
                 return;

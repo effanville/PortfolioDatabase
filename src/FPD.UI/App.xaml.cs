@@ -89,7 +89,7 @@ namespace Effanville.FPD.UI
         /// <summary>
         /// Fires when unhandled exceptions occur. Opens a dialog box, and hopefully the program continues.
         /// </summary>
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private async void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Handling the exception within the UnhandledException handler.
             if (e == null)
@@ -104,7 +104,7 @@ namespace Effanville.FPD.UI
                 MessageBoxImage.Error);
 
             MainWindow main = _host.Services.GetService<MainWindow>();
-            main?.PrintErrorLog(e.Exception);
+            await main?.PrintErrorLog(e.Exception);
 
             e.Handled = true;
         }

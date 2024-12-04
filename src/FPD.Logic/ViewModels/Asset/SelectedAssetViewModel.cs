@@ -202,7 +202,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             get;
         }
 
-        private void ExecuteExportCsvData()
+        private async void ExecuteExportCsvData()
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
                 $"Selected {_dataType} {SelectedName} exporting data to csv.");
@@ -211,9 +211,10 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                 return;
             }
 
-            FileInteractionResult result =
-                DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty,
-                    filter: "Csv Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                "csv",
+                string.Empty,
+                filter: "Csv Files|*.csv|All Files|*.*");
             if (result.Success)
             {
                 CsvReaderWriter.WriteToCSVFile(ModelData, result.FilePath, ReportLogger);

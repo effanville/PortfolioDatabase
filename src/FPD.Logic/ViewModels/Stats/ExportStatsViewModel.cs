@@ -288,10 +288,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private void ExecuteExportCommand()
+        private async void ExecuteExportCommand()
         {
             UserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                DocumentType.Html.ToString().ToLower(),
+                ModelData.Name,
+                filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)

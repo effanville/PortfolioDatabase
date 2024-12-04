@@ -200,7 +200,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             get;
         }
 
-        private void ExecuteAddCsvData()
+        private async void ExecuteAddCsvData()
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
                 $"Selected {_dataType} {SelectedName} adding data from csv.");
@@ -209,8 +209,9 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 return;
             }
 
-            FileInteractionResult result =
-                DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile(
+                "csv", 
+                filter: "Csv Files|*.csv|All Files|*.*");
             List<object> outputs = null;
             if (result.Success)
             {
@@ -251,7 +252,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             get;
         }
 
-        private void ExecuteExportCsvData()
+        private async void ExecuteExportCsvData()
         {
             _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
                 $"Selected {_dataType} {SelectedName} exporting data to csv.");
@@ -260,9 +261,10 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 return;
             }
 
-            FileInteractionResult result =
-                DisplayGlobals.FileInteractionService.SaveFile("csv", string.Empty,
-                    filter: "Csv Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                "csv", 
+                string.Empty,
+                filter: "Csv Files|*.csv|All Files|*.*");
             if (result.Success)
             {
                 CsvReaderWriter.WriteToCSVFile(ModelData, result.FilePath, ReportLogger);

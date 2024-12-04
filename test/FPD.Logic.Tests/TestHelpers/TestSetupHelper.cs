@@ -27,8 +27,10 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         public static Mock<IFileInteractionService> CreateFileMock(string filePath)
         {
             Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
-            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, filePath));
-            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, filePath));
+            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, filePath));
+            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, filePath));
             return mockfileinteraction;
         }
 
@@ -54,8 +56,10 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
         {
             Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
-            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, openFilePath));
-            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, saveFilePath));
+            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, openFilePath));
+            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, saveFilePath));
             return mockfileinteraction;
         }
 

@@ -118,10 +118,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to save the current database to file.
         /// </summary>
         public ICommand SaveDatabaseCommand { get; }
-        private void ExecuteSaveDatabase()
+        private async void ExecuteSaveDatabase()
         {
             _logger.LogInformation($"Saving database {_fileName} called.");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
             {
                 return;
@@ -145,10 +145,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// </summary>
         public ICommand LoadDatabaseCommand { get; }
 
-        private void ExecuteLoadDatabase()
+        private async void ExecuteLoadDatabase()
         {
             _logger.LogInformation("Loading database.");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
             {
                 return;
@@ -185,10 +185,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to import data from another database.
         /// </summary>
         public ICommand ImportFromOtherDatabaseCommand { get; }
-        private void ImportFromOtherDatabase()
+        private async void ImportFromOtherDatabase()
         {
             _logger.LogInformation($"Execute import data for database {_fileName} called.");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
                 var portfolioPersistence = new PortfolioPersistence();
