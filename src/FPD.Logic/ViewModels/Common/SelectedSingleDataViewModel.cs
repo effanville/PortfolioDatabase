@@ -25,7 +25,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// </summary>
     public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IValueList, IPortfolio>
     {
-        private readonly IPortfolio _portfolio;
+        private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
 
         private TwoName _selectedName;
@@ -65,7 +65,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// Default constructor.
         /// </summary>
         public SelectedSingleDataViewModel(
-            IPortfolio portfolio,
+            IAccountStatisticsProvider statisticsProvider,
             IValueList valueList,
             IUiStyles styles,
             UiGlobals globals,
@@ -75,12 +75,12 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
                 closable: true)
         {
-            _portfolio = portfolio;
+            _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = accountDataType;
             UpdateRequest += dataUpdater.PerformUpdate;
             string currencySymbol =
-                CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency ?? portfolio.BaseCurrency);
+                CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency);
             TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", Styles,
                 value => DeleteValue(SelectedName, value),
                 (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
@@ -102,10 +102,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
 
             TLVM.UpdateData(ModelData.Values, force);
-            var stats = new AccountStatistics(
-                _portfolio,
-                DateTime.Today, 
+            var stats = _statisticsProvider.GetStats(
                 modelData,
+                DateTime.Today,
                 AccountStatisticsHelpers.AllStatistics());
             Stats.UpdateData(stats, force);
         }

@@ -17,18 +17,21 @@ public class ViewModelFactory : IViewModelFactory
     private readonly UiGlobals _globals;
     private readonly IUpdater<IPortfolio> _updater;
     private readonly IConfiguration _configuration;
+    private readonly IAccountStatisticsProvider _statisticsProvider;
     private readonly IUiStyles _styles;
 
     public ViewModelFactory(
         IUiStyles styles,
         UiGlobals globals,
         IUpdater<IPortfolio> updater,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IAccountStatisticsProvider statisticsProvider)
     {
         _styles = styles;
         _globals = globals;
         _updater = updater;
         _configuration = configuration;
+        _statisticsProvider = statisticsProvider;
     }
 
     public DataDisplayViewModelBase GenerateViewModel(
@@ -48,20 +51,42 @@ public class ViewModelFactory : IViewModelFactory
     public StyledClosableViewModelBase<T, IPortfolio> GenerateViewModel<T>(
         T modelData, 
         TwoName names,
-        Account account, 
-        IPortfolio portfolio) 
+        Account account) 
         where T : class 
         => modelData switch
         {
-            IAmortisableAsset asset => new SelectedAssetViewModel(portfolio, asset, _styles, _globals, asset.Names,
-                account, _updater) as StyledClosableViewModelBase<T, IPortfolio>,
-            ISecurity security => new SelectedSecurityViewModel(portfolio, security, _styles, _globals, names, account,
+            IAmortisableAsset asset => new SelectedAssetViewModel(
+                _statisticsProvider,
+                asset,
+                _styles,
+                _globals,
+                asset.Names,
+                account,
                 _updater) as StyledClosableViewModelBase<T, IPortfolio>,
-            IExchangeableValueList exchangeableValueList => new SelectedSingleDataViewModel(portfolio,
-                exchangeableValueList, _styles, _globals, exchangeableValueList.Names, account,
+            ISecurity security => new SelectedSecurityViewModel(
+                _statisticsProvider,
+                security,
+                _styles,
+                _globals,
+                names,
+                account,
                 _updater) as StyledClosableViewModelBase<T, IPortfolio>,
-            IValueList valueList => new SelectedSingleDataViewModel(portfolio, valueList, _styles, _globals,
-                valueList.Names, account, _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+            IExchangeableValueList exchangeableValueList => new SelectedSingleDataViewModel(
+                _statisticsProvider,
+                exchangeableValueList,
+                _styles,
+                _globals,
+                exchangeableValueList.Names,
+                account,
+                _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+            IValueList valueList => new SelectedSingleDataViewModel(
+                _statisticsProvider,
+                valueList,
+                _styles,
+                _globals,
+                valueList.Names,
+                account,
+                _updater) as StyledClosableViewModelBase<T, IPortfolio>,
             _ => null
         };
 }

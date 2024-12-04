@@ -46,12 +46,14 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             IFileInteractionService fileService,
             IBaseDialogCreationService dialogCreationService,
             IConfiguration config,
+            IAccountStatisticsProvider statisticsProvider,
             IReportLogger logger = null) 
             => new ViewModelFactory(
                 null, 
                 CreateGlobalsMock(fileSystem, fileService, dialogCreationService, logger), 
                 CreateUpdater(portfolio),
-                config);
+                config,
+                statisticsProvider);
 
         public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
         {

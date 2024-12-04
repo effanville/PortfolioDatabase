@@ -32,13 +32,15 @@ public static class TestDependencies
         builder.RegisterInstance(SetupReportLogger());
         builder.RegisterInstance(SetupGlobalsMock());
         builder.RegisterInstance(SetupUpdater());
+        builder.RegisterInstance(SetupProvider());
         builder.RegisterInstance<IConfiguration>(new UserConfiguration());
         builder.Register(
             b => SetupViewModelFactory(
                 b.Resolve<IUiStyles>(),
                 b.Resolve<UiGlobals>(),
                 b.Resolve<IUpdater<IPortfolio>>(),
-                b.Resolve<IConfiguration>()));
+                b.Resolve<IConfiguration>(),
+                b.Resolve<IAccountStatisticsProvider>()));
 
         builder.RegisterType<ViewModelTestContext<ErrorReports, ReportingWindowViewModel>>();
         builder.RegisterType<ViewModelTestContext<IPortfolio, HtmlViewerViewModel>>();
@@ -68,6 +70,12 @@ public static class TestDependencies
     private static IUpdater<IPortfolio> SetupUpdater()
         => new SynchronousUpdater<IPortfolio>();
 
+    private static IAccountStatisticsProvider SetupProvider()
+    {
+        Mock<IAccountStatisticsProvider> mockProvider = new Mock<IAccountStatisticsProvider>();
+        return mockProvider.Object;
+    }
+
     private static UiGlobals SetupGlobalsMock()
         => new UiGlobals(
             null,
@@ -76,10 +84,13 @@ public static class TestDependencies
             null, null,
             SetupReportLogger());
 
-    private static IViewModelFactory SetupViewModelFactory(IUiStyles styles, UiGlobals globals,
+    private static IViewModelFactory SetupViewModelFactory(
+        IUiStyles styles, 
+        UiGlobals globals,
         IUpdater<IPortfolio> updater,
-        IConfiguration config)
-        => new ViewModelFactory(styles, globals, updater, config);
+        IConfiguration config,
+        IAccountStatisticsProvider statisticsProvider)
+        => new ViewModelFactory(styles, globals, updater, config, statisticsProvider);
 
     private static IReportLogger SetupReportLogger()
     {

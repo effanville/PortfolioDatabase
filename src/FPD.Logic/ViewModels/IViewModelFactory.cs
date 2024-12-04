@@ -16,7 +16,6 @@ public interface IViewModelFactory
     StyledClosableViewModelBase<T, IPortfolio> GenerateViewModel<T>(
         T modelData, 
         TwoName names,
-        Account account,
-        IPortfolio portfolio)
+        Account account)
         where T : class;
 }

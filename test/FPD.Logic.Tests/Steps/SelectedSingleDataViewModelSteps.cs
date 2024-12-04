@@ -7,6 +7,7 @@ using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
@@ -50,7 +51,7 @@ public class SelectedSingleDataViewModelSteps
         _testContext.Updater.Database = portfolio;
         _testContext.ModelData = valueList;
         _testContext.ViewModel = new SelectedSingleDataViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
@@ -70,7 +71,7 @@ public class SelectedSingleDataViewModelSteps
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSingleDataViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,

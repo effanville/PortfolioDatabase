@@ -48,6 +48,7 @@ namespace Effanville.FPD.UI
                         .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
                         .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
                         .AddSingleton<IViewModelFactory, ViewModelFactory>()
+                        .AddSingleton<IAccountStatisticsProvider, StatisticsProvider>()
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
                         .AddSingleton(ConfigurationFactory.LoadConfig)
                         .AddSingleton<ReportingWindowViewModel>()

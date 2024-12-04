@@ -39,7 +39,10 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
             Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             Mock<ILogger<ReportingWindowViewModel>> loggerReportMock = new Mock<ILogger<ReportingWindowViewModel>>();
-            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(FileSystem, TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object, TestSetupHelper.CreateDialogMock().Object);
+            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(
+                FileSystem,
+                TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object,
+                TestSetupHelper.CreateDialogMock().Object);
             
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
                 testConfigPath,
@@ -51,7 +54,8 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,
-                updater, new ViewModelFactory(styles, globals, updater, config),
+                updater, 
+                new ViewModelFactory(styles, globals, updater, config, new StatisticsProvider(portfolio)),
                 config,
                 new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
                 new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio),

@@ -27,7 +27,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
     /// </summary>
     public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset, IPortfolio>
     {
-        private readonly IPortfolio _portfolio;
+        private readonly IAccountStatisticsProvider _statisticsProvider;
 
         /// <summary>
         /// The name data of the security this window details.
@@ -95,7 +95,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         /// Default constructor.
         /// </summary>
         public SelectedAssetViewModel(
-            IPortfolio portfolio,
+            IAccountStatisticsProvider statisticsProvider,
             IAmortisableAsset asset,
             IUiStyles styles,
             UiGlobals globals,
@@ -104,7 +104,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", asset, globals, styles, true)
         {
-            _portfolio = portfolio;
+            _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = dataType;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
@@ -271,10 +271,9 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             ValuesTLVM?.UpdateData(modelData.Values, force);
             DebtTLVM?.UpdateData(modelData.Debt, force);
             PaymentsTLVM?.UpdateData(modelData.Payments, force);
-            var stats = new AccountStatistics(
-                _portfolio,
-                DateTime.Today,
+            var stats = _statisticsProvider.GetStats(
                 modelData,
+                DateTime.Today,
                 AccountStatisticsHelpers.DefaultAssetStats());
             Statistics.UpdateData(stats, force);
             Values = modelData.ListOfValues();

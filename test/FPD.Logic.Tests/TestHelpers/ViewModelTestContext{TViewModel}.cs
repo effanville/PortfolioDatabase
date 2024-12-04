@@ -43,7 +43,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
             IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(Portfolio);
             Globals = TestSetupHelper.CreateGlobalsMock(FileSystem, fileMock.Object, dialogMock.Object);
-            ViewModel = viewModelFactory.GenerateViewModel(data, Name, account, dataStore) as TViewModel;
+            ViewModel = viewModelFactory.GenerateViewModel(data, Name, account) as TViewModel;
             if(ViewModel != null)
             {
                 ViewModel.UpdateRequest += dataUpdater.PerformUpdate;

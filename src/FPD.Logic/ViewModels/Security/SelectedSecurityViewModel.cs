@@ -29,7 +29,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
     /// </summary>
     public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity, IPortfolio>
     {
-        private readonly IPortfolio _portfolio;
+        private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
 
         private SecurityTrade _oldSelectedTrade;
@@ -113,7 +113,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// Default constructor.
         /// </summary>
         public SelectedSecurityViewModel(
-            IPortfolio portfolio,
+            IAccountStatisticsProvider statisticsProvider,
             ISecurity security,
             IUiStyles styles,
             UiGlobals globals,
@@ -122,7 +122,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             IUpdater<IPortfolio> dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, styles, true)
         {
-            _portfolio = portfolio;
+            _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
@@ -134,7 +134,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             UpdateRequest += dataUpdater.PerformUpdate;
 
             string currencySymbol =
-                CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency ?? portfolio.BaseCurrency);
+                CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency);
             TradePriceHeader = $"Price({currencySymbol})";
             TradeTotalCostHeader = $"Total Cost({currencySymbol})";
             TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles,
@@ -301,10 +301,9 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 Trades = trades;
             }
 
-            var securityStats = new AccountStatistics(
-                _portfolio,
-                DateTime.Today,
+            var securityStats = _statisticsProvider.GetStats(
                 modelData,
+                DateTime.Today,
                 AccountStatisticsHelpers.AllStatistics());
             SecurityStats.UpdateData(securityStats, force);
             Values = modelData.ListOfValues().ToList();

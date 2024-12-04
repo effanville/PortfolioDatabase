@@ -29,8 +29,13 @@ namespace Effanville.FPD.Logic.Tests
         {
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
 
-            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null,
-                new UserConfiguration());
+            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(
+                portfolio, 
+                new MockFileSystem(),
+                null,
+                null,
+                new UserConfiguration(),
+                new StatisticsProvider(portfolio));
             ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
                 null,
                 Account.All,
@@ -57,8 +62,13 @@ namespace Effanville.FPD.Logic.Tests
         {
             UserConfiguration configuration = new UserConfiguration();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null
-                , configuration);
+            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(
+                portfolio,
+                new MockFileSystem(),
+                null,
+                null,
+                configuration,
+                new StatisticsProvider(portfolio));
 
             ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
                 null,

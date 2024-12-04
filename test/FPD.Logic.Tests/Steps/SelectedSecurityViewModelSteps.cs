@@ -8,6 +8,7 @@ using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Security;
 
 using NUnit.Framework;
@@ -37,7 +38,7 @@ public class SelectedSecurityViewModelSteps
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSecurityViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
@@ -77,7 +78,7 @@ public class SelectedSecurityViewModelSteps
         _testContext.Updater.Database = portfolio;
         _testContext.ModelData = security;
         _testContext.ViewModel = new SelectedSecurityViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,

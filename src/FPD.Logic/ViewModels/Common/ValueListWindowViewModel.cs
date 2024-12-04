@@ -149,8 +149,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         var newViewModel = _viewModelFactory.GenerateViewModel(
                             security, 
                             security.Names,
-                            DataType,
-                            ModelData);
+                            DataType);
                         newViewModel.RequestClose += RemoveTab;
                         Tabs.Add(newViewModel);
                         break;
@@ -160,8 +159,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         var newViewModel = _viewModelFactory.GenerateViewModel(
                             asset, 
                             asset.Names,
-                            DataType, 
-                            ModelData);
+                            DataType);
                         newViewModel.RequestClose += RemoveTab;
                         Tabs.Add(newViewModel);
                         break;
@@ -171,8 +169,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         var newViewModel = _viewModelFactory.GenerateViewModel(
                             valueList,
                             valueList.Names,
-                            DataType,
-                            ModelData);
+                            DataType);
                         newViewModel.RequestClose += RemoveTab;
                         Tabs.Add(newViewModel);
                         break;
@@ -184,11 +181,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 var newViewModel =  _viewModelFactory.GenerateViewModel(
                     ModelData, 
                     null,
-                    DataType, 
-                    ModelData);
+                    DataType);
                 Tabs.Add(newViewModel);
             }
-
         }
         
         /// <summary>
