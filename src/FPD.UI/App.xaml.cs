@@ -3,17 +3,15 @@ using System.IO.Abstractions;
 using System.Windows;
 using System.Windows.Threading;
 
-using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Download;
+using Effanville.FPD.Logic.DependencyInjection;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
-using Effanville.FPD.Logic.ViewModels.Stats;
 using Effanville.FPD.UI.TemplatesAndStyles;
 using Effanville.FPD.UI.Windows;
 
@@ -34,37 +32,24 @@ namespace Effanville.FPD.UI
         /// </summary>
         public App()
         {
-            _host = new HostBuilder()
-                .ConfigureServices(serviceCollection =>
-                {
-                    serviceCollection.AddSingleton<MainWindow>()
-                        .AddSingleton<Window>(x => x.GetService<MainWindow>())
-                        .AddSingleton<IDispatcher, DispatcherInstance>()
-                        .AddSingleton<IFileSystem, FileSystem>()
-                        .AddSingleton<IFileInteractionService, FileInteractionService>()
-                        .AddSingleton<DialogCreationService>()
-                        .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
-                        .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
-                        .AddSingleton<UiGlobals>()
-                        .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
-                        .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
-                        .AddSingleton<IViewModelFactory, ViewModelFactory>()
-                        .AddSingleton<IAccountStatisticsProvider, StatisticsProvider>()
-                        .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
-                        .AddSingleton<IPriceDownloaderFactory, PriceDownloaderFactory>()
-                        .AddSingleton<IPortfolioDataDownloader, PortfolioDataDownloader>()
-                        .AddSingleton(ConfigurationFactory.LoadConfig)
-                        .AddSingleton<ReportingWindowViewModel>()
-                        .AddSingleton<OptionsToolbarViewModel>()
-                        .AddSingleton<BasicDataViewModel>()
-                        .AddSingleton<StatisticsChartsViewModel>()
-                        .AddSingleton<MainWindowViewModel>();
-                })
-                .ConfigureLogging(loggingBuilder =>
-                {
-                    loggingBuilder.AddReportLogger(UpdateReport);
-                })
-                .Build();
+            var hostBuilder = Host.CreateApplicationBuilder();
+            _ = hostBuilder.Services
+                .AddSingleton<MainWindow>()
+                .AddSingleton<Window>(x => x.GetService<MainWindow>())
+                .AddSingleton<IDispatcher, DispatcherInstance>()
+                .AddSingleton<IFileSystem, FileSystem>()
+                .AddSingleton<IFileInteractionService, FileInteractionService>()
+                .AddSingleton<DialogCreationService>()
+                .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
+                .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
+                .AddSingleton<UiGlobals>()
+                .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
+                .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
+                .AddSingleton(ConfigurationFactory.LoadConfig)
+                .AddViewModelDependencies();
+            _ = hostBuilder.Logging.AddReportLogger(UpdateReport);
+
+            _host = hostBuilder.Build();
         }
 
         private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
