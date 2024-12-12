@@ -10,7 +10,7 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
@@ -23,7 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio, IPortfolio>
     {
         internal readonly IUpdater<IPortfolio> _updater;
-
+        private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         internal readonly Account DataType;
 
         /// <summary>
@@ -94,16 +94,18 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// Construct an instance.
         /// </summary>
         public DataNamesViewModel(
-            IPortfolio portfolio, 
-            UiGlobals uiGlobals, 
-            IUiStyles styles, 
+            IPortfolio portfolio,
+            UiGlobals uiGlobals,
+            IUiStyles styles,
             IUpdater<IPortfolio> dataUpdater,
-            Action<object> loadSelectedData, 
+            IPortfolioDataDownloader portfolioDataDownloader,
+            Action<object> loadSelectedData,
             Account dataType)
             : base("Accounts", portfolio, uiGlobals, styles, closable: false)
         {
             DataType = dataType;
             _updater = dataUpdater;
+            _portfolioDataDownloader = portfolioDataDownloader;
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
@@ -119,10 +121,10 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             get;
         }
 
-        private bool IsUpdated(IPortfolio dataToDisplay, NameData name) 
-            => dataToDisplay.LatestDate(DataType, name) == DateTime.Today 
+        private bool IsUpdated(IPortfolio dataToDisplay, NameData name)
+            => dataToDisplay.LatestDate(DataType, name) == DateTime.Today
                || dataToDisplay.LatestValue(DataType, name).Equals(0.0m);
- 
+
         /// <summary>
         /// Updates the data in this view model from the given portfolio.
         /// </summary>
@@ -163,7 +165,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
 
             NameData names = SelectedName.Instance;
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(DataType, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -178,7 +180,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         private void ExecuteSelectionChanged(object args) => SelectionChanged(args);
 
         private async void SelectionChanged(object args)
-        {            
+        {
             // object reference issue in following line
             if (DataNames != null && args is RowData selectableName && selectableName.Instance != null)
             {

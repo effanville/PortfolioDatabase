@@ -764,7 +764,7 @@ namespace Effanville.FPD.Logic.Tests
             MockFileSystem tempFileSystem = new MockFileSystem();
             string testPath = "c:/temp/database.xml";
 
-            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
             SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>();
             string testConfigPath = "c:/temp/saved/user.config";
@@ -772,12 +772,15 @@ namespace Effanville.FPD.Logic.Tests
                 testConfigPath,
                 globals.CurrentFileSystem,
                 globals.ReportLogger);
-            
+
+            var downloader = TestSetupHelper.SetupDownloader();
             config.ProgramVersion = new Version(1, 2, 3, 4);
             MainWindowViewModel vm = new MainWindowViewModel(globals,
                 null,
                 PortfolioFactory.GenerateEmpty(),
-                updater, new ViewModelFactory(null, globals, updater, config, null),
+                updater,
+                downloader,
+                new ViewModelFactory(null, globals, updater, downloader, config, null),
                 config,
                 null,
                 null,

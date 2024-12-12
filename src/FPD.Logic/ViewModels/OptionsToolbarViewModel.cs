@@ -8,7 +8,7 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Extensions;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.TemplatesAndStyles;
@@ -23,6 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels
     public sealed class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
         private readonly ILogger<OptionsToolbarViewModel> _logger;
+        private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         private string _fileName;
         private string _directory;
         private string _baseCurrency;
@@ -61,10 +62,11 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(ILogger<OptionsToolbarViewModel> logger, UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
+        public OptionsToolbarViewModel(ILogger<OptionsToolbarViewModel> logger, UiGlobals globals, IUiStyles styles, IPortfolio portfolio, IPortfolioDataDownloader portfolioDataDownloader)
             : base(globals, styles, portfolio, "Options")
         {
             _logger = logger;
+            _portfolioDataDownloader = portfolioDataDownloader;
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
@@ -130,12 +132,12 @@ namespace Effanville.FPD.Logic.ViewModels
             _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
             _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                true, 
+                true,
                 portfolio => portfolio.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
             var portfolioPersistence = new PortfolioPersistence();
             var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                false, 
+                false,
                 portfolio => portfolioPersistence.Save(portfolio, options, ReportLogger)));
             DisplayGlobals.CurrentWorkingDirectory = _directory;
         }
@@ -157,12 +159,12 @@ namespace Effanville.FPD.Logic.ViewModels
             var portfolioPersistence = new PortfolioPersistence();
             var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                true, 
+                true,
                 programPortfolio => portfolioPersistence.Load(programPortfolio, options, ReportLogger)));
-            
+
             var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
-                false, 
+                false,
                 programPortfolio => portfolioPersistence.Save(programPortfolio, backupOptions, ReportLogger)));
             DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
             _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
@@ -178,7 +180,7 @@ namespace Effanville.FPD.Logic.ViewModels
         private void ExecuteUpdateData()
         {
             _logger.LogInformation($"Execute update data for database {_fileName} called.");
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await PortfolioDataUpdater.Download(Account.All, programPortfolio, null, ReportLogger).ConfigureAwait(false)));
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(programPortfolio, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>

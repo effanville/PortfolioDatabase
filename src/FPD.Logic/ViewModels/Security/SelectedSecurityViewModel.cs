@@ -12,7 +12,7 @@ using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Database.Download;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.DataStructures;
@@ -31,7 +31,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
-
+        private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         private SecurityTrade _oldSelectedTrade;
         private SecurityTrade _selectedTrade;
 
@@ -119,7 +119,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             UiGlobals globals,
             TwoName selectedName,
             Account account,
-            IUpdater<IPortfolio> dataUpdater)
+            IUpdater<IPortfolio> dataUpdater,
+            IPortfolioDataDownloader portfolioDataDownloader)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, styles, true)
         {
             _statisticsProvider = statisticsProvider;
@@ -131,6 +132,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             _dataType = account;
+            _portfolioDataDownloader = portfolioDataDownloader;
             UpdateRequest += dataUpdater.PerformUpdate;
 
             string currencySymbol =
@@ -188,8 +190,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
 
             TwoName names = SelectedName;
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                async programPortfolio => await PortfolioDataUpdater
-                    .Download(_dataType, programPortfolio, names, ReportLogger).ConfigureAwait(false)));
+                async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -210,7 +211,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             }
 
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile(
-                "csv", 
+                "csv",
                 filter: "Csv Files|*.csv|All Files|*.*");
             List<object> outputs = null;
             if (result.Success)
@@ -262,7 +263,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             }
 
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
-                "csv", 
+                "csv",
                 string.Empty,
                 filter: "Csv Files|*.csv|All Files|*.*");
             if (result.Success)

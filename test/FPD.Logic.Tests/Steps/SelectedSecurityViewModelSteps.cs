@@ -44,7 +44,8 @@ public class SelectedSecurityViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
-            _testContext.Updater);
+            _testContext.Updater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [Given(@"I have a SelectedSecurityViewModel with account (.*) and name (.*) and data")]
@@ -84,7 +85,8 @@ public class SelectedSecurityViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.Updater,
+            _testContext.PortfolioDataDownloader);
     }
 
     private SecurityTrade FromRow(NameData name, TableRow row)

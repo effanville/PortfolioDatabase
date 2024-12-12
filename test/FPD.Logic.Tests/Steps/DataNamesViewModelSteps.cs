@@ -50,6 +50,7 @@ public class DataNamesViewModelSteps
             _testContext.Globals,
             _testContext.Styles,
             _testContext.Updater,
+            null,
             LoadSelectedData,
             account);
         _testContext.ViewModel.UpdateRequest += _testContext.Updater.PerformUpdate;

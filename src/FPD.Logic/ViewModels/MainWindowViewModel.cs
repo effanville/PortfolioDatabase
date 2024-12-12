@@ -13,6 +13,7 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Download;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -83,6 +84,7 @@ namespace Effanville.FPD.Logic.ViewModels
             IUiStyles styles,
             IPortfolio portfolio,
             IUpdater<IPortfolio> updater,
+            IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory,
             IConfiguration configuration,
             ReportingWindowViewModel reportsViewModel,
@@ -122,13 +124,13 @@ namespace Effanville.FPD.Logic.ViewModels
                 Account.BankAccount,
                 nameof(ValueListWindowViewModel)));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
-                updater, viewModelFactory));
+                updater, portfolioDataDownloader, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
-                updater, viewModelFactory));
+                updater, portfolioDataDownloader, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
-                updater, viewModelFactory));
+                updater, portfolioDataDownloader, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
-                updater, viewModelFactory));
+                updater, portfolioDataDownloader, viewModelFactory));
             Tabs.Add(viewModelFactory.GenerateViewModel(ProgramPortfolio, "", Account.All, nameof(StatsViewModel)));
             if (statisticsChartsViewModel != null)
             {

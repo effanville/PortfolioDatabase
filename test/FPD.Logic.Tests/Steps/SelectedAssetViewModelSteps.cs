@@ -43,7 +43,8 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.Updater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [AfterScenario]
@@ -89,7 +90,8 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.Updater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [Given(@"I have a SelectedAssetViewModel with name (.*) and no data")]
@@ -110,7 +112,8 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.Updater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [Given(@"the SelectedAssetViewModel is brought into focus")]

@@ -10,10 +10,10 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
-using Effanville.FPD.Logic.Tests.Support;
 using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
@@ -40,18 +40,19 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             styles.SetupGet(x => x.IsLightTheme).Returns(true);
             return styles.Object;
         }
-        internal static IViewModelFactory CreateViewModelFactory(
-            IPortfolio portfolio,
-            IFileSystem fileSystem,
-            IFileInteractionService fileService,
-            IBaseDialogCreationService dialogCreationService,
+
+        internal static IViewModelFactory SetupViewModelFactory(
+            IUiStyles styles,
+            UiGlobals globals,
+            IUpdater<IPortfolio> updater,
+            IPortfolioDataDownloader downloader,
             IConfiguration config,
-            IAccountStatisticsProvider statisticsProvider,
-            IReportLogger logger = null) 
+            IAccountStatisticsProvider statisticsProvider)
             => new ViewModelFactory(
-                null, 
-                CreateGlobalsMock(fileSystem, fileService, dialogCreationService, logger), 
-                CreateUpdater(portfolio),
+                styles,
+                globals,
+                updater,
+                downloader,
                 config,
                 statisticsProvider);
 
@@ -72,12 +73,51 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static IUpdater<TDataStore> CreateUpdater<TDataStore>(TDataStore portfolio) where TDataStore : class
+        public static IUpdater<TDataStore> SetupUpdater<TDataStore>(TDataStore portfolio = null) where TDataStore : class
             => new SynchronousUpdater<TDataStore>() { Database = portfolio };
 
-        public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IBaseDialogCreationService dialogCreationService, IReportLogger logger = null)
+        public static IAccountStatisticsProvider SetupProvider()
         {
-            return new UiGlobals(null, TestDependencies.SetupDispatcher(), fileSystem, fileService, dialogCreationService, logger ?? DummyReportLogger);
+            Mock<IAccountStatisticsProvider> mockProvider = new Mock<IAccountStatisticsProvider>();
+            return mockProvider.Object;
+        }
+
+        public static UiGlobals SetupGlobalsMock(
+            IFileSystem fileSystem,
+            IFileInteractionService fileService,
+            IBaseDialogCreationService dialogCreationService,
+            IReportLogger logger = null)
+            => new UiGlobals(
+                null,
+                SetupDispatcher(),
+                fileSystem,
+                fileService,
+                dialogCreationService,
+                logger ?? DummyReportLogger);
+
+        public static IDispatcher SetupDispatcher()
+        {
+            Mock<IDispatcher> dispatcherMock = new Mock<IDispatcher>();
+            _ = dispatcherMock.Setup(x => x.Invoke(It.IsAny<Action>())).Callback((Action a) => a());
+
+            _ = dispatcherMock.Setup(x => x.BeginInvoke(It.IsAny<Action>())).Callback((Action a) => a());
+            return dispatcherMock.Object;
+        }
+        public static IPortfolioDataDownloader SetupDownloader()
+        {
+            Mock<IPortfolioDataDownloader> downloaderMock = new Mock<IPortfolioDataDownloader>();
+
+            return downloaderMock.Object;
+        }
+
+        public static IReportLogger SetupReportLogger()
+        {
+            LogReporter reportLogger = new LogReporter(LogAction, saveInternally: true);
+            return reportLogger;
+
+            void LogAction(ReportSeverity sev, ReportType error, string loc, string msg)
+            {
+            }
         }
 
         public static IPortfolio CreateBasicDataBase()

@@ -8,8 +8,8 @@ using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Database.Download;
 using Effanville.FinancialStructures.Database.Export.Statistics;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
 
@@ -65,7 +65,8 @@ namespace Effanville.FPD.Console
                 _reportLogger);
             _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_filepathOption.Value}");
 
-            PortfolioDataUpdater.Download(Account.All, portfolio, null, _reportLogger).Wait();
+            PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory();
+            new PortfolioDataDownloader(priceDownloaderFactory).Download(portfolio, _reportLogger).Wait();
 
             if (_updateStatsOption.Value)
             {

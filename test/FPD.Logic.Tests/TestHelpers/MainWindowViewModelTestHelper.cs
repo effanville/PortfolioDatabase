@@ -39,11 +39,11 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
             Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
             Mock<ILogger<ReportingWindowViewModel>> loggerReportMock = new Mock<ILogger<ReportingWindowViewModel>>();
-            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(
                 FileSystem,
                 TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object,
                 TestSetupHelper.CreateDialogMock().Object);
-            
+
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
                 testConfigPath,
                 globals.CurrentFileSystem,
@@ -51,14 +51,16 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>(portfolio);
             IUiStyles styles = TestSetupHelper.SetupDefaultStyles();
+            var downloader = TestSetupHelper.SetupDownloader();
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,
-                updater, 
-                new ViewModelFactory(styles, globals, updater, config, new StatisticsProvider(portfolio)),
+                updater,
+                downloader,
+                new ViewModelFactory(styles, globals, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
                 new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
-                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio),
+                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio, downloader),
                 new BasicDataViewModel(globals, styles, portfolio),
                 new StatisticsChartsViewModel(globals, portfolio, styles));
         }

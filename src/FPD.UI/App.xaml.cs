@@ -10,6 +10,7 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Download;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
@@ -50,6 +51,8 @@ namespace Effanville.FPD.UI
                         .AddSingleton<IViewModelFactory, ViewModelFactory>()
                         .AddSingleton<IAccountStatisticsProvider, StatisticsProvider>()
                         .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
+                        .AddSingleton<IPriceDownloaderFactory, PriceDownloaderFactory>()
+                        .AddSingleton<IPortfolioDataDownloader, PortfolioDataDownloader>()
                         .AddSingleton(ConfigurationFactory.LoadConfig)
                         .AddSingleton<ReportingWindowViewModel>()
                         .AddSingleton<OptionsToolbarViewModel>()
@@ -100,8 +103,8 @@ namespace Effanville.FPD.UI
 
             _ = MessageBox.Show(
                 e.Exception?.Message + Environment.NewLine + e.Exception?.StackTrace,
-                "Exception Caught", 
-                MessageBoxButton.OK, 
+                "Exception Caught",
+                MessageBoxButton.OK,
                 MessageBoxImage.Error);
 
             MainWindow main = _host.Services.GetService<MainWindow>();
@@ -116,7 +119,7 @@ namespace Effanville.FPD.UI
             if (ex != null)
             {
                 _ = MessageBox.Show(
-                    ex.Message, 
+                    ex.Message,
                     "Uncaught Thread Exception",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);

@@ -10,6 +10,7 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
@@ -47,6 +48,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             string title,
             Account accountType,
             IUpdater<IPortfolio> dataUpdater,
+            IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
         {
@@ -56,6 +58,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 DisplayGlobals,
                 styles,
                 dataUpdater,
+                portfolioDataDownloader,
                 LoadTabFunc,
                 accountType);
             Tabs.Add(dataNames);
