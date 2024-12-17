@@ -96,7 +96,7 @@ public class ValueListWindowSteps
             case Account.Security:
             case Account.Pension:
             {
-                StyledClosableViewModelBase<ISecurity, IPortfolio> tab = desiredTab as StyledClosableViewModelBase<ISecurity, IPortfolio>;
+                StyledClosableViewModelBase<ISecurity> tab = desiredTab as StyledClosableViewModelBase<ISecurity>;
                 NameData actualName = tab.ModelData.Names;
                 Assert.That(actualName.Company, Is.EqualTo(expectedName.Company));
                 Assert.That(actualName.Name, Is.EqualTo(expectedName.Name));
@@ -106,7 +106,7 @@ public class ValueListWindowSteps
             case Account.BankAccount:
             case Account.Currency:
             {
-                StyledClosableViewModelBase<IValueList, IPortfolio> tab = desiredTab as StyledClosableViewModelBase<IValueList, IPortfolio>;
+                StyledClosableViewModelBase<IValueList> tab = desiredTab as StyledClosableViewModelBase<IValueList>;
                 NameData actualName = tab.ModelData.Names;
                 Assert.That(actualName.Company, Is.EqualTo(expectedName.Company));
                 Assert.That(actualName.Name, Is.EqualTo(expectedName.Name));
@@ -114,7 +114,7 @@ public class ValueListWindowSteps
             }
             case Account.Asset:
             {
-                StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> tab = desiredTab as StyledClosableViewModelBase<IAmortisableAsset, IPortfolio>;
+                StyledClosableViewModelBase<IAmortisableAsset> tab = desiredTab as StyledClosableViewModelBase<IAmortisableAsset>;
                 NameData actualName = tab.ModelData.Names;
                 Assert.That(actualName.Company, Is.EqualTo(expectedName.Company));
                 Assert.That(actualName.Name, Is.EqualTo(expectedName.Name));

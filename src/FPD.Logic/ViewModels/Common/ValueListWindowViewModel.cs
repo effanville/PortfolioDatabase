@@ -95,7 +95,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         {
             switch (item)
             {
-                case StyledClosableViewModelBase<IPortfolio, IPortfolio> viewModel1:
+                case StyledClosableViewModelBase<IPortfolio> viewModel1:
                 {
                     viewModel1.UpdateData(modelData, false);
                     return true;
