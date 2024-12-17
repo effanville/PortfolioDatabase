@@ -11,7 +11,8 @@ public class ViewModelTestContext<TModelData, TViewModel> where TModelData : cla
 {
     public IUiStyles Styles { get; }
     public UiGlobals Globals { get; }
-    public IUpdater<IPortfolio> Updater { get; }
+    public IDataStoreUpdater<IPortfolio> Updater { get; }
+    public IUpdater DataUpdater { get; }
     public IPortfolioDataDownloader PortfolioDataDownloader { get; }
     public TModelData ModelData { get; set; }
     public TViewModel ViewModel { get; set; }
@@ -21,12 +22,14 @@ public class ViewModelTestContext<TModelData, TViewModel> where TModelData : cla
     public ViewModelTestContext(
         IUiStyles uiStyles,
         UiGlobals globals,
-        IUpdater<IPortfolio> updater,
+        IDataStoreUpdater<IPortfolio> updater,
+        IUpdater dataUpdater,
         IViewModelFactory viewModelFactory)
     {
         Styles = uiStyles;
         Globals = globals;
         Updater = updater;
+        DataUpdater = dataUpdater;
         ViewModelFactory = viewModelFactory;
     }
 

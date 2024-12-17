@@ -44,7 +44,7 @@ public class SelectedSecurityViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
-            _testContext.Updater,
+            _testContext.DataUpdater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -85,7 +85,7 @@ public class SelectedSecurityViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater,
+            _testContext.DataUpdater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -206,7 +206,6 @@ public class SelectedSecurityViewModelSteps
                 Assert.That(actualTrade.TradeType, Is.EqualTo(expectedTrade.TradeType));
                 Assert.That(actualTrade.Company, Is.EqualTo(expectedTrade.Company));
                 Assert.That(actualTrade.Name, Is.EqualTo(expectedTrade.Name));
-                
                 Assert.That(actualTrade.Day, Is.EqualTo(expectedTrade.Day));
                 Assert.That(actualTrade.NumberShares, Is.EqualTo(expectedTrade.NumberShares));
                 Assert.That(actualTrade.UnitPrice, Is.EqualTo(expectedTrade.UnitPrice));
@@ -220,10 +219,10 @@ public class SelectedSecurityViewModelSteps
     {
         SecurityTrade oldTrade = _testContext.ViewModel.Trades[p0 - 1];
         SecurityTrade newTrade = FromRow(_testContext.ViewModel.ModelData.Names, table.Rows[0]);
-        _testContext.ViewModel.EditTrade(oldTrade, newTrade );
+        _testContext.ViewModel.EditTrade(oldTrade, newTrade);
     }
 
     [When(@"I delete SelectedSecurityViewModel trade data (.*)")]
-    public void WhenIDeleteSelectedSecurityViewModelTradeData(int p0) 
-        => _testContext.ViewModel.DeleteTrade(_testContext.ViewModel.Trades[p0-1]);
+    public void WhenIDeleteSelectedSecurityViewModelTradeData(int p0)
+        => _testContext.ViewModel.DeleteTrade(_testContext.ViewModel.Trades[p0 - 1]);
 }

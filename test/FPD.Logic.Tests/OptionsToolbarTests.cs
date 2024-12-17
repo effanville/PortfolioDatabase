@@ -26,7 +26,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
@@ -57,7 +57,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
@@ -89,7 +89,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath, savePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
@@ -123,7 +123,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
@@ -151,7 +151,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testFilePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
@@ -176,7 +176,7 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),

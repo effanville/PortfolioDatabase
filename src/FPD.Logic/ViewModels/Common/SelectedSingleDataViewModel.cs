@@ -11,7 +11,6 @@ using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
@@ -23,7 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model to display a list with one value.
     /// </summary>
-    public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IValueList, IPortfolio>
+    public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IValueList>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
@@ -71,20 +70,21 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             UiGlobals globals,
             TwoName selectedName,
             Account accountDataType,
-            IUpdater<IPortfolio> dataUpdater)
+            IUpdater dataUpdater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
                 closable: true)
         {
             _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = accountDataType;
-            UpdateRequest += dataUpdater.PerformUpdate;
-            string currencySymbol =
-                CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency);
-            TLVM = new TimeListViewModel(valueList.Values, $"Value({currencySymbol})", Styles,
-                value => DeleteValue(SelectedName, value),
-                (old, newVal) => ExecuteAddEditData(SelectedName, old, newVal));
-            TLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
+            string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency);
+            TLVM = new TimeListViewModel(
+                valueList.Values,
+                $"Value({currencySymbol})",
+                Styles,
+                DeleteValue,
+                ExecuteAddEditData);
             Stats = new AccountStatsViewModel(null, Styles);
             DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
             AddCsvData = new RelayCommand(ExecuteAddCsvData);
@@ -109,32 +109,31 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             Stats.UpdateData(stats, force);
         }
 
-        private void ExecuteAddEditData(TwoName name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditData(DailyValuation oldValue, DailyValuation newValue)
         {
-            if (name != null)
+            if (newValue == null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio =>
-                        _ = programPortfolio.TryAddOrEditData(_dataType, name, oldValue, newValue, ReportLogger)));
+                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, nameof(ExecuteAddEditData), "New value not present when updating");
+                return;
             }
+
+            OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+                valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
         }
 
         /// <summary>
         /// Command to delete data from the value list.
         /// </summary>
-        public ICommand DeleteValuationCommand
-        {
-            get;
-        }
+        public ICommand DeleteValuationCommand { get; }
 
-        private void ExecuteDeleteValuation() => DeleteValue(SelectedName, TLVM.SelectedValuation);
+        private void ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
 
-        private void DeleteValue(TwoName name, DailyValuation value)
+        private void DeleteValue(DailyValuation value)
         {
-            if (name != null && value != null)
+            if (value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => programPortfolio.TryDeleteData(_dataType, name, value.Day, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+                    valueList => valueList.TryDeleteData(value.Day, ReportLogger)));
             }
             else
             {
@@ -146,10 +145,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Command to add data from a csv file.
         /// </summary>
-        public ICommand AddCsvData
-        {
-            get;
-        }
+        public ICommand AddCsvData { get; }
 
         private async void ExecuteAddCsvData()
         {
@@ -175,10 +171,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 if (obj is DailyValuation view)
                 {
-                    OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                        programPortfolio =>
-                            programPortfolio.TryAddOrEditData(_dataType, SelectedName, view, view,
-                                ReportLogger)));
+                    OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+                        valueList => valueList.TryEditData(view.Day, view.Day, view.Value, ReportLogger)));
                 }
                 else
                 {
@@ -191,10 +185,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Command to export data to a csv file.
         /// </summary>
-        public ICommand ExportCsvData
-        {
-            get;
-        }
+        public ICommand ExportCsvData { get; }
 
         private async void ExecuteExportCsvData()
         {

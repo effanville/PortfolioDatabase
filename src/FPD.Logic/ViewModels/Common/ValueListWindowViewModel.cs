@@ -47,7 +47,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             IPortfolio portfolio,
             string title,
             Account accountType,
-            IUpdater<IPortfolio> dataUpdater,
+            IDataStoreUpdater<IPortfolio> dataUpdater,
             IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
@@ -100,7 +100,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     viewModel1.UpdateData(modelData, false);
                     return true;
                 }
-                case StyledClosableViewModelBase<ISecurity, IPortfolio> viewModel2:
+                case StyledClosableViewModelBase<ISecurity> viewModel2:
                 {
                     if (!modelData.TryGetAccount(DataType, viewModel2.ModelData.Names, out ISecurity security))
                     {
@@ -111,7 +111,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     return true;
 
                 }
-                case StyledClosableViewModelBase<IAmortisableAsset, IPortfolio> viewModel3:
+                case StyledClosableViewModelBase<IAmortisableAsset> viewModel3:
                 {
                     if (!modelData.TryGetAccount(DataType, viewModel3.ModelData.Names, out IAmortisableAsset asset))
                     {
@@ -122,7 +122,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     return true;
 
                 }
-                case StyledClosableViewModelBase<IValueList, IPortfolio> viewModel4:
+                case StyledClosableViewModelBase<IValueList> viewModel4:
                 {
                     if (!modelData.TryGetAccount(DataType, viewModel4.ModelData.Names, out IValueList vl))
                     {
@@ -151,29 +151,34 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 {
                     case ISecurity security:
                     {
-                        if (Tabs.Where(x => x is ViewModelBase<ISecurity, IPortfolio>)
-                            .Any(y => (y as ViewModelBase<ISecurity, IPortfolio>).ModelData == security))
+                        if (Tabs.Where(x => x is ViewModelBase<ISecurity>)
+                            .Any(y => (y as ViewModelBase<ISecurity>).ModelData == security))
                         {
                             return;
                         }
-                        
+
                         var newViewModel = _viewModelFactory.GenerateViewModel(
-                            security, 
+                            security,
                             security.Names,
                             DataType);
+                        if (newViewModel == null)
+                        {
+                            break;
+                        }
+
                         newViewModel.RequestClose += RemoveTab;
                         Tabs.Add(newViewModel);
                         break;
                     }
                     case IAmortisableAsset asset:
                     {
-                        if (Tabs.Where(x => x is ViewModelBase<IAmortisableAsset, IPortfolio>)
-                            .Any(y => (y as ViewModelBase<IAmortisableAsset, IPortfolio>).ModelData == asset))
+                        if (Tabs.Where(x => x is ViewModelBase<IAmortisableAsset>)
+                            .Any(y => (y as ViewModelBase<IAmortisableAsset>).ModelData == asset))
                         {
                             return;
                         }
                         var newViewModel = _viewModelFactory.GenerateViewModel(
-                            asset, 
+                            asset,
                             asset.Names,
                             DataType);
                         newViewModel.RequestClose += RemoveTab;
@@ -182,8 +187,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     }
                     default:
                     {
-                        if (Tabs.Where(x => x is ViewModelBase<IValueList, IPortfolio>)
-                            .Any(y => (y as ViewModelBase<IValueList, IPortfolio>).ModelData == valueList))
+                        if (Tabs.Where(x => x is ViewModelBase<IValueList>)
+                            .Any(y => (y as ViewModelBase<IValueList>).ModelData == valueList))
                         {
                             return;
                         }
@@ -199,14 +204,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
             else
             {
-                var newViewModel =  _viewModelFactory.GenerateViewModel(
-                    ModelData, 
+                var newViewModel = _viewModelFactory.GenerateViewModel(
+                    ModelData,
                     null,
                     DataType);
                 Tabs.Add(newViewModel);
             }
         }
-        
+
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>

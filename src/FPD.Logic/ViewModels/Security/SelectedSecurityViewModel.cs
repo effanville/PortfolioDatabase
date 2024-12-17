@@ -13,7 +13,6 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
-using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.FinanceStructures;
@@ -27,7 +26,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity, IPortfolio>
+    public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
@@ -119,7 +118,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             UiGlobals globals,
             TwoName selectedName,
             Account account,
-            IUpdater<IPortfolio> dataUpdater,
+            IUpdater dataUpdater,
             IPortfolioDataDownloader portfolioDataDownloader)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, styles, true)
         {
@@ -133,7 +132,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             _dataType = account;
             _portfolioDataDownloader = portfolioDataDownloader;
-            UpdateRequest += dataUpdater.PerformUpdate;
+            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
 
             string currencySymbol =
                 CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency);
@@ -141,8 +140,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             TradeTotalCostHeader = $"Total Cost({currencySymbol})";
             TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles,
                 value => DeleteValue(SelectedName, value),
-                (old, newVal) => ExecuteAddEditUnitPriceData(SelectedName, old, newVal));
-            TLVM.UpdateRequest += dataUpdater.PerformUpdate;
+                (old, newVal) => ExecuteAddEditUnitPriceData(old, newVal));
             SecurityStats = new AccountStatsViewModel(null, Styles);
         }
 
@@ -160,9 +158,9 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         {
             if (name != null && value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(false,
-                    programPortfolio =>
-                        programPortfolio.TryDeleteData(_dataType, name, value.Day, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<ISecurity>(false,
+                    security =>
+                        security.TryDeleteData(value.Day, ReportLogger)));
             }
             else
             {
@@ -189,7 +187,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             }
 
             TwoName names = SelectedName;
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
+            OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
                 async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
@@ -229,13 +227,10 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 if (obj is SecurityDayData view)
                 {
                     var value = new DailyValuation(view.Date, view.UnitPrice);
-                    OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                        programPortfolio =>
-                            programPortfolio.TryAddOrEditData(_dataType, SelectedName, value, value,
-                                ReportLogger)));
-                    OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                        programPortfolio => programPortfolio.TryAddOrEditTradeData(_dataType, SelectedName,
-                            view.Trade, view.Trade, ReportLogger)));
+                    OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
+                        security => security.TryEditData(value.Day, value.Day, value.Value, ReportLogger)));
+                    OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
+                        security => security.TryAddOrEditTradeData(view.Trade, view.Trade, ReportLogger)));
                 }
                 else
                 {
@@ -272,14 +267,12 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             }
         }
 
-        private void ExecuteAddEditUnitPriceData(TwoName name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditUnitPriceData(DailyValuation oldValue, DailyValuation newValue)
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio =>
-                        _ = programPortfolio.TryAddOrEditData(_dataType, name, oldValue, newValue,
-                            ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
+                    security => _ = security.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
             }
         }
 
@@ -334,7 +327,9 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         public SecurityTrade DefaultTradeValue() =>
             new SecurityTrade()
             {
-                TradeType = TradeType.Buy, Names = SelectedName, Day = DateTime.Today
+                TradeType = TradeType.Buy,
+                Names = SelectedName,
+                Day = DateTime.Today
             };
 
         /// <summary>
@@ -367,9 +362,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         {
             if (_selectedTrade != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => _ = programPortfolio.TryAddOrEditTradeData(_dataType, SelectedName,
-                        _oldSelectedTrade, _selectedTrade, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
+                    security => _ = security.TryAddOrEditTradeData(_oldSelectedTrade, _selectedTrade, ReportLogger)));
             }
         }
 
@@ -380,10 +374,9 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         {
             if (SelectedName != null && _selectedTrade != null)
             {
-                Trades.Remove(_selectedTrade);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio =>
-                        programPortfolio.TryDeleteTradeData(_dataType, SelectedName, _selectedTrade.Day, ReportLogger)));
+                _ = Trades.Remove(_selectedTrade);
+                OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
+                    security => security.TryDeleteTradeData(_selectedTrade.Day, ReportLogger)));
             }
             else
             {

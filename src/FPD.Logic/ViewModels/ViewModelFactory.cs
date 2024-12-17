@@ -16,7 +16,8 @@ namespace Effanville.FPD.Logic.ViewModels;
 public class ViewModelFactory : IViewModelFactory
 {
     private readonly UiGlobals _globals;
-    private readonly IUpdater<IPortfolio> _updater;
+    private readonly IDataStoreUpdater<IPortfolio> _updater;
+    private readonly IUpdater _newUpdater;
     private readonly IPortfolioDataDownloader _portfolioDataDownloader;
     private readonly IConfiguration _configuration;
     private readonly IAccountStatisticsProvider _statisticsProvider;
@@ -25,7 +26,8 @@ public class ViewModelFactory : IViewModelFactory
     public ViewModelFactory(
         IUiStyles styles,
         UiGlobals globals,
-        IUpdater<IPortfolio> updater,
+        IDataStoreUpdater<IPortfolio> updater,
+        IUpdater newUpdater,
         IPortfolioDataDownloader portfolioDataDownloader,
         IConfiguration configuration,
         IAccountStatisticsProvider statisticsProvider)
@@ -33,6 +35,7 @@ public class ViewModelFactory : IViewModelFactory
         _styles = styles;
         _globals = globals;
         _updater = updater;
+        _newUpdater = newUpdater;
         _portfolioDataDownloader = portfolioDataDownloader;
         _configuration = configuration;
         _statisticsProvider = statisticsProvider;
@@ -52,7 +55,7 @@ public class ViewModelFactory : IViewModelFactory
             _ => null
         };
 
-    public StyledClosableViewModelBase<T, IPortfolio> GenerateViewModel<T>(
+    public StyledClosableViewModelBase<T> GenerateViewModel<T>(
         T modelData,
         TwoName names,
         Account account)
@@ -66,8 +69,8 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 asset.Names,
                 account,
-                _updater,
-                _portfolioDataDownloader) as StyledClosableViewModelBase<T, IPortfolio>,
+                _newUpdater,
+                _portfolioDataDownloader) as StyledClosableViewModelBase<T>,
             ISecurity security => new SelectedSecurityViewModel(
                 _statisticsProvider,
                 security,
@@ -75,8 +78,8 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 names,
                 account,
-                _updater,
-                _portfolioDataDownloader) as StyledClosableViewModelBase<T, IPortfolio>,
+                _newUpdater,
+                _portfolioDataDownloader) as StyledClosableViewModelBase<T>,
             IExchangeableValueList exchangeableValueList => new SelectedSingleDataViewModel(
                 _statisticsProvider,
                 exchangeableValueList,
@@ -84,7 +87,7 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 exchangeableValueList.Names,
                 account,
-                _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+                _newUpdater) as StyledClosableViewModelBase<T>,
             IValueList valueList => new SelectedSingleDataViewModel(
                 _statisticsProvider,
                 valueList,
@@ -92,7 +95,7 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 valueList.Names,
                 account,
-                _updater) as StyledClosableViewModelBase<T, IPortfolio>,
+                _newUpdater) as StyledClosableViewModelBase<T>,
             _ => null
         };
 }

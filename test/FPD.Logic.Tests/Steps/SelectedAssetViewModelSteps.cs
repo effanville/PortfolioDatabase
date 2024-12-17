@@ -43,7 +43,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater,
+            _testContext.DataUpdater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -90,7 +90,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater,
+            _testContext.DataUpdater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -112,7 +112,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater,
+            _testContext.DataUpdater,
             _testContext.PortfolioDataDownloader);
     }
 

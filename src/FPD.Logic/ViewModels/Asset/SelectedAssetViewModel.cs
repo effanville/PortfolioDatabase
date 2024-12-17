@@ -12,7 +12,6 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
-using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
@@ -25,7 +24,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset, IPortfolio>
+    public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
 
@@ -101,7 +100,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             UiGlobals globals,
             NameData selectedName,
             Account dataType,
-            IUpdater<IPortfolio> dataUpdater,
+            IUpdater dataUpdater,
             IPortfolioDataDownloader portfolioDataDownloader)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", asset, globals, styles, true)
         {
@@ -111,66 +110,66 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             _portfolioDataDownloader = portfolioDataDownloader;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-            UpdateRequest += dataUpdater.PerformUpdate;
-            string currencySymbol =
-                CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
-            ValuesTLVM = new TimeListViewModel(asset.Values, $"Values({currencySymbol})", Styles,
-                value => DeleteValue(SelectedName, value),
-                (old, newVal) => ExecuteAddEditValues(SelectedName, old, newVal));
-            DebtTLVM = new TimeListViewModel(asset.Debt, $"Debt({currencySymbol})", Styles,
-                value => DeleteDebtValue(SelectedName, value),
-                (old, newVal) => ExecuteAddEditDebt(SelectedName, old, newVal));
-            PaymentsTLVM = new TimeListViewModel(asset.Payments, $"Payments({currencySymbol})", Styles,
-                value => DeletePaymentValue(SelectedName, value),
-                (old, newVal) => ExecuteAddEditPayment(SelectedName, old, newVal));
-            ValuesTLVM.UpdateRequest += dataUpdater.PerformUpdate;
-            DebtTLVM.UpdateRequest += dataUpdater.PerformUpdate;
-            PaymentsTLVM.UpdateRequest += dataUpdater.PerformUpdate;
+            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
+            string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
+            ValuesTLVM = new TimeListViewModel(
+                asset.Values,
+                $"Values({currencySymbol})",
+                Styles,
+                DeleteValue,
+                ExecuteAddEditValues);
+            DebtTLVM = new TimeListViewModel(
+                asset.Debt,
+                $"Debt({currencySymbol})",
+                Styles,
+                DeleteDebtValue,
+                ExecuteAddEditDebt);
+            PaymentsTLVM = new TimeListViewModel(
+                asset.Payments,
+                $"Payments({currencySymbol})",
+                Styles,
+                DeletePaymentValue,
+                ExecuteAddEditPayment);
             Statistics = new AccountStatsViewModel(null, Styles);
         }
 
-        private void DeleteValue(NameData name, DailyValuation value)
+        private void DeleteValue(DailyValuation value)
         {
-            if (name != null && value != null)
-            {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio =>
-                        programPortfolio.TryDeleteData(_dataType, name.ToTwoName(), value.Day, ReportLogger)));
-            }
-            else
-            {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
-                    "No Account was selected when trying to delete data.");
-            }
-        }
-
-        private void DeleteDebtValue(NameData name, DailyValuation value)
-        {
-            if (name == null || value == null)
+            if (value == null)
             {
                 _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
                     "No Account was selected when trying to delete data.");
                 return;
             }
 
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                programPortfolio =>
-                    programPortfolio.TryDeleteAssetDebt(_dataType, name.ToTwoName(), value.Day, ReportLogger)));
+            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => asset.TryDeleteData(value.Day, ReportLogger)));
         }
 
-        private void DeletePaymentValue(NameData name, DailyValuation value)
+        private void DeleteDebtValue(DailyValuation value)
         {
-            if (name == null || value == null)
+            if (value == null)
             {
                 _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
                     "No Account was selected when trying to delete data.");
                 return;
             }
 
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                programPortfolio =>
-                    programPortfolio.TryDeleteAssetPayment(_dataType, name.ToTwoName(), value.Day,
-                        ReportLogger)));
+            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => asset.TryDeleteDebt(value.Day, ReportLogger)));
+        }
+
+        private void DeletePaymentValue(DailyValuation value)
+        {
+            if (value == null)
+            {
+                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
+                    "No Account was selected when trying to delete data.");
+                return;
+            }
+
+            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => asset.TryDeletePayment(value.Day, ReportLogger)));
         }
 
         /// <summary>
@@ -191,8 +190,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             }
 
             NameData names = SelectedName;
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
+            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                async asset => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -222,33 +221,30 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             }
         }
 
-        private void ExecuteAddEditValues(NameData name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditValues(DailyValuation oldValue, DailyValuation newValue)
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => _ = programPortfolio.TryAddOrEditData(_dataType, name.ToTwoName(), oldValue,
-                        newValue, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                    asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
             }
         }
 
-        private void ExecuteAddEditDebt(NameData name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => _ = programPortfolio.TryAddOrEditAssetDebt(_dataType, name.ToTwoName(),
-                        oldValue, newValue, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                    asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
             }
         }
 
-        private void ExecuteAddEditPayment(NameData name, DailyValuation oldValue, DailyValuation newValue)
+        private void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
         {
             if (newValue != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio => _ = programPortfolio.TryAddOrEditAssetPayment(_dataType, name.ToTwoName(),
-                        oldValue, newValue, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                    asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
             }
         }
 

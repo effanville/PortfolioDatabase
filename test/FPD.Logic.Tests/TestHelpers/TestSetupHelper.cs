@@ -44,7 +44,8 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         internal static IViewModelFactory SetupViewModelFactory(
             IUiStyles styles,
             UiGlobals globals,
-            IUpdater<IPortfolio> updater,
+            IDataStoreUpdater<IPortfolio> updater,
+            IUpdater dataUpdater,
             IPortfolioDataDownloader downloader,
             IConfiguration config,
             IAccountStatisticsProvider statisticsProvider)
@@ -52,6 +53,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 styles,
                 globals,
                 updater,
+                dataUpdater,
                 downloader,
                 config,
                 statisticsProvider);
@@ -73,8 +75,10 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static IUpdater<TDataStore> SetupUpdater<TDataStore>(TDataStore portfolio = null) where TDataStore : class
+        public static IDataStoreUpdater<TDataStore> SetupUpdater<TDataStore>(TDataStore portfolio = null) where TDataStore : class
             => new SynchronousUpdater<TDataStore>() { Database = portfolio };
+
+        public static IUpdater SetupUpdater() => new SynchronousUpdater();
 
         public static IAccountStatisticsProvider SetupProvider()
         {

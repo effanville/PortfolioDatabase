@@ -38,6 +38,7 @@ public static class TestDependencies
                 null,
                 b.Resolve<IReportLogger>()));
         builder.RegisterInstance(TestSetupHelper.SetupUpdater<IPortfolio>());
+        builder.RegisterInstance(TestSetupHelper.SetupUpdater());
         builder.RegisterInstance(TestSetupHelper.SetupProvider());
         builder.RegisterInstance(TestSetupHelper.SetupDownloader());
         builder.RegisterInstance<IConfiguration>(new UserConfiguration());
@@ -45,7 +46,8 @@ public static class TestDependencies
             b => TestSetupHelper.SetupViewModelFactory(
                 b.Resolve<IUiStyles>(),
                 b.Resolve<UiGlobals>(),
-                b.Resolve<IUpdater<IPortfolio>>(),
+                b.Resolve<IDataStoreUpdater<IPortfolio>>(),
+                b.Resolve<IUpdater>(),
                 b.Resolve<IPortfolioDataDownloader>(),
                 b.Resolve<IConfiguration>(),
                 b.Resolve<IAccountStatisticsProvider>()));

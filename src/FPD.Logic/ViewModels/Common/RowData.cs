@@ -30,12 +30,12 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Function which updates the main data store.
         /// </summary>
-        private readonly IUpdater<IPortfolio> _updater;
+        private readonly IDataStoreUpdater<IPortfolio> _updater;
 
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public RowData(NameData name, bool isThis, Account accType, IUpdater<IPortfolio> update, IUiStyles styles)
+        public RowData(NameData name, bool isThis, Account accType, IDataStoreUpdater<IPortfolio> update, IUiStyles styles)
             : base(name, isThis)
         {
             Styles = styles;

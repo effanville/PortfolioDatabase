@@ -19,8 +19,9 @@ public sealed class DataNamesViewModelTestContext : ViewModelTestContext<IPortfo
     public DataNamesViewModelTestContext(
         IUiStyles uiStyles,
         UiGlobals globals,
-        IUpdater<IPortfolio> updater)
-        : base(uiStyles, globals, updater, null)
+        IDataStoreUpdater<IPortfolio> updater,
+        IUpdater dataUpdater)
+        : base(uiStyles, globals, updater, dataUpdater, null)
     {
     }
 }

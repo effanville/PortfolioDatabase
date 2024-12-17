@@ -15,7 +15,8 @@ public static class ServiceCollectionExtensions
         _ = services
             .AddSingleton<IViewModelFactory, ViewModelFactory>()
             .AddSingleton<IAccountStatisticsProvider, StatisticsProvider>()
-            .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
+            .AddSingleton<IDataStoreUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
+            .AddSingleton<IUpdater, BackgroundUpdater>()
             .AddSingleton<IPriceDownloaderFactory, PriceDownloaderFactory>()
             .AddSingleton<IPortfolioDataDownloader, PortfolioDataDownloader>()
             .AddSingleton<ReportingWindowViewModel>()

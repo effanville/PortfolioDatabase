@@ -5,7 +5,6 @@ using System.Windows.Input;
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.UI.Commands;
-using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
@@ -13,7 +12,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model for displaying a <see cref="TimeList"/>
     /// </summary>
-    public sealed class TimeListViewModel : StyledViewModelBase<TimeList, IPortfolio>
+    public sealed class TimeListViewModel : StyledViewModelBase<TimeList>
     {
         private readonly Action<DailyValuation> _deleteValueAction;
         private readonly Action<DailyValuation, DailyValuation> _addEditValueAction;

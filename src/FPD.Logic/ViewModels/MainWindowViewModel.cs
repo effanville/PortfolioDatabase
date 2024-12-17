@@ -83,7 +83,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public MainWindowViewModel(UiGlobals globals,
             IUiStyles styles,
             IPortfolio portfolio,
-            IUpdater<IPortfolio> updater,
+            IDataStoreUpdater<IPortfolio> updater,
             IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory,
             IConfiguration configuration,

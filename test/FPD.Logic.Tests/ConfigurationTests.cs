@@ -7,7 +7,6 @@ using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
@@ -766,7 +765,8 @@ namespace Effanville.FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>();
+            SynchronousUpdater<IPortfolio> dataUpdater = new SynchronousUpdater<IPortfolio>();
+            Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
             string testConfigPath = "c:/temp/saved/user.config";
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
                 testConfigPath,
@@ -778,9 +778,9 @@ namespace Effanville.FPD.Logic.Tests
             MainWindowViewModel vm = new MainWindowViewModel(globals,
                 null,
                 PortfolioFactory.GenerateEmpty(),
-                updater,
+                dataUpdater,
                 downloader,
-                new ViewModelFactory(null, globals, updater, downloader, config, null),
+                new ViewModelFactory(null, globals, dataUpdater, updater, downloader, config, null),
                 config,
                 null,
                 null,

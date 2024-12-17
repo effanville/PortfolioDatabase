@@ -20,9 +20,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.
     /// </summary>
-    public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio, IPortfolio>
+    public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio>
     {
-        internal readonly IUpdater<IPortfolio> _updater;
+        internal readonly IDataStoreUpdater<IPortfolio> _updater;
         private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         internal readonly Account DataType;
 
@@ -97,7 +97,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             IPortfolio portfolio,
             UiGlobals uiGlobals,
             IUiStyles styles,
-            IUpdater<IPortfolio> dataUpdater,
+            IDataStoreUpdater<IPortfolio> dataUpdater,
             IPortfolioDataDownloader portfolioDataDownloader,
             Action<object> loadSelectedData,
             Account dataType)

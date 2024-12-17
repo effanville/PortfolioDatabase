@@ -37,12 +37,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
 
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
                 globals,
                 dataUpdater,
+                updater,
                 null,
                 new UserConfiguration(),
                 new StatisticsProvider(portfolio));
@@ -74,12 +76,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
 
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
                 globals,
                 dataUpdater,
+                updater,
                 null,
                 configuration,
                 new StatisticsProvider(portfolio));
