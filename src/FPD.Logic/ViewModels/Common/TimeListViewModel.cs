@@ -55,11 +55,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public override void UpdateData(TimeList modelData, bool force)
         {
             base.UpdateData(modelData, force);
-            var newValuations = modelData?.Values() ?? new List<DailyValuation>();
+            List<DailyValuation> newValuations = modelData?.Values() ?? new List<DailyValuation>();
             if (Valuations == null || !newValuations.SequenceEqual(Valuations))
             {
                 Valuations = null;
-                Valuations = modelData?.Values() ?? new List<DailyValuation>();
+                Valuations = newValuations;
             }
         }
 
@@ -125,7 +125,10 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 return;
             }
 
-            Valuations.Remove(SelectedValuation);
+            List<DailyValuation> valuations = Valuations;
+            valuations.Remove(SelectedValuation);
+            Valuations = null;
+            Valuations = valuations;
             _deleteValueAction(SelectedValuation);
         }
     }
