@@ -9,6 +9,7 @@ using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.DependencyInjection;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
@@ -45,7 +46,7 @@ namespace Effanville.FPD.UI
                 .AddSingleton<UiGlobals>()
                 .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
                 .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
-                .AddSingleton(ConfigurationFactory.LoadConfig)
+                .AddSingleton(x => x.LoadConfig())
                 .AddViewModelDependencies();
             _ = hostBuilder.Logging.AddReportLogger(UpdateReport);
 
