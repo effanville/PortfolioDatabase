@@ -134,51 +134,22 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         }
 
         private void DeleteValue(DailyValuation value)
-        {
-            if (value == null)
-            {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
-                    "No Account was selected when trying to delete data.");
-                return;
-            }
-
-            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => asset.TryDeleteData(value.Day, ReportLogger)));
-        }
 
-        private void DeleteDebtValue(DailyValuation value)
-        {
-            if (value == null)
-            {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
-                    "No Account was selected when trying to delete data.");
-                return;
-            }
-
-            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+        private void DeleteDebtValue(DailyValuation value) 
+            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => asset.TryDeleteDebt(value.Day, ReportLogger)));
-        }
 
         private void DeletePaymentValue(DailyValuation value)
-        {
-            if (value == null)
-            {
-                _ = ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData,
-                    "No Account was selected when trying to delete data.");
-                return;
-            }
-
-            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => asset.TryDeletePayment(value.Day, ReportLogger)));
-        }
+        
 
         /// <summary>
         /// Downloads the latest data for the selected entry.
         /// </summary>
-        public ICommand DownloadCommand
-        {
-            get;
-        }
+        public ICommand DownloadCommand { get; }
 
         private void ExecuteDownloadCommand()
         {
@@ -197,10 +168,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         /// <summary>
         /// Command to export the data to a csv file.
         /// </summary>
-        public ICommand ExportCsvData
-        {
-            get;
-        }
+        public ICommand ExportCsvData { get; }
 
         private async void ExecuteExportCsvData()
         {
@@ -222,31 +190,16 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         }
 
         private void ExecuteAddEditValues(DailyValuation oldValue, DailyValuation newValue)
-        {
-            if (newValue != null)
-            {
-                OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                    asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
-            }
-        }
+            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
 
         private void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
-        {
-            if (newValue != null)
-            {
-                OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                    asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
-            }
-        }
+            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
 
         private void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
-        {
-            if (newValue != null)
-            {
-                OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                    asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
-            }
-        }
+            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
 
         /// <inheritdoc/>
         public override void UpdateData(IAmortisableAsset modelData, bool force)

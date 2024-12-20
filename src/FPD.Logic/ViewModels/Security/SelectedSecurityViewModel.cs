@@ -139,24 +139,21 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             TradePriceHeader = $"Price({currencySymbol})";
             TradeTotalCostHeader = $"Total Cost({currencySymbol})";
             TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles,
-                value => DeleteValue(SelectedName, value),
-                (old, newVal) => ExecuteAddEditUnitPriceData(old, newVal));
+                DeleteValue,
+                ExecuteAddEditUnitPriceData);
             SecurityStats = new AccountStatsViewModel(null, Styles);
         }
 
         /// <summary>
         /// Command to delete a selected Trade.
         /// </summary>
-        public ICommand DeleteValuationCommand
-        {
-            get;
-        }
+        public ICommand DeleteValuationCommand { get; }
 
-        private void ExecuteDeleteValuation() => DeleteValue(SelectedName, TLVM.SelectedValuation);
+        private void ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
 
-        private void DeleteValue(TwoName name, DailyValuation value)
+        private void DeleteValue(DailyValuation value)
         {
-            if (name != null && value != null)
+            if (value != null)
             {
                 OnUpdateRequest(new UpdateRequestArgs<ISecurity>(false,
                     security =>
@@ -172,10 +169,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// <summary>
         /// Downloads the latest data for the selected entry.
         /// </summary>
-        public ICommand DownloadCommand
-        {
-            get;
-        }
+        public ICommand DownloadCommand { get; }
 
         private void ExecuteDownloadCommand()
         {
@@ -194,10 +188,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// <summary>
         /// Command to add data to the security from a csv file.
         /// </summary>
-        public ICommand AddCsvData
-        {
-            get;
-        }
+        public ICommand AddCsvData { get; }
 
         private async void ExecuteAddCsvData()
         {
@@ -243,10 +234,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// <summary>
         /// Command to export the data to a csv file.
         /// </summary>
-        public ICommand ExportCsvData
-        {
-            get;
-        }
+        public ICommand ExportCsvData { get; }
 
         private async void ExecuteExportCsvData()
         {
@@ -268,13 +256,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         }
 
         private void ExecuteAddEditUnitPriceData(DailyValuation oldValue, DailyValuation newValue)
-        {
-            if (newValue != null)
-            {
-                OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
-                    security => _ = security.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
-            }
-        }
+            => OnUpdateRequest(new UpdateRequestArgs<ISecurity>(true,
+                security => _ = security.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
 
         /// <inheritdoc/>
         public override void UpdateData(ISecurity modelData, bool force)
@@ -335,11 +318,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// <summary>
         /// Command to update the selected trade.
         /// </summary>
-        public ICommand SelectionChangedCommand
-        {
-            get;
-            set;
-        }
+        public ICommand SelectionChangedCommand { get; set; }
 
         private void ExecuteSelectionChanged(object obj)
         {
@@ -352,11 +331,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// <summary>
         /// Command to add or edit data in the Trade list.
         /// </summary>
-        public ICommand AddEditDataCommand
-        {
-            get;
-            set;
-        }
+        public ICommand AddEditDataCommand { get; set; }
 
         private void ExecuteAddEditData()
         {

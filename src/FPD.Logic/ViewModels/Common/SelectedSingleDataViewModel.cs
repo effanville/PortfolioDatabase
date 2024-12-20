@@ -110,16 +110,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         }
 
         private void ExecuteAddEditData(DailyValuation oldValue, DailyValuation newValue)
-        {
-            if (newValue == null)
-            {
-                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, nameof(ExecuteAddEditData), "New value not present when updating");
-                return;
-            }
-
-            OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+            => OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
                 valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
-        }
 
         /// <summary>
         /// Command to delete data from the value list.
