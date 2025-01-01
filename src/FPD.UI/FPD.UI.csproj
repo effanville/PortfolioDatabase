@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
     <ApplicationIcon>self_drawn_icon.ico</ApplicationIcon>
+    <RootNamespace>Effanville.FPD.UI</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyTitle>FPD.UI</AssemblyTitle>
