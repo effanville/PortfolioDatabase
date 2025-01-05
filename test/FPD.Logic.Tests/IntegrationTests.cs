@@ -29,8 +29,8 @@ namespace Effanville.FPD.Logic.Tests
             Assert.That(ViewModel.ProgramPortfolio.BenchMarks.Count, Is.EqualTo(1));
 
             BasicDataViewModel dataView = ViewModel.Tabs[0] as BasicDataViewModel;
-            dataView.UpdateData(ViewModel.ProgramPortfolio, false);
             Assert.That(dataView != null, nameof(dataView) + " != null");
+            dataView.UpdateData(ViewModel.ProgramPortfolio, false);
             Assert.That(dataView.PortfolioNameText, Is.EqualTo("saved"));
             Assert.That(dataView.SecurityTotalText, Is.EqualTo("Total Securities: 1"));
             Assert.That(dataView.BankAccountTotalText, Is.EqualTo("Total Bank Accounts: 1"));
@@ -56,7 +56,7 @@ namespace Effanville.FPD.Logic.Tests
             DataNamesViewModel securityNames = securityViewModel.Tabs[0] as DataNamesViewModel;
             Assert.That(securityNames != null, nameof(securityNames) + " != null");
             
-            RowData selectedInitialName = new RowData(new NameData(), false, securityNames.DataType, securityNames._updater, null);
+            NameDataViewModel selectedInitialName = new NameDataViewModel("", new NameData(), false, securityNames.DataType, securityNames._updater, null, null);
             securityNames.DataNames.Add(selectedInitialName);
             securityNames.SelectionChangedCommand.Execute(selectedInitialName);
             Selectable<NameData> selectedEditedName = new Selectable<NameData>(new NameData("Forgotten", "New"), false);

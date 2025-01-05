@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -34,24 +35,24 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Backing field for <see cref="DataNames"/>.
         /// </summary>
-        private List<RowData> _dataNames = new List<RowData>();
+        private ObservableCollection<NameDataViewModel> _dataNames = new ObservableCollection<NameDataViewModel>();
 
         /// <summary>
         /// Name data of the names to be displayed in this view.
         /// </summary>
-        public List<RowData> DataNames
+        public ObservableCollection<NameDataViewModel> DataNames
         {
             get => _dataNames;
             set => SetAndNotify(ref _dataNames, value);
         }
 
-        private RowData _selectedName;
+        private NameDataViewModel _selectedName;
 
         /// <summary>
         /// The selected name with any alterations made by the user.
         /// These alterations update the database when certain commands are executed.
         /// </summary>
-        public RowData SelectedName
+        public NameDataViewModel SelectedName
         {
             get => _selectedName;
             set
@@ -84,8 +85,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// Calculate default RowData for a row in the Datanames table.
         /// </summary>
         /// <returns></returns>
-        public RowData DefaultRow() =>
-            new RowData(new NameData(), true, DataType, _updater, Styles)
+        public NameDataViewModel DefaultRow() =>
+            new NameDataViewModel("", new NameData(), true, DataType, _updater, DisplayGlobals, Styles)
             {
                 IsNew = true
             };
@@ -110,16 +111,13 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-            OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.Instance));
+            OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.ModelData));
         }
 
         /// <summary>
         /// Command that opens a tab associated to the selected entry.
         /// </summary>
-        public ICommand OpenTabCommand
-        {
-            get;
-        }
+        public ICommand OpenTabCommand { get; }
 
         private bool IsUpdated(IPortfolio dataToDisplay, NameData name)
             => dataToDisplay.LatestDate(DataType, name) == DateTime.Today
@@ -132,14 +130,16 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         {
             base.UpdateData(modelData, force);
 
-            List<RowData> values = modelData
+            List<NameDataViewModel> values = modelData
                 .NameDataForAccount(DataType)
-                .Select(name => new RowData(name, IsUpdated(modelData, name), DataType, _updater, Styles)).ToList();
-            DataNames = null;
-            DataNames = values;
-            DataNames ??= new List<RowData>();
+                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), DataType, _updater, DisplayGlobals, Styles)).ToList();
+            values.Sort((a, b) => a.ModelData.CompareTo(b.ModelData));
+            DisplayGlobals.CurrentDispatcher.BeginInvoke(() =>
+            {
+                DataNames.Clear();
+                DataNames = new ObservableCollection<NameDataViewModel>(values);
+            });
 
-            DataNames.Sort((a, b) => a.Instance.CompareTo(b.Instance));
             if (SelectedName != null && !DataNames.Contains(SelectedName))
             {
                 SelectedName = null;
@@ -152,41 +152,35 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Downloads the latest data for the selected entry.
         /// </summary>
-        public ICommand DownloadCommand
-        {
-            get;
-        }
+        public ICommand DownloadCommand { get; }
+
         private void ExecuteDownloadCommand()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName.Instance} - a {DataType}");
+            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName.ModelData} - a {DataType}");
             if (SelectedName == null)
             {
                 return;
             }
 
-            NameData names = SelectedName.Instance;
+            NameData names = SelectedName.ModelData;
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
-        /// Enacts the selected item in the datagrid has changed.
+        /// Enacts the selected item in the data grid has changed.
         /// </summary>
-        public ICommand SelectionChangedCommand
-        {
-            get;
-            set;
-        }
+        public ICommand SelectionChangedCommand { get; set; }
 
         private void ExecuteSelectionChanged(object args) => SelectionChanged(args);
 
         private async void SelectionChanged(object args)
         {
             // object reference issue in following line
-            if (DataNames != null && args is RowData selectableName && selectableName.Instance != null)
+            if (DataNames != null && args is NameDataViewModel selectableName && selectableName.ModelData != null)
             {
                 SelectedName = selectableName;
-                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Current item is a name {SelectedName.Instance}");
-                var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.Instance, ReportLogger).ToList());
+                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Current item is a name {SelectedName.ModelData}");
+                var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.ModelData, ReportLogger).ToList());
                 SelectedValueHistory = history;
                 _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Successfully updated SelectedItem.");
             }
@@ -202,21 +196,17 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Adds a new entry if the view has more than the repository, or edits an entry if these are the same.
         /// </summary>
-        public ICommand CreateCommand
-        {
-            get;
-            set;
-        }
+        public ICommand CreateCommand { get; set; }
 
         private void ExecuteCreateEdit(object obj)
         {
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"ExecuteCreateEdit called.");
-            if (obj is not RowData rowData || rowData.Instance == null || !rowData.IsNew)
+            if (obj is not NameDataViewModel rowData || rowData.ModelData == null || !rowData.IsNew)
             {
                 return;
             }
 
-            NameData selectedInstance = rowData.Instance; //rowName.Instance;
+            NameData selectedInstance = rowData.ModelData; //rowName.Instance;
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
             NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name, ReportLogger)));
@@ -225,18 +215,15 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Deletes the selected entry.
         /// </summary>
-        public ICommand DeleteCommand
-        {
-            get;
-        }
+        public ICommand DeleteCommand { get; }
 
         public void ExecuteDelete()
         {
             _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DeletingData, $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
-                DataNames.Remove(SelectedName);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.Instance, ReportLogger)));
+                _ = DataNames.Remove(SelectedName);
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.ModelData, ReportLogger)));
             }
             else
             {

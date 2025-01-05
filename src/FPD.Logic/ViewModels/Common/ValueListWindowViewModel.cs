@@ -204,11 +204,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
             else
             {
-                var newViewModel = _viewModelFactory.GenerateViewModel(
+                StyledClosableViewModelBase<IPortfolio> newViewModel = _viewModelFactory.GenerateViewModel(
                     ModelData,
                     null,
                     DataType);
-                Tabs.Add(newViewModel);
+                if (newViewModel != null)
+                {
+                    Tabs.Add(newViewModel);
+                }
             }
         }
 

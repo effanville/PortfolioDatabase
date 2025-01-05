@@ -111,6 +111,8 @@
     </Style>
     <Style TargetType="{x:Type DataGridRow}"
            x:Key="DgrStyle">
+        <Setter Property="Margin"
+                Value="2"/>
         <Setter Property="Background"
                 Value="{Binding Styles.BackgroundBrush}" />
         <Setter Property="Foreground"

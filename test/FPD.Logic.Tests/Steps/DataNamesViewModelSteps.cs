@@ -105,12 +105,12 @@ public class DataNamesViewModelSteps
     [Then(@"the user can see the DataNames are")]
     public void ThenTheUserCanSeeTheDataNamesAre(Table table)
     {
-        List<RowData> dataNames = _testContext.ViewModel.DataNames;
+        List<NameDataViewModel> dataNames = _testContext.ViewModel.DataNames.ToList();
         TableRows rows = table.Rows;
         for (int index = 0; index < rows.Count; index++)
         {
             NameData name = FromRow(rows[index]);
-            AreNameDataEqual(name, dataNames[index].Instance);
+            AreNameDataEqual(name, dataNames[index].ModelData);
         }
     }
 
@@ -118,7 +118,7 @@ public class DataNamesViewModelSteps
     public void WhenIEditTheNameDataTo(int index, Table table)
     {
         NameData newName = FromRow(table.Rows[0]);
-        RowData selectedRow = _testContext.ViewModel.DataNames[index - 1];
+        NameDataViewModel selectedRow = _testContext.ViewModel.DataNames[index - 1];
         _testContext.ViewModel.EditName(selectedRow, newName);
     }
 
@@ -133,8 +133,8 @@ public class DataNamesViewModelSteps
     [When(@"I remove the (.*) data name")]
     public void WhenIRemoveTheDataName(int p0)
     {
-        RowData selectedRow = _testContext.ViewModel.DataNames[p0 - 1];
-        _testContext.ViewModel.DeleteName(selectedRow.Instance);
+        NameDataViewModel selectedRow = _testContext.ViewModel.DataNames[p0 - 1];
+        _testContext.ViewModel.DeleteName(selectedRow.ModelData);
     }
 
     [Then(@"the dataNames portfolio has only (.*) of type (.*)")]
