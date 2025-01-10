@@ -26,17 +26,21 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
-                loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+                loggerMock.Object,
+                TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
+                null,
+                portfolio,
+                TestSetupHelper.SetupDownloader());
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.NewDatabaseCommand.Execute(1);
             //Check that data held is an empty database
 
-            Assert.AreEqual(null, portfolio.Name);
-            Assert.AreEqual(0, portfolio.Funds.Count);
-            Assert.AreEqual(0, portfolio.BankAccounts.Count);
-            Assert.AreEqual(0, portfolio.BenchMarks.Count);
+            Assert.That(portfolio.Name, Is.EqualTo(null));
+            Assert.That(portfolio.Funds.Count, Is.EqualTo(0));
+            Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(0));
+            Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -53,16 +57,21 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object,
+                TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
+                null,
+                portfolio,
+                TestSetupHelper.SetupDownloader());
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(name, portfolio.Name);
-            Assert.AreEqual(1, portfolio.Funds.Count);
-            Assert.AreEqual(1, portfolio.BankAccounts.Count);
-            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+            Assert.That(portfolio.Name, Is.EqualTo(name));
+            Assert.That(portfolio.Funds.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -80,21 +89,26 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath, savePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object,
+                TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
+                null,
+                portfolio,
+                TestSetupHelper.SetupDownloader());
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(name, portfolio.Name);
-            Assert.AreEqual(1, portfolio.Funds.Count);
-            Assert.AreEqual(1, portfolio.BankAccounts.Count);
-            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+            Assert.That(portfolio.Name, Is.EqualTo(name));
+            Assert.That(portfolio.Funds.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(1));
 
             viewModel.SaveDatabaseCommand.Execute(1);
 
             MockFileData savedFile = tempFileSystem.GetFile(savePath);
-            Assert.AreEqual(file, savedFile.TextContents);
+            Assert.That(savedFile.TextContents, Is.EqualTo(file));
         }
 
         [Test]
@@ -109,17 +123,22 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object,
+                TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
+                null,
+                portfolio,
+                TestSetupHelper.SetupDownloader());
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.SaveDatabaseCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(name, portfolio.Name);
-            Assert.AreEqual(1, portfolio.Funds.Count);
-            Assert.AreEqual(1, portfolio.BankAccounts.Count);
-            Assert.AreEqual(1, portfolio.BenchMarks.Count);
-            Assert.AreEqual(1, portfolio.Assets.Count);
+            Assert.That(portfolio.Name, Is.EqualTo(name));
+            Assert.That(portfolio.Funds.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(1));
+            Assert.That(portfolio.Assets.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -132,16 +151,21 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testFilePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object,
+                TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
+                null,
+                portfolio,
+                TestSetupHelper.SetupDownloader());
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.UpdateDataCommand.Execute(1);
             //Input prespecified example database
 
-            Assert.AreEqual(testFilePath, portfolio.Name);
-            Assert.AreEqual(1, portfolio.Funds.Count);
-            Assert.AreEqual(1, portfolio.BankAccounts.Count);
-            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+            Assert.That(portfolio.Name, Is.EqualTo(testFilePath));
+            Assert.That(portfolio.Funds.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -152,16 +176,21 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IUpdater<IPortfolio> dataUpdater = TestSetupHelper.CreateUpdater(portfolio);
-            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(loggerMock.Object, TestSetupHelper.CreateGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object), null, portfolio);
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
+                loggerMock.Object,
+                TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
+                null,
+                portfolio,
+                TestSetupHelper.SetupDownloader());
             viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.RefreshCommand.Execute(1);
             //Check that data held is an empty database
 
-            Assert.AreEqual("TestFilePath", portfolio.Name);
-            Assert.AreEqual(1, portfolio.Funds.Count);
-            Assert.AreEqual(1, portfolio.BankAccounts.Count);
-            Assert.AreEqual(1, portfolio.BenchMarks.Count);
+            Assert.That(portfolio.Name, Is.EqualTo("TestFilePath"));
+            Assert.That(portfolio.Funds.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(1));
+            Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(1));
         }
     }
 }

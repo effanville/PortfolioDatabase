@@ -8,6 +8,7 @@ using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Security;
 
 using NUnit.Framework;
@@ -37,13 +38,14 @@ public class SelectedSecurityViewModelSteps
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSecurityViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
-            _testContext.Updater);
+            _testContext.DataUpdater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [Given(@"I have a SelectedSecurityViewModel with account (.*) and name (.*) and data")]
@@ -77,13 +79,14 @@ public class SelectedSecurityViewModelSteps
         _testContext.Updater.Database = portfolio;
         _testContext.ModelData = security;
         _testContext.ViewModel = new SelectedSecurityViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.DataUpdater,
+            _testContext.PortfolioDataDownloader);
     }
 
     private SecurityTrade FromRow(NameData name, TableRow row)
@@ -203,7 +206,6 @@ public class SelectedSecurityViewModelSteps
                 Assert.That(actualTrade.TradeType, Is.EqualTo(expectedTrade.TradeType));
                 Assert.That(actualTrade.Company, Is.EqualTo(expectedTrade.Company));
                 Assert.That(actualTrade.Name, Is.EqualTo(expectedTrade.Name));
-                
                 Assert.That(actualTrade.Day, Is.EqualTo(expectedTrade.Day));
                 Assert.That(actualTrade.NumberShares, Is.EqualTo(expectedTrade.NumberShares));
                 Assert.That(actualTrade.UnitPrice, Is.EqualTo(expectedTrade.UnitPrice));
@@ -217,10 +219,10 @@ public class SelectedSecurityViewModelSteps
     {
         SecurityTrade oldTrade = _testContext.ViewModel.Trades[p0 - 1];
         SecurityTrade newTrade = FromRow(_testContext.ViewModel.ModelData.Names, table.Rows[0]);
-        _testContext.ViewModel.EditTrade(oldTrade, newTrade );
+        _testContext.ViewModel.EditTrade(oldTrade, newTrade);
     }
 
     [When(@"I delete SelectedSecurityViewModel trade data (.*)")]
-    public void WhenIDeleteSelectedSecurityViewModelTradeData(int p0) 
-        => _testContext.ViewModel.DeleteTrade(_testContext.ViewModel.Trades[p0-1]);
+    public void WhenIDeleteSelectedSecurityViewModelTradeData(int p0)
+        => _testContext.ViewModel.DeleteTrade(_testContext.ViewModel.Trades[p0 - 1]);
 }

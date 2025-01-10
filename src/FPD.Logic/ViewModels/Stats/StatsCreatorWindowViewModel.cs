@@ -89,10 +89,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private void ExecuteInvestmentListCommand()
+        private async void ExecuteInvestmentListCommand()
         {
             ReportLogger.Log(ReportType.Information, nameof(ExecuteInvestmentListCommand), "Execute called");
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", ModelData.Name + "-CSVStats.csv", filter: "CSV file|*.csv|All files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                ".csv",
+                $"{ModelData.Name}-CSVStats.csv",
+                filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".csv"))

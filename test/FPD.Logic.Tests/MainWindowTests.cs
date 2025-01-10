@@ -19,40 +19,40 @@ namespace Effanville.FPD.Logic.Tests
         [Test]
         public void CanSuccessfullyCreateMainViewModel()
         {
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
         }
 
         [Test]
         public void CanSuccessfullyOpenNewPortfolio()
         {
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
 
             ViewModel.OptionsToolbarCommands.NewDatabaseCommand.Execute(1);
 
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
         }
 
         [Test]
         public void CanSuccessfullyLoadPortfolio()
         {
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
 
             ViewModel.OptionsToolbarCommands.LoadDatabaseCommand.Execute(1);
 
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
         }
 
         [Test]
         public void CanSuccessfullySavePortfolio()
         {
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
 
             ViewModel.OptionsToolbarCommands.SaveDatabaseCommand.Execute(1);
 
-            Assert.AreEqual(ExpectedNumberTabs, ViewModel.Tabs.Count);
+            Assert.That(ViewModel.Tabs.Count, Is.EqualTo(ExpectedNumberTabs));
 
             MockFileData savedFile = FileSystem.GetFile("c:/temp/newDatabase.xml");
-            Assert.IsNotEmpty(savedFile.TextContents);
+            Assert.That(savedFile.TextContents, Is.Not.Empty);
         }
     }
 }

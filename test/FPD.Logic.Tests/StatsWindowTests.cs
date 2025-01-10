@@ -2,11 +2,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -28,23 +33,32 @@ namespace Effanville.FPD.Logic.Tests
         public async Task CanLoadWithNames()
         {
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
+            var fileSystem = new MockFileSystem();
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
 
-            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null,
-                new UserConfiguration());
-            ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
+            IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
-                Account.All,
-                nameof(StatsViewModel),
-                portfolio,
-                viewModelFactory);
-            context.ViewModel.UpdateData(context.Portfolio, false);
+                globals,
+                dataUpdater,
+                updater,
+                null,
+                new UserConfiguration(),
+                new StatisticsProvider(portfolio));
+
+            StatsViewModel viewModel = viewModelFactory.GenerateViewModel(portfolio, "", Account.All, nameof(StatsViewModel)) as StatsViewModel;
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.UpdateData(portfolio, false);
 
             await Task.Delay(3000);
-            
+
             Assert.Multiple(() =>
             {
-                Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
-                Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(true));
+                Assert.That(viewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(true));
             });
         }
 
@@ -57,34 +71,44 @@ namespace Effanville.FPD.Logic.Tests
         {
             UserConfiguration configuration = new UserConfiguration();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IViewModelFactory viewModelFactory = TestSetupHelper.CreateViewModelFactory(portfolio, new MockFileSystem(), null, null
-                , configuration);
 
-            ViewModelTestContext<IPortfolio, StatsViewModel> context = new ViewModelTestContext<IPortfolio, StatsViewModel>(
+            var fileSystem = new MockFileSystem();
+            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
+            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+
+            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
+            IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
-                Account.All,
-                nameof(StatsViewModel),
-                portfolio,
-                viewModelFactory);
-            context.ViewModel.UpdateData(context.Portfolio, false);
+                globals,
+                dataUpdater,
+                updater,
+                null,
+                configuration,
+                new StatisticsProvider(portfolio));
+
+            StatsViewModel viewModel = viewModelFactory.GenerateViewModel(portfolio, "", Account.All, nameof(StatsViewModel)) as StatsViewModel;
+            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+            viewModel.UpdateData(portfolio, false);
 
             await Task.Delay(3000);
             Assert.Multiple(() =>
             {
-                Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
-                Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(true));
+                Assert.That(viewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(true));
             });
-            context.ViewModel.DisplayValueFunds = valueFunds;
-            Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
+            viewModel.DisplayValueFunds = valueFunds;
+            Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
 
-            context.ResetViewModel(new StatsViewModel(context.Globals, null, configuration.ChildConfigurations[nameof(StatsViewModel)], context.Portfolio));
+            viewModel = viewModelFactory.GenerateViewModel(portfolio, "", Account.All, nameof(StatsViewModel)) as StatsViewModel;
 
-            context.ViewModel.UpdateData(context.Portfolio, false);
+            viewModel.UpdateData(portfolio, false);
             await Task.Delay(3000);
             Assert.Multiple(() =>
             {
-                Assert.That(context.ViewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
-                Assert.That(context.ViewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
+                Assert.That(viewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
             });
         }
     }

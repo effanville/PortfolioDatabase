@@ -7,7 +7,6 @@ using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
@@ -764,20 +763,24 @@ namespace Effanville.FPD.Logic.Tests
             MockFileSystem tempFileSystem = new MockFileSystem();
             string testPath = "c:/temp/database.xml";
 
-            UiGlobals globals = TestSetupHelper.CreateGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            SynchronousUpdater<IPortfolio> updater = new SynchronousUpdater<IPortfolio>();
+            SynchronousUpdater<IPortfolio> dataUpdater = new SynchronousUpdater<IPortfolio>();
+            Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
             string testConfigPath = "c:/temp/saved/user.config";
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
                 testConfigPath,
                 globals.CurrentFileSystem,
                 globals.ReportLogger);
-            
+
+            var downloader = TestSetupHelper.SetupDownloader();
             config.ProgramVersion = new Version(1, 2, 3, 4);
             MainWindowViewModel vm = new MainWindowViewModel(globals,
                 null,
                 PortfolioFactory.GenerateEmpty(),
-                updater, new ViewModelFactory(null, globals, updater, config),
+                dataUpdater,
+                downloader,
+                new ViewModelFactory(null, globals, dataUpdater, updater, downloader, config, null),
                 config,
                 null,
                 null,

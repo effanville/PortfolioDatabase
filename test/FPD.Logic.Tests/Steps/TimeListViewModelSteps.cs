@@ -56,19 +56,19 @@ public class TimeListViewModelSteps
 
     [Then(@"the user can view the length of the data is (.*)")]
     public void AssertViewModelHasEntryCount(int numberEntries) 
-        => Assert.AreEqual(numberEntries, _testContext.ViewModel.Valuations.Count);
+        => Assert.That(_testContext.ViewModel.Valuations.Count, Is.EqualTo(numberEntries));
 
     [Then(@"I can see the name is (.*)")]
     public void ThenTheNameIsDisplayedAs(string name) 
-        => Assert.AreEqual(name, _testContext.ViewModel.Header);
+        => Assert.That(_testContext.ViewModel.Header, Is.EqualTo(name));
 
     [Then(@"The update event is called")]
     public void ThenTheUpdateEventIsCalled() 
-        => Assert.AreEqual(true, _testContext.UpdateCalled);
+        => Assert.That(_testContext.UpdateCalled, Is.EqualTo(true));
 
     [Then("the delete event is called")]
     public void ThenTheDeleteEventIsCalled() 
-        => Assert.AreEqual(true, _testContext.DeleteCalled);
+        => Assert.That(_testContext.DeleteCalled, Is.EqualTo(true));
     
     [Then(@"the (.*) value has date (.*) and value (.*)")]
     public void ThenTheValueHasDateAndValue(int p0, DateTime p1, int p2)
@@ -76,8 +76,8 @@ public class TimeListViewModelSteps
         DailyValuation valuation = _testContext.ViewModel.Valuations[p0 - 1];
         Assert.Multiple(() =>
         {
-            Assert.AreEqual(p1, valuation.Day);
-            Assert.AreEqual(p2, valuation.Value);
+            Assert.That(valuation.Day, Is.EqualTo(p1));
+            Assert.That(valuation.Value, Is.EqualTo(p2));
         });
     }
 

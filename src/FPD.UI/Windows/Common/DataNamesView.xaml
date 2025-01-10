@@ -64,16 +64,109 @@
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   KeyDown="DataGrid_KeyDown"
                   PreviewKeyDown="DataGrid_KeyDown"
-                  AddingNewItem="DataGrid_AddingNewItem">
+                  AddingNewItem="DataGrid_AddingNewItem"
+                  RowDetailsVisibilityChanged="DataGrid_RowDetailsVisibilityChanged">
             <DataGrid.Resources>
                 <controls:BindingProxy x:Key="proxy"
                                        Data="{Binding}" />
             </DataGrid.Resources>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Grid Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.BackgroundBrush}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"
+                                              MaxWidth="100" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="20" />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   FontSize="{Binding Styles.MediumFontSize}"
+                                   Text="Account Details:"
+                                   Margin="2" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Company:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Name:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="2"
+                                 Grid.Column="1"
+                                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="Url:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                        <TextBlock Grid.Row="4"
+                                   Grid.Column="0"
+                                   Text="Currency:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="4"
+                                 Grid.Column="1"
+                                 Text="{Binding Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                        <TextBlock Grid.Row="5"
+                                   Grid.Column="0"
+                                   Text="Sectors:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="5"
+                                 Grid.Column="1"
+                                 Text="{Binding Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                        <TextBlock Grid.Row="6"
+                                   Grid.Column="0"
+                                   Text="Notes:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="6"
+                                 Grid.Column="1"
+                                 Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                    </Grid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}"
                        BasedOn="{StaticResource DgrStyle}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Selected}"
+                        <DataTrigger Binding="{Binding IsUpdated}"
                                      Value="False">
                             <Setter Property="Background"
                                     Value="#FF5555"></Setter>
@@ -92,7 +185,7 @@
                 <Style TargetType="{x:Type DataGridCell}"
                        BasedOn="{StaticResource DgcStyle}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Selected}"
+                        <DataTrigger Binding="{Binding IsUpdated}"
                                      Value="False">
                             <Setter Property="Background"
                                     Value="#FF5555"></Setter>
@@ -130,27 +223,11 @@
                                     MinWidth="70"
                                     Width="Auto"
                                     Visibility="{Binding Data.DisplayCompany, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
-                                    Binding="{Binding Path=Instance.Company,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Binding="{Binding Path=Company,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Name"
                                     MinWidth="70"
                                     Width="Auto"
-                                    Binding="{Binding Path=Instance.Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Url"
-                                    MinWidth="50"
-                                    Width="Auto"
-                                    Binding="{Binding Path=Instance.Url,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Currency"
-                                    MinWidth="20"
-                                    Width="Auto"
-                                    Binding="{Binding Path=Instance.Currency,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Sectors"
-                                    MinWidth="70"
-                                    Width="Auto"
-                                    Binding="{Binding Path=Instance.SectorsFlat,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Notes"
-                                    MinWidth="70"
-                                    Width="Auto"
-                                    Binding="{Binding Path=Instance.Notes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
         <GridSplitter Grid.Row="1"
@@ -159,7 +236,7 @@
                       VerticalAlignment="Stretch"
                       ShowsPreview="True"
                       Background="{Binding Styles.BackgroundSecondaryBrush}"
-                      Width="5"/>
+                      Width="5" />
         <Grid Grid.Row="1"
               Grid.Column="2"
               Visibility="{Binding Path=SelectedNameSet, Converter={StaticResource BoolToVis}}"

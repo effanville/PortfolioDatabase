@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
+using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.DisplayClasses;
 using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
-using Effanville.Common.Structure.ReportWriting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
@@ -192,7 +192,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get => _currencySortingField;
             set => SetAndNotify(ref _currencySortingField, value);
         }
-        
+
         private SortDirection _currencyDirection;
 
         /// <summary>
@@ -249,16 +249,16 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             {
                 AssetColumnNames.Add(new Selectable<Statistic>(stat, true));
             }
-            
+
             AssetSortingField = Statistic.Company;
-            
+
             foreach (Statistic stat in AccountStatisticsHelpers.DefaultCurrencyStats())
             {
                 CurrencyColumnNames.Add(new Selectable<Statistic>(stat, true));
             }
-            
+
             CurrencySortingField = Statistic.Name;
-            
+
             DisplayConditions.Add(new Selectable<string>(ValueFunds, true));
             DisplayConditions.Add(new Selectable<string>(Spacing, true));
             DisplayConditions.Add(new Selectable<string>(Colouring, true));
@@ -288,10 +288,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private void ExecuteExportCommand()
+        private async void ExecuteExportCommand()
         {
             UserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), ModelData.Name, filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                DocumentType.Html.ToString().ToLower(),
+                ModelData.Name,
+                filter: "Html Files|*.html|CSV Files|*.csv|All Files|*.*");
             string path = null;
 
             if (result.Success)

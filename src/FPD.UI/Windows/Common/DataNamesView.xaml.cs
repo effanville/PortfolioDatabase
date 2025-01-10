@@ -14,14 +14,11 @@ namespace Effanville.FPD.UI.Windows.Common
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public DataNamesView()
-        {
-            InitializeComponent();
-        }
+        public DataNamesView() => InitializeComponent();
 
         private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
-            if (DataContext  is DataNamesViewModel vm 
+            if (DataContext is DataNamesViewModel vm
                 && vm.DataNames != null)
             {
                 e.NewItem = vm.DefaultRow();
@@ -45,16 +42,34 @@ namespace Effanville.FPD.UI.Windows.Common
                 vm.ExecuteDelete();
             }
         }
-        
+
         private void DataGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataContext is DataNamesViewModel dc && sender is DataGrid dataGrid)
+            if (DataContext is not DataNamesViewModel dc || sender is not DataGrid dataGrid)
             {
-                object currentItem = dataGrid.CurrentItem;
+                return;
+            }
 
-                dc.SelectionChangedCommand.Execute(currentItem == CollectionView.NewItemPlaceholder
-                    ? null
-                    : dataGrid.CurrentItem);
+            object currentItem = dataGrid.CurrentItem;
+            dc.SelectionChangedCommand.Execute(currentItem == CollectionView.NewItemPlaceholder
+                ? null
+                : dataGrid.CurrentItem);
+        }
+
+        private void DataGrid_RowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
+        {
+            if (e.Row.DataContext is not NameDataViewModel rd)
+            {
+                return;
+            }
+
+            if (!rd.IsEditing)
+            {
+                rd.BeginEdit();
+            }
+            else
+            {
+                rd.EndEdit();
             }
         }
     }

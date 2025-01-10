@@ -1,3 +1,5 @@
+using System.Linq;
+
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.ViewModels.Common;
 
@@ -8,42 +10,49 @@ public static class DataNamesViewModelUserInteractions
     public static void AddName(this DataNamesViewModel viewModel, NameData name)
     {
         viewModel.SelectName(null);
-        RowData newItem = viewModel.DefaultRow();
+        NameDataViewModel newItem = viewModel.DefaultRow();
         viewModel.DataNames.Add(newItem);
         viewModel.SelectRow(newItem);
 
         newItem.BeginEdit();
-        newItem.Instance.Company = name.Company;
-        newItem.Instance.Name = name.Name;
-        newItem.Instance.Url = name.Url;
-        newItem.Instance.Currency = name.Currency;
-        newItem.Instance.Sectors = name.Sectors;
+        newItem.Company = name.Company;
+        newItem.Name = name.Name;
+        newItem.Url = name.Url;
+        newItem.Currency = name.Currency;
+        newItem.Sectors = name.SectorsFlat;
         viewModel.CompleteEdit(newItem);
     }
 
-    public static void EditName(this DataNamesViewModel viewModel, RowData row, NameData newName)
+    public static void EditName(this DataNamesViewModel viewModel, NameDataViewModel row, NameData newName)
     {
         viewModel.SelectRow(row);
         row.BeginEdit();
-        row.Instance.Company = newName.Company;
-        row.Instance.Name = newName.Name;
-        row.Instance.Url = newName.Url;
-        row.Instance.Currency = newName.Currency;
-        row.Instance.Sectors = newName.Sectors;
+        row.Company = newName.Company;
+        row.Name = newName.Name;
+        row.Url = newName.Url;
+        row.Currency = newName.Currency;
+        row.Sectors = newName.SectorsFlat;
         viewModel.CompleteEdit(row);
     }
 
     public static void SelectName(this DataNamesViewModel viewModel, NameData name)
-        => viewModel.SelectionChangedCommand?.Execute(new RowData(name, false, viewModel.DataType, viewModel._updater,
-            null));
+    {
+        var selectedRow = viewModel.DataNames.FirstOrDefault(v => v.ModelData.IsEqualTo(name));
+        if (name != null && selectedRow == null)
+        {
+            throw new System.Exception("Cannot attempt to select a non-existent row");
+        }
 
-    public static void SelectRow(this DataNamesViewModel viewModel, RowData row)
+        viewModel.SelectionChangedCommand?.Execute(selectedRow);
+    }
+
+    public static void SelectRow(this DataNamesViewModel viewModel, NameDataViewModel row)
         => viewModel.SelectionChangedCommand?.Execute(row);
 
     public static void ViewData(this DataNamesViewModel viewModel)
         => viewModel.OpenTabCommand.Execute(null);
 
-    public static void CompleteEdit(this DataNamesViewModel viewModel, RowData row)
+    public static void CompleteEdit(this DataNamesViewModel viewModel, NameDataViewModel row)
     {
         viewModel.CreateCommand?.Execute(row);
         row.EndEdit();

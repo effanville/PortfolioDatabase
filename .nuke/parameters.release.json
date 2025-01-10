@@ -8,7 +8,7 @@
   "NugetPackageProjects": [
   ],
   "Configuration": "Release",
-  "Framework": "net7.0-windows",
+  "Framework": "net9.0-windows",
   "Runtime": "win-x64",
   "IsProd": true,
   "TagRepo": true,

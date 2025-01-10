@@ -93,10 +93,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private void ExecuteCreateHistory()
+        private async void ExecuteCreateHistory()
         {
             UserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(".csv", DateTime.Today.Year + "-" + DateTime.Today.Month + "-" + DateTime.Today.Day + "-" + ModelData.Name + "-History.csv", filter: "CSV file|*.csv|All files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                ".csv",
+                $"{DateTime.Today:yyyy-MM-dd}-History.csv",
+                filter: "CSV file|*.csv|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))

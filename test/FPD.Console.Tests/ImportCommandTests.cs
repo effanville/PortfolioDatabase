@@ -19,12 +19,12 @@ public sealed class ImportCommandTests
     {
         yield return new TestCaseData(null, false);
         yield return new TestCaseData(Array.Empty<string>(), false);
-        yield return new TestCaseData(new [] {"--hats", "no"}, false);
-        yield return new TestCaseData(new [] {"--filepath", "no"}, false);
-        yield return new TestCaseData(new [] {"--filepath", @"c:\\temp\\file.xml"}, false);
-        yield return new TestCaseData(new [] {"--filepath", @"c:\\temp\\file.xml", "--importfilepath", @"c:\\temp\\other-file.xml"}, true);
-        yield return new TestCaseData(new [] {"--filepath", @"c:\\temp\\file.xml", "--importfilepath", "fish"}, false);
-        yield return new TestCaseData(new [] {"--filepath", @"c:\\temp\\file.xml", "--importfilepath",  @"c:\\temp\\other-file.xml", "nothoing", "fish"}, true);
+        yield return new TestCaseData(new[] { "--hats", "no" }, false);
+        yield return new TestCaseData(new[] { "--filepath", "no" }, false);
+        yield return new TestCaseData(new[] { "--filepath", @"c:\\temp\\file.xml" }, false);
+        yield return new TestCaseData(new[] { "--filepath", @"c:\\temp\\file.xml", "--importfilepath", @"c:\\temp\\other-file.xml" }, true);
+        yield return new TestCaseData(new[] { "--filepath", @"c:\\temp\\file.xml", "--importfilepath", "fish" }, false);
+        yield return new TestCaseData(new[] { "--filepath", @"c:\\temp\\file.xml", "--importfilepath", @"c:\\temp\\other-file.xml", "nothoing", "fish" }, true);
     }
 
     [TestCaseSource(nameof(ValidationSource))]

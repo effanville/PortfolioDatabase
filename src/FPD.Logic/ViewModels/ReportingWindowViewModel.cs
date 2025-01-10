@@ -116,12 +116,13 @@ namespace Effanville.FPD.Logic.ViewModels
 
         private void ExecuteExportReportsCommand() => ExecuteExportReports();
 
-        private void ExecuteExportReports()
+        private async void ExecuteExportReports()
         {
             try
             {
-                FileInteractionResult result =
-                    DisplayGlobals.FileInteractionService.SaveFile(".csv", "errorReports.csv");
+                FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                    ".csv",
+                    "errorReports.csv");
                 if (!result.Success)
                 {
                     return;

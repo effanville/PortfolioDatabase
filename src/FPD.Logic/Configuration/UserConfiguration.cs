@@ -133,7 +133,7 @@ namespace Effanville.FPD.Logic.Configuration
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 DataContractSerializer serializer = new DataContractSerializer(typeof(UserConfiguration), fExpectedConfigurationTypes);
-                using (Stream stream = fileSystem.FileStream.Create(filePath, FileMode.Open))
+                using (Stream stream = fileSystem.FileStream.New(filePath, FileMode.Open))
                 using (XmlTextReader reader = new XmlTextReader(stream))
                 {
                     UserConfiguration configuration = (UserConfiguration)serializer.ReadObject(reader);
@@ -165,7 +165,7 @@ namespace Effanville.FPD.Logic.Configuration
                 string dir = _fileSystem.Path.GetDirectoryName(_configLocation);
                 _ = _fileSystem.Directory.CreateDirectory(dir);
                 DataContractSerializer serializer = new DataContractSerializer(typeof(UserConfiguration), fExpectedConfigurationTypes);
-                using (Stream stream = _fileSystem.FileStream.Create(_configLocation, FileMode.Create))
+                using (Stream stream = _fileSystem.FileStream.New(_configLocation, FileMode.Create))
                 using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                 {
                     writer.Formatting = Formatting.Indented; // indent the Xml so it's human readable

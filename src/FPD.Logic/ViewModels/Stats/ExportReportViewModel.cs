@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
 
+using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Reporting;
-using Effanville.Common.Structure.ReportWriting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
@@ -60,10 +60,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private void ExecuteCreateReport()
+        private async void ExecuteCreateReport()
         {
             UserConfiguration.StoreConfiguration(this);
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.SaveFile(DocumentType.Html.ToString().ToLower(), $"{ModelData.Name}-report.html", filter: "Html file|*.html|All files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
+                DocumentType.Html.ToString().ToLower(),
+                $"{ModelData.Name}-report.html",
+                filter: "Html file|*.html|All files|*.*");
             if (result.Success)
             {
                 if (!result.FilePath.EndsWith(".html"))

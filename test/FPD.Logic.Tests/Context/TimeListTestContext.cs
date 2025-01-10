@@ -7,7 +7,7 @@ using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.Context;
 
-public sealed class TimeListTestContext 
+public sealed class TimeListTestContext
     : ViewModelTestContext<TimeList, TimeListViewModel>
 {
     public bool UpdateCalled { get; set; }
@@ -23,8 +23,9 @@ public sealed class TimeListTestContext
     public TimeListTestContext(
         IUiStyles uiStyles,
         UiGlobals globals,
-        IUpdater<IPortfolio> updater) 
-        : base(uiStyles, globals, updater, null)
+        IDataStoreUpdater<IPortfolio> updater,
+        IUpdater dataUpdater)
+        : base(uiStyles, globals, updater, dataUpdater, null, null)
     {
     }
 }
