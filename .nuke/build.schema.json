@@ -1,73 +1,69 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Build Schema",
-  "$ref": "#/definitions/build",
   "definitions": {
-    "build": {
-      "type": "object",
+    "Host": {
+      "type": "string",
+      "enum": [
+        "AppVeyor",
+        "AzurePipelines",
+        "Bamboo",
+        "Bitbucket",
+        "Bitrise",
+        "GitHubActions",
+        "GitLab",
+        "Jenkins",
+        "Rider",
+        "SpaceAutomation",
+        "TeamCity",
+        "Terminal",
+        "TravisCI",
+        "VisualStudio",
+        "VSCode"
+      ]
+    },
+    "ExecutableTarget": {
+      "type": "string",
+      "enum": [
+        "Clean",
+        "Compile",
+        "DiagnosticPrint",
+        "GitTag",
+        "Publish",
+        "PublishExe",
+        "PublishNuget",
+        "Release",
+        "ReleaseNotes",
+        "Test",
+        "UpdateVersion"
+      ]
+    },
+    "Verbosity": {
+      "type": "string",
+      "description": "",
+      "enum": [
+        "Verbose",
+        "Normal",
+        "Minimal",
+        "Quiet"
+      ]
+    },
+    "NukeBuild": {
       "properties": {
-        "Configuration": {
-          "type": "string",
-          "description": "Configuration to build - Default is 'Debug'",
-          "enum": [
-            "Debug",
-            "Release"
-          ]
-        },
         "Continue": {
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
-        },
-        "ExecutablePublishProjects": {
-          "type": "array",
-          "description": "The projects to build as executables",
-          "items": {
-            "type": "string"
-          }
-        },
-        "Framework": {
-          "type": "string",
-          "description": "Framework to build with - Current is net7.0"
         },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
         },
         "Host": {
-          "type": "string",
           "description": "Host for execution. Default is 'automatic'",
-          "enum": [
-            "AppVeyor",
-            "AzurePipelines",
-            "Bamboo",
-            "Bitbucket",
-            "Bitrise",
-            "GitHubActions",
-            "GitLab",
-            "Jenkins",
-            "Rider",
-            "SpaceAutomation",
-            "TeamCity",
-            "Terminal",
-            "TravisCI",
-            "VisualStudio",
-            "VSCode"
-          ]
-        },
-        "IsProd": {
-          "type": "boolean",
-          "description": "Is this a production release"
+          "$ref": "#/definitions/Host"
         },
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
-        },
-        "NugetPackageProjects": {
-          "type": "array",
-          "description": "The projects to build as nuget packages",
-          "items": {
-            "type": "string"
-          }
         },
         "Partition": {
           "type": "string",
@@ -84,36 +80,70 @@
             "type": "string"
           }
         },
-        "PushTag": {
-          "type": "boolean",
-          "description": "Should this tag be pushed to the remote"
-        },
         "Root": {
           "type": "string",
           "description": "Root directory during build execution"
-        },
-        "Runtime": {
-          "type": "string"
         },
         "Skip": {
           "type": "array",
           "description": "List of targets to be skipped. Empty list skips all dependencies",
           "items": {
-            "type": "string",
-            "enum": [
-              "Clean",
-              "Compile",
-              "DiagnosticPrint",
-              "GitTag",
-              "Publish",
-              "PublishExe",
-              "PublishNuget",
-              "Release",
-              "ReleaseNotes",
-              "Test",
-              "UpdateVersion"
-            ]
+            "$ref": "#/definitions/ExecutableTarget"
           }
+        },
+        "Target": {
+          "type": "array",
+          "description": "List of targets to be invoked. Default is '{default_target}'",
+          "items": {
+            "$ref": "#/definitions/ExecutableTarget"
+          }
+        },
+        "Verbosity": {
+          "description": "Logging verbosity during build execution. Default is 'Normal'",
+          "$ref": "#/definitions/Verbosity"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "properties": {
+        "Configuration": {
+          "type": "string",
+          "description": "Configuration to build - Default is 'Debug'",
+          "enum": [
+            "Debug",
+            "Release"
+          ]
+        },
+        "ExecutablePublishProjects": {
+          "type": "array",
+          "description": "The projects to build as executables",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Framework": {
+          "type": "string",
+          "description": "Framework to build with - Current is net7.0"
+        },
+        "IsProd": {
+          "type": "boolean",
+          "description": "Is this a production release"
+        },
+        "NugetPackageProjects": {
+          "type": "array",
+          "description": "The projects to build as nuget packages",
+          "items": {
+            "type": "string"
+          }
+        },
+        "PushTag": {
+          "type": "boolean",
+          "description": "Should this tag be pushed to the remote"
+        },
+        "Runtime": {
+          "type": "string"
         },
         "Solution": {
           "type": "string",
@@ -122,45 +152,11 @@
         "TagRepo": {
           "type": "boolean",
           "description": "Should this version be tagged"
-        },
-        "Target": {
-          "type": "array",
-          "description": "List of targets to be invoked. Default is '{default_target}'",
-          "items": {
-            "type": "string",
-            "enum": [
-              "Clean",
-              "Compile",
-              "DiagnosticPrint",
-              "GitTag",
-              "Publish",
-              "PublishExe",
-              "PublishNuget",
-              "Release",
-              "ReleaseNotes",
-              "Test",
-              "UpdateVersion"
-            ]
-          }
-        },
-        "TestProjects": {
-          "type": "array",
-          "description": "Projects to run unit tests for",
-          "items": {
-            "type": "string"
-          }
-        },
-        "Verbosity": {
-          "type": "string",
-          "description": "Logging verbosity during build execution. Default is 'Normal'",
-          "enum": [
-            "Minimal",
-            "Normal",
-            "Quiet",
-            "Verbose"
-          ]
         }
       }
+    },
+    {
+      "$ref": "#/definitions/NukeBuild"
     }
-  }
+  ]
 }
