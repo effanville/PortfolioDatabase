@@ -24,13 +24,15 @@ public class ViewModelTestContext<TModelData, TViewModel> where TModelData : cla
         UiGlobals globals,
         IDataStoreUpdater<IPortfolio> updater,
         IUpdater dataUpdater,
-        IViewModelFactory viewModelFactory)
+        IViewModelFactory viewModelFactory,
+        IPortfolioDataDownloader portfolioDataDownloader)
     {
         Styles = uiStyles;
         Globals = globals;
         Updater = updater;
         DataUpdater = dataUpdater;
         ViewModelFactory = viewModelFactory;
+        PortfolioDataDownloader = portfolioDataDownloader;
     }
 
     public virtual void Reset()

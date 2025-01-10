@@ -25,7 +25,7 @@ public sealed class TimeListTestContext
         UiGlobals globals,
         IDataStoreUpdater<IPortfolio> updater,
         IUpdater dataUpdater)
-        : base(uiStyles, globals, updater, dataUpdater, null)
+        : base(uiStyles, globals, updater, dataUpdater, null, null)
     {
     }
 }
