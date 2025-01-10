@@ -8,7 +8,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// <summary>
     /// Wraps a base view model with a account type record.
     /// </summary>
-    public abstract class DataDisplayViewModelBase : StyledClosableViewModelBase<IPortfolio, IPortfolio>
+    public abstract class DataDisplayViewModelBase : StyledClosableViewModelBase<IPortfolio>
     {
         /// <summary>
         /// The user configuration for this view model.

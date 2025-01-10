@@ -10,10 +10,10 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
-using Effanville.FPD.Logic.Tests.Support;
 using Effanville.FPD.Logic.ViewModels;
 
 using Moq;
@@ -27,8 +27,10 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         public static Mock<IFileInteractionService> CreateFileMock(string filePath)
         {
             Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
-            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, filePath));
-            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, filePath));
+            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, filePath));
+            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, filePath));
             return mockfileinteraction;
         }
 
@@ -38,24 +40,31 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             styles.SetupGet(x => x.IsLightTheme).Returns(true);
             return styles.Object;
         }
-        internal static IViewModelFactory CreateViewModelFactory(
-            IPortfolio portfolio,
-            IFileSystem fileSystem,
-            IFileInteractionService fileService,
-            IBaseDialogCreationService dialogCreationService,
+
+        internal static IViewModelFactory SetupViewModelFactory(
+            IUiStyles styles,
+            UiGlobals globals,
+            IDataStoreUpdater<IPortfolio> updater,
+            IUpdater dataUpdater,
+            IPortfolioDataDownloader downloader,
             IConfiguration config,
-            IReportLogger logger = null) 
+            IAccountStatisticsProvider statisticsProvider)
             => new ViewModelFactory(
-                null, 
-                CreateGlobalsMock(fileSystem, fileService, dialogCreationService, logger), 
-                CreateUpdater(portfolio),
-                config);
+                styles,
+                globals,
+                updater,
+                dataUpdater,
+                downloader,
+                config,
+                statisticsProvider);
 
         public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
         {
             Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
-            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, openFilePath));
-            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new FileInteractionResult(true, saveFilePath));
+            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, openFilePath));
+            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new FileInteractionResult(true, saveFilePath));
             return mockfileinteraction;
         }
 
@@ -66,12 +75,53 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static IUpdater<TDataStore> CreateUpdater<TDataStore>(TDataStore portfolio) where TDataStore : class
+        public static IDataStoreUpdater<TDataStore> SetupUpdater<TDataStore>(TDataStore portfolio = null) where TDataStore : class
             => new SynchronousUpdater<TDataStore>() { Database = portfolio };
 
-        public static UiGlobals CreateGlobalsMock(IFileSystem fileSystem, IFileInteractionService fileService, IBaseDialogCreationService dialogCreationService, IReportLogger logger = null)
+        public static IUpdater SetupUpdater() => new SynchronousUpdater();
+
+        public static IAccountStatisticsProvider SetupProvider()
         {
-            return new UiGlobals(null, TestDependencies.SetupDispatcher(), fileSystem, fileService, dialogCreationService, logger ?? DummyReportLogger);
+            Mock<IAccountStatisticsProvider> mockProvider = new Mock<IAccountStatisticsProvider>();
+            return mockProvider.Object;
+        }
+
+        public static UiGlobals SetupGlobalsMock(
+            IFileSystem fileSystem,
+            IFileInteractionService fileService,
+            IBaseDialogCreationService dialogCreationService,
+            IReportLogger logger = null)
+            => new UiGlobals(
+                null,
+                SetupDispatcher(),
+                fileSystem,
+                fileService,
+                dialogCreationService,
+                logger ?? DummyReportLogger);
+
+        public static IDispatcher SetupDispatcher()
+        {
+            Mock<IDispatcher> dispatcherMock = new Mock<IDispatcher>();
+            _ = dispatcherMock.Setup(x => x.Invoke(It.IsAny<Action>())).Callback((Action a) => a());
+
+            _ = dispatcherMock.Setup(x => x.BeginInvoke(It.IsAny<Action>())).Callback((Action a) => a());
+            return dispatcherMock.Object;
+        }
+        public static IPortfolioDataDownloader SetupDownloader()
+        {
+            Mock<IPortfolioDataDownloader> downloaderMock = new Mock<IPortfolioDataDownloader>();
+
+            return downloaderMock.Object;
+        }
+
+        public static IReportLogger SetupReportLogger()
+        {
+            LogReporter reportLogger = new LogReporter(LogAction, saveInternally: true);
+            return reportLogger;
+
+            void LogAction(ReportSeverity sev, ReportType error, string loc, string msg)
+            {
+            }
         }
 
         public static IPortfolio CreateBasicDataBase()

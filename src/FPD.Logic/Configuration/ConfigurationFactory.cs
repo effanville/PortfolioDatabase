@@ -2,21 +2,27 @@ using System;
 using System.Reflection;
 
 using Effanville.Common.UI;
-using Effanville.FPD.Logic.Configuration;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Effanville.FPD.UI;
+namespace Effanville.FPD.Logic.Configuration;
 
 public static class ConfigurationFactory
 {
-    public static IConfiguration LoadConfig(IServiceProvider provider)
+    public static IConfiguration LoadConfig(this IServiceProvider provider)
     {
-        var globals = provider.GetService<UiGlobals>();
+        UiGlobals globals = provider.GetService<UiGlobals>();
         Assembly assembly = Assembly.GetExecutingAssembly();
         AssemblyName name = assembly.GetName();
+        if (name.Name == null)
+        {
+            return null;
+        }
+
         string configLocation = globals.CurrentFileSystem.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), name.Name, "user.config");
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            name.Name,
+            "user.config");
         return UserConfiguration.LoadFromUserConfigFile(
             configLocation, 
             globals.CurrentFileSystem, 

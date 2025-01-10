@@ -3,16 +3,16 @@ using System.IO.Abstractions;
 using System.Windows;
 using System.Windows.Threading;
 
-using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Services;
 using Effanville.Common.UI.Wpf;
 using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
+using Effanville.FPD.Logic.Configuration;
+using Effanville.FPD.Logic.DependencyInjection;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
-using Effanville.FPD.Logic.ViewModels.Stats;
 using Effanville.FPD.UI.TemplatesAndStyles;
 using Effanville.FPD.UI.Windows;
 
@@ -33,34 +33,24 @@ namespace Effanville.FPD.UI
         /// </summary>
         public App()
         {
-            _host = new HostBuilder()
-                .ConfigureServices(serviceCollection =>
-                {
-                    serviceCollection.AddSingleton<MainWindow>()
-                        .AddSingleton<Window>(x => x.GetService<MainWindow>())
-                        .AddSingleton<IDispatcher, DispatcherInstance>()
-                        .AddSingleton<IFileSystem, FileSystem>()
-                        .AddSingleton<IFileInteractionService, FileInteractionService>()
-                        .AddSingleton<DialogCreationService>()
-                        .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
-                        .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
-                        .AddSingleton<UiGlobals>()
-                        .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
-                        .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
-                        .AddSingleton<IViewModelFactory, ViewModelFactory>()
-                        .AddSingleton<IUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
-                        .AddSingleton(ConfigurationFactory.LoadConfig)
-                        .AddSingleton<ReportingWindowViewModel>()
-                        .AddSingleton<OptionsToolbarViewModel>()
-                        .AddSingleton<BasicDataViewModel>()
-                        .AddSingleton<StatisticsChartsViewModel>()
-                        .AddSingleton<MainWindowViewModel>();
-                })
-                .ConfigureLogging(loggingBuilder =>
-                {
-                    loggingBuilder.AddReportLogger(UpdateReport);
-                })
-                .Build();
+            var hostBuilder = Host.CreateApplicationBuilder();
+            _ = hostBuilder.Services
+                .AddSingleton<MainWindow>()
+                .AddSingleton<Window>(x => x.GetService<MainWindow>())
+                .AddSingleton<IDispatcher, DispatcherInstance>()
+                .AddSingleton<IFileSystem, FileSystem>()
+                .AddSingleton<IFileInteractionService, FileInteractionService>()
+                .AddSingleton<DialogCreationService>()
+                .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
+                .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
+                .AddSingleton<UiGlobals>()
+                .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
+                .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
+                .AddSingleton(x => x.LoadConfig())
+                .AddViewModelDependencies();
+            _ = hostBuilder.Logging.AddReportLogger(UpdateReport);
+
+            _host = hostBuilder.Build();
         }
 
         private void UpdateReport(ReportSeverity severity, ReportType type, string location, string message)
@@ -89,7 +79,7 @@ namespace Effanville.FPD.UI
         /// <summary>
         /// Fires when unhandled exceptions occur. Opens a dialog box, and hopefully the program continues.
         /// </summary>
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private async void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Handling the exception within the UnhandledException handler.
             if (e == null)
@@ -99,12 +89,12 @@ namespace Effanville.FPD.UI
 
             _ = MessageBox.Show(
                 e.Exception?.Message + Environment.NewLine + e.Exception?.StackTrace,
-                "Exception Caught", 
-                MessageBoxButton.OK, 
+                "Exception Caught",
+                MessageBoxButton.OK,
                 MessageBoxImage.Error);
 
             MainWindow main = _host.Services.GetService<MainWindow>();
-            main?.PrintErrorLog(e.Exception);
+            await main?.PrintErrorLog(e.Exception);
 
             e.Handled = true;
         }
@@ -115,7 +105,7 @@ namespace Effanville.FPD.UI
             if (ex != null)
             {
                 _ = MessageBox.Show(
-                    ex.Message, 
+                    ex.Message,
                     "Uncaught Thread Exception",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);

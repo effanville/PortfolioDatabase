@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,14 +40,14 @@ namespace Effanville.FPD.UI.Windows
         /// Prints all error reports from the report logger instance.
         /// </summary>
         /// <param name="exception"></param>
-        public void PrintErrorLog(Exception exception)
+        public async Task PrintErrorLog(Exception exception)
         {
             if (DataContext is not MainWindowViewModel viewModel)
             {
                 return;
             }
 
-            FileInteractionResult result = viewModel.Globals.FileInteractionService.SaveFile("log", string.Empty,
+            FileInteractionResult result = await viewModel.Globals.FileInteractionService.SaveFile("log", string.Empty,
                 viewModel.Globals.CurrentWorkingDirectory, filter: "log Files|*.log|All Files|*.*");
             if (!result.Success)
             {
@@ -73,7 +74,7 @@ namespace Effanville.FPD.UI.Windows
         /// This should really check if the data has changed or not, but this
         /// is not currently possible.
         /// </remarks>
-        private void Window_Closing(object sender, CancelEventArgs e)
+        private async void Window_Closing(object sender, CancelEventArgs e)
         {
             if (DataContext is not MainWindowViewModel viewModel)
             {
@@ -91,7 +92,7 @@ namespace Effanville.FPD.UI.Windows
 
             if (result == MessageBoxOutcome.Yes)
             {
-                FileInteractionResult savingResult = viewModel.Globals.FileInteractionService.SaveFile("xml",
+                FileInteractionResult savingResult = await viewModel.Globals.FileInteractionService.SaveFile("xml",
                     viewModel.ProgramPortfolio.Name, filter: "XML Files|*.xml|All Files|*.*");
                 if (savingResult.Success)
                 {

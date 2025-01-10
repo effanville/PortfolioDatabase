@@ -7,6 +7,7 @@ using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
+using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Asset;
 
 using NUnit.Framework;
@@ -36,13 +37,14 @@ public class SelectedAssetViewModelSteps
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedAssetViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.DataUpdater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [AfterScenario]
@@ -82,13 +84,14 @@ public class SelectedAssetViewModelSteps
         _testContext.Updater.Database = portfolio;
         _testContext.ModelData = asset;
         _testContext.ViewModel = new SelectedAssetViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.DataUpdater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [Given(@"I have a SelectedAssetViewModel with name (.*) and no data")]
@@ -103,13 +106,14 @@ public class SelectedAssetViewModelSteps
         _testContext.Updater.Database = portfolio;
         _testContext.ModelData = valueList;
         _testContext.ViewModel = new SelectedAssetViewModel(
-            portfolio,
+            new StatisticsProvider(portfolio),
             _testContext.ModelData,
             _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.Updater);
+            _testContext.DataUpdater,
+            _testContext.PortfolioDataDownloader);
     }
 
     [Given(@"the SelectedAssetViewModel is brought into focus")]

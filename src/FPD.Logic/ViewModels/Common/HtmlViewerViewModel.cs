@@ -64,9 +64,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             FileSelect = new RelayCommand(ExecuteFileSelect);
         }
 
-        private void ExecuteFileSelect()
+        private async void ExecuteFileSelect()
         {
-            FileInteractionResult result = DisplayGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
             if (result.Success)
             {
                 UrlTextPath = result.FilePath;
