@@ -1,3 +1,5 @@
+using System.Linq;
+
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.ViewModels.Common;
 
@@ -34,8 +36,15 @@ public static class DataNamesViewModelUserInteractions
     }
 
     public static void SelectName(this DataNamesViewModel viewModel, NameData name)
-        => viewModel.SelectionChangedCommand?.Execute(new NameDataViewModel("", name, false, viewModel.DataType, viewModel._updater,
-            null, null));
+    {
+        var selectedRow = viewModel.DataNames.FirstOrDefault(v => v.ModelData.IsEqualTo(name));
+        if (name != null && selectedRow == null)
+        {
+            throw new System.Exception("Cannot attempt to select a non-existent row");
+        }
+
+        viewModel.SelectionChangedCommand?.Execute(selectedRow);
+    }
 
     public static void SelectRow(this DataNamesViewModel viewModel, NameDataViewModel row)
         => viewModel.SelectionChangedCommand?.Execute(row);

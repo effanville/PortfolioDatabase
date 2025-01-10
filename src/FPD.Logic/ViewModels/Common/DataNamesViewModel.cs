@@ -200,15 +200,15 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         private void ExecuteCreateEdit(object obj)
         {
-            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"ExecuteCreateEdit called.");
             if (obj is not NameDataViewModel rowData || rowData.ModelData == null || !rowData.IsNew)
             {
                 return;
             }
 
-            NameData selectedInstance = rowData.ModelData; //rowName.Instance;
-            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Adding {selectedInstance} to the database");
-            NameData name = new NameData(selectedInstance.Company, selectedInstance.Name, selectedInstance.Currency, selectedInstance.Url, selectedInstance.Sectors, selectedInstance.Notes);
+            NameData name = new NameData(rowData.Company, rowData.Name, rowData.Currency, rowData.Url, notes: rowData.Notes)
+            {
+                SectorsFlat = rowData.Sectors
+            };
             OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name, ReportLogger)));
         }
 
