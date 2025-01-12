@@ -14,7 +14,7 @@
         Height="500"
         Width="1000"
         WindowChrome.IsHitTestVisibleInChrome="True"
-        Icon="/self_drawn_icon.ico"
+        Icon="../Assets/fpd-icon.ico"
         FontFamily="{Binding Styles.FontFamily}"
         Foreground="{Binding Styles.ForegroundBrush}"
         Background="{Binding Styles.BackgroundBrush}"

@@ -7,7 +7,7 @@
     <PublishReadyToRun>true</PublishReadyToRun>
     <UseWPF>true</UseWPF>
     <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
-    <ApplicationIcon>self_drawn_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets/fpd-icon.ico</ApplicationIcon>
     <RootNamespace>Effanville.FPD.UI</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
@@ -31,9 +31,9 @@
     <ProjectReference Include="..\..\src\FPD.Logic\FPD.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="self_drawn_icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+	  <Resource Include="Assets/fpd-icon.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
     <Resource Include="TemplatesAndStyles\close.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
