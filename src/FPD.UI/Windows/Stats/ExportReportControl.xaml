@@ -30,7 +30,6 @@
         </Grid>
         <Button Grid.Column="2"
                 Content="Create portfolio Report"
-                Style="{StaticResource ResourceKey=DefaultButton}"
                 Width="200"
                 Command="{Binding ExportReportCommand}" />
     </Grid>

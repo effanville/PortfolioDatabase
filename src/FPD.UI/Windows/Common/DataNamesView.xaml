@@ -36,11 +36,9 @@
                     Grid.Column="0">
             <Button Content="Download"
                     FontSize="{Binding Styles.MediumFontSize}"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding DownloadCommand}"
                     ToolTip="Press here to download data for selected." />
             <Button Content="Delete"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding DeleteCommand}"
                     ToolTip="Delete the highlighted." />
         </StackPanel>

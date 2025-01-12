@@ -34,11 +34,9 @@
                     Grid.Column="0"
                     Orientation="Horizontal">
             <Button Content="Download"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding DownloadCommand}"
                     ToolTip="Press here to download data for selected." />
             <Button Content="Export Data"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding ExportCsvData}"
                     ToolTip="Exports data from the selected security to a csv file." />
         </StackPanel>

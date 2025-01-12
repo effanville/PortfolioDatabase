@@ -29,7 +29,6 @@
                     BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
                     Background="{Binding Styles.BackgroundBrush}">
                 <Button Content="Create Investment list"
-                        Style="{StaticResource ResourceKey=DefaultButton}"
                         Width="300"
                         Command="{Binding  CreateInvestmentListCommand}" />
             </Border>

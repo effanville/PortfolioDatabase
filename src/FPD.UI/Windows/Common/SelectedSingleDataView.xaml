@@ -27,15 +27,12 @@
                     Grid.ColumnSpan="2"
                     Grid.Column="0">
             <Button Content="Delete Valuation"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding DeleteValuationCommand}"
                     ToolTip="Deletes the data highlighted." />
             <Button Content="Import Data"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding AddCsvData}"
                     ToolTip="Adds data to the selected account from a csv file." />
             <Button Content="Export Data"
-                    Style="{StaticResource ResourceKey=DefaultButton}"
                     Command="{Binding ExportCsvData}"
                     ToolTip="Exports data from the selected account to a csv file." />
         </StackPanel>

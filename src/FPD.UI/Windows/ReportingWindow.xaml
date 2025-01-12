@@ -31,8 +31,7 @@
         <Grid Background="{Binding Styles.BackgroundSecondaryBrush}"
               Grid.Column="0">
             <StackPanel VerticalAlignment="Top">
-                <Button Style="{StaticResource ResourceKey=DefaultButton}"
-                        Content="Clear"
+                <Button Content="Clear"
                         FontSize="{Binding Styles.SmallFontSize}"
                         Command="{Binding ClearReportsCommand}" />
                 <TextBlock Margin="2"
@@ -50,7 +49,6 @@
                           SelectedValue="{Binding Path=ReportingSeverity}" />
                 <Button Content="Export"
                         FontSize="{Binding Styles.SmallFontSize}"
-                        Style="{StaticResource ResourceKey=DefaultButton}"
                         Command="{Binding ExportReportsCommand}" />
             </StackPanel>
         </Grid>
