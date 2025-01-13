@@ -39,12 +39,12 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal"
                                 Margin="3">
-                        <CheckBox IsChecked="{Binding Selected}">
-                            <TextBlock Text="{Binding Instance}"
-                                       Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundBrush}"
-                                       Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                                       TextWrapping="Wrap"/>
-                        </CheckBox>
+                        <CheckBox IsChecked="{Binding Selected}"
+                                  Style="{StaticResource CheckBoxDefaultStyle}"
+                                  Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundBrush}"
+                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
+                                  BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundSecondaryBrush}"
+                                  Content="{Binding Instance}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -4,6 +4,7 @@
         <ResourceDictionary Source="ButtonStyles.xaml" />
         <ResourceDictionary Source="DataGridStyles.xaml" />
         <ResourceDictionary Source="ChartStyles.xaml" />
+        <ResourceDictionary Source="CheckBoxStyles.xaml" />
         <ResourceDictionary Source="ScrollBarStyles.xaml" />
         <ResourceDictionary Source="ComboBoxStyles.xaml" />
         <ResourceDictionary Source="DataTemplates.xaml" />

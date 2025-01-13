@@ -15,6 +15,7 @@
     <controls:AutoGenColumnControl.Resources>
         <ui:Bridge x:Key="Bridge"
                    Styles="{Binding Styles}" />
+        <ui:StatisticToStringConverter x:Key="statConverter" />
     </controls:AutoGenColumnControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,23 +29,20 @@
         <CheckBox Grid.Row="0"
                   Grid.Column="0"
                   Grid.ColumnSpan="2"
-                  Foreground="{Binding Styles.ForegroundBrush}"
                   IsChecked="{Binding DisplayValueFunds}"
-                  Margin="10,10,10,10">
-            <TextBlock Text="Only Display Funds with current value"
-                       TextWrapping="Wrap" />
-        </CheckBox>
+                  Content="Only Display Funds with current value" />
         <ItemsControl Grid.Row="1"
                       Grid.Column="0"
-                      Margin="5"
+                      Margin="3"
                       DataContext="{Binding}"
-                      Foreground="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}"
                       ItemsSource="{Binding StatisticNames}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox Content="{Binding Instance}"
-                              Foreground="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}"
-                              Tag="{RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}"
+                    <CheckBox Content="{Binding Instance, Converter={StaticResource statConverter}}"
+                              Style="{StaticResource CheckBoxDefaultStyle}"
+                              Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundBrush}"
+                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
+                              BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundSecondaryBrush}"
                               IsChecked="{Binding Selected}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
