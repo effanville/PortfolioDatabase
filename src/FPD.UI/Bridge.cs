@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-
 using Effanville.FPD.Logic.TemplatesAndStyles;
-using Effanville.FPD.UI.TemplatesAndStyles;
 
 namespace Effanville.FPD.UI
 {

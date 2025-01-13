@@ -62,8 +62,9 @@
                 Focusable="False"
                 Background="{TemplateBinding Background}" />
     </ControlTemplate>
-    <Style x:Key="{x:Type ComboBox}"
-           TargetType="ComboBox">
+    <Style TargetType="ComboBox">
+        <Setter Property="Foreground"
+                Value="{Binding Styles.ForegroundBrush}" />
         <Setter Property="SnapsToDevicePixels"
                 Value="true" />
         <Setter Property="OverridesDefaultStyle"
@@ -75,7 +76,7 @@
         <Setter Property="ScrollViewer.CanContentScroll"
                 Value="true" />
         <Setter Property="MinWidth"
-                Value="120" />
+                Value="40" />
         <Setter Property="MinHeight"
                 Value="20" />
         <Setter Property="Template">

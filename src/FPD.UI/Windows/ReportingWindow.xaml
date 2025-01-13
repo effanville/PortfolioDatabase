@@ -28,23 +28,14 @@
             <ColumnDefinition Width="90" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Background="{Binding Styles.BackgroundSecondaryBrush}"
-              Grid.Column="0">
+        <Grid Grid.Column="0">
             <StackPanel VerticalAlignment="Top">
                 <Button Content="Clear"
-                        FontSize="{Binding Styles.SmallFontSize}"
                         Command="{Binding ClearReportsCommand}" />
                 <TextBlock Margin="2"
                            FontWeight="Normal"
-                           Text="Report Level:"
-                           Foreground="{Binding Styles.ForegroundBrush}"
-                           FontSize="{Binding Styles.SmallFontSize}" />
-                <ComboBox Margin="2"
-                          FontWeight="Normal"
-                          VerticalAlignment="Center"
-                          VerticalContentAlignment="Center"
-                          HorizontalContentAlignment="Center"
-                          FontSize="{Binding Styles.SmallFontSize}"
+                           Text="Report Level:"/>
+                <ComboBox FontWeight="Normal"
                           ItemsSource="{Binding ReportSeverityValues}"
                           SelectedValue="{Binding Path=ReportingSeverity}" />
                 <Button Content="Export"
