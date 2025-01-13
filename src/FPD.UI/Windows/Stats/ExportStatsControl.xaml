@@ -5,6 +5,7 @@
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
               xmlns:ui="clr-namespace:Effanville.FPD.UI"
+              xmlns:stats1="clr-namespace:Effanville.FPD.UI.Windows.Stats"
               d:DataContext="{d:DesignInstance Type=stats:ExportStatsViewModel}"
               mc:Ignorable="d"
               Background="{Binding Styles.BackgroundBrush}"
@@ -69,158 +70,27 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Margin="5"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Grid.Row="2"
-                   Text="Securities Sorting Properties" />
-        <ComboBox Grid.Column="0"
-                  Margin="5"
-                  Grid.Row="3"
-                  ItemsSource="{Binding Source={StaticResource Consts}, Path=SecurityFieldNames}"
-                  SelectedItem="{Binding SecuritySortingField}" />
-        <ComboBox Grid.Column="1"
-                  Grid.Row="3"
-                  Margin="5"
-                  ItemsSource="{Binding Source={StaticResource Consts}, Path=SortDirections}"
-                  SelectedItem="{Binding SecurityDirection}" />
-        <ComboBox Grid.Column="2"
-                  Grid.Row="3"
-                  Margin="5"
-                  ItemsSource="{Binding SecurityColumnNames}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <CheckBox Content="{Binding Path=Instance}"
-                              IsChecked="{Binding Path=Selected, Mode=TwoWay}"
-                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                              Tag="{RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <TextBlock Margin="5"
-                   Grid.Row="4"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Text="BankAccount Sorting Properties" />
-        <ComboBox Grid.Column="0"
-                  Grid.Row="5"
-                  Margin="5"
-                  ItemsSource="{Binding Source={StaticResource Consts}, Path=BankFieldNames}"
-                  SelectedItem="{Binding BankSortingField}" />
-        <ComboBox Grid.Column="1"
-                  Grid.Row="5"
-                  Margin="5"
-                  ItemsSource="{Binding Source={StaticResource Consts}, Path=SortDirections}"
-                  SelectedItem="{Binding BankDirection}" />
-        <ComboBox Grid.Column="2"
-                  Grid.Row="5"
-                  Margin="5"
-                  ItemsSource="{Binding BankColumnNames}"
-                  Text="BankAccount Columns">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <CheckBox Content="{Binding Path=Instance}"
-                              IsChecked="{Binding Path=Selected, Mode=TwoWay}"
-                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                              Tag="{RelativeSource FindAncestor,
-                  AncestorType={x:Type ComboBox}}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <TextBlock Margin="5"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Grid.Row="6"
-                   Text="Sector Sorting Properties" />
-        <ComboBox Grid.Column="0"
-                  Grid.Row="7"
-                  Margin="5"
-                  ItemsSource="{Binding Source={StaticResource Consts}, Path=SectorFieldNames}"
-                  SelectedItem="{Binding SectorSortingField}" />
-        <ComboBox Grid.Column="1"
-                  Grid.Row="7"
-                  Margin="5"
-                  ItemsSource="{Binding Source={StaticResource Consts}, Path=SortDirections}"
-                  SelectedItem="{Binding SectorDirection}" />
-        <ComboBox Grid.Column="2"
-                  Grid.Row="7"
-                  Margin="5"
-                  ItemsSource="{Binding SectorColumnNames}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <CheckBox Content="{Binding Path=Instance}"
-                              IsChecked="{Binding Path=Selected, Mode=TwoWay}"
-                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                              Tag="{RelativeSource FindAncestor,
-                  AncestorType={x:Type ComboBox}}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-            </ComboBox>
-            <TextBlock Margin="5"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="3"
-                       Grid.Row="8"
-                       Text="Asset Sorting Properties" />
-            <ComboBox Grid.Column="0"
-                      Grid.Row="9"
-                      Margin="5"
-                      ItemsSource="{Binding Source={StaticResource Consts}, Path=AssetFieldNames}"
-                      SelectedItem="{Binding AssetSortingField}" />
-            <ComboBox Grid.Column="1"
-                      Grid.Row="9"
-                      Margin="5"
-                      ItemsSource="{Binding Source={StaticResource Consts}, Path=SortDirections}"
-                      SelectedItem="{Binding AssetDirection}" />
-            <ComboBox Grid.Column="2"
-                      Grid.Row="9"
-                      Margin="5"
-                      ItemsSource="{Binding AssetColumnNames}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding Path=Instance}"
-                                  IsChecked="{Binding Path=Selected, Mode=TwoWay}"
-                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                                  Tag="{RelativeSource FindAncestor,
-                  AncestorType={x:Type ComboBox}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <TextBlock Margin="5"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="3"
-                       Grid.Row="10"
-                       Text="Currency Sorting Properties" />
-            <ComboBox Grid.Column="0"
-                      Grid.Row="11"
-                      Margin="5"
-                      ItemsSource="{Binding Source={StaticResource Consts}, Path=AssetFieldNames}"
-                      SelectedItem="{Binding CurrencySortingField}" />
-            <ComboBox Grid.Column="1"
-                      Grid.Row="11"
-                      Margin="5"
-                      ItemsSource="{Binding Source={StaticResource Consts}, Path=SortDirections}"
-                      SelectedItem="{Binding CurrencyDirection}" />
-            <ComboBox Grid.Column="2"
-                      Grid.Row="11"
-                      Margin="5"
-                      ItemsSource="{Binding CurrencyColumnNames}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding Path=Instance}"
-                                  IsChecked="{Binding Path=Selected, Mode=TwoWay}"
-                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                                  Tag="{RelativeSource FindAncestor,
-                  AncestorType={x:Type ComboBox}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+            <UserControl Grid.Column="0"
+                         Grid.ColumnSpan="3"
+                         Grid.Row="1"
+                         Content="{Binding SecuritySortingData}" />
+            <UserControl Grid.Column="0"
+                         Grid.ColumnSpan="3"
+                         Grid.Row="2"
+                         Content="{Binding BankAccountSortingData}" />
+            <UserControl Grid.Column="0"
+                         Grid.ColumnSpan="3"
+                         Grid.Row="3"
+                         Content="{Binding SectorSortingData}" />
+            <UserControl Grid.Column="0"
+                         Grid.ColumnSpan="3"
+                         Grid.Row="4"
+                         Content="{Binding AssetSortingData}" />
+            <UserControl Grid.Column="0"
+                         Grid.ColumnSpan="3"
+                         Grid.Row="5"
+                         Content="{Binding CurrencySortingData}" />
         </Grid>
     </Grid>
 </ItemsControl>

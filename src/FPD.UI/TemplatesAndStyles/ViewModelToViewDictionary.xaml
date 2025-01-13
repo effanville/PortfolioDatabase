@@ -31,4 +31,7 @@
     <DataTemplate DataType="{x:Type svm:AccountStatsViewModel}">
         <stats:AccountStatsControl />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type svm:ExportDataViewModel}">
+        <stats:ExportDataView />
+    </DataTemplate>
 </ResourceDictionary>

@@ -19,18 +19,25 @@ namespace Effanville.FPD.Logic.Configuration
         [DataMember(EmitDefaultValue = false)]
         private List<Selectable<string>> DisplayConditions = new List<Selectable<string>>();
         [DataMember]
+        private bool ShowSecurities;
+        [DataMember]
         private Statistic SecuritySortingField;
         [DataMember]
         private SortDirection SecurityDirection;
         [DataMember(EmitDefaultValue = false)]
         private List<Selectable<Statistic>> SecurityColumnNames = new List<Selectable<Statistic>>();
+
+        [DataMember]
+        private bool ShowBankAccounts;
         [DataMember]
         private Statistic BankSortingField;
-
         [DataMember]
         private SortDirection BankDirection;
         [DataMember(EmitDefaultValue = false)]
         private List<Selectable<Statistic>> BankColumnNames = new List<Selectable<Statistic>>();
+
+        [DataMember]
+        private bool ShowSectors;
         [DataMember]
         private Statistic SectorSortingField;
         [DataMember]
@@ -39,12 +46,16 @@ namespace Effanville.FPD.Logic.Configuration
         private List<Selectable<Statistic>> SectorColumnNames = new List<Selectable<Statistic>>();
 
         [DataMember]
+        private bool ShowAssets;
+        [DataMember]
         private Statistic AssetSortingField;
         [DataMember]
         private SortDirection AssetDirection;
         [DataMember(EmitDefaultValue = false)]
         private List<Selectable<Statistic>> AssetColumnNames = new List<Selectable<Statistic>>();
 
+        [DataMember]
+        private bool ShowCurrencies;
         [DataMember]
         private Statistic CurrencySortingField;
         [DataMember]
@@ -54,20 +65,11 @@ namespace Effanville.FPD.Logic.Configuration
 
         /// <inheritdoc/>
         [DataMember]
-        public bool HasLoaded
-        {
-            get;
-            set;
-        }
+        public bool HasLoaded { get; set; }
 
         /// <inheritdoc/>
         [DataMember(EmitDefaultValue = false)]
-        public Dictionary<string, IConfiguration> ChildConfigurations
-        {
-            get;
-            set;
-        }
-
+        public Dictionary<string, IConfiguration> ChildConfigurations { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -81,21 +83,31 @@ namespace Effanville.FPD.Logic.Configuration
         {
             if (viewModel is ExportStatsViewModel vm)
             {
-                SecurityColumnNames = vm.SecurityColumnNames;
-                SecuritySortingField = vm.SecuritySortingField;
-                SecurityDirection = vm.SecurityDirection;
-                SectorColumnNames = vm.SectorColumnNames;
-                SectorSortingField = vm.SectorSortingField;
-                SectorDirection = vm.SectorDirection;
-                BankColumnNames = vm.BankColumnNames;
-                BankSortingField = vm.BankSortingField;
-                BankDirection = vm.BankDirection;
-                AssetColumnNames = vm.AssetColumnNames;
-                AssetSortingField = vm.AssetSortingField;
-                AssetDirection = vm.AssetDirection;
-                CurrencyColumnNames = vm.CurrencyColumnNames;
-                CurrencySortingField = vm.CurrencySortingField;
-                CurrencyDirection = vm.CurrencyDirection;
+                ShowSecurities = vm.SecuritySortingData.ShouldDisplay;
+                SecurityColumnNames = vm.SecuritySortingData.ColumnNames;
+                SecuritySortingField = vm.SecuritySortingData.SortingField;
+                SecurityDirection = vm.SecuritySortingData.SortingDirection;
+
+                ShowSectors = vm.SectorSortingData.ShouldDisplay;
+                SectorColumnNames = vm.SectorSortingData.ColumnNames;
+                SectorSortingField = vm.SectorSortingData.SortingField;
+                SectorDirection = vm.SectorSortingData.SortingDirection;
+
+                ShowBankAccounts = vm.BankAccountSortingData.ShouldDisplay;
+                BankColumnNames = vm.BankAccountSortingData.ColumnNames;
+                BankSortingField = vm.BankAccountSortingData.SortingField;
+                BankDirection = vm.BankAccountSortingData.SortingDirection;
+
+                ShowAssets = vm.AssetSortingData.ShouldDisplay;
+                AssetColumnNames = vm.AssetSortingData.ColumnNames;
+                AssetSortingField = vm.AssetSortingData.SortingField;
+                AssetDirection = vm.AssetSortingData.SortingDirection;
+
+                ShowCurrencies = vm.CurrencySortingData.ShouldDisplay;
+                CurrencyColumnNames = vm.CurrencySortingData.ColumnNames;
+                CurrencySortingField = vm.CurrencySortingData.SortingField;
+                CurrencyDirection = vm.CurrencySortingData.SortingDirection;
+
                 DisplayConditions = vm.DisplayConditions;
             }
         }
@@ -105,111 +117,11 @@ namespace Effanville.FPD.Logic.Configuration
         {
             if (HasLoaded && viewModel is ExportStatsViewModel vm)
             {
-                if (SecurityColumnNames != null && SecurityColumnNames.Any())
-                {                    
-                    if(vm.SecurityColumnNames == null)
-                    {
-                        vm.SecurityColumnNames = SecurityColumnNames;
-                    }
-                    else
-                    {
-                        foreach (Selectable<Statistic> name in vm.SecurityColumnNames)
-                        {
-                            Selectable<Statistic> configName = SecurityColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
-                            if (configName != null)
-                            {
-                                name.Selected = configName.Selected;
-                            }
-                        }
-                    }
-                }
-                vm.SecuritySortingField = SecuritySortingField;
-                vm.SecurityDirection = SecurityDirection;
-
-                if (SectorColumnNames != null && SectorColumnNames.Any())
-                {                    
-                    if(vm.SectorColumnNames == null)
-                    {
-                        vm.SectorColumnNames = SectorColumnNames;
-                    }
-                    else
-                    {
-                        foreach (Selectable<Statistic> name in vm.SectorColumnNames)
-                        {
-                            Selectable<Statistic> configName = SectorColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
-                            if (configName != null)
-                            {
-                                name.Selected = configName.Selected;
-                            }
-                        }
-                    }
-                }
-                vm.SectorSortingField = SectorSortingField;
-                vm.SectorDirection = SectorDirection;
-
-                if (BankColumnNames != null && BankColumnNames.Any())
-                {
-                    if(vm.BankColumnNames == null)
-                    {
-                        vm.BankColumnNames = BankColumnNames;
-                    }
-                    else
-                    {
-                        foreach (Selectable<Statistic> name in vm.BankColumnNames)
-                        {
-                            Selectable<Statistic> configName = BankColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
-                            if (configName != null)
-                            {
-                                name.Selected = configName.Selected;
-                            }
-                        }
-                    }
-                }
-                vm.BankSortingField = BankSortingField;
-                vm.BankDirection = BankDirection;
-
-                if (AssetColumnNames != null && AssetColumnNames.Any())
-                {                    
-                    if(vm.AssetColumnNames == null)
-                    {
-                        vm.AssetColumnNames = AssetColumnNames;
-                    }
-                    else
-                    {
-                        foreach (Selectable<Statistic> name in vm.AssetColumnNames)
-                        {
-                            Selectable<Statistic> configName = AssetColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
-                            if (configName != null)
-                            {
-                                name.Selected = configName.Selected;
-                            }
-                        }
-                    }
-                }
-                vm.AssetSortingField = AssetSortingField;
-                vm.AssetDirection = AssetDirection;
-                
-                
-                if (CurrencyColumnNames != null && CurrencyColumnNames.Any())
-                {                    
-                    if(vm.CurrencyColumnNames == null)
-                    {
-                        vm.CurrencyColumnNames = CurrencyColumnNames;
-                    }
-                    else
-                    {
-                        foreach (Selectable<Statistic> name in vm.CurrencyColumnNames)
-                        {
-                            Selectable<Statistic> configName = CurrencyColumnNames.FirstOrDefault(config => config.Instance == name.Instance);
-                            if (configName != null)
-                            {
-                                name.Selected = configName.Selected;
-                            }
-                        }
-                    }
-                }
-                vm.CurrencySortingField = CurrencySortingField;
-                vm.CurrencyDirection = CurrencyDirection;
+                RestoreSubViewModel(vm.SecuritySortingData, SecurityColumnNames, SecuritySortingField, SecurityDirection, ShowSecurities);
+                RestoreSubViewModel(vm.BankAccountSortingData, BankColumnNames, BankSortingField, BankDirection, ShowBankAccounts);
+                RestoreSubViewModel(vm.SectorSortingData, SectorColumnNames, SectorSortingField, SectorDirection, ShowSectors);
+                RestoreSubViewModel(vm.AssetSortingData, AssetColumnNames, AssetSortingField, AssetDirection, ShowAssets);
+                RestoreSubViewModel(vm.CurrencySortingData, CurrencyColumnNames, CurrencySortingField, CurrencyDirection, ShowCurrencies);
 
                 if (DisplayConditions != null && DisplayConditions.Any())
                 {
@@ -220,6 +132,36 @@ namespace Effanville.FPD.Logic.Configuration
                     }
                 }
             }
+        }
+
+        private static void RestoreSubViewModel(
+            ExportDataViewModel dataViewModel,
+            List<Selectable<Statistic>> columnNames,
+            Statistic sortingField,
+            SortDirection sortingDirection,
+            bool shouldDisplay)
+        {
+            if (columnNames != null && columnNames.Any())
+            {
+                if (dataViewModel.ColumnNames == null)
+                {
+                    dataViewModel.ColumnNames = columnNames;
+                }
+                else
+                {
+                    foreach (Selectable<Statistic> name in dataViewModel.ColumnNames)
+                    {
+                        Selectable<Statistic> configName = columnNames.FirstOrDefault(config => config.Instance == name.Instance);
+                        if (configName != null)
+                        {
+                            name.Selected = configName.Selected;
+                        }
+                    }
+                }
+            }
+            dataViewModel.ShouldDisplay = shouldDisplay;
+            dataViewModel.SortingField = sortingField;
+            dataViewModel.SortingDirection = sortingDirection;
         }
 
         public void SaveConfiguration(IReportLogger logger = null) => throw new System.NotImplementedException();
