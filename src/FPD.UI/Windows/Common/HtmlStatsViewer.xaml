@@ -9,13 +9,13 @@
              d:DataContext="{d:DesignInstance Type=common:HtmlViewerViewModel}"
              mc:Ignorable="d"
              FontFamily="{Binding Styles.FontFamily}"
+             Background="White"
              d:DesignHeight="450"
              d:DesignWidth="800">
     <Grid Width="Auto"
           Height="Auto"
           VerticalAlignment="Stretch"
-          HorizontalAlignment="Stretch"
-          Background="{Binding Styles.BackgroundBrush}">
+          HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
