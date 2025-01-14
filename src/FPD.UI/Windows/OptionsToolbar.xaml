@@ -12,6 +12,15 @@
              FontFamily="{Binding Styles.FontFamily}">
     <StackPanel Orientation="Horizontal"
                 Margin="-2">
+        <StackPanel.Resources>
+            <Style TargetType="Button"
+                   BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Height"
+                        Value="25" />
+                <Setter Property="MinWidth"
+                        Value="40" />
+            </Style>
+        </StackPanel.Resources>
         <StackPanel Orientation="Horizontal"
                     ToolTip="Database Save/Load"
                     Margin="2">

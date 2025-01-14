@@ -8,16 +8,17 @@
           d:DataContext="{d:DesignInstance Type=viewModels:ReportingWindowViewModel}"
           mc:Ignorable="d"
           MaxHeight="150"
-          Header="SysReports"
-          FontWeight="Bold"
           IsExpanded="{Binding IsExpanded}"
           Background="{Binding Styles.BackgroundBrush}"
           Foreground="{Binding Styles.ForegroundBrush}"
-          FontSize="{Binding Styles.MediumFontSize}"
           FontFamily="{Binding Styles.FontFamily}"
           HorizontalAlignment="Stretch"
           DataContextChanged="UC_DataContextChanged"
           VerticalAlignment="Stretch">
+    <Expander.Header>
+        <TextBlock FontWeight="Bold"
+                   Text="SysReports" />
+    </Expander.Header>
     <Expander.Resources>
         <ui:Bridge x:Key="Bridge"
                       Styles="{Binding Styles}" />
@@ -33,21 +34,16 @@
                 <Button Content="Clear"
                         Command="{Binding ClearReportsCommand}" />
                 <TextBlock Margin="2"
-                           FontWeight="Normal"
                            Text="Report Level:"/>
-                <ComboBox FontWeight="Normal"
-                          ItemsSource="{Binding ReportSeverityValues}"
+                <ComboBox ItemsSource="{Binding ReportSeverityValues}"
                           SelectedValue="{Binding Path=ReportingSeverity}" />
                 <Button Content="Export"
-                        FontSize="{Binding Styles.SmallFontSize}"
                         Command="{Binding ExportReportsCommand}" />
             </StackPanel>
         </Grid>
         <DataGrid SelectionUnit="FullRow"
                   SelectionMode="Extended"
                   AutoGenerateColumns="False"
-                  FontWeight="Normal"
-                  FontSize="{Binding Styles.MediumFontSize}"
                   DataContext="{Binding}"
                   ItemsSource="{Binding ReportsToView, Mode=TwoWay}"
                   PreviewKeyDown="DataGrid_PreviewKeyDown"
@@ -75,19 +71,15 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Severity"
                                     MinWidth="50"
-                                    Width="Auto"
                                     Binding="{Binding Path=ErrorSeverity, UpdateSourceTrigger=LostFocus}" />
                 <DataGridTextColumn Header="Type"
                                     MinWidth="50"
-                                    Width="Auto"
                                     Binding="{Binding Path=ErrorType, UpdateSourceTrigger=LostFocus}" />
                 <DataGridTextColumn Header="Location"
                                     MinWidth="50"
-                                    Width="Auto"
                                     Binding="{Binding Path=ErrorLocation, UpdateSourceTrigger=LostFocus}" />
                 <DataGridTextColumn Header="Message"
-                                    MinWidth="50"
-                                    Width="Auto"
+                                    MinWidth="100"
                                     Binding="{Binding Path=Message, UpdateSourceTrigger=LostFocus}" />
             </DataGrid.Columns>
         </DataGrid>

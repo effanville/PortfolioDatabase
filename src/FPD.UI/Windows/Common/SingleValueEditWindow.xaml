@@ -10,6 +10,13 @@
       mc:Ignorable="d">
     <Grid.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButtonStyle}">
+            <Setter Property="Height"
+                    Value="25" />
+            <Setter Property="MinWidth"
+                    Value="40" />
+        </Style>
     </Grid.Resources>
     <Grid>
         <Grid.RowDefinitions>
