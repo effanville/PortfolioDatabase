@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="BorderStyles.xaml" />
         <ResourceDictionary Source="ButtonStyles.xaml" />
         <ResourceDictionary Source="DataGridStyles.xaml" />
         <ResourceDictionary Source="ChartStyles.xaml" />
