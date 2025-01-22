@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="Effanville.FPD.UI.Av.Windows.Security.SelectedSecurityView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sec="clr-namespace:Effanville.FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
+             d:DataContext="{d:DesignInstance Type=sec:SelectedSecurityViewModel}"
+             xmlns:ui="clr-namespace:Effanville.FPD.UI.Av"
+			 mc:Ignorable="d">
+	<UserControl.Resources>
+		<ui:DisplayConstants x:Key="Consts" />
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+			<Button Content="Download"
+                    Command="{Binding DownloadCommand}"
+                    ToolTip.Tip="Press here to download data for selected." />
+			<Button Content="Delete Valuation"
+                    Command="{Binding DeleteValuationCommand}"
+                    ToolTip.Tip="Deletes the security data highlighted." />
+			<Button Content="Import Data"
+                    Command="{Binding AddCsvData}"
+                    ToolTip.Tip="Adds data to the selected security from a csv file." />
+			<Button Content="Export Data"
+                    Command="{Binding ExportCsvData}"
+                    ToolTip.Tip="Exports data from the selected security to a csv file." />
+		</StackPanel>
+		<Grid Grid.Column="0"
+              Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<ContentControl Content="{Binding TLVM}"
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Grid.Column="0" />
+			<Border BorderThickness="1"
+                    Grid.Row="0"
+                    Grid.Column="1">
+				<DataGrid ItemsSource="{Binding Path=Trades, Mode=TwoWay}"
+                          AutoGenerateColumns="False"
+                          Grid.Row="0"
+                          Grid.Column="1"
+                          DataContext="{Binding}">
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Type" 
+												MinWidth="50">
+							<DataTemplate>
+								<ComboBox Name="ComboBoxResponsible"
+										  MinWidth="50"										  
+                                          ItemsSource="{Binding Source={StaticResource Consts}, Path=TradeTypes}"
+                                          SelectedValue="{Binding Path=TradeType, UpdateSourceTrigger=LostFocus}">
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn>
+						<DataGridTextColumn Header="Date"
+                                            MinWidth="50"
+                                            Width="Auto"
+                                            Binding="{Binding Path=Day, UpdateSourceTrigger=LostFocus}" />
+						<DataGridTextColumn MinWidth="50"
+                                            Width="Auto"
+                                            Binding="{Binding Path=UnitPrice, UpdateSourceTrigger=LostFocus}">
+							<DataGridTextColumn.Header>
+								<TextBlock x:Name="Thing"
+                                           Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, AncestorLevel=1}, Path=DataContext.TradePriceHeader }" />
+							</DataGridTextColumn.Header>
+						</DataGridTextColumn>
+					</DataGrid.Columns>
+				</DataGrid>
+		    </Border>
+			<ContentControl Grid.Row="1"
+                            Grid.Column="1"
+                            Content="{Binding SecurityStats}" />
+		</Grid>
+		<GridSplitter Grid.Row="1"
+                      Grid.Column="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      ShowsPreview="True"
+                      Width="5" />
+		<Grid Grid.Row="1"
+              Grid.Column="2"
+              VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch">
+			<TextBlock>Charting Not yet implemented</TextBlock>
+		</Grid>
+	</Grid>
+</UserControl>

@@ -1,0 +1,51 @@
+﻿<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Effanville.FPD.AvaloniaUI"
+             RequestedThemeVariant="Dark"
+             x:Class="Effanville.FPD.AvaloniaUI.App"
+             xmlns:vm="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
+			 xmlns:view="clr-namespace:Effanville.FPD.AvaloniaUI.Windows;assembly=Effanville.FPD.AvaloniaUI"
+			 xmlns:common="clr-namespace:Effanville.FPD.AvaloniaUI.Windows.Common"
+             xmlns:vmStats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
+             xmlns:vmCommon="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
+			 xmlns:stats="clr-namespace:Effanville.FPD.UI.Av.Windows.Stats"
+			 xmlns:asset="clr-namespace:Effanville.FPD.UI.Av.Windows.Asset"
+			 xmlns:vmAsset="clr-namespace:Effanville.FPD.Logic.ViewModels.Asset;assembly=Effanville.FPD.Logic"
+             xmlns:sec="clr-namespace:Effanville.FPD.UI.Av.Windows.Security"
+			 xmlns:vmSec="clr-namespace:Effanville.FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic">
+	<Application.Styles>
+		<FluentTheme />
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+	</Application.Styles>
+	<Application.Styles>
+	</Application.Styles>
+	<Application.DataTemplates>
+		<DataTemplate DataType="{x:Type vm:ReportingWindowViewModel}">
+			<view:ReportingWindow />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vm:BasicDataViewModel}">
+			<view:BasicDataView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmCommon:DataNamesViewModel}">
+			<common:DataNamesView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmCommon:SelectedSingleDataViewModel}">
+			<common:SelectedSingleDataView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmCommon:TimeListViewModel}">
+			<common:TimeListView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmStats:StatsViewModel}">
+			<stats:StatsUserControl />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmStats:AccountStatsViewModel}">
+			<stats:AccountStatsControl />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmAsset:SelectedAssetViewModel}">
+			<asset:SelectedAssetView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vmSec:SelectedSecurityViewModel}">
+			<sec:SelectedSecurityView />
+		</DataTemplate>
+	</Application.DataTemplates>
+</Application>

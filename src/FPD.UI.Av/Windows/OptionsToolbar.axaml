@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="Effanville.FPD.AvaloniaUI.Windows.OptionsToolbar"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
+             d:DataContext="{d:DesignInstance Type=viewModels:OptionsToolbarViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="40"
+             d:DesignWidth="800">
+  <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal"
+                    ToolTip.Tip="Database Save/Load">
+            <Button Content="New"
+                    Command="{Binding NewDatabaseCommand}" />
+            <Button Content="Save"
+                    Command="{Binding SaveDatabaseCommand}" />
+            <Button Content="Load"
+                    Command="{Binding LoadDatabaseCommand}" />
+            <Button Content="Refresh Display"
+                    Command="{Binding RefreshCommand}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    ToolTip.Tip="Portfolio Settings">
+            <Button Content="Update Data"
+                    Command="{Binding UpdateDataCommand}" />
+            <Button Content="Import Data"
+                    Command="{Binding ImportFromOtherDatabaseCommand}" />
+            <Button Content="Clean Data"
+                    Command="{Binding CleanDataCommand}" />
+            <Button Content="Reprice-Reset"
+                    Command="{Binding RepriceResetCommand}" />
+            <Label VerticalAlignment="Center"
+                   Content="Base Currency" />
+            <ComboBox MinWidth="50"
+                      VerticalContentAlignment="Center"
+                      ItemsSource="{Binding Currencies}"
+                      SelectedValue="{Binding Path=BaseCurrency}">
+            </ComboBox>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

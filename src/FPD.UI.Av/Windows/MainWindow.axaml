@@ -1,0 +1,95 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
+        xmlns:windows="clr-namespace:Effanville.FPD.AvaloniaUI.Windows"
+        mc:Ignorable="d"
+        MinHeight="400"
+        MinWidth="600"
+        Height="500"
+        Width="1000"
+        Icon="/Assets/self_drawn_icon.ico"
+		ExtendClientAreaToDecorationsHint="True"
+        x:Class="Effanville.FPD.AvaloniaUI.Windows.MainWindow"
+        FontSize="12">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"
+				     MaxHeight="35" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="40" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Image Grid.Column="0"
+             Source="/Assets/self_drawn_icon.ico"
+             ToolTip.Tip="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Title}"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Left"
+             Width="100"
+             Height="31"/>
+      <windows:OptionsToolbar Grid.Column="1"
+							  DataContext="{Binding OptionsToolbarCommands}"/>
+    </Grid>
+    <Grid Grid.Row="1"
+			  VerticalAlignment="Stretch">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <TabControl Grid.Row="0"
+				  x:Name="MainTabControl"
+				  TabStripPlacement="Top"
+				  Margin="0"
+				  ItemsSource="{Binding Tabs}"
+				  SelectedIndex="0">
+		  <TabControl.Styles>
+			  <Style Selector="TabItem">
+				  <Setter Property="Template">
+					  <Setter.Value>
+						  <ControlTemplate TargetType="TabItem">
+							  <Border Name="Border"
+									  MinHeight="20"
+									  MaxHeight="26"
+									  MinWidth="20"
+									  BorderThickness="3,3,3,0"
+									  Margin="1,5,1,0"
+									  HorizontalAlignment="Stretch">
+								  <StackPanel Orientation="Horizontal"
+											  MinHeight="20"
+											  VerticalAlignment="Center"
+											  Margin="3">
+									  <TextBlock Name="HeaderText"
+												 Text="{Binding Header}"
+												 VerticalAlignment="Center"
+												 HorizontalAlignment="Center" 
+												 FontSize="12"/>
+									  <Button Background="Transparent"
+											  IsVisible="{Binding Closable}"
+											  Height="12"
+											  Width="12"
+											  MinWidth="12"
+											  MaxWidth="12"
+											  Margin="2 2 0 0"
+											  Command="{Binding CloseCommand}">
+										  <TextBlock Text="C"/>
+									  </Button>
+								  </StackPanel>
+							  </Border>
+						  </ControlTemplate>
+					  </Setter.Value>
+				  </Setter>
+			  </Style>
+		  </TabControl.Styles>
+      </TabControl>
+		<Expander Grid.Row="1"
+          Header="SysReports"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Top"
+          Content="{Binding ReportsViewModel}" />
+    </Grid>
+  </Grid>
+</Window>

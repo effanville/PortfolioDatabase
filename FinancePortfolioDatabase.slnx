@@ -28,9 +28,10 @@
     <File Path=".editorconfig" />
     <File Path="global.json" />
   </Folder>
+  <Project Path="src/FPD.UI.Av/FPD.UI.Av.csproj" />
   <Project Path="src/FPD.Console/FPD.Console.csproj" />
   <Project Path="src/FPD.Logic/FPD.Logic.csproj" />
-  <Project Path="src/FPD.UI/FPD.UI.csproj" Startup="true" />
+  <Project Path="src/FPD.UI/FPD.UI.csproj" />
   <Project Path="test/FPD.Console.Tests/FPD.Console.Tests.csproj" />
   <Project Path="test/FPD.Logic.Tests/FPD.Logic.Tests.csproj" />
 </Solution>

@@ -1,0 +1,53 @@
+﻿<Expander x:Class="Effanville.FPD.AvaloniaUI.Windows.ReportingWindow"
+		  xmlns="https://github.com/avaloniaui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          MaxHeight="150"
+          Header="SysReports"
+          IsExpanded="False"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Top">
+	<Grid HorizontalAlignment="Stretch"
+		  VerticalAlignment="Stretch">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="110" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0">
+			<StackPanel VerticalAlignment="Top">
+				<Button Content="Clear"
+                Command="{Binding ClearReportsCommand}" />
+				<TextBlock Margin="2"
+                   FontWeight="Normal"
+                   Text="Report Level:"/>
+				<ComboBox Margin="2"
+                  ItemsSource="{Binding ReportTypeValues}"
+                  SelectedValue="{Binding Path=ReportType}" />
+				<Button Content="Export"
+                Command="{Binding ExportReportsCommand}" />
+			</StackPanel>
+		</Grid>
+		<DataGrid SelectionMode="Extended"
+				  AutoGenerateColumns="False"
+				  DataContext="{Binding}"
+				  HorizontalAlignment="Stretch"
+				  ItemsSource="{Binding ReportsToView, Mode=TwoWay}"
+				  KeyDown="DataGrid_KeyDown"
+				  Grid.Column="1"
+				  Margin="5 0 5 5"
+				  ScrollViewer.VerticalScrollBarVisibility="Auto">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Type"
+									MinWidth="50"
+									Binding="{Binding Path=ErrorType}" />
+				<DataGridTextColumn Header="Location"
+									MinWidth="50"
+									Binding="{Binding Path=ErrorLocation}" />
+				<DataGridTextColumn Header="Message"
+									MinWidth="100"
+									Binding="{Binding Path=Message}" />
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+</Expander>

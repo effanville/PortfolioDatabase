@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.ReportWriting.Unit.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_build", "BuildProcess\src\_build.csproj", "{D15847D5-8BB7-907C-150E-021EE2ED18DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPD.UI.Av", "FPD.UI.Av\FPD.UI.Av.csproj", "{210B3439-374C-4E2F-BF6E-F63DD7E7807B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -139,6 +141,12 @@ Global
 		{9EAC13F0-4297-40E3-8FDC-0635EF2FE8AB}.Release|x64.Build.0 = Release|x64
 		{D15847D5-8BB7-907C-150E-021EE2ED18DF}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{D15847D5-8BB7-907C-150E-021EE2ED18DF}.Release|x64.ActiveCfg = Release|Any CPU
+		{210B3439-374C-4E2F-BF6E-F63DD7E7807B}.Debug(Tests)|x64.ActiveCfg = Debug|x64
+		{210B3439-374C-4E2F-BF6E-F63DD7E7807B}.Debug(Tests)|x64.Build.0 = Debug|x64
+		{210B3439-374C-4E2F-BF6E-F63DD7E7807B}.Debug|x64.ActiveCfg = Debug|x64
+		{210B3439-374C-4E2F-BF6E-F63DD7E7807B}.Debug|x64.Build.0 = Debug|x64
+		{210B3439-374C-4E2F-BF6E-F63DD7E7807B}.Release|x64.ActiveCfg = Release|x64
+		{210B3439-374C-4E2F-BF6E-F63DD7E7807B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

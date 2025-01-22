@@ -1,0 +1,174 @@
+﻿<UserControl x:Class="Effanville.FPD.AvaloniaUI.Windows.Common.DataNamesView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:common="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
+             d:DataContext="{d:DesignInstance Type=common:DataNamesViewModel}"
+             mc:Ignorable="d"
+			 d:DesignHeight="450"
+             d:DesignWidth="800">
+	<Grid VerticalAlignment="Stretch"
+          HorizontalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40"
+                           MaxHeight="40"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<StackPanel Orientation="Horizontal"
+                    Height="35"
+                    Grid.Row="0"
+                    Grid.Column="0">
+			<Button Content="Download"
+                    Command="{Binding DownloadCommand}"
+                    ToolTip.Tip="Press here to download data for selected." />
+			<Button Content="Delete"
+                    Command="{Binding DeleteCommand}"
+                    ToolTip.Tip="Delete the highlighted." />
+		</StackPanel>
+		<DataGrid Grid.Row="1"
+                  Grid.Column="0"
+                  Margin="5"
+                  HorizontalAlignment="Left"
+                  ToolTip.Tip="Lists all items currently in the database. Select one to edit data."
+                  ItemsSource="{Binding Path=DataNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  DataContext="{Binding}"
+				  SelectedItem="{Binding SelectedName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+			<DataGrid.RowDetailsTemplate>
+				<DataTemplate>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"
+                                              MaxWidth="100" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition MaxHeight="20" />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Text="Account Details:"
+                                   Margin="2" />
+						<TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Broker:"
+                                   Margin="2" />
+						<TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Text="{Binding Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2"/>
+						<TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Company:"
+                                   Margin="2" />
+						<TextBox Grid.Row="2"
+                                 Grid.Column="1"
+                                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2" />
+						<TextBlock Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="Name:"
+                                   Margin="2" />
+						<TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2" />
+						<TextBlock Grid.Row="4"
+                                   Grid.Column="0"
+                                   Text="Url:"
+                                   Margin="2" />
+						<TextBox Grid.Row="4"
+                                 Grid.Column="1"
+                                 Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2" />
+						<TextBlock Grid.Row="5"
+                                   Grid.Column="0"
+                                   Text="Currency:"
+                                   Margin="2" />
+						<TextBox Grid.Row="5"
+                                 Grid.Column="1"
+                                 Text="{Binding Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2" />
+						<TextBlock Grid.Row="6"
+                                   Grid.Column="0"
+                                   Text="Sectors:"
+                                   Margin="2" />
+						<TextBox Grid.Row="6"
+                                 Grid.Column="1"
+                                 Text="{Binding Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2" />
+						<TextBlock Grid.Row="7"
+                                   Grid.Column="0"
+                                   Text="Notes:"
+                                   Margin="2" />
+						<TextBox Grid.Row="7"
+                                 Grid.Column="1"
+                                 Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2" />
+					</Grid>
+				</DataTemplate>
+			</DataGrid.RowDetailsTemplate>
+			<DataGrid.Columns>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<StackPanel DataContext="{Binding}">
+								<Button Content="View Data"
+                                        DataContext="{Binding}"
+                                        BorderThickness="0"
+                                        Margin="0.5"
+                                        Padding="3"
+                                        Command="{Binding Path=DataContext.OpenTabCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+							</StackPanel>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTextColumn Header="Broker"
+                                    MinWidth="70"
+                                    Width="Auto"
+                                    IsVisible="{Binding DisplayBroker}"
+                                    Binding="{Binding Path=Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<DataGridTextColumn Header="Company"
+                                    MinWidth="70"
+                                    Width="Auto"
+                                    IsVisible="{Binding DisplayCompany}"
+                                    Binding="{Binding Path=Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<DataGridTextColumn Header="Name"
+                                    MinWidth="70"
+                                    Width="Auto"
+                                    Binding="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			</DataGrid.Columns>
+		</DataGrid>
+		<GridSplitter Grid.Row="1"
+		              Grid.Column="1"
+		              HorizontalAlignment="Center"
+		              VerticalAlignment="Stretch"/>
+		<Grid Grid.Row="1"
+			  Grid.Column="2"
+			  VerticalAlignment="Stretch"
+			  HorizontalAlignment="Stretch">
+			<TextBlock>Charting Not yet implemented</TextBlock>
+		</Grid>
+	</Grid>
+</UserControl>
