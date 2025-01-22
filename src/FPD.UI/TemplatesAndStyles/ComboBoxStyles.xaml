@@ -10,12 +10,10 @@
             </Grid.ColumnDefinitions>
             <Border x:Name="Border"
                     Grid.ColumnSpan="2"
-                    CornerRadius="2"
                     Background="{Binding Styles.BackgroundSecondaryBrush}"
                     BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                    BorderThickness="3" />
+                    BorderThickness="2" />
             <Border Grid.Column="0"
-                    CornerRadius="2,0,0,2"
                     Margin="1"
                     Background="{Binding Styles.BackgroundBrush}"
                     BorderBrush="{Binding Styles.BackgroundBrush}"
@@ -151,9 +149,6 @@
                         <Trigger SourceName="Popup"
                                  Property="Popup.AllowsTransparency"
                                  Value="true">
-                            <Setter TargetName="DropDownBorder"
-                                    Property="CornerRadius"
-                                    Value="4" />
                             <Setter TargetName="DropDownBorder"
                                     Property="Margin"
                                     Value="0,2,0,0" />
