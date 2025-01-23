@@ -92,8 +92,7 @@
                        Height="31"
                        shell:WindowChrome.IsHitTestVisibleInChrome="True" />
                 <windows:OptionsToolbar Grid.Column="1"
-                                        DataContext="{Binding OptionsToolbarCommands}"
-                                        Background="{Binding Styles.BackgroundBrush}" />
+                                        DataContext="{Binding OptionsToolbarCommands}"/>
                 <StackPanel Grid.Column="2" />
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="3"

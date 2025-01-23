@@ -6,12 +6,9 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:viewModels="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
              d:DataContext="{d:DesignInstance Type=viewModels:OptionsToolbarViewModel}"
-             mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             FontFamily="{Binding Styles.FontFamily}">
+             mc:Ignorable="d">
     <StackPanel Orientation="Horizontal"
-                Margin="-2">
+                Margin="2">
         <StackPanel.Resources>
             <Style TargetType="Button"
                    BasedOn="{StaticResource DefaultButtonStyle}">
@@ -22,20 +19,18 @@
             </Style>
         </StackPanel.Resources>
         <StackPanel Orientation="Horizontal"
-                    ToolTip="Database Save/Load"
-                    Margin="2">
+                    ToolTip="Database Save/Load">
             <Button Content="New"
                     Command="{Binding NewDatabaseCommand}" />
             <Button Content="Save"
                     Command="{Binding SaveDatabaseCommand}" />
             <Button Content="Load"
                     Command="{Binding LoadDatabaseCommand}" />
-            <Button Content="Refresh Display"
+            <Button Content="Refresh View"
                     Command="{Binding RefreshCommand}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal"
-                    ToolTip="Portfolio Settings"
-                    Margin="2">
+                    ToolTip="Portfolio Settings">
             <Button Content="Update Data"
                     Command="{Binding UpdateDataCommand}" />
             <Button Content="Import Data"
@@ -45,10 +40,9 @@
             <Button Content="Reprice-Reset"
                     Command="{Binding RepriceResetCommand}" />
             <Label VerticalAlignment="Center"
-                   Foreground="{Binding Styles.ForegroundBrush}"
                    Content="Base Currency" />
             <ComboBox MinWidth="55"
-                      MaxHeight="27"
+                      MaxHeight="25"
                       ItemsSource="{Binding Currencies}"
                       SelectedValue="{Binding Path=BaseCurrency}">
                 <i:Interaction.Triggers>
@@ -63,8 +57,6 @@
                     ToolTip="Display Settings"
                     Margin="2">
             <CheckBox Content="LightTheme"
-                      VerticalAlignment="Center"
-                      Foreground="{Binding Styles.ForegroundBrush}"
                       IsChecked="{Binding IsLightTheme}" />
         </StackPanel>
     </StackPanel>
