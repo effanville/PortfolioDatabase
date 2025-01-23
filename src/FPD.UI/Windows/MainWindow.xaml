@@ -304,7 +304,6 @@
                 </TabControl>
                 <UserControl Grid.Row="1"
                              VerticalAlignment="Stretch"
-                             Background="{Binding Styles.BackgroundSecondaryBrush}"
                              Content="{Binding ReportsViewModel}" />
             </Grid>
         </Grid>

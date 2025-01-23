@@ -9,9 +9,7 @@
           mc:Ignorable="d"
           MaxHeight="150"
           IsExpanded="{Binding IsExpanded}"
-          Background="{Binding Styles.BackgroundBrush}"
           Foreground="{Binding Styles.ForegroundBrush}"
-          FontFamily="{Binding Styles.FontFamily}"
           HorizontalAlignment="Stretch"
           DataContextChanged="UC_DataContextChanged"
           VerticalAlignment="Stretch">
@@ -29,17 +27,27 @@
             <ColumnDefinition Width="90" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <StackPanel VerticalAlignment="Top">
-                <Button Content="Clear"
-                        Command="{Binding ClearReportsCommand}" />
-                <TextBlock Margin="2"
-                           Text="Report Level:"/>
-                <ComboBox ItemsSource="{Binding ReportSeverityValues}"
-                          SelectedValue="{Binding Path=ReportingSeverity}" />
-                <Button Content="Export"
-                        Command="{Binding ExportReportsCommand}" />
-            </StackPanel>
+        <Grid Grid.Column="0"
+              Background="{Binding Styles.BackgroundSecondaryBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0"
+                    Content="Clear"
+                    MinHeight="17"
+                    Command="{Binding ClearReportsCommand}" />
+            <TextBlock Grid.Row="1"
+                       Margin="2"
+                       Text="Report Level:" />
+            <ComboBox Grid.Row="2"
+                      ItemsSource="{Binding ReportSeverityValues}"
+                      SelectedValue="{Binding Path=ReportingSeverity}" />
+            <Button Grid.Row="3"
+                    Content="Export"
+                    Command="{Binding ExportReportsCommand}" />
         </Grid>
         <DataGrid SelectionUnit="FullRow"
                   SelectionMode="Extended"
