@@ -9,10 +9,7 @@
              xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              xmlns:common="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
              d:DataContext="{d:DesignInstance Type=common:DataNamesViewModel}"
-             mc:Ignorable="d"
-             d:DesignHeight="450"
-             FontFamily="{Binding Styles.FontFamily}"
-             d:DesignWidth="800">
+             mc:Ignorable="d">
     <Grid Height="Auto"
           Width="Auto"
           VerticalAlignment="Stretch"
@@ -35,7 +32,6 @@
                     Grid.Row="0"
                     Grid.Column="0">
             <Button Content="Download"
-                    FontSize="{Binding Styles.MediumFontSize}"
                     Command="{Binding DownloadCommand}"
                     ToolTip="Press here to download data for selected." />
             <Button Content="Delete"

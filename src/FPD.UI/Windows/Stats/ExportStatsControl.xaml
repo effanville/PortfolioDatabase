@@ -7,10 +7,7 @@
               xmlns:ui="clr-namespace:Effanville.FPD.UI"
               xmlns:stats1="clr-namespace:Effanville.FPD.UI.Windows.Stats"
               d:DataContext="{d:DesignInstance Type=stats:ExportStatsViewModel}"
-              mc:Ignorable="d"
-              Background="{Binding Styles.BackgroundBrush}"
-              Foreground="{Binding Styles.ForegroundBrush}"
-              FontFamily="{Binding Styles.FontFamily}">
+              mc:Ignorable="d">
     <Grid ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.HorizontalScrollBarVisibility="Auto">
         <Grid.Resources>

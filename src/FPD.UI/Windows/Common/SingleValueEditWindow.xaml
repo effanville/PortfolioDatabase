@@ -30,7 +30,6 @@
                     Grid.Column="0"
                     SelectedIndex="0"
                     SelectionChanged="TabMain_OnSelectionChanged"
-                    FontFamily="{Binding Styles.FontFamily}"
                     ItemsSource="{Binding Tabs}"
                     Background="{Binding Styles.BackgroundBrush}">
             <TabControl.Resources>

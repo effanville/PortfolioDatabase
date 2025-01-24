@@ -6,8 +6,7 @@
       xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
       d:DataContext="{d:DesignInstance Type=stats:StatsCreatorWindowViewModel}"
       mc:Ignorable="d"
-      VerticalAlignment="Stretch"
-      Background="{Binding Styles.BackgroundBrush}">
+      VerticalAlignment="Stretch">
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Auto"
                   FlowDirection="RightToLeft">
@@ -35,8 +34,7 @@
             <Border Grid.Row="0"
                     BorderThickness="2"
                     Height="Auto"
-                    BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                    Background="{Binding Styles.BackgroundBrush}">
+                    BorderBrush="{Binding Styles.BackgroundSecondaryBrush}">
                 <Button Content="Create Investment list"
                         Width="300"
                         Command="{Binding  CreateInvestmentListCommand}" />
@@ -46,21 +44,18 @@
                          BorderThickness="2"
                          Margin="2"
                          BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                         Background="{Binding Styles.BackgroundBrush}"
                          Content="{Binding ExportReportOptions}" />
             <UserControl Grid.Row="2"
                          Height="Auto"
                          BorderThickness="2"
                          Margin="2"
                          BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                         Background="{Binding Styles.BackgroundBrush}"
                          Content="{Binding ExportHistoryOptions}" />
             <UserControl Grid.Row="3"
                          Height="Auto"
                          BorderThickness="2"
                          Margin="2"
                          BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                         Background="{Binding Styles.BackgroundBrush}"
                          Content="{Binding StatsPageExportOptions}" />
         </Grid>
     </ScrollViewer>

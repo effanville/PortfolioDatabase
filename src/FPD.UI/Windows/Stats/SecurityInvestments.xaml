@@ -7,11 +7,7 @@
                                xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
                                xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
                                d:DataContext="{d:DesignInstance Type=stats:SecurityInvestmentViewModel}"
-                               mc:Ignorable="d"
-                               FontFamily="{Binding Styles.FontFamily}"
-                               Background="{Binding Styles.BackgroundBrush}"
-                               d:DesignHeight="450"
-                               d:DesignWidth="800">
+                               mc:Ignorable="d">
     <Grid VerticalAlignment="Stretch">
         <DataGrid Margin="5"
                   SelectionUnit="FullRow"
