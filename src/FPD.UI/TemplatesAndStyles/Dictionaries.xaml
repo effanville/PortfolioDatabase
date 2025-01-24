@@ -9,6 +9,7 @@
         <ResourceDictionary Source="LabelStyles.xaml" />
         <ResourceDictionary Source="ScrollBarStyles.xaml" />
         <ResourceDictionary Source="TextBoxStyles.xaml" />
+        <ResourceDictionary Source="TabControlStyles.xaml" />
         <ResourceDictionary Source="ViewModelToViewDictionary.xaml"/>
         <ResourceDictionary Source="MainWindowTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
