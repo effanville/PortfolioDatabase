@@ -13,8 +13,8 @@
                BasedOn="{StaticResource DefaultButtonStyle}">
             <Setter Property="Height"
                     Value="25" />
-            <Setter Property="MinWidth"
-                    Value="40" />
+            <Setter Property="Margin"
+                    Value="2" />
         </Style>
     </Grid.Resources>
     <Grid>

@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         mc:Ignorable="d"
         MinHeight="400"
-        MinWidth="400"
+        MinWidth="600"
         Height="500"
         Width="1000"
         WindowChrome.IsHitTestVisibleInChrome="True"
@@ -70,14 +70,14 @@
             </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"
-                               MaxHeight="35" />
+                               MaxHeight="32" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
                   Background="{Binding Styles.BackgroundSecondaryBrush}"
                   MouseDown="UserControl_MouseDown">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -88,23 +88,20 @@
                        VerticalAlignment="Top"
                        HorizontalAlignment="Left"
                        Width="100"
-                       Margin="2"
-                       Height="31"
+                       Margin="2,1,1,1"
+                       Height="30"
                        shell:WindowChrome.IsHitTestVisibleInChrome="True" />
                 <windows:OptionsToolbar Grid.Column="1"
                                         DataContext="{Binding OptionsToolbarCommands}"/>
                 <StackPanel Grid.Column="2" />
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="3"
-                            Background="Transparent"
                             MouseDown="UserControl_MouseDown"
                             HorizontalAlignment="Right">
                     <Button KeyboardNavigation.IsTabStop="False"
-                            FontSize="{Binding Styles.LargeFontSize}"
                             Background="Transparent"
-                            BorderBrush="Transparent"
                             Foreground="{Binding Styles.ForegroundBrush}"
-                            Width="40"
+                            MinWidth="40"
                             Click="MinimizeButton_Click">
                         <Grid Width="30"
                               Height="25"
@@ -113,18 +110,14 @@
                             <Path Data="M0,6 L8,6 M0,5.5 L8,5.5"
                                   Width="8"
                                   Height="8"
-                                  VerticalAlignment="Center"
-                                  Fill="green"
-                                  HorizontalAlignment="Center"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"
                                   StrokeThickness="1" />
                         </Grid>
                     </Button>
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
-                            BorderBrush="Transparent"
                             Foreground="{Binding Styles.ForegroundBrush}"
-                            Width="40"
+                            MinWidth="40"
                             Click="MaximizeButton_Click">
                         <Grid Width="30"
                               Height="30"
@@ -133,17 +126,14 @@
                             <Path Data="M2,0 L8,0 L8,6 M0,3 L6,3 M0,2 L6,2 L6,8 L0,8 Z"
                                   Width="8"
                                   Height="8"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Center"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"
                                   StrokeThickness="1" />
                         </Grid>
                     </Button>
                     <Button KeyboardNavigation.IsTabStop="False"
-                            BorderBrush="Transparent"
                             Background="Transparent"
                             Foreground="{Binding Styles.ForegroundBrush}"
-                            Width="40"
+                            MinWidth="40"
                             Click="CloseButton_Click">
                         <Grid Width="30"
                               Height="30"
@@ -152,8 +142,6 @@
                             <Path Data="M0,0 L8,8 M8,0 L0,8"
                                   Width="8"
                                   Height="8"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Center"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"
                                   StrokeThickness="1" />
                         </Grid>
@@ -161,8 +149,7 @@
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="1"
-                  VerticalAlignment="Stretch"
-                  Background="{Binding Styles.BackgroundBrush}">
+                  VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
@@ -175,9 +162,8 @@
                             Margin="0"
                             ItemsSource="{Binding Tabs}"
                             SelectionChanged="MainTabControl_OnSelectionChanged"
-                            SelectedIndex="0"></TabControl>
+                            SelectedIndex="0" />
                 <UserControl Grid.Row="1"
-                             VerticalAlignment="Stretch"
                              Content="{Binding ReportsViewModel}" />
             </Grid>
         </Grid>

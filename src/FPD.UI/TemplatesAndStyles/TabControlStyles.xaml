@@ -4,6 +4,8 @@
     <Style TargetType="{x:Type TabControl}">
         <Setter Property="Background"
                 Value="{Binding Styles.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{Binding Styles.ForegroundBrush}" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
         <Setter Property="VerticalContentAlignment"
