@@ -7,11 +7,7 @@
              xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
              d:DataContext="{d:DesignInstance Type=stats:StatisticsChartsViewModel}"
-             mc:Ignorable="d"
-             d:DesignHeight="450"
-             FontFamily="{Binding Styles.FontFamily}"
-             Background="{Binding Styles.BackgroundBrush}"
-             d:DesignWidth="800">
+             mc:Ignorable="d">
     <Grid Height="Auto"
           VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch"
@@ -37,15 +33,11 @@
                        Text="Gap between history records" Margin="1" />
             <TextBox Grid.Column="1" 
                      MinWidth="100"
-                     Background="{Binding Styles.BackgroundBrush}"
-                     Foreground="{Binding Styles.ForegroundBrush}"
                      Text="{Binding HistoryGapDays}" />
             <TextBlock Grid.Column="2"
                        Text="Earliest Date In Chart" />
             <TextBox Grid.Column="3"
                      MinWidth="100"
-                     Background="{Binding Styles.BackgroundBrush}"
-                     Foreground="{Binding Styles.ForegroundBrush}"
                      Text="{Binding EarliestViewDate}" />
         </Grid>
         <controls:BindableChart Title="Total Value"

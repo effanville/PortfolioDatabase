@@ -9,7 +9,13 @@
       Background="{Binding Styles.BackgroundSecondaryBrush}"
       mc:Ignorable="d">
     <Grid.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButtonStyle}">
+            <Setter Property="Height"
+                    Value="25" />
+            <Setter Property="Margin"
+                    Value="2" />
+        </Style>
     </Grid.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -23,77 +29,10 @@
                     Grid.Column="0"
                     SelectedIndex="0"
                     SelectionChanged="TabMain_OnSelectionChanged"
-                    FontFamily="{Binding Styles.FontFamily}"
-                    ItemsSource="{Binding Tabs}"
-                    Background="{Binding Styles.BackgroundBrush}">
+                    ItemsSource="{Binding Tabs}">
             <TabControl.Resources>
-                <Style TargetType="TabItem">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="TabItem">
-                                <Border Name="Border"
-                                        BorderThickness="3,3,3,0"
-                                        BorderBrush="{Binding Styles.BackgroundBrush}"
-                                        CornerRadius="4,4,0,0"
-                                        Margin="1,0"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch">
-                                    <StackPanel Orientation="Horizontal"
-                                                Height="15"
-                                                MinWidth="50"
-                                                Margin="3"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch">
-                                        <TextBlock Text="{Binding Header}"
-                                                   Margin="3,0,3,0"
-                                                   VerticalAlignment="Center"
-                                                   Foreground="{Binding Styles.ForegroundBrush}"
-                                                   FontSize="{Binding Styles.MediumFontSize}"
-                                                   FontWeight="SemiBold"
-                                                   FontStretch="UltraExpanded"
-                                                   FontFamily="{Binding Styles.FontFamily}"
-                                                   HorizontalAlignment="Center" />
-                                        <Button Background="Transparent"
-                                                Foreground="{Binding Styles.ForegroundBrush}"
-                                                BorderThickness="0"
-                                                Visibility="{Binding Closable, Converter={StaticResource BoolToVis}}"
-                                                Height="12"
-                                                Width="12"
-                                                Margin="2 2 0 0"
-                                                Command="{Binding CloseCommand}">
-                                            <Grid Width="10"
-                                                  Height="10"
-                                                  UseLayoutRounding="True"
-                                                  RenderTransform="1,0,0,1,.5,.5">
-                                                <Path Data="M0,-1 L8,7 M8,-1 L0,7"
-                                                      Width="8"
-                                                      Height="8"
-                                                      VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"
-                                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"
-                                                      StrokeThickness="1" />
-                                            </Grid>
-                                        </Button>
-                                    </StackPanel>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSelected"
-                                             Value="True">
-                                        <Setter TargetName="Border"
-                                                Property="Background"
-                                                Value="{Binding Styles.BackgroundBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="IsSelected"
-                                             Value="False">
-                                        <Setter TargetName="Border"
-                                                Property="Background"
-                                                Value="{Binding Styles.BackgroundSecondaryBrush}" />
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
+                <Style TargetType="TabItem"
+                       BasedOn="{StaticResource DefaultTabItemStyle}" />
             </TabControl.Resources>
         </TabControl>
     </Grid>

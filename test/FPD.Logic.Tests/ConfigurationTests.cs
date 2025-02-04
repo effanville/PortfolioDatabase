@@ -59,6 +59,11 @@ namespace Effanville.FPD.Logic.Tests
               <SecurityColumnNames xmlns:d8p1=""http://schemas.datacontract.org/2004/07/Effanville.Common.Structure.DisplayClasses"" />
               <SecurityDirection>Ascending</SecurityDirection>
               <SecuritySortingField>AccountType</SecuritySortingField>
+              <ShowAssets>false</ShowAssets>
+              <ShowBankAccounts>false</ShowBankAccounts>
+              <ShowCurrencies>false</ShowCurrencies>
+              <ShowSectors>false</ShowSectors>
+              <ShowSecurities>false</ShowSecurities>
             </d2p1:Value>
           </d2p1:KeyValueOfstringanyType>
           <d2p1:KeyValueOfstringanyType>
@@ -439,27 +444,7 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfstring>
                 <d8p1:SelectableOfstring>
-                  <d8p1:Instance>ShowSecurites</d8p1:Instance>
-                  <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfstring>
-                <d8p1:SelectableOfstring>
-                  <d8p1:Instance>ShowBankAccounts</d8p1:Instance>
-                  <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfstring>
-                <d8p1:SelectableOfstring>
-                  <d8p1:Instance>ShowSectors</d8p1:Instance>
-                  <d8p1:Selected>true</d8p1:Selected>
-                </d8p1:SelectableOfstring>
-                <d8p1:SelectableOfstring>
                   <d8p1:Instance>ShowBenchmarks</d8p1:Instance>
-                  <d8p1:Selected>false</d8p1:Selected>
-                </d8p1:SelectableOfstring>
-                <d8p1:SelectableOfstring>
-                  <d8p1:Instance>ShowAssets</d8p1:Instance>
-                  <d8p1:Selected>false</d8p1:Selected>
-                </d8p1:SelectableOfstring>
-                <d8p1:SelectableOfstring>
-                  <d8p1:Instance>ShowCurrencies</d8p1:Instance>
                   <d8p1:Selected>false</d8p1:Selected>
                 </d8p1:SelectableOfstring>
               </DisplayConditions>
@@ -644,6 +629,11 @@ namespace Effanville.FPD.Logic.Tests
               </SecurityColumnNames>
               <SecurityDirection>Ascending</SecurityDirection>
               <SecuritySortingField>Company</SecuritySortingField>
+              <ShowAssets>false</ShowAssets>
+              <ShowBankAccounts>true</ShowBankAccounts>
+              <ShowCurrencies>false</ShowCurrencies>
+              <ShowSectors>true</ShowSectors>
+              <ShowSecurities>true</ShowSecurities>
             </d2p1:Value>
           </d2p1:KeyValueOfstringanyType>
           <d2p1:KeyValueOfstringanyType>

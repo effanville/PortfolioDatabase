@@ -7,8 +7,6 @@
                 xmlns:ui="clr-namespace:Effanville.FPD.UI"
                 d:DataContext="{d:DesignInstance Type=stats:AccountStatsViewModel}"
                 mc:Ignorable="d"
-                d:DesignHeight="450"
-                d:DesignWidth="800"
                 DataContextChanged="UC_DataContextChanged">
     <ContentControl.Resources>
         <ui:Bridge x:Key="Bridge"

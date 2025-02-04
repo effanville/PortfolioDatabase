@@ -6,55 +6,43 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:viewModels="clr-namespace:Effanville.FPD.Logic.ViewModels;assembly=Effanville.FPD.Logic"
              d:DataContext="{d:DesignInstance Type=viewModels:OptionsToolbarViewModel}"
-             mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             FontFamily="{Binding Styles.FontFamily}"
-             Foreground="{Binding Styles.ForegroundBrush}">
+             mc:Ignorable="d">
     <StackPanel Orientation="Horizontal"
-                Margin="-2">
+                Margin="2">
+        <StackPanel.Resources>
+            <Style TargetType="Button"
+                   BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Height"
+                        Value="25" />
+                <Setter Property="MinWidth"
+                        Value="40" />
+            </Style>
+        </StackPanel.Resources>
         <StackPanel Orientation="Horizontal"
-                    ToolTip="Database Save/Load"
-                    Margin="2">
+                    ToolTip="Database Save/Load">
             <Button Content="New"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding NewDatabaseCommand}" />
             <Button Content="Save"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding SaveDatabaseCommand}" />
             <Button Content="Load"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding LoadDatabaseCommand}" />
-            <Button Content="Refresh Display"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
+            <Button Content="Refresh View"
                     Command="{Binding RefreshCommand}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal"
-                    ToolTip="Portfolio Settings"
-                    Margin="2">
+                    ToolTip="Portfolio Settings">
             <Button Content="Update Data"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding UpdateDataCommand}" />
             <Button Content="Import Data"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding ImportFromOtherDatabaseCommand}" />
             <Button Content="Clean Data"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding CleanDataCommand}" />
             <Button Content="Reprice-Reset"
-                    Style="{StaticResource ResourceKey=DefaultButtonNoMargin}"
                     Command="{Binding RepriceResetCommand}" />
-            <Label Margin="5 5 5 5"
-                   VerticalAlignment="Center"
-                   Foreground="{Binding Styles.ForegroundBrush}"
+            <Label VerticalAlignment="Center"
                    Content="Base Currency" />
-            <ComboBox Margin="2 2 2 2"
-                      MinWidth="50"
-                      MinHeight="20"
-                      MaxHeight="27"
-                      VerticalContentAlignment="Center"
-                      Background="{Binding Styles.DefaultButtonBrush}"
-                      Foreground="{Binding Styles.ForegroundBrush}"
+            <ComboBox MinWidth="55"
+                      MaxHeight="25"
                       ItemsSource="{Binding Currencies}"
                       SelectedValue="{Binding Path=BaseCurrency}">
                 <i:Interaction.Triggers>
@@ -69,8 +57,6 @@
                     ToolTip="Display Settings"
                     Margin="2">
             <CheckBox Content="LightTheme"
-                      VerticalAlignment="Center"
-                      Foreground="{Binding Styles.ForegroundBrush}"
                       IsChecked="{Binding IsLightTheme}" />
         </StackPanel>
     </StackPanel>
