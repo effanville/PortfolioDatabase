@@ -22,7 +22,7 @@ public class TimeListViewModelSteps
         _testContext = testContext;
     }
 
-    private void UpdateEvent(DailyValuation oldValue, DailyValuation newValue) 
+    private void UpdateEvent(DailyValuation oldValue, DailyValuation newValue)
         => _testContext.UpdateCalled = true;
 
     private void DeleteEvent(DailyValuation valuation)
@@ -32,7 +32,7 @@ public class TimeListViewModelSteps
     public void Reset() => _testContext.Reset();
 
     [StepDefinition("I have a TimeListViewModel with name (.*) and no data")]
-    public void InstantiateEmptyViewModel(string name) 
+    public void InstantiateEmptyViewModel(string name)
         => InstantiateBasicViewModel(name, 0);
 
     [StepDefinition("I have a TimeListViewModel with name (.*) and (.*) entries")]
@@ -43,7 +43,7 @@ public class TimeListViewModelSteps
         for (int index = 0; index < numberEntries; index++)
         {
             date = date.AddDays(index);
-            timeList.AddOrEditData(date, date, index);
+            timeList.SetData(date, index);
         }
 
         _testContext.ModelData = timeList;
@@ -51,25 +51,25 @@ public class TimeListViewModelSteps
     }
 
     [StepDefinition("It is brought into focus")]
-    public void NavigateToViewModel() 
+    public void NavigateToViewModel()
         => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"the user can view the length of the data is (.*)")]
-    public void AssertViewModelHasEntryCount(int numberEntries) 
+    public void AssertViewModelHasEntryCount(int numberEntries)
         => Assert.That(_testContext.ViewModel.Valuations.Count, Is.EqualTo(numberEntries));
 
     [Then(@"I can see the name is (.*)")]
-    public void ThenTheNameIsDisplayedAs(string name) 
+    public void ThenTheNameIsDisplayedAs(string name)
         => Assert.That(_testContext.ViewModel.Header, Is.EqualTo(name));
 
     [Then(@"The update event is called")]
-    public void ThenTheUpdateEventIsCalled() 
+    public void ThenTheUpdateEventIsCalled()
         => Assert.That(_testContext.UpdateCalled, Is.EqualTo(true));
 
     [Then("the delete event is called")]
-    public void ThenTheDeleteEventIsCalled() 
+    public void ThenTheDeleteEventIsCalled()
         => Assert.That(_testContext.DeleteCalled, Is.EqualTo(true));
-    
+
     [Then(@"the (.*) value has date (.*) and value (.*)")]
     public void ThenTheValueHasDateAndValue(int p0, DateTime p1, int p2)
     {
@@ -82,13 +82,13 @@ public class TimeListViewModelSteps
     }
 
     [When(@"I edit the (.*) entry to date (.*) and value (.*)")]
-    public void WhenIEditTheEntryToDateAndValue(int p0, DateTime p1, decimal p2) 
+    public void WhenIEditTheEntryToDateAndValue(int p0, DateTime p1, decimal p2)
         => _testContext.ViewModel.EditValuation(
-            _testContext.ViewModel.Valuations[p0 - 1], 
+            _testContext.ViewModel.Valuations[p0 - 1],
             new DailyValuation(p1, p2));
 
     [When(@"I remove the (.*) entry from the list")]
-    public void WhenIRemoveTheEntryFromTheList(int p0) 
+    public void WhenIRemoveTheEntryFromTheList(int p0)
         => _testContext.ViewModel.DeleteValuation(_testContext.ViewModel.Valuations[p0 - 1]);
 
     [When(@"I add an entry with date (.*) and value (.*)")]

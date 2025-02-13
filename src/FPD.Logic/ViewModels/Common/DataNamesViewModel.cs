@@ -209,7 +209,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 SectorsFlat = rowData.Sectors
             };
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name, ReportLogger)));
+            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name)));
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (SelectedName != null)
             {
                 _ = DataNames.Remove(SelectedName);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.ModelData, ReportLogger)));
+                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.ModelData)));
             }
             else
             {

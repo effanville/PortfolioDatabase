@@ -111,7 +111,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         private void ExecuteAddEditData(DailyValuation oldValue, DailyValuation newValue)
             => OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
-                valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+                valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
         /// <summary>
         /// Command to delete data from the value list.
@@ -125,7 +125,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (value != null)
             {
                 OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
-                    valueList => valueList.TryDeleteData(value.Day, ReportLogger)));
+                    valueList => valueList.TryDeleteData(value.Day)));
             }
             else
             {
@@ -164,7 +164,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 if (obj is DailyValuation view)
                 {
                     OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
-                        valueList => valueList.TryEditData(view.Day, view.Day, view.Value, ReportLogger)));
+                        valueList => valueList.TryEditData(view.Day, view.Day, view.Value)));
                 }
                 else
                 {

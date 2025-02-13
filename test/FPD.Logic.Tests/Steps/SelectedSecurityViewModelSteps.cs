@@ -33,7 +33,7 @@ public class SelectedSecurityViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out ISecurity valueList);
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
@@ -54,7 +54,7 @@ public class SelectedSecurityViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out ISecurity security);
         foreach (TableRow row in table.Rows)
         {

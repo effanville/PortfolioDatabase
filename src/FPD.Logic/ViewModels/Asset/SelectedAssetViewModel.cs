@@ -135,16 +135,15 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
 
         private void DeleteValue(DailyValuation value)
             => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => asset.TryDeleteData(value.Day, ReportLogger)));
+                asset => asset.TryDeleteData(value.Day)));
 
         private void DeleteDebtValue(DailyValuation value) 
             => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => asset.TryDeleteDebt(value.Day, ReportLogger)));
+                asset => asset.TryDeleteDebt(value.Day)));
 
         private void DeletePaymentValue(DailyValuation value)
             => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => asset.TryDeletePayment(value.Day, ReportLogger)));
-        
+                asset => asset.TryDeletePayment(value.Day)));
 
         /// <summary>
         /// Downloads the latest data for the selected entry.
@@ -191,15 +190,15 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
 
         private void ExecuteAddEditValues(DailyValuation oldValue, DailyValuation newValue)
             => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+                asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
         private void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
             => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+                asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value)));
 
         private void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
             => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+                asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value)));
 
         /// <inheritdoc/>
         public override void UpdateData(IAmortisableAsset modelData, bool force)

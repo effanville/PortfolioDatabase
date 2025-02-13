@@ -32,7 +32,7 @@ public class SelectedAssetViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
@@ -56,7 +56,7 @@ public class SelectedAssetViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset asset);
         foreach (TableRow row in table.Rows)
         {
@@ -100,7 +100,7 @@ public class SelectedAssetViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
 
         _testContext.Updater.Database = portfolio;

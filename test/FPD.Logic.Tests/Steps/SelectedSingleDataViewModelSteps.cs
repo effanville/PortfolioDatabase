@@ -35,7 +35,7 @@ public class SelectedSingleDataViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out IValueList valueList);
 
         foreach (TableRow row in table.Rows)
@@ -66,7 +66,7 @@ public class SelectedSingleDataViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(account, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out IValueList valueList);
         _testContext.ModelData = valueList;
         _testContext.Updater.Database = portfolio;
