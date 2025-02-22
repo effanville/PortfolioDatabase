@@ -10,7 +10,6 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
@@ -48,19 +47,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             string title,
             Account accountType,
             IDataStoreUpdater<IPortfolio> dataUpdater,
-            IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory)
             : base(globals, styles, portfolio, title, accountType)
         {
             _viewModelFactory = viewModelFactory;
-            var dataNames = new DataNamesViewModel(
-                ModelData,
-                DisplayGlobals,
-                styles,
-                dataUpdater,
-                portfolioDataDownloader,
-                LoadTabFunc,
-                accountType);
+            var dataNames = viewModelFactory.GenerateViewModel(portfolio, LoadTabFunc, accountType);
             Tabs.Add(dataNames);
             dataNames.UpdateRequest += dataUpdater.PerformUpdate;
             dataNames.RequestClose += RemoveTab;
@@ -206,7 +197,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 StyledClosableViewModelBase<IPortfolio> newViewModel = _viewModelFactory.GenerateViewModel(
                     ModelData,
-                    null,
+                    (TwoName)null,
                     DataType);
                 if (newViewModel != null)
                 {

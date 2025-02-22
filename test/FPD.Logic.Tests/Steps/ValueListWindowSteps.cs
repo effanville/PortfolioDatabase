@@ -50,7 +50,6 @@ public class ValueListWindowSteps
             account.ToString(),
             account,
             _testContext.Updater,
-            _testContext.PortfolioDataDownloader,
             _testContext.ViewModelFactory);
         _testContext.ViewModel.UpdateRequest += _testContext.Updater.PerformUpdate;
     }

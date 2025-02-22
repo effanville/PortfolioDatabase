@@ -769,7 +769,6 @@ namespace Effanville.FPD.Logic.Tests
                 null,
                 PortfolioFactory.GenerateEmpty(),
                 dataUpdater,
-                downloader,
                 new ViewModelFactory(null, globals, dataUpdater, updater, downloader, config, null),
                 config,
                 null,

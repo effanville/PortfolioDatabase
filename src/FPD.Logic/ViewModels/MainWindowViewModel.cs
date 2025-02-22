@@ -84,7 +84,6 @@ namespace Effanville.FPD.Logic.ViewModels
             IUiStyles styles,
             IPortfolio portfolio,
             IDataStoreUpdater<IPortfolio> updater,
-            IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory,
             IConfiguration configuration,
             ReportingWindowViewModel reportsViewModel,
@@ -124,13 +123,13 @@ namespace Effanville.FPD.Logic.ViewModels
                 Account.BankAccount,
                 nameof(ValueListWindowViewModel)));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
-                updater, portfolioDataDownloader, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
-                updater, portfolioDataDownloader, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
-                updater, portfolioDataDownloader, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
-                updater, portfolioDataDownloader, viewModelFactory));
+                updater, viewModelFactory));
             Tabs.Add(viewModelFactory.GenerateViewModel(ProgramPortfolio, "", Account.All, nameof(StatsViewModel)));
             if (statisticsChartsViewModel != null)
             {

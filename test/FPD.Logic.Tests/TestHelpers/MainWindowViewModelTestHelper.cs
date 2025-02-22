@@ -53,7 +53,6 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 styles,
                 portfolio,
                 dataUpdater,
-                downloader,
                 new ViewModelFactory(styles, globals, dataUpdater, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
                 new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
