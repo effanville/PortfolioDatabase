@@ -41,7 +41,6 @@ public class ValueListWindowSteps
     {
         IPortfolio portfolio = PortfolioGeneratorHelper.CreateFromTable(table);
         _testContext.ModelData = portfolio;
-        _testContext.Updater.Database = portfolio;
 
         _testContext.ViewModel = new ValueListWindowViewModel(
             _testContext.Globals,
@@ -51,7 +50,6 @@ public class ValueListWindowSteps
             account,
             _testContext.Updater,
             _testContext.ViewModelFactory);
-        _testContext.ViewModel.UpdateRequest += _testContext.Updater.PerformUpdate;
     }
 
     [Then(@"I can see the ValueListWindowViewModel type is (.*)")]

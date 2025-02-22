@@ -46,14 +46,13 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             IPortfolio portfolio,
             string title,
             Account accountType,
-            IDataStoreUpdater<IPortfolio> dataUpdater,
+            IUpdater updater,
             IViewModelFactory viewModelFactory)
-            : base(globals, styles, portfolio, title, accountType)
+            : base(globals, styles, portfolio, updater, title, accountType)
         {
             _viewModelFactory = viewModelFactory;
             var dataNames = viewModelFactory.GenerateViewModel(portfolio, LoadTabFunc, accountType);
             Tabs.Add(dataNames);
-            dataNames.UpdateRequest += dataUpdater.PerformUpdate;
             dataNames.RequestClose += RemoveTab;
             SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
         }

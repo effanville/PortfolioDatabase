@@ -1,7 +1,6 @@
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.UI;
-using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
@@ -23,9 +22,8 @@ public sealed class TimeListTestContext
     public TimeListTestContext(
         IUiStyles uiStyles,
         UiGlobals globals,
-        IDataStoreUpdater<IPortfolio> updater,
-        IUpdater dataUpdater)
-        : base(uiStyles, globals, updater, dataUpdater, null, null)
+        IUpdater updater)
+        : base(uiStyles, globals, updater, null, null)
     {
     }
 }

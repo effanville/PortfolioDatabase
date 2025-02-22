@@ -48,7 +48,6 @@ public class SelectedSingleDataViewModelSteps
             valueList.SetData(actualDate, decimalValue);
         }
 
-        _testContext.Updater.Database = portfolio;
         _testContext.ModelData = valueList;
         _testContext.ViewModel = new SelectedSingleDataViewModel(
             new StatisticsProvider(portfolio),
@@ -57,7 +56,7 @@ public class SelectedSingleDataViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
-            _testContext.DataUpdater);
+            _testContext.Updater);
     }
 
     [Given(@"I have a SelectedSingleDataViewModel with account (.*) and name (.*) and no data")]
@@ -69,7 +68,6 @@ public class SelectedSingleDataViewModelSteps
         portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out IValueList valueList);
         _testContext.ModelData = valueList;
-        _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSingleDataViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
@@ -77,7 +75,7 @@ public class SelectedSingleDataViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
-            _testContext.DataUpdater);
+            _testContext.Updater);
     }
 
     [StepDefinition(@"the SelectedSingleDataViewModel is brought into focus")]

@@ -26,7 +26,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
-
+        private readonly IUpdater _updater;
         private TwoName _selectedName;
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             UiGlobals globals,
             TwoName selectedName,
             Account accountDataType,
-            IUpdater dataUpdater)
+            IUpdater updater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
                 closable: true)
         {
             _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = accountDataType;
-            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
+            _updater = updater;
             string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency);
             TLVM = new TimeListViewModel(
                 valueList.Values,
@@ -110,7 +110,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         }
 
         private void ExecuteAddEditData(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IValueList>(true,
                 valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         {
             if (value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IValueList>(true,
                     valueList => valueList.TryDeleteData(value.Day)));
             }
             else
@@ -163,7 +163,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 if (obj is DailyValuation view)
                 {
-                    OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+                    _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IValueList>(true,
                         valueList => valueList.TryEditData(view.Day, view.Day, view.Value)));
                 }
                 else

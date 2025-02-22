@@ -37,20 +37,17 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
 
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
                 globals,
-                dataUpdater,
                 updater,
                 null,
                 new UserConfiguration(),
                 new StatisticsProvider(portfolio));
 
             StatsViewModel viewModel = viewModelFactory.GenerateViewModel(portfolio, "", Account.All, nameof(StatsViewModel)) as StatsViewModel;
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.UpdateData(portfolio, false);
 
             await Task.Delay(3000);
@@ -76,20 +73,17 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
 
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
             IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
                 globals,
-                dataUpdater,
                 updater,
                 null,
                 configuration,
                 new StatisticsProvider(portfolio));
 
             StatsViewModel viewModel = viewModelFactory.GenerateViewModel(portfolio, "", Account.All, nameof(StatsViewModel)) as StatsViewModel;
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
             viewModel.UpdateData(portfolio, false);
 
             await Task.Delay(3000);

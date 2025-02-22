@@ -62,8 +62,8 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(ILogger<OptionsToolbarViewModel> logger, UiGlobals globals, IUiStyles styles, IPortfolio portfolio, IPortfolioDataDownloader portfolioDataDownloader)
-            : base(globals, styles, portfolio, "Options")
+        public OptionsToolbarViewModel(ILogger<OptionsToolbarViewModel> logger, UiGlobals globals, IUiStyles styles, IPortfolio portfolio, IPortfolioDataDownloader portfolioDataDownloader, IUpdater updater)
+            : base(globals, styles, portfolio, updater, "Options")
         {
             _logger = logger;
             _portfolioDataDownloader = portfolioDataDownloader;
@@ -111,7 +111,7 @@ namespace Effanville.FPD.Logic.ViewModels
             }
             if (result == MessageBoxOutcome.Yes)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(userInitiated: true, programPortfolio => programPortfolio.Clear()));
+                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(userInitiated: true, programPortfolio => programPortfolio.Clear()));
                 DisplayGlobals.CurrentWorkingDirectory = "";
             }
         }
@@ -131,12 +131,12 @@ namespace Effanville.FPD.Logic.ViewModels
 
             _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
             _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
                 portfolio => portfolio.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
             var portfolioPersistence = new PortfolioPersistence();
             var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 false,
                 portfolio => portfolioPersistence.Save(portfolio, options, ReportLogger)));
             DisplayGlobals.CurrentWorkingDirectory = _directory;
@@ -158,12 +158,12 @@ namespace Effanville.FPD.Logic.ViewModels
 
             var portfolioPersistence = new PortfolioPersistence();
             var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
                 programPortfolio => portfolioPersistence.Load(programPortfolio, options, ReportLogger)));
 
             var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 false,
                 programPortfolio => portfolioPersistence.Save(programPortfolio, backupOptions, ReportLogger)));
             DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
@@ -180,7 +180,7 @@ namespace Effanville.FPD.Logic.ViewModels
         private void ExecuteUpdateData()
         {
             _logger.LogInformation($"Execute update data for database {_fileName} called.");
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(programPortfolio, ReportLogger).ConfigureAwait(false)));
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(programPortfolio, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Effanville.FPD.Logic.ViewModels
                 var portfolioPersistence = new PortfolioPersistence();
                 var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
                 IPortfolio otherPortfolio = portfolioPersistence.Load(options, ReportLogger);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.ImportValuesFrom(otherPortfolio, ReportLogger)));
+                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.ImportValuesFrom(otherPortfolio, ReportLogger)));
             }
         }
 
@@ -207,7 +207,7 @@ namespace Effanville.FPD.Logic.ViewModels
         private void ExecuteCleanData()
         {
             _logger.LogInformation($"Execute clean database for database {_fileName} called.");
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.CleanData()));
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.CleanData()));
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Effanville.FPD.Logic.ViewModels
         private void ExecuteRepriceReset()
         {
             _logger.LogInformation($"Execute clean database for database {_fileName} called.");
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.MigrateRepriceToReset()));
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.MigrateRepriceToReset()));
         }
 
         /// <summary>
@@ -235,6 +235,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to update the base currency of the database.
         /// </summary>
         public ICommand CurrencyDropDownClosed { get; }
-        private void DropDownClosed() => OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.BaseCurrency = BaseCurrency));
+        private void DropDownClosed() 
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.BaseCurrency = BaseCurrency));
     }
 }

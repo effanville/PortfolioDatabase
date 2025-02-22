@@ -29,7 +29,8 @@ public class BasicDayViewModelSteps
         _testContext.ViewModel = new BasicDataViewModel(
             _testContext.Globals,
             _testContext.Styles,
-            _testContext.ModelData);
+            _testContext.ModelData,
+            _testContext.Updater);
     }
 
     [Given(@"the BasicDataViewModel is brought into focus")]
@@ -56,7 +57,8 @@ public class BasicDayViewModelSteps
         _testContext.ViewModel = new BasicDataViewModel(
             _testContext.Globals,
             _testContext.Styles,
-            _testContext.ModelData);
+            _testContext.ModelData,
+            _testContext.Updater);
     }
 
     [When(@"the BasicDataViewModel has database updated to basic portfolio")]

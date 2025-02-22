@@ -58,7 +58,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// Default constructor.
         /// </summary>
         public StatsCreatorWindowViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, IViewModelFactory viewModelFactory)
-            : base(globals, styles, userConfiguration, portfolio, "Stats Creator", Account.All)
+            : base(globals, styles, userConfiguration, portfolio, null, "Stats Creator", Account.All)
         {
             UserConfiguration = userConfiguration;
             if (UserConfiguration.HasLoaded)

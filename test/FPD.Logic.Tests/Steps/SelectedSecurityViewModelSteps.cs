@@ -36,7 +36,6 @@ public class SelectedSecurityViewModelSteps
         portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out ISecurity valueList);
         _testContext.ModelData = valueList;
-        _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedSecurityViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
@@ -44,7 +43,7 @@ public class SelectedSecurityViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -76,7 +75,6 @@ public class SelectedSecurityViewModelSteps
             }
         }
 
-        _testContext.Updater.Database = portfolio;
         _testContext.ModelData = security;
         _testContext.ViewModel = new SelectedSecurityViewModel(
             new StatisticsProvider(portfolio),
@@ -85,7 +83,7 @@ public class SelectedSecurityViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 

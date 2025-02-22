@@ -45,20 +45,19 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 globals.CurrentFileSystem,
                 globals.ReportLogger);
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
-            SynchronousUpdater<IPortfolio> dataUpdater = new SynchronousUpdater<IPortfolio>(portfolio);
             Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
             IUiStyles styles = TestSetupHelper.SetupDefaultStyles();
             var downloader = TestSetupHelper.SetupDownloader();
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,
-                dataUpdater,
-                new ViewModelFactory(styles, globals, dataUpdater, updater, downloader, config, new StatisticsProvider(portfolio)),
+                updater,
+                new ViewModelFactory(styles, globals, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
                 new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
-                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio, downloader),
-                new BasicDataViewModel(globals, styles, portfolio),
-                new StatisticsChartsViewModel(globals, portfolio, styles));
+                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio, downloader, updater),
+                new BasicDataViewModel(globals, styles, portfolio, updater),
+                new StatisticsChartsViewModel(globals, portfolio, styles, updater));
         }
 
         [TearDown]

@@ -27,6 +27,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
     public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
+        private readonly IUpdater _updater;
 
         /// <summary>
         /// The name data of the security this window details.
@@ -107,10 +108,10 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = dataType;
+            _updater = dataUpdater;
             _portfolioDataDownloader = portfolioDataDownloader;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
             string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
             ValuesTLVM = new TimeListViewModel(
                 asset.Values,
@@ -134,15 +135,15 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         }
 
         private void DeleteValue(DailyValuation value)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => asset.TryDeleteData(value.Day)));
 
-        private void DeleteDebtValue(DailyValuation value) 
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+        private void DeleteDebtValue(DailyValuation value)
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => asset.TryDeleteDebt(value.Day)));
 
         private void DeletePaymentValue(DailyValuation value)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => asset.TryDeletePayment(value.Day)));
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             }
 
             NameData names = SelectedName;
-            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 async asset => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
@@ -189,15 +190,15 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         }
 
         private void ExecuteAddEditValues(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
         private void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value)));
 
         private void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
+            => _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
                 asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value)));
 
         /// <inheritdoc/>

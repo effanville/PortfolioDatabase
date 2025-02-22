@@ -70,7 +70,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// Default constructor.
         /// </summary>
         public StatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
-            : base(globals, styles, userConfiguration, portfolio, "Statistics", account)
+            : base(globals, styles, userConfiguration, portfolio, null, "Statistics", account)
         {
             StatisticNames = AccountStatisticsHelpers.AllStatistics()
                 .Select(stat =>
@@ -79,7 +79,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                         {
                             return new Selectable<Statistic>(stat, false);
                         }
-                        
+
                         return new Selectable<Statistic>(stat, true);
                     })
                 .ToList();

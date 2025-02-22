@@ -13,7 +13,6 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Download;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -83,7 +82,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public MainWindowViewModel(UiGlobals globals,
             IUiStyles styles,
             IPortfolio portfolio,
-            IDataStoreUpdater<IPortfolio> updater,
+            IUpdater updater,
             IViewModelFactory viewModelFactory,
             IConfiguration configuration,
             ReportingWindowViewModel reportsViewModel,
@@ -103,7 +102,6 @@ namespace Effanville.FPD.Logic.ViewModels
             if (OptionsToolbarCommands != null)
             {
                 OptionsToolbarCommands.RefreshDisplay += AllData_portfolioChanged;
-                OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
                 OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
             }
 
@@ -152,7 +150,6 @@ namespace Effanville.FPD.Logic.ViewModels
                     continue;
                 }
 
-                vmb.UpdateRequest += updater.PerformUpdate;
                 vmb.RequestClose += RemoveTab;
             }
 

@@ -23,7 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// </summary>
     public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio>
     {
-        internal readonly IDataStoreUpdater<IPortfolio> _updater;
+        private readonly IUpdater _updater;
         private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         internal readonly Account DataType;
 
@@ -86,7 +86,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         /// <returns></returns>
         public NameDataViewModel DefaultRow() =>
-            new NameDataViewModel("", new NameData(), true, DataType, _updater, DisplayGlobals, Styles)
+            new NameDataViewModel("", new NameData(), true, UpdateNameData, DisplayGlobals, Styles)
             {
                 IsNew = true
             };
@@ -98,14 +98,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             IPortfolio portfolio,
             UiGlobals uiGlobals,
             IUiStyles styles,
-            IDataStoreUpdater<IPortfolio> dataUpdater,
+            IUpdater updater,
             IPortfolioDataDownloader portfolioDataDownloader,
             Action<object> loadSelectedData,
             Account dataType)
             : base("Accounts", portfolio, uiGlobals, styles, closable: false)
         {
             DataType = dataType;
-            _updater = dataUpdater;
+            _updater = updater;
             _portfolioDataDownloader = portfolioDataDownloader;
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
@@ -132,7 +132,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
             List<NameDataViewModel> values = modelData
                 .NameDataForAccount(DataType)
-                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), DataType, _updater, DisplayGlobals, Styles)).ToList();
+                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), UpdateNameData, DisplayGlobals, Styles)).ToList();
             values.Sort((a, b) => a.ModelData.CompareTo(b.ModelData));
             DisplayGlobals.CurrentDispatcher.BeginInvoke(() =>
             {
@@ -163,7 +163,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
 
             NameData names = SelectedName.ModelData;
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 SectorsFlat = rowData.Sectors
             };
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name)));
+            _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name)));
         }
 
         /// <summary>
@@ -223,12 +223,20 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (SelectedName != null)
             {
                 _ = DataNames.Remove(SelectedName);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.ModelData)));
+                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.ModelData)));
             }
             else
             {
                 _ = ReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "Nothing was selected when trying to delete.");
             }
+        }
+
+        internal void UpdateNameData(NameData _preEditSelectedName, NameData name)
+        {
+            _updater.PerformUpdate(ModelData,
+                new UpdateRequestArgs<IPortfolio>(true,
+                    programPortfolio =>
+                        programPortfolio.TryEditName(DataType, _preEditSelectedName, name)));
         }
     }
 }

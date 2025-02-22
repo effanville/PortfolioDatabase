@@ -141,8 +141,8 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public BasicDataViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio)
-            : base(globals, styles, portfolio, "Overview", Account.All)
+        public BasicDataViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio, IUpdater updater)
+            : base(globals, styles, portfolio, updater, "Overview", Account.All)
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommand(ExecuteCreateEdit);
@@ -152,7 +152,7 @@ namespace Effanville.FPD.Logic.ViewModels
         public override void UpdateData(IPortfolio modelData, bool force)
         {
             ModelData = modelData;
-            
+
             PortfolioNameText = string.IsNullOrWhiteSpace(modelData.Name) ? "Unsaved database" : modelData.Name;
             HasValues = modelData.NumberOf(Account.All) != 0;
             SecurityTotalText = $"Total Securities: {modelData.NumberOf(Account.Security)}";
@@ -217,7 +217,7 @@ namespace Effanville.FPD.Logic.ViewModels
         {
             if (_selectedNote != null && !ModelData.Notes.Contains(_selectedNote))
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(_selectedNote.TimeStamp, _selectedNote.Text)));
+                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(_selectedNote.TimeStamp, _selectedNote.Text)));
             }
         }
 
@@ -228,7 +228,7 @@ namespace Effanville.FPD.Logic.ViewModels
         {
             if (_selectedNote != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.RemoveNote(_selectedNote)));
+                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.RemoveNote(_selectedNote)));
             }
         }
     }
