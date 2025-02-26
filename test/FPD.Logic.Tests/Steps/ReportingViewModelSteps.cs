@@ -30,21 +30,22 @@ public class ReportingViewModelSteps
     public void Reset() => _testContext.Reset();
 
     [Given(@"I have a ReportingViewModel with default level (.*) and no reports")]
-    public void GivenIHaveAReportingViewModelNoReports(ReportSeverity reportSeverity)
-        => Instantiate(reportSeverity, null);
+    public void GivenIHaveAReportingViewModelNoReports(ReportType reportType)
+        => Instantiate(reportType, null);
 
     [Given(@"I have a ReportingViewModel with default level (.*) and reports")]
-    public void GivenIHaveAReportingViewModelWithDefaultLevelUsefulAndReports(ReportSeverity reportSeverity,
+    public void GivenIHaveAReportingViewModelWithDefaultLevelUsefulAndReports(ReportType reportType,
         Table table)
-        => Instantiate(reportSeverity, table);
+        => Instantiate(reportType, table);
 
-    private void Instantiate(ReportSeverity reportSeverity, Table table)
+    private void Instantiate(ReportType reportSeverity, Table table)
     {
         ILogger<ReportingWindowViewModel> loggerMock = new Mock<ILogger<ReportingWindowViewModel>>().Object;
         _testContext.ViewModel = new ReportingWindowViewModel(
             loggerMock,
             _testContext.Globals,
-            _testContext.Styles) { ReportingSeverity = reportSeverity };
+            _testContext.Styles)
+        { ReportType = reportSeverity };
         WhenAReportIsAddedToTheRvmWithData(table);
         _testContext.ModelData = _testContext.ViewModel.ModelData;
     }
@@ -54,11 +55,11 @@ public class ReportingViewModelSteps
         => _testContext.ViewModel.UpdateData(_testContext.ModelData, false);
 
     [Then(@"I can see that the ReportingViewModel has (.*) reports")]
-    public void ThenICanSeeThatTheRvmHasReports(int p0) 
+    public void ThenICanSeeThatTheRvmHasReports(int p0)
         => Assert.That(_testContext.ViewModel.ModelData.Count(), Is.EqualTo(p0));
 
     [Then(@"I can see that the ReportingViewModel display has (.*) reports")]
-    public void ThenICanSeeThatTheRvmDisplayHasReports(int p0) 
+    public void ThenICanSeeThatTheRvmDisplayHasReports(int p0)
         => Assert.That(_testContext.ViewModel.ReportsToView.Count, Is.EqualTo(p0));
 
     [When(@"reports are added to the ReportingViewModel with data")]

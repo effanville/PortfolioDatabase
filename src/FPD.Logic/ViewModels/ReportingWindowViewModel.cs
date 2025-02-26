@@ -35,7 +35,7 @@ namespace Effanville.FPD.Logic.ViewModels
         }
 
         /// <summary>
-        /// The reports to display in the control. This is a sublist of <see cref="ReportingWindowViewModel.ModelData"/> filtered by <see cref="ReportingSeverity"/>.
+        /// The reports to display in the control. This is a sublist of <see cref="ReportingWindowViewModel.ModelData"/> filtered by <see cref="ReportType"/>.
         /// </summary>
         public List<ErrorReport> ReportsToView
         {
@@ -54,17 +54,17 @@ namespace Effanville.FPD.Logic.ViewModels
             set => SetAndNotify(ref _isExpanded, value);
         }
 
-        private ReportSeverity _reportingSeverity;
+        private ReportType _reportType;
 
         /// <summary>
         /// The selected reporting severity.
         /// </summary>
-        public ReportSeverity ReportingSeverity
+        public ReportType ReportType
         {
-            get => _reportingSeverity;
+            get => _reportType;
             set
             {
-                SetAndNotify(ref _reportingSeverity, value);
+                SetAndNotify(ref _reportType, value);
                 SyncReports();
             }
         }
@@ -72,8 +72,8 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// List of all types of ReportSeverity.
         /// </summary>
-        public static List<ReportSeverity> ReportSeverityValues =>
-            Enum.GetValues(typeof(ReportSeverity)).Cast<ReportSeverity>().ToList();
+        public static List<ReportType> ReportTypeValues =>
+            Enum.GetValues(typeof(ReportType)).Cast<ReportType>().ToList();
 
         /// <summary>
         /// Default constructor.
@@ -84,6 +84,7 @@ namespace Effanville.FPD.Logic.ViewModels
             _logger = logger;
             Styles = styles;
             IsExpanded = false;
+            ReportType = ReportType.Information;
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
             ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
         }
@@ -91,7 +92,7 @@ namespace Effanville.FPD.Logic.ViewModels
         private void SyncReports()
         {
             ReportsToView = null;
-            ReportsToView = ModelData.GetReports(ReportingSeverity).ToList();
+            ReportsToView = ModelData.GetAtLevel(ReportType);
             if (ReportsToView != null && (ReportsToView?.Any() ?? false))
             {
                 IsExpanded = true;
@@ -136,7 +137,7 @@ namespace Effanville.FPD.Logic.ViewModels
                     ReportType.Error, ReportLocation.Saving, $"Error when saving reports: {ex.Message}"));
             }
         }
-        
+
         /// <summary>
         /// Command to delete a selected report.
         /// </summary>
@@ -149,7 +150,7 @@ namespace Effanville.FPD.Logic.ViewModels
             }
             SyncReports();
         }
-        
+
         /// <summary>
         /// Command to delete a selected report.
         /// </summary>
