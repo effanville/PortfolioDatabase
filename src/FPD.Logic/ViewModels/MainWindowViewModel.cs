@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
 
-using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
@@ -17,6 +16,7 @@ using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
+
 
 namespace Effanville.FPD.Logic.ViewModels
 {
@@ -79,10 +79,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals,
+        public MainWindowViewModel(
+            UiGlobals globals,
             IUiStyles styles,
             IPortfolio portfolio,
-            IUpdater updater,
             IViewModelFactory viewModelFactory,
             IConfiguration configuration,
             ReportingWindowViewModel reportsViewModel,
@@ -120,15 +120,31 @@ namespace Effanville.FPD.Logic.ViewModels
                 "Bank Accounts",
                 Account.BankAccount,
                 nameof(ValueListWindowViewModel)));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
-                updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
-                updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
-                updater, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
-                updater, viewModelFactory));
-            Tabs.Add(viewModelFactory.GenerateViewModel(ProgramPortfolio, "", Account.All, nameof(StatsViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Pensions",
+                Account.Pension,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Benchmarks",
+                Account.Benchmark,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Currencies",
+                Account.Currency,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Assets",
+                Account.Asset,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "",
+                Account.All,
+                nameof(StatsViewModel)));
             if (statisticsChartsViewModel != null)
             {
                 Tabs.Add(statisticsChartsViewModel);

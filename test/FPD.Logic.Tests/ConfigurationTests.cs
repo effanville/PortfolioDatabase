@@ -767,7 +767,6 @@ namespace Effanville.FPD.Logic.Tests
             MainWindowViewModel vm = new MainWindowViewModel(globals,
                 null,
                 PortfolioFactory.GenerateEmpty(),
-                updater,
                 new ViewModelFactory(null, globals, updater, downloader, config, null),
                 config,
                 null,

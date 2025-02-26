@@ -51,7 +51,6 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,
-                updater,
                 new ViewModelFactory(styles, globals, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
                 new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
