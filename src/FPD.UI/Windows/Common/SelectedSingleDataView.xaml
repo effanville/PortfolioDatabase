@@ -30,10 +30,10 @@
                     Command="{Binding DeleteValuationCommand}"
                     ToolTip="Deletes the data highlighted." />
             <Button Content="Import Data"
-                    Command="{Binding AddCsvData}"
+                    Command="{Binding AddCsvDataCommand}"
                     ToolTip="Adds data to the selected account from a csv file." />
             <Button Content="Export Data"
-                    Command="{Binding ExportCsvData}"
+                    Command="{Binding ExportCsvDataCommand}"
                     ToolTip="Exports data from the selected account to a csv file." />
         </StackPanel>
         <ContentControl Grid.Row="1"

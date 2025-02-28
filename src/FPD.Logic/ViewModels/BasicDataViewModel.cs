@@ -213,22 +213,30 @@ namespace Effanville.FPD.Logic.ViewModels
         /// </summary>
         public ICommand CreateCommand { get; set; }
 
-        private void ExecuteCreateEdit()
+        private async void ExecuteCreateEdit()
         {
             if (_selectedNote != null && !ModelData.Notes.Contains(_selectedNote))
             {
-                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.AddNote(_selectedNote.TimeStamp, _selectedNote.Text)));
+                await _updater.PerformUpdate(
+                    ModelData,
+                    new UpdateRequestArgs<IPortfolio>(
+                        true,
+                        portfolio => portfolio.AddNote(_selectedNote.TimeStamp, _selectedNote.Text)));
             }
         }
 
         /// <summary>
         /// Method to delete the selected note.
         /// </summary>
-        public void DeleteSelectedNote()
+        public async void DeleteSelectedNote()
         {
             if (_selectedNote != null)
             {
-                _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.RemoveNote(_selectedNote)));
+                await _updater.PerformUpdate(
+                    ModelData,
+                    new UpdateRequestArgs<IPortfolio>(
+                        true,
+                        portfolio => portfolio.RemoveNote(_selectedNote)));
             }
         }
     }
