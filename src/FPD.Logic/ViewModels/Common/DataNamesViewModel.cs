@@ -23,7 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// </summary>
     public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio>
     {
-        internal readonly IDataStoreUpdater<IPortfolio> _updater;
+        private readonly IUpdater _updater;
         private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         internal readonly Account DataType;
 
@@ -86,7 +86,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         /// <returns></returns>
         public NameDataViewModel DefaultRow() =>
-            new NameDataViewModel("", new NameData(), true, DataType, _updater, DisplayGlobals, Styles)
+            new NameDataViewModel("", new NameData(), true, UpdateNameData, DisplayGlobals, Styles)
             {
                 IsNew = true
             };
@@ -98,17 +98,17 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             IPortfolio portfolio,
             UiGlobals uiGlobals,
             IUiStyles styles,
-            IDataStoreUpdater<IPortfolio> dataUpdater,
+            IUpdater updater,
             IPortfolioDataDownloader portfolioDataDownloader,
             Action<object> loadSelectedData,
             Account dataType)
             : base("Accounts", portfolio, uiGlobals, styles, closable: false)
         {
             DataType = dataType;
-            _updater = dataUpdater;
+            _updater = updater;
             _portfolioDataDownloader = portfolioDataDownloader;
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            CreateCommand = new RelayCommand<object>(ExecuteCreateEdit);
+            CreateCommand = new RelayCommand<object>(CreateEdit);
             DeleteCommand = new RelayCommand(ExecuteDelete);
             DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
             OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.ModelData));
@@ -132,7 +132,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
             List<NameDataViewModel> values = modelData
                 .NameDataForAccount(DataType)
-                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), DataType, _updater, DisplayGlobals, Styles)).ToList();
+                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), UpdateNameData, DisplayGlobals, Styles)).ToList();
             values.Sort((a, b) => a.ModelData.CompareTo(b.ModelData));
             DisplayGlobals.CurrentDispatcher.BeginInvoke(() =>
             {
@@ -154,16 +154,20 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private void ExecuteDownloadCommand()
+        private async void ExecuteDownloadCommand()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess, $"Download selected for account {SelectedName.ModelData} - a {DataType}");
+            ReportLogger?.Log(ReportType.Information, nameof(ExecuteDownloadCommand), $"Download selected for account {SelectedName.ModelData} - a {DataType}");
             if (SelectedName == null)
             {
                 return;
             }
 
             NameData names = SelectedName.ModelData;
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, async programPortfolio => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
+            await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IPortfolio>(
+                    true,
+                    portfolio => _portfolioDataDownloader.Download(portfolio, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -179,10 +183,10 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (DataNames != null && args is NameDataViewModel selectableName && selectableName.ModelData != null)
             {
                 SelectedName = selectableName;
-                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Current item is a name {SelectedName.ModelData}");
+                ReportLogger?.Log(ReportType.Information, nameof(SelectionChanged), $"Current item is a name {SelectedName.ModelData}");
                 var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.ModelData, ReportLogger).ToList());
                 SelectedValueHistory = history;
-                _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.AddingData, $"Successfully updated SelectedItem.");
+                ReportLogger?.Log(ReportType.Information, nameof(SelectionChanged), $"Successfully updated SelectedItem.");
             }
             else
             {
@@ -198,7 +202,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand CreateCommand { get; set; }
 
-        private void ExecuteCreateEdit(object obj)
+        private async void CreateEdit(object obj)
         {
             if (obj is not NameDataViewModel rowData || rowData.ModelData == null || !rowData.IsNew)
             {
@@ -209,7 +213,12 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 SectorsFlat = rowData.Sectors
             };
-            OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryAdd(DataType, name, ReportLogger)));
+            UpdateResult<(Account, NameData)> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
+                    true,
+                    portfolio => portfolio.TryAdd(DataType, name)));
+            ReportLogger.Log(ReportType.Information, nameof(CreateEdit), result.ToString());
         }
 
         /// <summary>
@@ -217,18 +226,33 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DeleteCommand { get; }
 
-        public void ExecuteDelete()
+        public async void ExecuteDelete()
         {
-            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DeletingData, $"Deleting {SelectedName} from the database");
+            ReportLogger?.Log(ReportType.Information, nameof(ExecuteDelete), $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
                 _ = DataNames.Remove(SelectedName);
-                OnUpdateRequest(new UpdateRequestArgs<IPortfolio>(true, programPortfolio => programPortfolio.TryRemove(DataType, SelectedName.ModelData, ReportLogger)));
+                UpdateResult<(Account, NameData)> result = await _updater.PerformUpdate(
+                    ModelData,
+                    new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
+                        true,
+                        portfolio => portfolio.TryRemove(DataType, SelectedName.ModelData)));
+                ReportLogger?.Log(ReportType.Information, nameof(ExecuteDelete), result.ToString());
             }
             else
             {
-                _ = ReportLogger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData, "Nothing was selected when trying to delete.");
+                ReportLogger?.Log(ReportType.Error, nameof(ExecuteDelete), "Nothing was selected when trying to delete.");
             }
+        }
+
+        internal async void UpdateNameData(NameData _preEditSelectedName, NameData name)
+        {
+            UpdateResult<(Account, NameData)> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
+                    true,
+                    portfolio => portfolio.TryEditName(DataType, _preEditSelectedName, name)));
+            ReportLogger?.Log(ReportType.Information, nameof(UpdateNameData), result.ToString());
         }
     }
 }

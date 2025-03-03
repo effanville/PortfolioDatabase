@@ -44,8 +44,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         internal static IViewModelFactory SetupViewModelFactory(
             IUiStyles styles,
             UiGlobals globals,
-            IDataStoreUpdater<IPortfolio> updater,
-            IUpdater dataUpdater,
+            IUpdater updater,
             IPortfolioDataDownloader downloader,
             IConfiguration config,
             IAccountStatisticsProvider statisticsProvider)
@@ -53,7 +52,6 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 styles,
                 globals,
                 updater,
-                dataUpdater,
                 downloader,
                 config,
                 statisticsProvider);
@@ -74,9 +72,6 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             _ = mockfileinteraction.Setup(x => x.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<BoxButton>(), It.IsAny<BoxImage>())).Returns(result);
             return mockfileinteraction;
         }
-
-        public static IDataStoreUpdater<TDataStore> SetupUpdater<TDataStore>(TDataStore portfolio = null) where TDataStore : class
-            => new SynchronousUpdater<TDataStore>() { Database = portfolio };
 
         public static IUpdater SetupUpdater() => new SynchronousUpdater();
 
@@ -135,19 +130,19 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
         {
             portfolio.BaseCurrency = "GBP";
             portfolio.Name = "TestFilePath";
-            _ = portfolio.TryAdd(Account.Security, new NameData("Fidelity", "China", "GBP", "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx", new HashSet<string>() { "Bonds", "UK" }), DummyReportLogger);
+            _ = portfolio.TryAdd(Account.Security, new NameData("Fidelity", "China", "GBP", "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx", new HashSet<string>() { "Bonds", "UK" }));
             TwoName secName = new TwoName("Fidelity", "China");
             _ = portfolio.TryAddOrEditTradeData(Account.Security, secName, new SecurityTrade(TradeType.Buy, secName, new DateTime(2000, 1, 1), 1, 1, 1), new SecurityTrade(TradeType.Buy, secName, new DateTime(2000, 1, 1), 1, 1, 2));
             _ = portfolio.TryAddOrEditData(Account.Security, secName, new DailyValuation(new DateTime(2000, 1, 1), 1), new DailyValuation(new DateTime(2000, 1, 1), 1));
-            _ = portfolio.TryAdd(Account.BankAccount, new NameData("Barclays", "currentAccount", url: "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx"), DummyReportLogger);
+            _ = portfolio.TryAdd(Account.BankAccount, new NameData("Barclays", "currentAccount", url: "https://markets.ft.com/data/funds/tearsheet/summary?s=gb00b5lxgg05:gbx"));
             _ = portfolio.TryAddOrEditData(Account.BankAccount, new NameData("Barclays", "currentAccount"), new DailyValuation(new DateTime(2000, 1, 1), 1), new DailyValuation(new DateTime(2000, 1, 1), 1));
-            _ = portfolio.TryAdd(Account.Currency, new NameData(string.Empty, "GBP"), DummyReportLogger);
+            _ = portfolio.TryAdd(Account.Currency, new NameData(string.Empty, "GBP"));
 
-            _ = portfolio.TryAdd(Account.Benchmark, new NameData(string.Empty, "UK", string.Empty, "http://www.hi.com"), DummyReportLogger);
+            _ = portfolio.TryAdd(Account.Benchmark, new NameData(string.Empty, "UK", string.Empty, "http://www.hi.com"));
 
-            _ = portfolio.TryAdd(Account.Asset, new NameData("House", "MyHouse"), DummyReportLogger);
-            _ = portfolio.TryAddOrEditData(Account.Asset, new NameData("House", "MyHouse"), new DailyValuation(new DateTime(2020, 1, 1), 300000), new DailyValuation(new DateTime(2020, 1, 1), 300000), DummyReportLogger);
-            _ = portfolio.TryAddOrEditAssetDebt(Account.Asset, new NameData("House", "MyHouse"), new DailyValuation(new DateTime(2020, 1, 1), 150000), new DailyValuation(new DateTime(2020, 1, 1), 150000), DummyReportLogger);
+            _ = portfolio.TryAdd(Account.Asset, new NameData("House", "MyHouse"));
+            _ = portfolio.TryAddOrEditData(Account.Asset, new NameData("House", "MyHouse"), new DailyValuation(new DateTime(2020, 1, 1), 300000), new DailyValuation(new DateTime(2020, 1, 1), 300000));
+            _ = portfolio.TryAddOrEditAssetDebt(Account.Asset, new NameData("House", "MyHouse"), new DailyValuation(new DateTime(2020, 1, 1), 150000), new DailyValuation(new DateTime(2020, 1, 1), 150000));
         }
 
         public static IPortfolio CreateEmptyDataBase()

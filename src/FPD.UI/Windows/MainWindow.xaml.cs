@@ -110,21 +110,6 @@ namespace Effanville.FPD.UI.Windows
             }
         }
 
-        private void CloseTabCommand(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is not MainWindowViewModel viewModel
-                || MainTabControl.SelectedIndex == 0)
-            {
-                return;
-            }
-
-            if (viewModel.Tabs[MainTabControl.SelectedIndex] is DataDisplayViewModelBase vmBase
-                && vmBase.Closable)
-            {
-                viewModel.Tabs.RemoveAt(MainTabControl.SelectedIndex);
-            }
-        }
-
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current != null
@@ -157,8 +142,13 @@ namespace Effanville.FPD.UI.Windows
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow?.Close();
 
-        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e) =>
-            Application.Current.MainWindow?.DragMove();
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Application.Current.MainWindow?.DragMove();
+            }
+        }
 
         private void Resize_Init(object sender, MouseButtonEventArgs e)
         {

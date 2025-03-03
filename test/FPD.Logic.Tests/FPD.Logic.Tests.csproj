@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-windows;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks>net9.0-windows</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<RootNamespace>Effanville.FPD.Logic.Tests</RootNamespace>
 		<AssemblyName>Effanville.FPD.Logic.Tests</AssemblyName>

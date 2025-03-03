@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls.DataVisualization.Charting;
 
+using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.History;
@@ -99,8 +100,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUiStyles styles)
-            : base(uiGlobals, styles, portfolio, "Charts", Account.All)
+        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUiStyles styles, IUpdater updater)
+            : base(uiGlobals, styles, portfolio, updater, "Charts", Account.All)
         {
             PropertyChanged += OnPropertyChanged;
         }
@@ -123,7 +124,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             {
                 base.UpdateData(modelData, force);
             }
-            
+
             UpdateData(force);
         }
 
@@ -148,7 +149,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
             int numDays = (lastDate - firstDate).Days;
             if (HistoryGapDays == 0 && numDays > 0)
-            { 
+            {
                 HistoryGapDays = numDays / 100;
             }
 
@@ -193,7 +194,10 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
                     LineSeries series1 = new LineSeries
                     {
-                        DependentValuePath = "Value", IndependentValuePath = "Key", ItemsSource = pc, Title = name
+                        DependentValuePath = "Value",
+                        IndependentValuePath = "Key",
+                        ItemsSource = pc,
+                        Title = name
                     };
                     newValues.Add(series1);
                 }

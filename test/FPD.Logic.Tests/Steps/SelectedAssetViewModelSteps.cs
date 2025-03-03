@@ -32,10 +32,9 @@ public class SelectedAssetViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
         _testContext.ModelData = valueList;
-        _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
@@ -43,7 +42,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -56,7 +55,7 @@ public class SelectedAssetViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset asset);
         foreach (TableRow row in table.Rows)
         {
@@ -81,7 +80,6 @@ public class SelectedAssetViewModelSteps
             }
         }
 
-        _testContext.Updater.Database = portfolio;
         _testContext.ModelData = asset;
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
@@ -90,7 +88,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -100,10 +98,9 @@ public class SelectedAssetViewModelSteps
         IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        portfolio.TryAdd(Account.Asset, nameData, _testContext.Globals.ReportLogger);
+        portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
 
-        _testContext.Updater.Database = portfolio;
         _testContext.ModelData = valueList;
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
@@ -112,7 +109,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 

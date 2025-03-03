@@ -26,14 +26,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader());
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+                TestSetupHelper.SetupDownloader(),
+                updater);
             viewModel.NewDatabaseCommand.Execute(1);
             //Check that data held is an empty database
 
@@ -57,14 +57,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader());
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+                TestSetupHelper.SetupDownloader(),
+                updater);
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
 
@@ -89,14 +89,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath, savePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader());
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+                TestSetupHelper.SetupDownloader(),
+                updater);
             viewModel.LoadDatabaseCommand.Execute(1);
             //Input prespecified example database
 
@@ -123,14 +123,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testPath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock.Object, dialogMock.Object),
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader());
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+                TestSetupHelper.SetupDownloader(),
+                updater);
             viewModel.SaveDatabaseCommand.Execute(1);
             //Input prespecified example database
 
@@ -151,14 +151,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock(testFilePath);
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader());
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+                TestSetupHelper.SetupDownloader(),
+                updater);
             viewModel.UpdateDataCommand.Execute(1);
             //Input prespecified example database
 
@@ -176,14 +176,14 @@ namespace Effanville.FPD.Logic.Tests
             Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("notNeeded");
             Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock(MessageBoxOutcome.Yes);
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
-            IDataStoreUpdater<IPortfolio> dataUpdater = TestSetupHelper.SetupUpdater(portfolio);
+            IUpdater updater = TestSetupHelper.SetupUpdater();
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 loggerMock.Object,
                 TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object),
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader());
-            viewModel.UpdateRequest += dataUpdater.PerformUpdate;
+                TestSetupHelper.SetupDownloader(),
+                updater);
             viewModel.RefreshCommand.Execute(1);
             //Check that data held is an empty database
 

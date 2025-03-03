@@ -27,6 +27,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
     public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
+        private readonly IUpdater _updater;
 
         /// <summary>
         /// The name data of the security this window details.
@@ -107,10 +108,10 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = dataType;
+            _updater = dataUpdater;
             _portfolioDataDownloader = portfolioDataDownloader;
             ExportCsvData = new RelayCommand(ExecuteExportCsvData);
-            DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
-            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
+            DownloadCommand = new RelayCommand(DownloadValue);
             string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
             ValuesTLVM = new TimeListViewModel(
                 asset.Values,
@@ -133,27 +134,43 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             Statistics = new AccountStatsViewModel(null, Styles);
         }
 
-        private void DeleteValue(DailyValuation value)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => asset.TryDeleteData(value.Day, ReportLogger)));
+        private async void DeleteValue(DailyValuation value)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
+                    true,
+                    asset => asset.TryDeleteData(value.Day)));
+            ReportLogger?.Log(ReportType.Information, nameof(DeleteValue), result.ToString());
+        }
 
-        private void DeleteDebtValue(DailyValuation value) 
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => asset.TryDeleteDebt(value.Day, ReportLogger)));
+        private async void DeleteDebtValue(DailyValuation value)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
+                    true,
+                    asset => asset.TryDeleteDebt(value.Day)));
+            ReportLogger?.Log(ReportType.Information, nameof(DeleteDebtValue), result.ToString());
+        }
 
-        private void DeletePaymentValue(DailyValuation value)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => asset.TryDeletePayment(value.Day, ReportLogger)));
-        
+        private async void DeletePaymentValue(DailyValuation value)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(ModelData,
+                new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
+                    true,
+                    asset => asset.TryDeletePayment(value.Day)));
+            ReportLogger?.Log(ReportType.Information, nameof(DeletePaymentValue), result.ToString());
+        }
 
         /// <summary>
         /// Downloads the latest data for the selected entry.
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private void ExecuteDownloadCommand()
+        private async void DownloadValue()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+            ReportLogger?.Log(ReportType.Information, nameof(DownloadValue),
                 $"Download selected for account {SelectedName} - a {_dataType}");
             if (SelectedName == null)
             {
@@ -161,8 +178,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             }
 
             NameData names = SelectedName;
-            OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                async asset => await _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
+            await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
+                asset => _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -172,7 +189,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
 
         private async void ExecuteExportCsvData()
         {
-            _ = ReportLogger.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+            ReportLogger?.Log(ReportType.Information, nameof(ExecuteExportCsvData),
                 $"Selected {_dataType} {SelectedName} exporting data to csv.");
             if (SelectedName == null)
             {
@@ -189,22 +206,43 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             }
         }
 
-        private void ExecuteAddEditValues(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _ = asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+        private async void ExecuteAddEditValues(DailyValuation oldValue, DailyValuation newValue)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
+                    true,
+                    asset => asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
-        private void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _ = asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddEditValues), result.ToString());
+        }
 
-        private void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _ = asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value, ReportLogger)));
+        private async void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
+                    true,
+                    asset => asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value)));
+
+            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddEditDebt), result.ToString());
+        }
+
+        private async void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
+                    true,
+                    asset => asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value)));
+
+            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddEditPayment), result.ToString());
+        }
 
         /// <inheritdoc/>
         public override void UpdateData(IAmortisableAsset modelData, bool force)
         {
-            _ = ReportLogger?.Log(ReportSeverity.Detailed, ReportType.Information, ReportLocation.DatabaseAccess,
+            ReportLogger?.Log(ReportType.Information, nameof(UpdateData),
                 $"Selected {_dataType} {SelectedName} updating data.");
             base.UpdateData(modelData, force);
             if (SelectedName == null)

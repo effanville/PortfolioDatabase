@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Effanville.Common.Structure.DisplayClasses;
-using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Statistics;
@@ -70,7 +68,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// Default constructor.
         /// </summary>
         public StatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
-            : base(globals, styles, userConfiguration, portfolio, "Statistics", account)
+            : base(globals, styles, userConfiguration, portfolio, null, "Statistics", account)
         {
             StatisticNames = AccountStatisticsHelpers.AllStatistics()
                 .Select(stat =>
@@ -79,7 +77,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                         {
                             return new Selectable<Statistic>(stat, false);
                         }
-                        
+
                         return new Selectable<Statistic>(stat, true);
                     })
                 .ToList();
@@ -136,8 +134,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
         private void UpdateDataInternal(IPortfolio modelData, bool force)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            stopwatch.Start();
             if (modelData != null)
             {
                 base.UpdateData(modelData, false);
@@ -150,8 +146,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
             var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
             DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
-            stopwatch.Stop();
-            ReportLogger.Log(ReportSeverity.Critical, ReportType.Information, "here", $"Elapsed is {stopwatch.Elapsed.TotalMilliseconds}ms");
             return;
 
             void AssignStats(List<AccountStatistics> statistics)

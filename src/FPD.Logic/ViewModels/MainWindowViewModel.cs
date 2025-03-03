@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
 
-using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Download;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
+
 
 namespace Effanville.FPD.Logic.ViewModels
 {
@@ -80,11 +79,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public MainWindowViewModel(UiGlobals globals,
+        public MainWindowViewModel(
+            UiGlobals globals,
             IUiStyles styles,
             IPortfolio portfolio,
-            IDataStoreUpdater<IPortfolio> updater,
-            IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory,
             IConfiguration configuration,
             ReportingWindowViewModel reportsViewModel,
@@ -104,7 +102,6 @@ namespace Effanville.FPD.Logic.ViewModels
             if (OptionsToolbarCommands != null)
             {
                 OptionsToolbarCommands.RefreshDisplay += AllData_portfolioChanged;
-                OptionsToolbarCommands.UpdateRequest += updater.PerformUpdate;
                 OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
             }
 
@@ -123,15 +120,31 @@ namespace Effanville.FPD.Logic.ViewModels
                 "Bank Accounts",
                 Account.BankAccount,
                 nameof(ValueListWindowViewModel)));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Pensions", Account.Pension,
-                updater, portfolioDataDownloader, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Benchmarks", Account.Benchmark,
-                updater, portfolioDataDownloader, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Currencies", Account.Currency,
-                updater, portfolioDataDownloader, viewModelFactory));
-            Tabs.Add(new ValueListWindowViewModel(Globals, Styles, ProgramPortfolio, "Assets", Account.Asset,
-                updater, portfolioDataDownloader, viewModelFactory));
-            Tabs.Add(viewModelFactory.GenerateViewModel(ProgramPortfolio, "", Account.All, nameof(StatsViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Pensions",
+                Account.Pension,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Benchmarks",
+                Account.Benchmark,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Currencies",
+                Account.Currency,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "Assets",
+                Account.Asset,
+                nameof(ValueListWindowViewModel)));
+            Tabs.Add(viewModelFactory.GenerateViewModel(
+                ProgramPortfolio,
+                "",
+                Account.All,
+                nameof(StatsViewModel)));
             if (statisticsChartsViewModel != null)
             {
                 Tabs.Add(statisticsChartsViewModel);
@@ -153,7 +166,6 @@ namespace Effanville.FPD.Logic.ViewModels
                     continue;
                 }
 
-                vmb.UpdateRequest += updater.PerformUpdate;
                 vmb.RequestClose += RemoveTab;
             }
 

@@ -1,8 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
-using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
-using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 
@@ -10,9 +9,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 {
     public sealed class NameDataViewModel : StyledViewModelBase<NameData>, IEditableObject
     {
-        private readonly Account _typeOfAccount;
+        private readonly Action<NameData, NameData> _updateCallback;
         private NameData _preEditSelectedName;
-        private readonly IDataStoreUpdater<IPortfolio> _updater;
 
         private bool _isUpdated;
         private string _company;
@@ -96,13 +94,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public NameDataViewModel(string header,
             NameData modelData,
             bool isUpdated,
-            Account accType,
-            IDataStoreUpdater<IPortfolio> updater,
+            Action<NameData, NameData> updateCallback,
             UiGlobals displayGlobals, IUiStyles styles)
             : base(header, modelData, displayGlobals, styles)
         {
-            _typeOfAccount = accType;
-            _updater = updater;
+            _updateCallback = updateCallback;
             IsUpdated = isUpdated;
             if (modelData == null)
             {
@@ -148,10 +144,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 SectorsFlat = Sectors
             };
-            _updater.PerformUpdate(null,
-                new UpdateRequestArgs<IPortfolio>(true,
-                    programPortfolio =>
-                        programPortfolio.TryEditName(_typeOfAccount, _preEditSelectedName, name)));
+            _updateCallback(_preEditSelectedName, name);
             ModelData = name;
             IsEditing = false;
         }
