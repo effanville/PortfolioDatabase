@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [25.03.02] - 2025-03-03
+
+### Testing
+
+- Fix broken unit tests
+
+## [25.03.02] - 2025-03-02
+
+### Bug Fixes
+
+- Use simple inferral for button styles
+- Small tidies in combobox display to enable small boxes to be shown
+- Ensure button style doesnt force sizing on buttons
+- Ensure html viewer background is white to view the html
+- Use viewModelFactory for creating view models
+- Remove unnecessary updateRequest event on view models and associated updater
+- Use ViewModelFactory where possible
+- Use ReportType sorting in reporting window
+- Fix yahoo downloading
+
+### Features
+
+- Use new icon for project
+- Provide default style for CheckBoxes to ensure consistent colouring
+- Use Update classes to respond with result from finance structure updates
+- Use update result values and log output
+- Remove ability to target net8.0
+
+### Refactor
+
+- Simplify Stats options display classes
+- Rename BorderStyle style file
+- Remove unnecessary borderstyles file
+
 ## [25.01.01] - 2025-01-10
 
 ### Bug Fixes
