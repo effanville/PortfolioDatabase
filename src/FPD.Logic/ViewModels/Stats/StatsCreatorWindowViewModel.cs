@@ -19,6 +19,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     public sealed class StatsCreatorWindowViewModel : DataDisplayViewModelBase
     {
         private ExportHistoryViewModel _historyExport;
+        private IViewModelFactory _viewModelFactory;
 
         /// <summary>
         /// The options for exporting the history of the portfolio.
@@ -56,8 +57,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsCreatorWindowViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio)
-            : base(globals, styles, userConfiguration, portfolio, "Stats Creator", Account.All)
+        public StatsCreatorWindowViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, IViewModelFactory viewModelFactory)
+            : base(globals, styles, userConfiguration, portfolio, null, "Stats Creator", Account.All)
         {
             UserConfiguration = userConfiguration;
             if (UserConfiguration.HasLoaded)
@@ -79,6 +80,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
             ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
             CreateInvestmentListCommand = new RelayCommand(ExecuteInvestmentListCommand);
+            _viewModelFactory = viewModelFactory;
         }
 
         /// <summary>
@@ -104,7 +106,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 }
                 PortfolioInvestments portfolioInvestments = new PortfolioInvestments(ModelData, new PortfolioInvestmentSettings());
                 portfolioInvestments.ExportToFile(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger);
-                RequestAddTab?.Invoke(new SecurityInvestmentViewModel(ModelData, Styles), EventArgs.Empty);
+                RequestAddTab?.Invoke(_viewModelFactory.GenerateViewModel(ModelData, "", Account.All, nameof(SecurityInvestmentViewModel)), EventArgs.Empty);
+
             }
             else
             {

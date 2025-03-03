@@ -54,7 +54,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// Construct an instance.
         /// </summary>
         public HtmlViewerViewModel(IUiStyles styles, UiGlobals globals, string header, string filePath)
-            : base(globals, styles, null, header, Account.All, closable: true)
+            : base(globals, styles, null, null, header, Account.All, closable: true)
         {
             if (!string.IsNullOrEmpty(filePath))
             {

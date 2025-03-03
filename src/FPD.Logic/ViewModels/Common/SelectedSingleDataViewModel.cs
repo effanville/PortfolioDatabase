@@ -26,7 +26,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
-
+        private readonly IUpdater _updater;
         private TwoName _selectedName;
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             UiGlobals globals,
             TwoName selectedName,
             Account accountDataType,
-            IUpdater dataUpdater)
+            IUpdater updater)
             : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
                 closable: true)
         {
             _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
             _dataType = accountDataType;
-            UpdateRequest += (obj, args) => dataUpdater.PerformUpdate(ModelData, args);
+            _updater = updater;
             string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(valueList.Names.Currency);
             TLVM = new TimeListViewModel(
                 valueList.Values,
@@ -86,9 +86,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 DeleteValue,
                 ExecuteAddEditData);
             Stats = new AccountStatsViewModel(null, Styles);
-            DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
-            AddCsvData = new RelayCommand(ExecuteAddCsvData);
-            ExportCsvData = new RelayCommand(ExecuteExportCsvData);
+            DeleteValuationCommand = new RelayCommand(DeleteValue);
+            AddCsvDataCommand = new RelayCommand(AddCsvData);
+            ExportCsvDataCommand = new RelayCommand(ExportCsvData);
         }
 
         /// <inheritdoc/>
@@ -109,45 +109,55 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             Stats.UpdateData(stats, force);
         }
 
-        private void ExecuteAddEditData(DailyValuation oldValue, DailyValuation newValue)
-            => OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
-                valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
+        private async void ExecuteAddEditData(DailyValuation oldValue, DailyValuation newValue)
+        {
+            UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                ModelData,
+                new UpdateRequestArgs<IValueList, DailyValuation>(
+                    true,
+                    valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
+            ReportLogger.Log(ReportType.Information, nameof(ExecuteAddEditData), result.ToString());
+        }
 
         /// <summary>
         /// Command to delete data from the value list.
         /// </summary>
         public ICommand DeleteValuationCommand { get; }
 
-        private void ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
+        private void DeleteValue() => DeleteValue(TLVM.SelectedValuation);
 
-        private void DeleteValue(DailyValuation value)
+        private async void DeleteValue(DailyValuation value)
         {
             if (value != null)
             {
-                OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
-                    valueList => valueList.TryDeleteData(value.Day)));
+                UpdateResult<DailyValuation> result = await _updater.PerformUpdate(
+                    ModelData,
+                    new UpdateRequestArgs<IValueList, DailyValuation>(
+                        true,
+                        valueList => valueList.TryDeleteData(value.Day)));
+                ReportLogger.Log(ReportType.Information, nameof(DeleteValue), result.ToString());
             }
             else
             {
-                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.DeletingData.ToString(),
-                    "No Account was selected when trying to delete data.");
+                ReportLogger.Log(ReportType.Error, nameof(DeleteValue), "No Account was selected when trying to delete data.");
             }
         }
 
         /// <summary>
         /// Command to add data from a csv file.
         /// </summary>
-        public ICommand AddCsvData { get; }
+        public ICommand AddCsvDataCommand { get; }
 
-        private async void ExecuteAddCsvData()
+        private async void AddCsvData()
         {
             if (_selectedName == null)
             {
                 return;
             }
 
-            FileInteractionResult result =
-                await DisplayGlobals.FileInteractionService.OpenFile("csv", filter: "Csv Files|*.csv|All Files|*.*");
+            FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile(
+                "csv",
+                filter: "Csv Files|*.csv|All Files|*.*");
             List<object> outputs = null;
             if (result.Success)
             {
@@ -163,13 +173,13 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 if (obj is DailyValuation view)
                 {
-                    OnUpdateRequest(new UpdateRequestArgs<IValueList>(true,
+                    UpdateResult<DailyValuation> updateResult = await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IValueList, DailyValuation>(true,
                         valueList => valueList.TryEditData(view.Day, view.Day, view.Value)));
+                    ReportLogger.Log(ReportType.Information, nameof(AddCsvData), updateResult.ToString());
                 }
                 else
                 {
-                    ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(),
-                        "Have the wrong type of thing");
+                    ReportLogger.Log(ReportType.Error, nameof(AddCsvData), "Have the wrong type of thing");
                 }
             }
         }
@@ -177,9 +187,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Command to export data to a csv file.
         /// </summary>
-        public ICommand ExportCsvData { get; }
+        public ICommand ExportCsvDataCommand { get; }
 
-        private async void ExecuteExportCsvData()
+        private async void ExportCsvData()
         {
             if (_selectedName == null)
             {

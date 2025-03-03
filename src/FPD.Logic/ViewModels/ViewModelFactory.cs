@@ -1,3 +1,5 @@
+using System;
+
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
@@ -16,8 +18,7 @@ namespace Effanville.FPD.Logic.ViewModels;
 public class ViewModelFactory : IViewModelFactory
 {
     private readonly UiGlobals _globals;
-    private readonly IDataStoreUpdater<IPortfolio> _updater;
-    private readonly IUpdater _newUpdater;
+    private readonly IUpdater _updater;
     private readonly IPortfolioDataDownloader _portfolioDataDownloader;
     private readonly IConfiguration _configuration;
     private readonly IAccountStatisticsProvider _statisticsProvider;
@@ -26,8 +27,7 @@ public class ViewModelFactory : IViewModelFactory
     public ViewModelFactory(
         IUiStyles styles,
         UiGlobals globals,
-        IDataStoreUpdater<IPortfolio> updater,
-        IUpdater newUpdater,
+        IUpdater updater,
         IPortfolioDataDownloader portfolioDataDownloader,
         IConfiguration configuration,
         IAccountStatisticsProvider statisticsProvider)
@@ -35,7 +35,6 @@ public class ViewModelFactory : IViewModelFactory
         _styles = styles;
         _globals = globals;
         _updater = updater;
-        _newUpdater = newUpdater;
         _portfolioDataDownloader = portfolioDataDownloader;
         _configuration = configuration;
         _statisticsProvider = statisticsProvider;
@@ -49,9 +48,10 @@ public class ViewModelFactory : IViewModelFactory
         => vmType switch
         {
             nameof(StatsViewModel) => new StatsViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsViewModel)], portfolio, account),
-            nameof(BasicDataViewModel) => new BasicDataViewModel(_globals, _styles, portfolio),
-            nameof(ValueListWindowViewModel) => new ValueListWindowViewModel(_globals, _styles, portfolio, title, account, _updater, _portfolioDataDownloader, this),
-            nameof(StatsCreatorWindowViewModel) => new StatsCreatorWindowViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsCreatorWindowViewModel)], portfolio),
+            nameof(BasicDataViewModel) => new BasicDataViewModel(_globals, _styles, portfolio, _updater),
+            nameof(ValueListWindowViewModel) => new ValueListWindowViewModel(_globals, _styles, portfolio, title, account, _updater, this),
+            nameof(StatsCreatorWindowViewModel) => new StatsCreatorWindowViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsCreatorWindowViewModel)], portfolio, this),
+            nameof(SecurityInvestmentViewModel) => new SecurityInvestmentViewModel(portfolio, _styles),
             _ => null
         };
 
@@ -69,7 +69,7 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 asset.Names,
                 account,
-                _newUpdater,
+                _updater,
                 _portfolioDataDownloader) as StyledClosableViewModelBase<T>,
             ISecurity security => new SelectedSecurityViewModel(
                 _statisticsProvider,
@@ -78,7 +78,7 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 names,
                 account,
-                _newUpdater,
+                _updater,
                 _portfolioDataDownloader) as StyledClosableViewModelBase<T>,
             IExchangeableValueList exchangeableValueList => new SelectedSingleDataViewModel(
                 _statisticsProvider,
@@ -87,7 +87,7 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 exchangeableValueList.Names,
                 account,
-                _newUpdater) as StyledClosableViewModelBase<T>,
+                _updater) as StyledClosableViewModelBase<T>,
             IValueList valueList => new SelectedSingleDataViewModel(
                 _statisticsProvider,
                 valueList,
@@ -95,7 +95,20 @@ public class ViewModelFactory : IViewModelFactory
                 _globals,
                 valueList.Names,
                 account,
-                _newUpdater) as StyledClosableViewModelBase<T>,
+                _updater) as StyledClosableViewModelBase<T>,
             _ => null
         };
+
+    public DataNamesViewModel GenerateViewModel(
+        IPortfolio portfolio,
+        Action<object> loadSelectedData,
+        Account dataType)
+        => new DataNamesViewModel(
+            portfolio,
+            _globals,
+            _styles,
+            _updater,
+            _portfolioDataDownloader,
+            loadSelectedData,
+            dataType);
 }

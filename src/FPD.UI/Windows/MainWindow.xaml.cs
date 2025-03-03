@@ -142,8 +142,13 @@ namespace Effanville.FPD.UI.Windows
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow?.Close();
 
-        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e) =>
-            Application.Current.MainWindow?.DragMove();
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Application.Current.MainWindow?.DragMove();
+            }
+        }
 
         private void Resize_Init(object sender, MouseButtonEventArgs e)
         {

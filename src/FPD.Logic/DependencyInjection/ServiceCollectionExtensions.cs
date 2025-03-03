@@ -1,5 +1,4 @@
 ﻿using Effanville.Common.Structure.DataEdit;
-using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
@@ -15,7 +14,6 @@ public static class ServiceCollectionExtensions
         _ = services
             .AddSingleton<IViewModelFactory, ViewModelFactory>()
             .AddSingleton<IAccountStatisticsProvider, StatisticsProvider>()
-            .AddSingleton<IDataStoreUpdater<IPortfolio>, BackgroundUpdater<IPortfolio>>()
             .AddSingleton<IUpdater, BackgroundUpdater>()
             .AddSingleton<IPriceDownloaderFactory, PriceDownloaderFactory>()
             .AddSingleton<IPortfolioDataDownloader, PortfolioDataDownloader>()

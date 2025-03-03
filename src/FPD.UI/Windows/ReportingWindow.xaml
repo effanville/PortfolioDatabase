@@ -43,8 +43,8 @@
                        Margin="2"
                        Text="Report Level:" />
             <ComboBox Grid.Row="2"
-                      ItemsSource="{Binding ReportSeverityValues}"
-                      SelectedValue="{Binding Path=ReportingSeverity}" />
+                      ItemsSource="{Binding ReportTypeValues}"
+                      SelectedValue="{Binding Path=ReportType}" />
             <Button Grid.Row="3"
                     Content="Export"
                     Command="{Binding ExportReportsCommand}" />
@@ -77,9 +77,6 @@
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Severity"
-                                    MinWidth="50"
-                                    Binding="{Binding Path=ErrorSeverity, UpdateSourceTrigger=LostFocus}" />
                 <DataGridTextColumn Header="Type"
                                     MinWidth="50"
                                     Binding="{Binding Path=ErrorType, UpdateSourceTrigger=LostFocus}" />

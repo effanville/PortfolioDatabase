@@ -755,7 +755,6 @@ namespace Effanville.FPD.Logic.Tests
 
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
 
-            SynchronousUpdater<IPortfolio> dataUpdater = new SynchronousUpdater<IPortfolio>();
             Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
             string testConfigPath = "c:/temp/saved/user.config";
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
@@ -768,9 +767,7 @@ namespace Effanville.FPD.Logic.Tests
             MainWindowViewModel vm = new MainWindowViewModel(globals,
                 null,
                 PortfolioFactory.GenerateEmpty(),
-                dataUpdater,
-                downloader,
-                new ViewModelFactory(null, globals, dataUpdater, updater, downloader, config, null),
+                new ViewModelFactory(null, globals, updater, downloader, config, null),
                 config,
                 null,
                 null,

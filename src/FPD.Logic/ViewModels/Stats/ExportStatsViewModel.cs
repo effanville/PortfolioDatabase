@@ -85,7 +85,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// Default constructor.
         /// </summary>
         public ExportStatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
-            : base(globals, styles, userConfiguration, portfolio, "", Account.All)
+            : base(globals, styles, userConfiguration, portfolio, null, "", Account.All)
         {
             _closeWindowAction = closeWindow;
             ExportCommand = new RelayCommand(ExecuteExportCommand);

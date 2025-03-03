@@ -35,7 +35,6 @@ public class SelectedAssetViewModelSteps
         portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
         _testContext.ModelData = valueList;
-        _testContext.Updater.Database = portfolio;
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
@@ -43,7 +42,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -81,7 +80,6 @@ public class SelectedAssetViewModelSteps
             }
         }
 
-        _testContext.Updater.Database = portfolio;
         _testContext.ModelData = asset;
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
@@ -90,7 +88,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 
@@ -103,7 +101,6 @@ public class SelectedAssetViewModelSteps
         portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset valueList);
 
-        _testContext.Updater.Database = portfolio;
         _testContext.ModelData = valueList;
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
@@ -112,7 +109,7 @@ public class SelectedAssetViewModelSteps
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
-            _testContext.DataUpdater,
+            _testContext.Updater,
             _testContext.PortfolioDataDownloader);
     }
 
