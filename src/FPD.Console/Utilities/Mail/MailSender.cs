@@ -3,23 +3,28 @@ using System.IO.Abstractions;
 using System.Net.Mail;
 using System.Net.Mime;
 
-using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.Extensions;
+
+using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Console.Utilities.Mail;
 
 public sealed class MailSender : IMailSender
 {
+    private readonly ILogger _logger;
+
+    public MailSender(ILogger<MailSender> logger) => _logger = logger;
+
     public void WriteEmail(
         IFileSystem fileSystem,
         SmtpInfo smtpInfo,
-        MailInfo mailInfo,
-        IReportLogger logger)
+        MailInfo mailInfo)
     {
         try
         {
             if (!smtpInfo.Validate())
             {
-                logger.Error("Emailing", "Could not validate smtp info.");
+                _logger.Error("Could not validate smtp info.");
                 return;
             }
 
@@ -56,17 +61,17 @@ public sealed class MailSender : IMailSender
                 }
             }
 
-            logger.Log(ReportType.Information, "Emailing", "Added all attachments.");
+            _logger.Info("Added all attachments.");
 
             client.EnableSsl = true;
             client.Port = smtpInfo.Port;
             client.Credentials = new System.Net.NetworkCredential(smtpInfo.AuthUser, smtpInfo.AuthPassword);
             client.Send(newMail);
-            logger.Log(ReportType.Information, "Emailing", "Sent mail.");
+            _logger.Info("Sent mail.");
         }
         catch (Exception ex)
         {
-            logger.Error("Emailing", ex.ToString());
+            _logger.Exception(ex);
         }
     }
 }
