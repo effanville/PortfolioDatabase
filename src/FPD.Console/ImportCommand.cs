@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
+using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
 using Effanville.FinancialStructures.Database;
@@ -60,7 +61,7 @@ namespace Effanville.FPD.Console
             var portfolioPersistence = new PortfolioPersistence();
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
             IPortfolio portfolio = portfolioPersistence.Load(portfolioOptions, _reportLogger);
-            _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_filepathOption.Value}");
+            _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
             var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem);
             IPortfolio otherPortfolio = portfolioPersistence.Load(otherPortfolioOptions, _reportLogger);

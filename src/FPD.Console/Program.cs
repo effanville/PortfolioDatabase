@@ -17,7 +17,7 @@ namespace Effanville.FPD.Console
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
             builder.Services.AddScoped<LogInterceptor>()
-                .AddScoped<IMailSender>();
+                .AddScoped<IMailSender, MailSender>();
             IHost host = builder.SetupConsole(
                     args,
                     new List<Type>() { typeof(DownloadCommand), typeof(ImportCommand), typeof(StatisticsCommand) })

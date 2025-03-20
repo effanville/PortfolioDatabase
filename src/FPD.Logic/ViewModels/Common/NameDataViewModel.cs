@@ -91,6 +91,13 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         }
 
+        /// <summary>
+        /// Empty constructor. Required for WPF to load rows with this as a view model.
+        /// </summary>
+        public NameDataViewModel()
+            : base(null, null, null, null)
+        { }
+
         public NameDataViewModel(string header,
             NameData modelData,
             bool isUpdated,
