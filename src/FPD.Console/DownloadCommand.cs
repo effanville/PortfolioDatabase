@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using Effanville.Common.Console.Commands;
 using Effanville.Common.Console.Options;
 using Effanville.Common.ReportWriting.Documents;
+using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
 using Effanville.FinancialStructures.Database;
@@ -63,7 +64,7 @@ namespace Effanville.FPD.Console
             IPortfolio portfolio = portfolioPersistence.Load(
                 persistenceOptions,
                 _reportLogger);
-            _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_filepathOption.Value}");
+            _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
             PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory();
             new PortfolioDataDownloader(priceDownloaderFactory).Download(portfolio, _reportLogger).Wait();
@@ -84,9 +85,9 @@ namespace Effanville.FPD.Console
                 {
                     var exportString = stats.ExportString(true, DocumentType.Html, exportSettings);
                     string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
-                    _logger.Log(LogLevel.Information, $"Attempting to mail with auth user of length {smtpAuthUser.Length}");
+                    _logger.Info($"Attempting to mail with auth user of length {smtpAuthUser.Length}");
                     string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
-                    _logger.Log(LogLevel.Information, $"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
+                    _logger.Info($"Attempting to mail with auth pwd of length {smtpAuthPassword.Length}");
                     var smtpInfo = SmtpInfo.GmailHost();
                     smtpInfo.AuthUser = smtpAuthUser;
                     smtpInfo.AuthPassword = smtpAuthPassword;
@@ -98,7 +99,7 @@ namespace Effanville.FPD.Console
                         Recipients = new List<string> { _mailRecipientOption.Value }
                     };
                     _logger.Log(LogLevel.Information, $"Setup content for mailing.");
-                    _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
+                    _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData);
                 }
             }
 

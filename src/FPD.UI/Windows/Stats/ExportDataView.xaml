@@ -9,6 +9,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=stats:ExportDataViewModel}">
     <UserControl.Resources>
+        <ui:StatisticToStringConverter x:Key="StatToStringConverter" />
         <ui:DisplayConstants x:Key="Consts" />
     </UserControl.Resources>
     <Grid>
@@ -44,10 +45,15 @@
                   ItemsSource="{Binding ColumnNames}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox Content="{Binding Path=Instance}"
-                              IsChecked="{Binding Path=Selected, Mode=TwoWay}"
-                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                              Tag="{RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}" />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="3">
+                        <CheckBox IsChecked="{Binding Selected}"
+                                  Style="{StaticResource CheckBoxDefaultStyle}"
+                                  Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.Styles.BackgroundBrush}"
+                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Styles.ForegroundBrush}"
+                                  BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Styles.BackgroundSecondaryBrush}"
+                                  Content="{Binding Instance, Converter={StaticResource StatToStringConverter}}" />
+                    </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

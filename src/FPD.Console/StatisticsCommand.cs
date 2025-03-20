@@ -66,7 +66,7 @@ namespace Effanville.FPD.Console
             var portfolio = portfolioPersistence.Load(
                 PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem),
                 _reportLogger);
-            _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_filepathOption.Value}");
+            _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
             DocumentType docType = _fileTypeOption.Value;
 
@@ -79,7 +79,7 @@ namespace Effanville.FPD.Console
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
             var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
             stats.ExportToFile(_fileSystem, filePath, docType, exportSettings, _reportLogger);
-            _logger.Log(LogLevel.Information, $"Successfully generated statistics page {filePath}");
+            _logger.Info($"Successfully generated statistics page {filePath}");
 
             if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
             {
@@ -96,7 +96,7 @@ namespace Effanville.FPD.Console
                     Body = exportString.ToString(),
                     Recipients = new List<string> { _mailRecipientOption.Value }
                 };
-                _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData, _reportLogger);
+                _mailSender.WriteEmail(_fileSystem, smtpInfo, emailData);
             }
 
             return 0;
