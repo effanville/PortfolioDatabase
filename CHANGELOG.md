@@ -2,13 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [25.03.02] - 2025-03-03
+## [25.03.05] - 2025-03-20
+
+### Bug Fixes
+
+- Small fixes to fpd console for json serialization
+- Ensure notes and stat lists can be displayed
+- Ensure new names can be created via NameDataViewModel
+- Fixes to json serialization and xml versioning
+
+### Features
+
+- Tidy console logging
 
 ### Testing
 
-- Fix broken unit tests
+- Update unit tests for recent saving changes
 
-## [25.03.02] - 2025-03-02
+## [25.03.02] - 2025-03-03
 
 ### Bug Fixes
 
@@ -35,6 +46,10 @@ All notable changes to this project will be documented in this file.
 - Simplify Stats options display classes
 - Rename BorderStyle style file
 - Remove unnecessary borderstyles file
+
+### Testing
+
+- Fix broken unit tests
 
 ## [25.01.01] - 2025-01-10
 

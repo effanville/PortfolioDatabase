@@ -14,7 +14,7 @@
     <AssemblyTitle>FPD.UI</AssemblyTitle>
     <AssemblyName>FPD.UI</AssemblyName>
     <Product>FinancePortfolioDatabase</Product>
-    <Version>25.03.02</Version>
+    <Version>25.03.05</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
