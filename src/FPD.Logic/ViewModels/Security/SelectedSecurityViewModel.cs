@@ -161,11 +161,11 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                     new UpdateRequestArgs<ISecurity, DailyValuation>(
                         false,
                         security => security.TryDeleteData(value.Day)));
-                ReportLogger?.Log(ReportType.Information, nameof(DeleteValue), result.ToString());
+                ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
             }
             else
             {
-                ReportLogger?.Log(ReportType.Error, nameof(DeleteValue), "No Account was selected when trying to delete data.");
+                ReportLogger?.Error(nameof(SelectedSecurityViewModel), "No Account was selected when trying to delete data.");
             }
         }
 
@@ -176,8 +176,6 @@ namespace Effanville.FPD.Logic.ViewModels.Security
 
         private async void DownloadValue()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(DownloadValue),
-                $"Download selected for account {SelectedName} - a {_dataType}");
             if (SelectedName == null)
             {
                 return;
@@ -195,8 +193,6 @@ namespace Effanville.FPD.Logic.ViewModels.Security
 
         private async void ExecuteAddCsvData()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddCsvData),
-                $"Selected {_dataType} {SelectedName} adding data from csv.");
             if (SelectedName == null)
             {
                 return;
@@ -228,8 +224,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 }
                 else
                 {
-                    ReportLogger?.Log(ReportType.Error, nameof(ExecuteAddCsvData),
-                        "Have the wrong type of thing");
+                    ReportLogger?.Error(nameof(SelectedSecurityViewModel), "Have the wrong type of thing");
                 }
             }
         }
@@ -241,8 +236,6 @@ namespace Effanville.FPD.Logic.ViewModels.Security
 
         private async void ExecuteExportCsvData()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteExportCsvData),
-                $"Selected {_dataType} {SelectedName} exporting data to csv.");
             if (SelectedName == null)
             {
                 return;
@@ -264,14 +257,12 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 ModelData,
                 new UpdateRequestArgs<ISecurity, DailyValuation>(true,
                         security => security.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
-            ReportLogger?.Log(ReportType.Information, nameof(AddEditUnitPriceData), result.ToString());
+            ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
         }
 
         /// <inheritdoc/>
         public override void UpdateData(ISecurity modelData, bool force)
         {
-            ReportLogger?.Log(ReportType.Information, nameof(UpdateData),
-                $"Selected {_dataType} {SelectedName} updating data.");
             base.UpdateData(modelData, force);
             if (SelectedName == null || modelData == null)
             {
@@ -349,7 +340,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                     ModelData,
                     new UpdateRequestArgs<ISecurity, SecurityTrade>(true,
                     security => security.TryAddOrEditTradeData(_oldSelectedTrade, _selectedTrade)));
-                ReportLogger?.Log(ReportType.Information, nameof(AddEditTradeData), result.ToString());
+                ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
             }
         }
 
@@ -365,12 +356,11 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                     ModelData,
                     new UpdateRequestArgs<ISecurity, SecurityTrade>(true,
                     security => security.TryDeleteTradeData(_selectedTrade.Day)));
-                ReportLogger?.Log(ReportType.Information, nameof(DeleteTrade), result.ToString());
+                ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
             }
             else
             {
-                ReportLogger?.Log(ReportType.Error, nameof(DeleteTrade),
-                    "No Account was selected when trying to delete data.");
+                ReportLogger?.Error(nameof(SelectedSecurityViewModel), "No Account was selected when trying to delete data.");
             }
         }
     }

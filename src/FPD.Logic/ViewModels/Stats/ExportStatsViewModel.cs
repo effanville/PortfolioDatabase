@@ -164,11 +164,11 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     CurrencySortingData.CreateTableOptions());
                 stats.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
-                ReportLogger.Log(ReportType.Information, ReportLocation.StatisticsPage.ToString(), "Created statistics page");
+                ReportLogger.Info(nameof(ExportStatsViewModel), "Created statistics page");
             }
             else
             {
-                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Was not able to create page in place specified.");
+                ReportLogger.Error(nameof(ExportStatsViewModel), "Was not able to create page in place specified.");
             }
 
             _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Stats", path));

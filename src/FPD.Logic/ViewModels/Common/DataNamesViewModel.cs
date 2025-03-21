@@ -156,7 +156,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         private async void ExecuteDownloadCommand()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteDownloadCommand), $"Download selected for account {SelectedName.ModelData} - a {DataType}");
+            ReportLogger?.Info(nameof(DataNamesViewModel), $"Download selected for account {SelectedName.ModelData} - a {DataType}");
             if (SelectedName == null)
             {
                 return;
@@ -183,10 +183,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (DataNames != null && args is NameDataViewModel selectableName && selectableName.ModelData != null)
             {
                 SelectedName = selectableName;
-                ReportLogger?.Log(ReportType.Information, nameof(SelectionChanged), $"Current item is a name {SelectedName.ModelData}");
                 var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.ModelData, ReportLogger).ToList());
                 SelectedValueHistory = history;
-                ReportLogger?.Log(ReportType.Information, nameof(SelectionChanged), $"Successfully updated SelectedItem.");
             }
             else
             {
@@ -218,7 +216,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
                     true,
                     portfolio => portfolio.TryAdd(DataType, name)));
-            ReportLogger.Log(ReportType.Information, nameof(CreateEdit), result.ToString());
+            ReportLogger.Info(nameof(DataNamesViewModel), result.ToString());
         }
 
         /// <summary>
@@ -228,7 +226,6 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
         public async void ExecuteDelete()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteDelete), $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
                 _ = DataNames.Remove(SelectedName);
@@ -237,11 +234,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
                         true,
                         portfolio => portfolio.TryRemove(DataType, SelectedName.ModelData)));
-                ReportLogger?.Log(ReportType.Information, nameof(ExecuteDelete), result.ToString());
+                ReportLogger?.Info(nameof(DataNamesViewModel), result.ToString());
             }
             else
             {
-                ReportLogger?.Log(ReportType.Error, nameof(ExecuteDelete), "Nothing was selected when trying to delete.");
+                ReportLogger?.Error(nameof(DataNamesViewModel), "Nothing was selected when trying to delete.");
             }
         }
 
@@ -252,7 +249,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
                     true,
                     portfolio => portfolio.TryEditName(DataType, _preEditSelectedName, name)));
-            ReportLogger?.Log(ReportType.Information, nameof(UpdateNameData), result.ToString());
+            ReportLogger?.Info(nameof(DataNamesViewModel), result.ToString());
         }
     }
 }

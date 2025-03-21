@@ -79,7 +79,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             }
             else
             {
-                DisplayGlobals.ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
+                DisplayGlobals.ReportLogger.Error(nameof(ExportReportViewModel), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
     }

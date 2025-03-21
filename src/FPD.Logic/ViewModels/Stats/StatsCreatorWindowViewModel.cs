@@ -93,7 +93,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
         private async void ExecuteInvestmentListCommand()
         {
-            ReportLogger.Log(ReportType.Information, nameof(ExecuteInvestmentListCommand), "Execute called");
+            ReportLogger.Info(nameof(StatsCreatorWindowViewModel), "Execute called");
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
                 ".csv",
                 $"{ModelData.Name}-CSVStats.csv",
@@ -111,7 +111,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             }
             else
             {
-                ReportLogger.Log(ReportType.Error, nameof(ExecuteInvestmentListCommand), $"Was not able to create Investment list page at {result.FilePath}");
+                ReportLogger.Error(nameof(StatsCreatorWindowViewModel), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
 
