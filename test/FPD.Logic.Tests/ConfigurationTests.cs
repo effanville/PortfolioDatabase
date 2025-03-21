@@ -145,6 +145,10 @@ namespace Effanville.FPD.Logic.Tests
             <d5p1:Selected>true</d5p1:Selected>
           </d5p1:SelectableOfStatisticAUSmO6kd>
           <d5p1:SelectableOfStatisticAUSmO6kd>
+            <d5p1:Instance>WeeklyChange</d5p1:Instance>
+            <d5p1:Selected>true</d5p1:Selected>
+          </d5p1:SelectableOfStatisticAUSmO6kd>
+          <d5p1:SelectableOfStatisticAUSmO6kd>
             <d5p1:Instance>FundFraction</d5p1:Instance>
             <d5p1:Selected>true</d5p1:Selected>
           </d5p1:SelectableOfStatisticAUSmO6kd>
@@ -256,6 +260,10 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>WeeklyChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>Investment</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
@@ -336,6 +344,10 @@ namespace Effanville.FPD.Logic.Tests
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>WeeklyChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>FundFraction</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
@@ -385,6 +397,10 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>RecentChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>WeeklyChange</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
@@ -464,6 +480,10 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>RecentChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>WeeklyChange</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
@@ -548,6 +568,10 @@ namespace Effanville.FPD.Logic.Tests
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
                   <d8p1:Instance>RecentChange</d8p1:Instance>
+                  <d8p1:Selected>true</d8p1:Selected>
+                </d8p1:SelectableOfStatisticAUSmO6kd>
+                <d8p1:SelectableOfStatisticAUSmO6kd>
+                  <d8p1:Instance>WeeklyChange</d8p1:Instance>
                   <d8p1:Selected>true</d8p1:Selected>
                 </d8p1:SelectableOfStatisticAUSmO6kd>
                 <d8p1:SelectableOfStatisticAUSmO6kd>
