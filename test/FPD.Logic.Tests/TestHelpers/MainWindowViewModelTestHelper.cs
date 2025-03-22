@@ -3,6 +3,7 @@ using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
@@ -54,7 +55,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 new ViewModelFactory(styles, globals, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
                 new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
-                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio, downloader, updater),
+                new OptionsToolbarViewModel(globals, styles, portfolio, downloader, updater, new PortfolioPersistence(globals.ReportLogger)),
                 new BasicDataViewModel(globals, styles, portfolio, updater),
                 new StatisticsChartsViewModel(globals, portfolio, styles, updater));
         }

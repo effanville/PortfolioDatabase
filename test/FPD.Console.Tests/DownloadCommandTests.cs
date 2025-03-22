@@ -5,6 +5,8 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
 
 using Microsoft.Extensions.Configuration;
@@ -38,12 +40,13 @@ public sealed class DownloadCommandTests
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var mailSender = Substitute.For<IMailSender>();
+        var persistence = Substitute.For<IPersistence<IPortfolio>>();
         ILogger<DownloadCommand> logger = Substitute.For<ILogger<DownloadCommand>>();
         IConfiguration config = new ConfigurationBuilder()
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger, mailSender);
+        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger, mailSender, persistence);
         bool isValidated = downloadCommand.Validate(config);
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }

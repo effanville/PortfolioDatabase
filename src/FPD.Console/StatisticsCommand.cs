@@ -8,6 +8,7 @@ using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
+using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
@@ -23,6 +24,7 @@ namespace Effanville.FPD.Console
         private readonly ILogger _logger;
         private readonly IReportLogger _reportLogger;
         private readonly IMailSender _mailSender;
+        private readonly IPersistence<IPortfolio> _persistence;
         readonly CommandOption<string> _filepathOption;
         readonly CommandOption<string> _outputPathOption;
         readonly CommandOption<DocumentType> _fileTypeOption;
@@ -39,12 +41,18 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public StatisticsCommand(IFileSystem fileSystem, ILogger<StatisticsCommand> logger, IReportLogger reportLogger, IMailSender mailSender)
+        public StatisticsCommand(
+            IFileSystem fileSystem,
+            ILogger<StatisticsCommand> logger,
+            IReportLogger reportLogger,
+            IMailSender mailSender,
+            IPersistence<IPortfolio> persistence)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
             _mailSender = mailSender;
+            _persistence = persistence;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _outputPathOption = new CommandOption<string>("outputPath", "Path for the statistics file.");
@@ -62,10 +70,7 @@ namespace Effanville.FPD.Console
         [LogIntercept]
         public int Execute(IConfiguration config)
         {
-            var portfolioPersistence = new PortfolioPersistence();
-            var portfolio = portfolioPersistence.Load(
-                PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem),
-                _reportLogger);
+            var portfolio = _persistence.Load(PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem));
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
             DocumentType docType = _fileTypeOption.Value;

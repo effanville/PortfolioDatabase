@@ -12,7 +12,6 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.ViewModels;
-using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.UI.Windows
 {
@@ -98,9 +97,9 @@ namespace Effanville.FPD.UI.Windows
                 {
                     viewModel.ProgramPortfolio.Name =
                         viewModel.Globals.CurrentFileSystem.Path.GetFileNameWithoutExtension(savingResult.FilePath);
-                    var xmlPersistence = new XmlPortfolioPersistence();
+                    var xmlPersistence = new XmlPortfolioPersistence(viewModel.Globals.ReportLogger);
                     var options = new XmlFilePersistenceOptions(savingResult.FilePath, viewModel.Globals.CurrentFileSystem);
-                    xmlPersistence.Save(viewModel.ProgramPortfolio, options, viewModel.Globals.ReportLogger);
+                    xmlPersistence.Save(viewModel.ProgramPortfolio, options);
                 }
             }
 

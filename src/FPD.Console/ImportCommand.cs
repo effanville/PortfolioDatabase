@@ -19,6 +19,7 @@ namespace Effanville.FPD.Console
         private readonly IFileSystem _fileSystem;
         private readonly ILogger<ImportCommand> _logger;
         private readonly IReportLogger _reportLogger;
+        private readonly IPersistence<IPortfolio> _persistence;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<string> _otherDatabaseFilepath;
 
@@ -32,22 +33,27 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public ImportCommand(IFileSystem fileSystem, ILogger<ImportCommand> logger, IReportLogger reportLogger)
+        public ImportCommand(
+            IFileSystem fileSystem,
+            ILogger<ImportCommand> logger,
+            IReportLogger reportLogger,
+            IPersistence<IPortfolio> persistence)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
+            _persistence = persistence;
             _filepathOption =
                 new CommandOption<string>(
-                    "filepath", 
+                    "filepath",
                     "The path to the portfolio.",
                     required: true,
                     FileValidator);
             Options.Add(_filepathOption);
             _otherDatabaseFilepath = new CommandOption<string>(
                 "importfilepath",
-                "Filepath for that database to import from.", 
-                required: true, 
+                "Filepath for that database to import from.",
+                required: true,
                 FileValidator);
             Options.Add(_otherDatabaseFilepath);
             return;
@@ -58,19 +64,17 @@ namespace Effanville.FPD.Console
         [LogIntercept]
         public int Execute(IConfiguration config)
         {
-            var portfolioPersistence = new PortfolioPersistence();
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
-            IPortfolio portfolio = portfolioPersistence.Load(portfolioOptions, _reportLogger);
+            IPortfolio portfolio = _persistence.Load(portfolioOptions);
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
             var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem);
-            IPortfolio otherPortfolio = portfolioPersistence.Load(otherPortfolioOptions, _reportLogger);
+            IPortfolio otherPortfolio = _persistence.Load(otherPortfolioOptions);
             _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
 
             portfolio.ImportValuesFrom(otherPortfolio, _reportLogger);
 
-            var xmlPersistence = new XmlPortfolioPersistence();
-            xmlPersistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem), _reportLogger);
+            _persistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem));
             return 0;
         }
 

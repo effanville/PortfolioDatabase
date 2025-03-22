@@ -22,7 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels
     /// </summary>
     public sealed class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
-        private readonly ILogger<OptionsToolbarViewModel> _logger;
+        private readonly IPersistence<IPortfolio> _portfolioPersistence;
         private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         private string _fileName;
         private string _directory;
@@ -62,11 +62,17 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public OptionsToolbarViewModel(ILogger<OptionsToolbarViewModel> logger, UiGlobals globals, IUiStyles styles, IPortfolio portfolio, IPortfolioDataDownloader portfolioDataDownloader, IUpdater updater)
+        public OptionsToolbarViewModel(
+            UiGlobals globals,
+            IUiStyles styles,
+            IPortfolio portfolio,
+            IPortfolioDataDownloader portfolioDataDownloader,
+            IUpdater updater,
+            IPersistence<IPortfolio> persistence)
             : base(globals, styles, portfolio, updater, "Options")
         {
-            _logger = logger;
             _portfolioDataDownloader = portfolioDataDownloader;
+            _portfolioPersistence = persistence;
             NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
             SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
             LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
@@ -99,7 +105,6 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand NewDatabaseCommand { get; }
         private async void ExecuteNewDatabase()
         {
-            _logger.LogInformation("ExecuteNewDatabase called.");
             MessageBoxOutcome result;
             if (ModelData.IsAlteredSinceSave)
             {
@@ -126,7 +131,6 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand SaveDatabaseCommand { get; }
         private async void ExecuteSaveDatabase()
         {
-            _logger.LogInformation($"Saving database {_fileName} called.");
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
             {
@@ -138,11 +142,10 @@ namespace Effanville.FPD.Logic.ViewModels
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
                 portfolio => portfolio.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
-            PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
             PersistenceOptions options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 false,
-                portfolio => portfolioPersistence.Save(portfolio, options, ReportLogger)));
+                portfolio => _portfolioPersistence.Save(portfolio, options)));
             DisplayGlobals.CurrentWorkingDirectory = _directory;
         }
 
@@ -153,28 +156,24 @@ namespace Effanville.FPD.Logic.ViewModels
 
         private async void ExecuteLoadDatabase()
         {
-            _logger.LogInformation("Loading database.");
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
             {
                 return;
             }
 
-            var portfolioPersistence = new PortfolioPersistence();
             var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
-                portfolio => portfolioPersistence.Load(portfolio, options, ReportLogger)));
+                portfolio => _portfolioPersistence.Load(portfolio, options)));
 
             var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 false,
-                portfolio => portfolioPersistence.Save(portfolio, backupOptions, ReportLogger)));
+                portfolio => _portfolioPersistence.Save(portfolio, backupOptions)));
             DisplayGlobals.CurrentWorkingDirectory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
             _fileName = DisplayGlobals.CurrentFileSystem.Path.GetFileName(result.FilePath);
             _directory = DisplayGlobals.CurrentFileSystem.Path.GetDirectoryName(result.FilePath);
-
-            _logger.LogInformation($"Loaded database {_fileName} successfully.");
         }
 
         /// <summary>
@@ -183,7 +182,6 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand UpdateDataCommand { get; }
         private async void ExecuteUpdateData()
         {
-            _logger.LogInformation($"Execute update data for database {_fileName} called.");
             await _updater.PerformUpdate(
                 ModelData,
                 new UpdateRequestArgs<IPortfolio>(
@@ -197,13 +195,11 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand ImportFromOtherDatabaseCommand { get; }
         private async void ImportFromOtherDatabase()
         {
-            _logger.LogInformation($"Execute import data for database {_fileName} called.");
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
                 PersistenceOptions options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
-                IPortfolio otherPortfolio = portfolioPersistence.Load(options, ReportLogger);
+                IPortfolio otherPortfolio = _portfolioPersistence.Load(options);
                 await _updater.PerformUpdate(
                     ModelData,
                     new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.ImportValuesFrom(otherPortfolio, ReportLogger)));
@@ -216,7 +212,6 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand CleanDataCommand { get; }
         private async void ExecuteCleanData()
         {
-            _logger.LogInformation($"Execute clean database for database {_fileName} called.");
             await _updater.PerformUpdate(
                 ModelData,
                 new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.CleanData()));
@@ -228,7 +223,6 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand RepriceResetCommand { get; }
         private async void ExecuteRepriceReset()
         {
-            _logger.LogInformation($"Execute clean database for database {_fileName} called.");
             await _updater.PerformUpdate(
                 ModelData,
                 new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.MigrateRepriceToReset()));
@@ -241,9 +235,8 @@ namespace Effanville.FPD.Logic.ViewModels
 
         private void ExecuteRefresh()
         {
-            _logger.LogInformation($"Execute refresh on the window fo database {_fileName} called.");
             RefreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
-         }
+        }
 
         /// <summary>
         /// Command to update the base currency of the database.

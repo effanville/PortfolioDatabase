@@ -18,6 +18,7 @@ using Effanville.FPD.UI.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.UI
 {
@@ -48,7 +49,9 @@ namespace Effanville.FPD.UI
                 .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
                 .AddSingleton(x => x.LoadConfig())
                 .AddViewModelDependencies();
-            _ = hostBuilder.Logging.AddReportLogger(UpdateReport);
+            _ = hostBuilder.Logging
+                .ClearProviders()
+                .AddReportLogger(UpdateReport);
 
             _host = hostBuilder.Build();
         }

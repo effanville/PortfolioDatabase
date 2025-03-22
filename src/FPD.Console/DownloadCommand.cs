@@ -8,6 +8,7 @@ using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
+using Effanville.Common.Structure.WebAccess;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Download;
@@ -25,6 +26,7 @@ namespace Effanville.FPD.Console
         private readonly ILogger _logger;
         private readonly IReportLogger _reportLogger;
         private readonly IMailSender _mailSender;
+        private readonly IPersistence<IPortfolio> _persistence;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<bool> _updateStatsOption;
         private readonly CommandOption<string> _mailRecipientOption;
@@ -38,12 +40,18 @@ namespace Effanville.FPD.Console
         /// <inheritdoc/>
         public IList<ICommand> SubCommands { get; } = new List<ICommand>();
 
-        public DownloadCommand(IFileSystem fileSystem, ILogger<DownloadCommand> logger, IReportLogger reportLogger, IMailSender mailSender)
+        public DownloadCommand(
+            IFileSystem fileSystem,
+            ILogger<DownloadCommand> logger,
+            IReportLogger reportLogger,
+            IMailSender mailSender,
+            IPersistence<IPortfolio> persistence)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
             _mailSender = mailSender;
+            _persistence = persistence;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _updateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
@@ -59,14 +67,12 @@ namespace Effanville.FPD.Console
         [LogIntercept]
         public int Execute(IConfiguration config)
         {
-            PortfolioPersistence portfolioPersistence = new PortfolioPersistence();
             PersistenceOptions persistenceOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
-            IPortfolio portfolio = portfolioPersistence.Load(
-                persistenceOptions,
-                _reportLogger);
+            IPortfolio portfolio = _persistence.Load(persistenceOptions);
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
-            PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory();
+            WebDownloader webDownloader = new WebDownloader(_reportLogger);
+            PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory(_reportLogger, webDownloader);
             new PortfolioDataDownloader(priceDownloaderFactory).Download(portfolio, _reportLogger).Wait();
 
             if (_updateStatsOption.Value)
@@ -103,7 +109,7 @@ namespace Effanville.FPD.Console
                 }
             }
 
-            bool saved = portfolioPersistence.Save(portfolio, persistenceOptions, _reportLogger);
+            bool saved = _persistence.Save(portfolio, persistenceOptions);
             return saved ? 0 : 1;
         }
 

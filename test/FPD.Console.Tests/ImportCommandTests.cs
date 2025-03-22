@@ -5,8 +5,12 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 
 using Microsoft.Extensions.Configuration;
+
+using NSubstitute;
 
 using NUnit.Framework;
 
@@ -34,7 +38,8 @@ public sealed class ImportCommandTests
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
         mockFileSystem.AddFile(@"c:\\temp\\other-file.xml", new MockFileData("some other contents"));
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
-        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger);
+        var persistence = Substitute.For<IPersistence<IPortfolio>>();
+        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger, persistence);
         IConfiguration config = new ConfigurationBuilder()
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
