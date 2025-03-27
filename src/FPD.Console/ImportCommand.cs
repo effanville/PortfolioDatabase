@@ -19,6 +19,7 @@ namespace Effanville.FPD.Console
         private readonly IFileSystem _fileSystem;
         private readonly ILogger<ImportCommand> _logger;
         private readonly IReportLogger _reportLogger;
+        private readonly IConfiguration _config;
         private readonly IPersistence<IPortfolio> _persistence;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<string> _otherDatabaseFilepath;
@@ -37,11 +38,13 @@ namespace Effanville.FPD.Console
             IFileSystem fileSystem,
             ILogger<ImportCommand> logger,
             IReportLogger reportLogger,
+            IConfiguration config,
             IPersistence<IPortfolio> persistence)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
+            _config = config;
             _persistence = persistence;
             _filepathOption =
                 new CommandOption<string>(
@@ -62,7 +65,7 @@ namespace Effanville.FPD.Console
 
         /// <inheritdoc/>
         [LogIntercept]
-        public int Execute(IConfiguration config)
+        public int Execute()
         {
             var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
             IPortfolio portfolio = _persistence.Load(portfolioOptions);
@@ -80,7 +83,7 @@ namespace Effanville.FPD.Console
 
         /// <inheritdoc/>
         [LogIntercept]
-        public bool Validate(IConfiguration config) => this.Validate(config, _logger);
+        public bool Validate() => this.Validate(_config, _logger);
 
         /// <inheritdoc/>
         [LogIntercept]

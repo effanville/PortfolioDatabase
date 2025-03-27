@@ -47,8 +47,8 @@ public sealed class StatisticsCommandTests
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger, mailSender, persistence);
-        bool isValidated = statisticsCommand.Validate(config);
+        var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger, config, mailSender, persistence);
+        bool isValidated = statisticsCommand.Validate();
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

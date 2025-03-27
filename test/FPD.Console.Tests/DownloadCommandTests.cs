@@ -46,8 +46,8 @@ public sealed class DownloadCommandTests
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger, mailSender, persistence);
-        bool isValidated = downloadCommand.Validate(config);
+        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger, config, mailSender, persistence);
+        bool isValidated = downloadCommand.Validate();
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

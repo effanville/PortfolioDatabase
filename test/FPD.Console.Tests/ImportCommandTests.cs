@@ -34,17 +34,18 @@ public sealed class ImportCommandTests
     [TestCaseSource(nameof(ValidationSource))]
     public void CanValidateTest(string[] args, bool expectedValidation)
     {
+        IConfiguration config = new ConfigurationBuilder()
+            .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
+            .AddEnvironmentVariables()
+            .Build();
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
         mockFileSystem.AddFile(@"c:\\temp\\other-file.xml", new MockFileData("some other contents"));
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var persistence = Substitute.For<IPersistence<IPortfolio>>();
-        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger, persistence);
-        IConfiguration config = new ConfigurationBuilder()
-            .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
-            .AddEnvironmentVariables()
-            .Build();
-        bool isValidated = importCommand.Validate(config);
+        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger, config, persistence);
+
+        bool isValidated = importCommand.Validate();
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

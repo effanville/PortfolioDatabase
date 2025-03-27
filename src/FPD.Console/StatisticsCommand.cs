@@ -23,12 +23,16 @@ namespace Effanville.FPD.Console
         readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
         private readonly IReportLogger _reportLogger;
+        private readonly IConfiguration _config;
         private readonly IMailSender _mailSender;
         private readonly IPersistence<IPortfolio> _persistence;
         readonly CommandOption<string> _filepathOption;
         readonly CommandOption<string> _outputPathOption;
         readonly CommandOption<DocumentType> _fileTypeOption;
         private readonly CommandOption<string> _mailRecipientOption;
+        private string _smtpAuthUser;
+        private string _smtpAuthPassword;
+        private CommandOptions _commandOptions;
 
         /// <inheritdoc/>
         public string Name => "stats";
@@ -45,12 +49,14 @@ namespace Effanville.FPD.Console
             IFileSystem fileSystem,
             ILogger<StatisticsCommand> logger,
             IReportLogger reportLogger,
+            IConfiguration config,
             IMailSender mailSender,
             IPersistence<IPortfolio> persistence)
         {
             _fileSystem = fileSystem;
             _logger = logger;
             _reportLogger = reportLogger;
+            _config = config;
             _mailSender = mailSender;
             _persistence = persistence;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
@@ -68,7 +74,7 @@ namespace Effanville.FPD.Console
 
         /// <inheritdoc/>
         [LogIntercept]
-        public int Execute(IConfiguration config)
+        public int Execute()
         {
             var portfolio = _persistence.Load(PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem));
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
@@ -82,21 +88,19 @@ namespace Effanville.FPD.Console
 
             var settings = PortfolioStatisticsSettings.DefaultSettings();
             PortfolioStatistics stats = new PortfolioStatistics(portfolio, settings, _fileSystem);
-            var exportSettings = PortfolioStatisticsExportSettings.DefaultSettings();
+            var exportSettings = _commandOptions.StatsExport.Create();
             stats.ExportToFile(_fileSystem, filePath, docType, exportSettings, _reportLogger);
             _logger.Info($"Successfully generated statistics page {filePath}");
 
             if (!string.IsNullOrWhiteSpace(_mailRecipientOption.Value))
             {
                 var exportString = stats.ExportString(true, docType, exportSettings);
-                string smtpAuthUser = config.GetValue<string>("SmtpAuthUser");
-                string smtpAuthPassword = config.GetValue<string>("SmtpAuthPassword");
                 var smtpInfo = SmtpInfo.GmailHost();
-                smtpInfo.AuthUser = smtpAuthUser;
-                smtpInfo.AuthPassword = smtpAuthPassword;
+                smtpInfo.AuthUser = _smtpAuthUser;
+                smtpInfo.AuthPassword = _smtpAuthPassword;
                 var emailData = new MailInfo()
                 {
-                    Sender = smtpAuthUser,
+                    Sender = _smtpAuthUser,
                     Subject = "[Update] Stats auto update",
                     Body = exportString.ToString(),
                     Recipients = new List<string> { _mailRecipientOption.Value }
@@ -109,8 +113,18 @@ namespace Effanville.FPD.Console
 
         /// <inheritdoc/>
         [LogIntercept]
-        public bool Validate(IConfiguration config)
-            => this.Validate(config, _logger);
+        public bool Validate()
+        {
+            _smtpAuthUser = _config.GetValue<string>("SmtpAuthUser");
+            _logger.Info($"Mail user has length {_smtpAuthUser.Length}");
+
+            _smtpAuthPassword = _config.GetValue<string>("SmtpAuthPassword");
+            _logger.Info($"Mail auth pwd has length {_smtpAuthPassword.Length}");
+
+            _commandOptions = _config.GetSection(CommandOptions.Command).Get<CommandOptions>();
+            _logger.Info($"Retrieved options");
+            return this.Validate(_config, _logger);
+        }
 
         /// <inheritdoc/>
         [LogIntercept]
