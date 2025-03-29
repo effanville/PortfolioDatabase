@@ -22,19 +22,11 @@ namespace Effanville.FPD.Logic.Configuration
 
         /// <inheritdoc/>
         [DataMember]
-        public bool HasLoaded
-        {
-            get;
-            set;
-        }
+        public bool HasLoaded { get; set; }
 
         /// <inheritdoc/>
         [DataMember(EmitDefaultValue = false)]
-        public Dictionary<string, IConfiguration> ChildConfigurations
-        {
-            get;
-            set;
-        }
+        public Dictionary<string, IConfiguration> ChildConfigurations { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -61,7 +53,21 @@ namespace Effanville.FPD.Logic.Configuration
             {
                 if (StatisticNames != null && StatisticNames.Any())
                 {
-                    vm.StatisticNames = StatisticNames;
+                    if (vm.StatisticNames == null)
+                    {
+                        vm.StatisticNames = StatisticNames;
+                    }
+                    else
+                    {
+                        foreach (Selectable<Statistic> name in vm.StatisticNames)
+                        {
+                            Selectable<Statistic> configName = StatisticNames.FirstOrDefault(config => config.Instance == name.Instance);
+                            if (configName != null)
+                            {
+                                name.Selected = configName.Selected;
+                            }
+                        }
+                    }
                 }
 
                 vm.DisplayValueFunds = DisplayValueFunds;

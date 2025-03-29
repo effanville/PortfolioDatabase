@@ -1,4 +1,5 @@
 ﻿using Effanville.Common.Structure.DataEdit;
+using Effanville.Common.Structure.WebAccess;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Persistence;
@@ -19,6 +20,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IAccountStatisticsProvider, StatisticsProvider>()
             .AddSingleton<IUpdater, BackgroundUpdater>()
             .AddSingleton<IPriceDownloaderFactory, PriceDownloaderFactory>()
+            .AddSingleton<WebDownloader>()
             .AddSingleton<IPortfolioDataDownloader, PortfolioDataDownloader>()
             .AddSingleton<ReportingWindowViewModel>()
             .AddSingleton<OptionsToolbarViewModel>()
