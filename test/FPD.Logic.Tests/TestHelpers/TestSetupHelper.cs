@@ -16,7 +16,7 @@ using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 
-using Moq;
+using NSubstitute;
 
 namespace Effanville.FPD.Logic.Tests.TestHelpers
 {
@@ -24,21 +24,23 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
     {
         internal static IReportLogger DummyReportLogger => new NothingReportLogger();
 
-        public static Mock<IFileInteractionService> CreateFileMock(string filePath)
+        public static IFileInteractionService CreateFileMock(string filePath)
         {
-            Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
-            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new FileInteractionResult(true, filePath));
-            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new FileInteractionResult(true, filePath));
+            IFileInteractionService mockfileinteraction = Substitute.For<IFileInteractionService>();
+            mockfileinteraction
+                .OpenFile(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(new FileInteractionResult(true, filePath));
+            mockfileinteraction
+                .SaveFile(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(new FileInteractionResult(true, filePath));
             return mockfileinteraction;
         }
 
         public static IUiStyles SetupDefaultStyles()
         {
-            Mock<IUiStyles> styles = new Mock<IUiStyles>();
-            styles.SetupGet(x => x.IsLightTheme).Returns(true);
-            return styles.Object;
+            IUiStyles styles = Substitute.For<IUiStyles>();
+            styles.IsLightTheme.Returns(true);
+            return styles;
         }
 
         internal static IViewModelFactory SetupViewModelFactory(
@@ -56,30 +58,31 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 config,
                 statisticsProvider);
 
-        public static Mock<IFileInteractionService> CreateFileMock(string openFilePath, string saveFilePath)
+        public static IFileInteractionService CreateFileMock(string openFilePath, string saveFilePath)
         {
-            Mock<IFileInteractionService> mockfileinteraction = new Mock<IFileInteractionService>();
-            _ = mockfileinteraction.Setup(x => x.OpenFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new FileInteractionResult(true, openFilePath));
-            _ = mockfileinteraction.Setup(x => x.SaveFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new FileInteractionResult(true, saveFilePath));
+            IFileInteractionService mockfileinteraction = Substitute.For<IFileInteractionService>();
+            _ = mockfileinteraction
+                .OpenFile(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(new FileInteractionResult(true, openFilePath));
+            _ = mockfileinteraction
+                .SaveFile(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+                .Returns(new FileInteractionResult(true, saveFilePath));
             return mockfileinteraction;
         }
 
-        public static Mock<IBaseDialogCreationService> CreateDialogMock(MessageBoxOutcome result = MessageBoxOutcome.Yes)
+        public static IBaseDialogCreationService CreateDialogMock(MessageBoxOutcome result = MessageBoxOutcome.Yes)
         {
-            Mock<IBaseDialogCreationService> mockfileinteraction = new Mock<IBaseDialogCreationService>();
-            _ = mockfileinteraction.Setup(x => x.ShowMessageBox(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<BoxButton>(), It.IsAny<BoxImage>())).Returns(result);
+            IBaseDialogCreationService mockfileinteraction = Substitute.For<IBaseDialogCreationService>();
+            _ = mockfileinteraction
+                .ShowMessageBox(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<BoxButton>(), Arg.Any<BoxImage>())
+                .Returns(result);
             return mockfileinteraction;
         }
 
         public static IUpdater SetupUpdater() => new SynchronousUpdater();
 
         public static IAccountStatisticsProvider SetupProvider()
-        {
-            Mock<IAccountStatisticsProvider> mockProvider = new Mock<IAccountStatisticsProvider>();
-            return mockProvider.Object;
-        }
+            => Substitute.For<IAccountStatisticsProvider>();
 
         public static UiGlobals SetupGlobalsMock(
             IFileSystem fileSystem,
@@ -96,18 +99,24 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
         public static IDispatcher SetupDispatcher()
         {
-            Mock<IDispatcher> dispatcherMock = new Mock<IDispatcher>();
-            _ = dispatcherMock.Setup(x => x.Invoke(It.IsAny<Action>())).Callback((Action a) => a());
+            IDispatcher dispatcherMock = Substitute.For<IDispatcher>();
+            dispatcherMock.When(x => x.Invoke(Arg.Any<Action>()))
+                .Do(y =>
+                {
+                    var arg = y.ArgAt<Action>(0);
+                    arg();
+                });
+            dispatcherMock.When(x => x.BeginInvoke(Arg.Any<Action>()))
+                .Do(y =>
+                {
+                    var arg = y.ArgAt<Action>(0);
+                    arg();
+                });
 
-            _ = dispatcherMock.Setup(x => x.BeginInvoke(It.IsAny<Action>())).Callback((Action a) => a());
-            return dispatcherMock.Object;
+            return dispatcherMock;
         }
         public static IPortfolioDataDownloader SetupDownloader()
-        {
-            Mock<IPortfolioDataDownloader> downloaderMock = new Mock<IPortfolioDataDownloader>();
-
-            return downloaderMock.Object;
-        }
+            => Substitute.For<IPortfolioDataDownloader>();
 
         public static IReportLogger SetupReportLogger()
         {

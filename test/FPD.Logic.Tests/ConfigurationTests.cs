@@ -777,7 +777,7 @@ namespace Effanville.FPD.Logic.Tests
             MockFileSystem tempFileSystem = new MockFileSystem();
             string testPath = "c:/temp/database.xml";
 
-            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath).Object, TestSetupHelper.CreateDialogMock().Object);
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, TestSetupHelper.CreateFileMock(testPath), TestSetupHelper.CreateDialogMock());
 
             Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
             string testConfigPath = "c:/temp/saved/user.config";

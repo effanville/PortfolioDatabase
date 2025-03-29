@@ -8,7 +8,7 @@ using Effanville.FPD.Logic.ViewModels;
 
 using Microsoft.Extensions.Logging;
 
-using Moq;
+using NSubstitute;
 
 using NUnit.Framework;
 
@@ -40,7 +40,7 @@ public class ReportingViewModelSteps
 
     private void Instantiate(ReportType reportSeverity, Table table)
     {
-        ILogger<ReportingWindowViewModel> loggerMock = new Mock<ILogger<ReportingWindowViewModel>>().Object;
+        ILogger<ReportingWindowViewModel> loggerMock = Substitute.For<ILogger<ReportingWindowViewModel>>();
         _testContext.ViewModel = new ReportingWindowViewModel(
             loggerMock,
             _testContext.Globals,

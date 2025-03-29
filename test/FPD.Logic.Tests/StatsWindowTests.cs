@@ -11,8 +11,6 @@ using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
-using Moq;
-
 using NUnit.Framework;
 
 namespace Effanville.FPD.Logic.Tests
@@ -34,11 +32,11 @@ namespace Effanville.FPD.Logic.Tests
         {
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
             var fileSystem = new MockFileSystem();
-            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
-            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            IFileInteractionService fileMock = TestSetupHelper.CreateFileMock("nothing");
+            IBaseDialogCreationService dialogMock = TestSetupHelper.CreateDialogMock();
 
             IUpdater updater = TestSetupHelper.SetupUpdater();
-            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
                 globals,
@@ -70,11 +68,11 @@ namespace Effanville.FPD.Logic.Tests
             IPortfolio portfolio = TestSetupHelper.CreateBasicDataBase();
 
             var fileSystem = new MockFileSystem();
-            Mock<IFileInteractionService> fileMock = TestSetupHelper.CreateFileMock("nothing");
-            Mock<IBaseDialogCreationService> dialogMock = TestSetupHelper.CreateDialogMock();
+            IFileInteractionService fileMock = TestSetupHelper.CreateFileMock("nothing");
+            IBaseDialogCreationService dialogMock = TestSetupHelper.CreateDialogMock();
 
             IUpdater updater = TestSetupHelper.SetupUpdater();
-            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock.Object, dialogMock.Object);
+            UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
                 null,
                 globals,
