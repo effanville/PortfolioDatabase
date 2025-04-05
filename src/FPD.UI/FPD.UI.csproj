@@ -25,8 +25,8 @@
     <PackageReference Include="System.IO.Abstractions" Version="22.0.12" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\src\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\..\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\Common\src\Common.UI\Common.UI.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
     <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
     <ProjectReference Include="..\..\src\FPD.Logic\FPD.Logic.csproj" />
   </ItemGroup>
