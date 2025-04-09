@@ -13,7 +13,6 @@ using Effanville.FinancialStructures.Database.Extensions;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
-using Microsoft.Extensions.Logging;
 
 namespace Effanville.FPD.Logic.ViewModels
 {
@@ -142,7 +141,7 @@ namespace Effanville.FPD.Logic.ViewModels
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
                 portfolio => portfolio.Name = DisplayGlobals.CurrentFileSystem.Path.GetFileNameWithoutExtension(result.FilePath)));
-            PersistenceOptions options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+            PersistenceOptions options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem, PortfolioPersistence.WriteVersion);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 false,
                 portfolio => _portfolioPersistence.Save(portfolio, options)));
@@ -162,12 +161,12 @@ namespace Effanville.FPD.Logic.ViewModels
                 return;
             }
 
-            var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+            var options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem, PortfolioPersistence.ReadVersion);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
                 portfolio => _portfolioPersistence.Load(portfolio, options)));
 
-            var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem);
+            var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem, PortfolioPersistence.ReadVersion);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 false,
                 portfolio => _portfolioPersistence.Save(portfolio, backupOptions)));
@@ -198,7 +197,7 @@ namespace Effanville.FPD.Logic.ViewModels
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
             {
-                PersistenceOptions options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem);
+                PersistenceOptions options = PortfolioPersistence.CreateOptions(result.FilePath, DisplayGlobals.CurrentFileSystem, PortfolioPersistence.ReadVersion);
                 IPortfolio otherPortfolio = _portfolioPersistence.Load(options);
                 await _updater.PerformUpdate(
                     ModelData,

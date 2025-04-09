@@ -67,18 +67,18 @@ namespace Effanville.FPD.Console
         [LogIntercept]
         public int Execute()
         {
-            var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
+            var portfolioOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem, PortfolioPersistence.WriteVersion);
             IPortfolio portfolio = _persistence.Load(portfolioOptions);
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
-            var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem);
+            var otherPortfolioOptions = PortfolioPersistence.CreateOptions(_otherDatabaseFilepath.Value, _fileSystem, PortfolioPersistence.ReadVersion);
             IPortfolio otherPortfolio = _persistence.Load(otherPortfolioOptions);
             _logger.Log(LogLevel.Information, $"Successfully loaded portfolio from {_otherDatabaseFilepath.Value}");
 
             portfolio.ImportValuesFrom(otherPortfolio, _reportLogger);
 
-            _persistence.Save(portfolio, new XmlFilePersistenceOptions(_filepathOption.Value, _fileSystem));
-            return 0;
+            bool saved = _persistence.Save(portfolio, portfolioOptions);
+            return saved ? 0 : 1;
         }
 
         /// <inheritdoc/>

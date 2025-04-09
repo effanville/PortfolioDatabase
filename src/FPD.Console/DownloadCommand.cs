@@ -73,7 +73,7 @@ namespace Effanville.FPD.Console
         [LogIntercept]
         public int Execute()
         {
-            PersistenceOptions persistenceOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem);
+            PersistenceOptions persistenceOptions = PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem, PortfolioPersistence.WriteVersion);
             IPortfolio portfolio = _persistence.Load(persistenceOptions);
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 

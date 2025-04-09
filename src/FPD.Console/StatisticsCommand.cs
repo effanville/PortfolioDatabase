@@ -76,7 +76,7 @@ namespace Effanville.FPD.Console
         [LogIntercept]
         public int Execute()
         {
-            var portfolio = _persistence.Load(PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem));
+            var portfolio = _persistence.Load(PortfolioPersistence.CreateOptions(_filepathOption.Value, _fileSystem, PortfolioPersistence.ReadVersion));
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
             DocumentType docType = _fileTypeOption.Value;
