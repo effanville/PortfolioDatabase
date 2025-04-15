@@ -77,7 +77,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
             return new DailyValuation()
             {
-                Day = DateTime.Today,
+                Day = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc),
                 Value = latest?.Value ?? 0.0m
             };
         }

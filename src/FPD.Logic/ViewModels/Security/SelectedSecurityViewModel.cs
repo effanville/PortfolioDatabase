@@ -311,7 +311,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             {
                 TradeType = TradeType.Buy,
                 Names = SelectedName,
-                Day = DateTime.Today
+                Day = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc)
             };
 
         /// <summary>
