@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.Reporting;
@@ -86,7 +87,7 @@ namespace Effanville.FPD.Logic.ViewModels
             IsExpanded = false;
             ReportType = ReportType.Information;
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);
-            ExportReportsCommand = new RelayCommand(ExecuteExportReportsCommand);
+            ExportReportsCommand = new RelayCommandAsync(ExecuteExportReportsCommand);
         }
 
         private void SyncReports()
@@ -115,9 +116,9 @@ namespace Effanville.FPD.Logic.ViewModels
         /// </summary>
         public ICommand ExportReportsCommand { get; }
 
-        private void ExecuteExportReportsCommand() => ExecuteExportReports();
+        private async Task ExecuteExportReportsCommand() => await ExecuteExportReports();
 
-        private async void ExecuteExportReports()
+        private async Task ExecuteExportReports()
         {
             try
             {

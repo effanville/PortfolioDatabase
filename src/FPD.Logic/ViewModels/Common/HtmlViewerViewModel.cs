@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.UI;
@@ -61,10 +62,10 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 UrlTextPath = filePath;
             }
 
-            FileSelect = new RelayCommand(ExecuteFileSelect);
+            FileSelect = new RelayCommandAsync(ExecuteFileSelect);
         }
 
-        private async void ExecuteFileSelect()
+        private async Task ExecuteFileSelect()
         {
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("html", filter: "HTML file|*.html;*.htm|All files|*.*");
             if (result.Success)

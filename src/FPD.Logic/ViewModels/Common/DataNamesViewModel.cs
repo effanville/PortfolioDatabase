@@ -107,10 +107,10 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             DataType = dataType;
             _updater = updater;
             _portfolioDataDownloader = portfolioDataDownloader;
-            SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            CreateCommand = new RelayCommand<object>(CreateEdit);
-            DeleteCommand = new RelayCommand(ExecuteDelete);
-            DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
+            SelectionChangedCommand = new RelayCommandAsync<object>(ExecuteSelectionChanged);
+            CreateCommand = new RelayCommandAsync<object>(CreateEdit);
+            DeleteCommand = new RelayCommandAsync(ExecuteDelete);
+            DownloadCommand = new RelayCommandAsync(ExecuteDownloadCommand);
             OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.ModelData));
         }
 
@@ -154,7 +154,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private async void ExecuteDownloadCommand()
+        private async Task ExecuteDownloadCommand()
         {
             ReportLogger?.Info(nameof(DataNamesViewModel), $"Download selected for account {SelectedName.ModelData} - a {DataType}");
             if (SelectedName == null)
@@ -175,9 +175,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand SelectionChangedCommand { get; set; }
 
-        private void ExecuteSelectionChanged(object args) => SelectionChanged(args);
+        private async Task ExecuteSelectionChanged(object args) => await SelectionChanged(args);
 
-        private async void SelectionChanged(object args)
+        private async Task SelectionChanged(object args)
         {
             // object reference issue in following line
             if (DataNames != null && args is NameDataViewModel selectableName && selectableName.ModelData != null)
@@ -200,7 +200,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand CreateCommand { get; set; }
 
-        private async void CreateEdit(object obj)
+        private async Task CreateEdit(object obj)
         {
             if (obj is not NameDataViewModel rowData || rowData.ModelData == null || !rowData.IsNew)
             {
@@ -224,7 +224,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DeleteCommand { get; }
 
-        public async void ExecuteDelete()
+        public async Task ExecuteDelete()
         {
             if (SelectedName != null)
             {

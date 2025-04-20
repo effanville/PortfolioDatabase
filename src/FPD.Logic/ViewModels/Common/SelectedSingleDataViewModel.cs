@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -86,9 +87,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 DeleteValue,
                 ExecuteAddEditData);
             Stats = new AccountStatsViewModel(null, Styles);
-            DeleteValuationCommand = new RelayCommand(DeleteValue);
-            AddCsvDataCommand = new RelayCommand(AddCsvData);
-            ExportCsvDataCommand = new RelayCommand(ExportCsvData);
+            DeleteValuationCommand = new RelayCommandAsync(DeleteValue);
+            AddCsvDataCommand = new RelayCommandAsync(AddCsvData);
+            ExportCsvDataCommand = new RelayCommandAsync(ExportCsvData);
         }
 
         /// <inheritdoc/>
@@ -124,7 +125,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DeleteValuationCommand { get; }
 
-        private void DeleteValue() => DeleteValue(TLVM.SelectedValuation);
+        private async Task DeleteValue() => DeleteValue(TLVM.SelectedValuation);
 
         private async void DeleteValue(DailyValuation value)
         {
@@ -148,7 +149,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand AddCsvDataCommand { get; }
 
-        private async void AddCsvData()
+        private async Task AddCsvData()
         {
             if (_selectedName == null)
             {
@@ -189,7 +190,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand ExportCsvDataCommand { get; }
 
-        private async void ExportCsvData()
+        private async Task ExportCsvData()
         {
             if (_selectedName == null)
             {

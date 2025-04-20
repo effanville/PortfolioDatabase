@@ -13,6 +13,7 @@ using Effanville.FinancialStructures.Database.Extensions;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
+using System.Threading.Tasks;
 
 namespace Effanville.FPD.Logic.ViewModels
 {
@@ -21,6 +22,7 @@ namespace Effanville.FPD.Logic.ViewModels
     /// </summary>
     public sealed class OptionsToolbarViewModel : DataDisplayViewModelBase
     {
+        public event EventHandler<PortfolioEventArgs> NewPortfolio;
         private readonly IPersistence<IPortfolio> _portfolioPersistence;
         private readonly IPortfolioDataDownloader _portfolioDataDownloader;
         private string _fileName;
@@ -72,15 +74,15 @@ namespace Effanville.FPD.Logic.ViewModels
         {
             _portfolioDataDownloader = portfolioDataDownloader;
             _portfolioPersistence = persistence;
-            NewDatabaseCommand = new RelayCommand(ExecuteNewDatabase);
-            SaveDatabaseCommand = new RelayCommand(ExecuteSaveDatabase);
-            LoadDatabaseCommand = new RelayCommand(ExecuteLoadDatabase);
-            UpdateDataCommand = new RelayCommand(ExecuteUpdateData);
-            ImportFromOtherDatabaseCommand = new RelayCommand(ImportFromOtherDatabase);
-            CleanDataCommand = new RelayCommand(ExecuteCleanData);
-            RepriceResetCommand = new RelayCommand(ExecuteRepriceReset);
+            NewDatabaseCommand = new RelayCommandAsync(ExecuteNewDatabase);
+            SaveDatabaseCommand = new RelayCommandAsync(ExecuteSaveDatabase);
+            LoadDatabaseCommand = new RelayCommandAsync(ExecuteLoadDatabase);
+            UpdateDataCommand = new RelayCommandAsync(ExecuteUpdateData);
+            ImportFromOtherDatabaseCommand = new RelayCommandAsync(ImportFromOtherDatabase);
+            CleanDataCommand = new RelayCommandAsync(ExecuteCleanData);
+            RepriceResetCommand = new RelayCommandAsync(ExecuteRepriceReset);
             RefreshCommand = new RelayCommand(ExecuteRefresh);
-            CurrencyDropDownClosed = new RelayCommand(DropDownClosed);
+            CurrencyDropDownClosed = new RelayCommandAsync(DropDownClosed);
             PropertyChanged += UpdateColours;
         }
 
@@ -102,7 +104,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to reset database and load empty one.
         /// </summary>
         public ICommand NewDatabaseCommand { get; }
-        private async void ExecuteNewDatabase()
+        private async Task ExecuteNewDatabase()
         {
             MessageBoxOutcome result;
             if (ModelData.IsAlteredSinceSave)
@@ -128,7 +130,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to save the current database to file.
         /// </summary>
         public ICommand SaveDatabaseCommand { get; }
-        private async void ExecuteSaveDatabase()
+        private async Task ExecuteSaveDatabase()
         {
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile("xml", _fileName, _directory, "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
@@ -153,7 +155,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// </summary>
         public ICommand LoadDatabaseCommand { get; }
 
-        private async void ExecuteLoadDatabase()
+        private async Task ExecuteLoadDatabase()
         {
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|Bin Files|*.bin|All Files|*.*");
             if (!result.Success)
@@ -165,6 +167,7 @@ namespace Effanville.FPD.Logic.ViewModels
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
                 true,
                 portfolio => _portfolioPersistence.Load(portfolio, options)));
+            NewPortfolio?.Invoke(this, new PortfolioEventArgs(true));
 
             var backupOptions = PortfolioPersistence.CreateOptions($"{result.FilePath}.bak", DisplayGlobals.CurrentFileSystem, PortfolioPersistence.ReadVersion);
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IPortfolio>(
@@ -179,7 +182,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to instantiate the auto update of database values.
         /// </summary>
         public ICommand UpdateDataCommand { get; }
-        private async void ExecuteUpdateData()
+        private async Task ExecuteUpdateData()
         {
             await _updater.PerformUpdate(
                 ModelData,
@@ -192,7 +195,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to import data from another database.
         /// </summary>
         public ICommand ImportFromOtherDatabaseCommand { get; }
-        private async void ImportFromOtherDatabase()
+        private async Task ImportFromOtherDatabase()
         {
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.OpenFile("xml", filter: "XML Files|*.xml|All Files|*.*");
             if (result.Success)
@@ -209,7 +212,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to remove unnecessary data from the database.
         /// </summary>
         public ICommand CleanDataCommand { get; }
-        private async void ExecuteCleanData()
+        private async Task ExecuteCleanData()
         {
             await _updater.PerformUpdate(
                 ModelData,
@@ -220,7 +223,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// Command to replace old trade types from the database.
         /// </summary>
         public ICommand RepriceResetCommand { get; }
-        private async void ExecuteRepriceReset()
+        private async Task ExecuteRepriceReset()
         {
             await _updater.PerformUpdate(
                 ModelData,
@@ -233,16 +236,14 @@ namespace Effanville.FPD.Logic.ViewModels
         public ICommand RefreshCommand { get; }
 
         private void ExecuteRefresh()
-        {
-            RefreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
-        }
+            => RefreshDisplay?.Invoke(null, new PortfolioEventArgs(Account.All, true));
 
         /// <summary>
         /// Command to update the base currency of the database.
         /// </summary>
         public ICommand CurrencyDropDownClosed { get; }
 
-        private async void DropDownClosed()
+        private async Task DropDownClosed()
             => await _updater.PerformUpdate(
                 ModelData,
                 new UpdateRequestArgs<IPortfolio>(true, portfolio => portfolio.BaseCurrency = BaseCurrency));

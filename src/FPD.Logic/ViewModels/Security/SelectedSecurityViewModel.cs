@@ -20,6 +20,7 @@ using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
+using System.Threading.Tasks;
 
 namespace Effanville.FPD.Logic.ViewModels.Security
 {
@@ -126,11 +127,11 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             _statisticsProvider = statisticsProvider;
             _updater = updater;
             SelectedName = selectedName;
-            DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
-            AddCsvData = new RelayCommand(ExecuteAddCsvData);
-            ExportCsvData = new RelayCommand(ExecuteExportCsvData);
-            DownloadCommand = new RelayCommand(DownloadValue);
-            AddEditDataCommand = new RelayCommand(AddEditTradeData);
+            DeleteValuationCommand = new RelayCommandAsync(ExecuteDeleteValuation);
+            AddCsvData = new RelayCommandAsync(ExecuteAddCsvData);
+            ExportCsvData = new RelayCommandAsync(ExecuteExportCsvData);
+            DownloadCommand = new RelayCommandAsync(DownloadValue);
+            AddEditDataCommand = new RelayCommandAsync(AddEditTradeData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             _dataType = account;
             _portfolioDataDownloader = portfolioDataDownloader;
@@ -150,7 +151,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand DeleteValuationCommand { get; }
 
-        private void ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
+        private async Task ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
 
         private async void DeleteValue(DailyValuation value)
         {
@@ -174,7 +175,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private async void DownloadValue()
+        private async Task DownloadValue()
         {
             if (SelectedName == null)
             {
@@ -191,7 +192,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand AddCsvData { get; }
 
-        private async void ExecuteAddCsvData()
+        private async Task ExecuteAddCsvData()
         {
             if (SelectedName == null)
             {
@@ -234,7 +235,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand ExportCsvData { get; }
 
-        private async void ExecuteExportCsvData()
+        private async Task ExecuteExportCsvData()
         {
             if (SelectedName == null)
             {
@@ -332,7 +333,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand AddEditDataCommand { get; set; }
 
-        private async void AddEditTradeData()
+        private async Task AddEditTradeData()
         {
             if (_selectedTrade != null)
             {
@@ -347,7 +348,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// <summary>
         /// Deletes the pre selected trade.
         /// </summary>
-        public async void DeleteTrade()
+        public async Task DeleteTrade()
         {
             if (SelectedName != null && _selectedTrade != null)
             {

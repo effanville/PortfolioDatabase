@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.Reporting;
@@ -79,7 +80,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
             ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
             ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
-            CreateInvestmentListCommand = new RelayCommand(ExecuteInvestmentListCommand);
+            CreateInvestmentListCommand = new RelayCommandAsync(ExecuteInvestmentListCommand);
             _viewModelFactory = viewModelFactory;
         }
 
@@ -91,7 +92,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private async void ExecuteInvestmentListCommand()
+        private async Task ExecuteInvestmentListCommand()
         {
             ReportLogger.Info(nameof(StatsCreatorWindowViewModel), "Execute called");
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(

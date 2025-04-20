@@ -18,6 +18,7 @@ using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
+using System.Threading.Tasks;
 
 namespace Effanville.FPD.Logic.ViewModels.Asset
 {
@@ -110,8 +111,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             _dataType = dataType;
             _updater = dataUpdater;
             _portfolioDataDownloader = portfolioDataDownloader;
-            ExportCsvData = new RelayCommand(ExecuteExportCsvData);
-            DownloadCommand = new RelayCommand(DownloadValue);
+            ExportCsvData = new RelayCommandAsync(ExecuteExportCsvData);
+            DownloadCommand = new RelayCommandAsync(DownloadValue);
             string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
             ValuesTLVM = new TimeListViewModel(
                 asset.Values,
@@ -168,7 +169,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private async void DownloadValue()
+        private async Task DownloadValue()
         {
             if (SelectedName == null)
             {
@@ -185,7 +186,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         /// </summary>
         public ICommand ExportCsvData { get; }
 
-        private async void ExecuteExportCsvData()
+        private async Task ExecuteExportCsvData()
         {
             if (SelectedName == null)
             {
