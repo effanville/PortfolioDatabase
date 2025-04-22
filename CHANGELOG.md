@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [25.04.01] - 2025-04-22
+
+### Bug Fixes
+
+- Ensure stats display can display new statistics
+- Ensure timelist and selectedSecurity values are created in UTC
+
+### Build Changes
+
+- Remove net8.0 targetting
+- Update test dependencies
+- Update packages to latest
+- Update microsoft depencies to latest
+- Consume Common repo as a sub repo of FinancialStructures
+
+### Features
+
+- Add WeeklyChange statistic type
+- Use debug level logging in downloading
+- Use logging extension methods
+- Inject logger into WebDownloader and persistence classes
+- Enable stats sorting options to be specified via configuration for console commands
+- Add appsettings config to raise log level for hosting info
+- Add new xml saving version for Portfolio
+- Update for fixes to Xml writing
+- Use new async Relay commands where possible
+- Improve loading and saving to file
+
+### Testing
+
+- Remove moq from testing code
+
 ## [25.03.05] - 2025-03-20
 
 ### Bug Fixes
