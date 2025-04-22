@@ -18,15 +18,15 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="System.IO.Abstractions" Version="21.1.3" />
+    <PackageReference Include="System.IO.Abstractions" Version="22.0.12" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\src\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\..\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\Common\src\Common.UI\Common.UI.csproj" />
+    <ProjectReference Include="..\..\FinancialStructures\Common\src\Common.UI.Wpf\Common.UI.Wpf.csproj" />
     <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
     <ProjectReference Include="..\..\src\FPD.Logic\FPD.Logic.csproj" />
   </ItemGroup>
@@ -40,5 +40,10 @@
     <Resource Include="TemplatesAndStyles\helpicon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

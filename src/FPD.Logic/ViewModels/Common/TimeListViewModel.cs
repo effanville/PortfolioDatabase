@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataStructures;
@@ -44,8 +45,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         {
             _deleteValueAction = deleteValueAction;
             _addEditValueAction = addEditValueAction;
-            PreEditCommand = new RelayCommand(ExecutePreEdit);
-            AddEditDataCommand = new RelayCommand(ExecuteAddEditData);
+            PreEditCommand = new RelayCommandAsync(ExecutePreEdit);
+            AddEditDataCommand = new RelayCommandAsync(ExecuteAddEditData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
         }
 
@@ -77,7 +78,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
             return new DailyValuation()
             {
-                Day = DateTime.Today,
+                Day = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc),
                 Value = latest?.Value ?? 0.0m
             };
         }
@@ -100,14 +101,14 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand PreEditCommand { get; set; }
 
-        private void ExecutePreEdit() => _oldSelectedValuation = SelectedValuation?.Copy();
+        private async Task ExecutePreEdit() => _oldSelectedValuation = SelectedValuation?.Copy();
 
         /// <summary>
         /// Command to add or edit data to the <see cref="TimeList"/>
         /// </summary>
         public ICommand AddEditDataCommand { get; set; }
 
-        private void ExecuteAddEditData()
+        private async Task ExecuteAddEditData()
         {
             if (SelectedValuation != null)
             {

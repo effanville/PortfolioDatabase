@@ -5,6 +5,8 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
 
 using Microsoft.Extensions.Configuration;
@@ -39,13 +41,14 @@ public sealed class StatisticsCommandTests
         var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
         var mailSender = Substitute.For<IMailSender>();
         ILogger<StatisticsCommand> logger = Substitute.For<ILogger<StatisticsCommand>>();
+        var persistence = Substitute.For<IPersistence<IPortfolio>>();
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger, mailSender);
-        bool isValidated = statisticsCommand.Validate(config);
+        var statisticsCommand = new StatisticsCommand(mockFileSystem, logger, reportLogger, config, mailSender, persistence);
+        bool isValidated = statisticsCommand.Validate();
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

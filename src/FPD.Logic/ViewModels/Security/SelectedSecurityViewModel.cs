@@ -20,6 +20,7 @@ using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
+using System.Threading.Tasks;
 
 namespace Effanville.FPD.Logic.ViewModels.Security
 {
@@ -126,11 +127,11 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             _statisticsProvider = statisticsProvider;
             _updater = updater;
             SelectedName = selectedName;
-            DeleteValuationCommand = new RelayCommand(ExecuteDeleteValuation);
-            AddCsvData = new RelayCommand(ExecuteAddCsvData);
-            ExportCsvData = new RelayCommand(ExecuteExportCsvData);
-            DownloadCommand = new RelayCommand(DownloadValue);
-            AddEditDataCommand = new RelayCommand(AddEditTradeData);
+            DeleteValuationCommand = new RelayCommandAsync(ExecuteDeleteValuation);
+            AddCsvData = new RelayCommandAsync(ExecuteAddCsvData);
+            ExportCsvData = new RelayCommandAsync(ExecuteExportCsvData);
+            DownloadCommand = new RelayCommandAsync(DownloadValue);
+            AddEditDataCommand = new RelayCommandAsync(AddEditTradeData);
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             _dataType = account;
             _portfolioDataDownloader = portfolioDataDownloader;
@@ -150,7 +151,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand DeleteValuationCommand { get; }
 
-        private void ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
+        private async Task ExecuteDeleteValuation() => DeleteValue(TLVM.SelectedValuation);
 
         private async void DeleteValue(DailyValuation value)
         {
@@ -161,11 +162,11 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                     new UpdateRequestArgs<ISecurity, DailyValuation>(
                         false,
                         security => security.TryDeleteData(value.Day)));
-                ReportLogger?.Log(ReportType.Information, nameof(DeleteValue), result.ToString());
+                ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
             }
             else
             {
-                ReportLogger?.Log(ReportType.Error, nameof(DeleteValue), "No Account was selected when trying to delete data.");
+                ReportLogger?.Error(nameof(SelectedSecurityViewModel), "No Account was selected when trying to delete data.");
             }
         }
 
@@ -174,10 +175,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private async void DownloadValue()
+        private async Task DownloadValue()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(DownloadValue),
-                $"Download selected for account {SelectedName} - a {_dataType}");
             if (SelectedName == null)
             {
                 return;
@@ -193,10 +192,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand AddCsvData { get; }
 
-        private async void ExecuteAddCsvData()
+        private async Task ExecuteAddCsvData()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddCsvData),
-                $"Selected {_dataType} {SelectedName} adding data from csv.");
             if (SelectedName == null)
             {
                 return;
@@ -228,8 +225,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 }
                 else
                 {
-                    ReportLogger?.Log(ReportType.Error, nameof(ExecuteAddCsvData),
-                        "Have the wrong type of thing");
+                    ReportLogger?.Error(nameof(SelectedSecurityViewModel), "Have the wrong type of thing");
                 }
             }
         }
@@ -239,10 +235,8 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand ExportCsvData { get; }
 
-        private async void ExecuteExportCsvData()
+        private async Task ExecuteExportCsvData()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteExportCsvData),
-                $"Selected {_dataType} {SelectedName} exporting data to csv.");
             if (SelectedName == null)
             {
                 return;
@@ -264,14 +258,12 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                 ModelData,
                 new UpdateRequestArgs<ISecurity, DailyValuation>(true,
                         security => security.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
-            ReportLogger?.Log(ReportType.Information, nameof(AddEditUnitPriceData), result.ToString());
+            ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
         }
 
         /// <inheritdoc/>
         public override void UpdateData(ISecurity modelData, bool force)
         {
-            ReportLogger?.Log(ReportType.Information, nameof(UpdateData),
-                $"Selected {_dataType} {SelectedName} updating data.");
             base.UpdateData(modelData, force);
             if (SelectedName == null || modelData == null)
             {
@@ -320,7 +312,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
             {
                 TradeType = TradeType.Buy,
                 Names = SelectedName,
-                Day = DateTime.Today
+                Day = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc)
             };
 
         /// <summary>
@@ -341,7 +333,7 @@ namespace Effanville.FPD.Logic.ViewModels.Security
         /// </summary>
         public ICommand AddEditDataCommand { get; set; }
 
-        private async void AddEditTradeData()
+        private async Task AddEditTradeData()
         {
             if (_selectedTrade != null)
             {
@@ -349,14 +341,14 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                     ModelData,
                     new UpdateRequestArgs<ISecurity, SecurityTrade>(true,
                     security => security.TryAddOrEditTradeData(_oldSelectedTrade, _selectedTrade)));
-                ReportLogger?.Log(ReportType.Information, nameof(AddEditTradeData), result.ToString());
+                ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
             }
         }
 
         /// <summary>
         /// Deletes the pre selected trade.
         /// </summary>
-        public async void DeleteTrade()
+        public async Task DeleteTrade()
         {
             if (SelectedName != null && _selectedTrade != null)
             {
@@ -365,12 +357,11 @@ namespace Effanville.FPD.Logic.ViewModels.Security
                     ModelData,
                     new UpdateRequestArgs<ISecurity, SecurityTrade>(true,
                     security => security.TryDeleteTradeData(_selectedTrade.Day)));
-                ReportLogger?.Log(ReportType.Information, nameof(DeleteTrade), result.ToString());
+                ReportLogger?.Info(nameof(SelectedSecurityViewModel), result.ToString());
             }
             else
             {
-                ReportLogger?.Log(ReportType.Error, nameof(DeleteTrade),
-                    "No Account was selected when trying to delete data.");
+                ReportLogger?.Error(nameof(SelectedSecurityViewModel), "No Account was selected when trying to delete data.");
             }
         }
     }

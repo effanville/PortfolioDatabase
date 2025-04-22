@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -145,7 +146,7 @@ namespace Effanville.FPD.Logic.ViewModels
             : base(globals, styles, portfolio, updater, "Overview", Account.All)
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            CreateCommand = new RelayCommand(ExecuteCreateEdit);
+            CreateCommand = new RelayCommandAsync(ExecuteCreateEdit);
         }
 
         /// <inheritdoc/>
@@ -213,7 +214,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// </summary>
         public ICommand CreateCommand { get; set; }
 
-        private async void ExecuteCreateEdit()
+        private async Task ExecuteCreateEdit()
         {
             if (_selectedNote != null && !ModelData.Notes.Contains(_selectedNote))
             {
@@ -228,7 +229,7 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Method to delete the selected note.
         /// </summary>
-        public async void DeleteSelectedNote()
+        public async Task DeleteSelectedNote()
         {
             if (_selectedNote != null)
             {

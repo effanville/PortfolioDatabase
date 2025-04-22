@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.ReportWriting.Documents;
@@ -88,7 +89,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             : base(globals, styles, userConfiguration, portfolio, null, "", Account.All)
         {
             _closeWindowAction = closeWindow;
-            ExportCommand = new RelayCommand(ExecuteExportCommand);
+            ExportCommand = new RelayCommandAsync(ExecuteExportCommand);
 
             TableOptions<Statistic> securityData = new TableOptions<Statistic>(true, Statistic.Company, SortDirection.Ascending, null);
             SecuritySortingData = new ExportDataViewModel("Securities", securityData, DisplayGlobals, Styles, AccountStatisticsHelpers.DefaultSecurityStats());
@@ -127,7 +128,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// </summary>
         public ICommand ExportCommand { get; }
 
-        private async void ExecuteExportCommand()
+        private async Task ExecuteExportCommand()
         {
             UserConfiguration.StoreConfiguration(this);
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
@@ -164,11 +165,11 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                     CurrencySortingData.CreateTableOptions());
                 stats.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, type, exportSettings, ReportLogger);
 
-                ReportLogger.Log(ReportType.Information, ReportLocation.StatisticsPage.ToString(), "Created statistics page");
+                ReportLogger.Info(nameof(ExportStatsViewModel), "Created statistics page");
             }
             else
             {
-                ReportLogger.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.StatisticsPage.ToString(), "Was not able to create page in place specified.");
+                ReportLogger.Error(nameof(ExportStatsViewModel), "Was not able to create page in place specified.");
             }
 
             _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Stats", path));

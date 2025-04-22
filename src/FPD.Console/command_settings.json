@@ -1,0 +1,97 @@
+{
+  "Command": {
+    "DatabaseFile": "here.xml",
+    "UpdateStats": true,
+    "StatsOutputFile": "this.html",
+    "MailTo": "matt.egginton@gmail.com",
+    "StatsExport": {
+      "SecurityDisplayOptions": {
+        "DisplayFields": [
+          "Company",
+          "Name",
+          "Currency",
+          "LatestValue",
+          "UnitPrice",
+          "MeanSharePrice",
+          "WeeklyChange",
+          "FundFraction",
+          "Investment",
+          "Profit",
+          "IRR3M",
+          "IRR6M",
+          "IRR1Y",
+          "IRR5Y",
+          "IRRTotal",
+          "LatestDate",
+          "Sectors",
+          "Notes"
+        ]
+      },
+      "BankAccountDisplayOptions": {
+        "DisplayFields": [
+          "Company",
+          "Name",
+          "Currency",
+          "LatestValue",
+          "WeeklyChange",
+          "FundFraction",
+          "FundCompanyFraction",
+          "LatestDate",
+          "Sectors",
+          "Notes"
+        ]
+      },
+      "SectorDisplayOptions": {
+        "DisplayFields": [
+          "Company",
+          "Name",
+          "LatestValue",
+          "WeeklyChange",
+          "Profit",
+          "IRR3M",
+          "IRR6M",
+          "IRR1Y",
+          "IRR5Y",
+          "IRRTotal",
+          "NumberOfAccounts",
+          "LatestDate",
+          "Notes"
+        ]
+      },
+      "AssetDisplayOptions": {
+        "DisplayFields": [
+          "Company",
+          "Name",
+          "LatestValue",
+          "WeeklyChange",
+          "Investment",
+          "Profit",
+          "Debt",
+          "IRR3M",
+          "IRR6M",
+          "IRR1Y",
+          "IRR5Y",
+          "IRRTotal",
+          "LatestDate",
+          "Sectors",
+          "Notes"
+        ]
+      },
+      "CurrencyDisplayOptions": {
+        "DisplayFields": [
+          "Company",
+          "Name",
+          "LatestValue",
+          "WeeklyChange",
+          "Investment",
+          "Profit",
+          "FundFraction",
+          "NumberOfAccounts",
+          "LatestDate",
+          "Sectors",
+          "Notes"
+        ]
+      }
+    }
+  }
+}

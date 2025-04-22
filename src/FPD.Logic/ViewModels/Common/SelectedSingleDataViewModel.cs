@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
@@ -86,9 +87,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 DeleteValue,
                 ExecuteAddEditData);
             Stats = new AccountStatsViewModel(null, Styles);
-            DeleteValuationCommand = new RelayCommand(DeleteValue);
-            AddCsvDataCommand = new RelayCommand(AddCsvData);
-            ExportCsvDataCommand = new RelayCommand(ExportCsvData);
+            DeleteValuationCommand = new RelayCommandAsync(DeleteValue);
+            AddCsvDataCommand = new RelayCommandAsync(AddCsvData);
+            ExportCsvDataCommand = new RelayCommandAsync(ExportCsvData);
         }
 
         /// <inheritdoc/>
@@ -116,7 +117,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 new UpdateRequestArgs<IValueList, DailyValuation>(
                     true,
                     valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
-            ReportLogger.Log(ReportType.Information, nameof(ExecuteAddEditData), result.ToString());
+            ReportLogger.Info(nameof(SelectedSingleDataViewModel), result.ToString());
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DeleteValuationCommand { get; }
 
-        private void DeleteValue() => DeleteValue(TLVM.SelectedValuation);
+        private async Task DeleteValue() => DeleteValue(TLVM.SelectedValuation);
 
         private async void DeleteValue(DailyValuation value)
         {
@@ -135,11 +136,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     new UpdateRequestArgs<IValueList, DailyValuation>(
                         true,
                         valueList => valueList.TryDeleteData(value.Day)));
-                ReportLogger.Log(ReportType.Information, nameof(DeleteValue), result.ToString());
+                ReportLogger.Info(nameof(SelectedSingleDataViewModel), result.ToString());
             }
             else
             {
-                ReportLogger.Log(ReportType.Error, nameof(DeleteValue), "No Account was selected when trying to delete data.");
+                ReportLogger.Error(nameof(SelectedSingleDataViewModel), "No Account was selected when trying to delete data.");
             }
         }
 
@@ -148,7 +149,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand AddCsvDataCommand { get; }
 
-        private async void AddCsvData()
+        private async Task AddCsvData()
         {
             if (_selectedName == null)
             {
@@ -175,11 +176,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 {
                     UpdateResult<DailyValuation> updateResult = await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IValueList, DailyValuation>(true,
                         valueList => valueList.TryEditData(view.Day, view.Day, view.Value)));
-                    ReportLogger.Log(ReportType.Information, nameof(AddCsvData), updateResult.ToString());
+                    ReportLogger.Info(nameof(SelectedSingleDataViewModel), updateResult.ToString());
                 }
                 else
                 {
-                    ReportLogger.Log(ReportType.Error, nameof(AddCsvData), "Have the wrong type of thing");
+                    ReportLogger.Error(nameof(SelectedSingleDataViewModel), "Have the wrong type of thing");
                 }
             }
         }
@@ -189,7 +190,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand ExportCsvDataCommand { get; }
 
-        private async void ExportCsvData()
+        private async Task ExportCsvData()
         {
             if (_selectedName == null)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Effanville.Common.Structure.Reporting;
@@ -82,7 +83,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 UserConfiguration.HasLoaded = true;
             }
 
-            ExportHistoryCommand = new RelayCommand(ExecuteCreateHistory);
+            ExportHistoryCommand = new RelayCommandAsync(ExecuteCreateHistory);
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             get;
         }
 
-        private async void ExecuteCreateHistory()
+        private async Task ExecuteCreateHistory()
         {
             UserConfiguration.StoreConfiguration(this);
             FileInteractionResult result = await DisplayGlobals.FileInteractionService.SaveFile(
@@ -113,7 +114,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             }
             else
             {
-                ReportLogger.Log(ReportType.Error, ReportLocation.StatisticsPage.ToString(), $"Was not able to create Investment list page at {result.FilePath}");
+                ReportLogger.Error(nameof(ExportHistoryViewModel), $"Was not able to create Investment list page at {result.FilePath}");
             }
         }
     }

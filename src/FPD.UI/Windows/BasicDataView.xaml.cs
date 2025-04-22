@@ -21,7 +21,7 @@ namespace Effanville.FPD.UI.Windows
             InitializeComponent();
         }
 
-        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        private async void DataGrid_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete || e.Key == Key.Back)
             {
@@ -29,7 +29,7 @@ namespace Effanville.FPD.UI.Windows
                 {
                     if (DataContext is BasicDataViewModel vm)
                     {
-                        vm.DeleteSelectedNote();
+                        await vm.DeleteSelectedNote();
                     }
                 }
             }

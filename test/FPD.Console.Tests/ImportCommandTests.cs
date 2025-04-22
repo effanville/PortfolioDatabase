@@ -5,8 +5,12 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 
 using Microsoft.Extensions.Configuration;
+
+using NSubstitute;
 
 using NUnit.Framework;
 
@@ -30,16 +34,18 @@ public sealed class ImportCommandTests
     [TestCaseSource(nameof(ValidationSource))]
     public void CanValidateTest(string[] args, bool expectedValidation)
     {
-        var mockFileSystem = new MockFileSystem();
-        mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
-        mockFileSystem.AddFile(@"c:\\temp\\other-file.xml", new MockFileData("some other contents"));
-        var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
-        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger);
         IConfiguration config = new ConfigurationBuilder()
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        bool isValidated = importCommand.Validate(config);
+        var mockFileSystem = new MockFileSystem();
+        mockFileSystem.AddFile(@"c:\\temp\\file.xml", new MockFileData("some contents"));
+        mockFileSystem.AddFile(@"c:\\temp\\other-file.xml", new MockFileData("some other contents"));
+        var reportLogger = new LogReporter(null, new SingleTaskQueue(), saveInternally: true);
+        var persistence = Substitute.For<IPersistence<IPortfolio>>();
+        var importCommand = new ImportCommand(mockFileSystem, null, reportLogger, config, persistence);
+
+        bool isValidated = importCommand.Validate();
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }
 }

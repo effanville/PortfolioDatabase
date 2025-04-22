@@ -147,7 +147,7 @@ namespace Effanville.FPD.Logic.Configuration
             }
             catch
             {
-                _ = logger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Loading, "Could not load configuration file, reverting to default values.");
+                logger?.Error(nameof(UserConfiguration), "Could not load configuration file, reverting to default values.");
             }
         }
 
@@ -174,7 +174,7 @@ namespace Effanville.FPD.Logic.Configuration
             }
             catch
             {
-                _ = logger?.Log(ReportSeverity.Critical, ReportType.Error, ReportLocation.Saving, "Could not save configuration file.");
+                logger?.Error(nameof(UserConfiguration), "Could not save configuration file.");
             }
         }
     }

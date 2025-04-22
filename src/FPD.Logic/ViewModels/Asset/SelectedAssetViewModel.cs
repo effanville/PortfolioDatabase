@@ -18,6 +18,7 @@ using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
+using System.Threading.Tasks;
 
 namespace Effanville.FPD.Logic.ViewModels.Asset
 {
@@ -110,8 +111,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             _dataType = dataType;
             _updater = dataUpdater;
             _portfolioDataDownloader = portfolioDataDownloader;
-            ExportCsvData = new RelayCommand(ExecuteExportCsvData);
-            DownloadCommand = new RelayCommand(DownloadValue);
+            ExportCsvData = new RelayCommandAsync(ExecuteExportCsvData);
+            DownloadCommand = new RelayCommandAsync(DownloadValue);
             string currencySymbol = CurrencyCultureHelpers.CurrencySymbol(asset.Names.Currency);
             ValuesTLVM = new TimeListViewModel(
                 asset.Values,
@@ -141,7 +142,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                 new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
                     true,
                     asset => asset.TryDeleteData(value.Day)));
-            ReportLogger?.Log(ReportType.Information, nameof(DeleteValue), result.ToString());
+            ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
         }
 
         private async void DeleteDebtValue(DailyValuation value)
@@ -151,7 +152,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                 new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
                     true,
                     asset => asset.TryDeleteDebt(value.Day)));
-            ReportLogger?.Log(ReportType.Information, nameof(DeleteDebtValue), result.ToString());
+            ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
         }
 
         private async void DeletePaymentValue(DailyValuation value)
@@ -160,7 +161,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                 new UpdateRequestArgs<IAmortisableAsset, DailyValuation>(
                     true,
                     asset => asset.TryDeletePayment(value.Day)));
-            ReportLogger?.Log(ReportType.Information, nameof(DeletePaymentValue), result.ToString());
+            ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
         }
 
         /// <summary>
@@ -168,10 +169,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private async void DownloadValue()
+        private async Task DownloadValue()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(DownloadValue),
-                $"Download selected for account {SelectedName} - a {_dataType}");
             if (SelectedName == null)
             {
                 return;
@@ -187,10 +186,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         /// </summary>
         public ICommand ExportCsvData { get; }
 
-        private async void ExecuteExportCsvData()
+        private async Task ExecuteExportCsvData()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteExportCsvData),
-                $"Selected {_dataType} {SelectedName} exporting data to csv.");
             if (SelectedName == null)
             {
                 return;
@@ -214,7 +211,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddEditValues), result.ToString());
+            ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
         }
 
         private async void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
@@ -225,7 +222,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value)));
 
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddEditDebt), result.ToString());
+            ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
         }
 
         private async void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
@@ -236,14 +233,12 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value)));
 
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteAddEditPayment), result.ToString());
+            ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
         }
 
         /// <inheritdoc/>
         public override void UpdateData(IAmortisableAsset modelData, bool force)
         {
-            ReportLogger?.Log(ReportType.Information, nameof(UpdateData),
-                $"Selected {_dataType} {SelectedName} updating data.");
             base.UpdateData(modelData, force);
             if (SelectedName == null)
             {

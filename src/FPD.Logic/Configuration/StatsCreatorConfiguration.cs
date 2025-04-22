@@ -14,19 +14,11 @@ namespace Effanville.FPD.Logic.Configuration
     {
         /// <inheritdoc/>
         [DataMember(EmitDefaultValue = false)]
-        public Dictionary<string, IConfiguration> ChildConfigurations
-        {
-            get;
-            set;
-        }
+        public Dictionary<string, IConfiguration> ChildConfigurations { get; set; }
 
         /// <inheritdoc/>
         [DataMember]
-        public bool HasLoaded
-        {
-            get;
-            set;
-        }
+        public bool HasLoaded { get; set; }
 
         /// <summary>
         /// Default constructor.

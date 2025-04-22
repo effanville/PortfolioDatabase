@@ -107,10 +107,10 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             DataType = dataType;
             _updater = updater;
             _portfolioDataDownloader = portfolioDataDownloader;
-            SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
-            CreateCommand = new RelayCommand<object>(CreateEdit);
-            DeleteCommand = new RelayCommand(ExecuteDelete);
-            DownloadCommand = new RelayCommand(ExecuteDownloadCommand);
+            SelectionChangedCommand = new RelayCommandAsync<object>(ExecuteSelectionChanged);
+            CreateCommand = new RelayCommandAsync<object>(CreateEdit);
+            DeleteCommand = new RelayCommandAsync(ExecuteDelete);
+            DownloadCommand = new RelayCommandAsync(ExecuteDownloadCommand);
             OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.ModelData));
         }
 
@@ -154,9 +154,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DownloadCommand { get; }
 
-        private async void ExecuteDownloadCommand()
+        private async Task ExecuteDownloadCommand()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteDownloadCommand), $"Download selected for account {SelectedName.ModelData} - a {DataType}");
+            ReportLogger?.Info(nameof(DataNamesViewModel), $"Download selected for account {SelectedName.ModelData} - a {DataType}");
             if (SelectedName == null)
             {
                 return;
@@ -175,18 +175,16 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand SelectionChangedCommand { get; set; }
 
-        private void ExecuteSelectionChanged(object args) => SelectionChanged(args);
+        private async Task ExecuteSelectionChanged(object args) => await SelectionChanged(args);
 
-        private async void SelectionChanged(object args)
+        private async Task SelectionChanged(object args)
         {
             // object reference issue in following line
             if (DataNames != null && args is NameDataViewModel selectableName && selectableName.ModelData != null)
             {
                 SelectedName = selectableName;
-                ReportLogger?.Log(ReportType.Information, nameof(SelectionChanged), $"Current item is a name {SelectedName.ModelData}");
                 var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.ModelData, ReportLogger).ToList());
                 SelectedValueHistory = history;
-                ReportLogger?.Log(ReportType.Information, nameof(SelectionChanged), $"Successfully updated SelectedItem.");
             }
             else
             {
@@ -202,7 +200,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand CreateCommand { get; set; }
 
-        private async void CreateEdit(object obj)
+        private async Task CreateEdit(object obj)
         {
             if (obj is not NameDataViewModel rowData || rowData.ModelData == null || !rowData.IsNew)
             {
@@ -218,7 +216,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
                     true,
                     portfolio => portfolio.TryAdd(DataType, name)));
-            ReportLogger.Log(ReportType.Information, nameof(CreateEdit), result.ToString());
+            ReportLogger.Info(nameof(DataNamesViewModel), result.ToString());
         }
 
         /// <summary>
@@ -226,9 +224,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         public ICommand DeleteCommand { get; }
 
-        public async void ExecuteDelete()
+        public async Task ExecuteDelete()
         {
-            ReportLogger?.Log(ReportType.Information, nameof(ExecuteDelete), $"Deleting {SelectedName} from the database");
             if (SelectedName != null)
             {
                 _ = DataNames.Remove(SelectedName);
@@ -237,11 +234,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
                         true,
                         portfolio => portfolio.TryRemove(DataType, SelectedName.ModelData)));
-                ReportLogger?.Log(ReportType.Information, nameof(ExecuteDelete), result.ToString());
+                ReportLogger?.Info(nameof(DataNamesViewModel), result.ToString());
             }
             else
             {
-                ReportLogger?.Log(ReportType.Error, nameof(ExecuteDelete), "Nothing was selected when trying to delete.");
+                ReportLogger?.Error(nameof(DataNamesViewModel), "Nothing was selected when trying to delete.");
             }
         }
 
@@ -252,7 +249,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 new UpdateRequestArgs<IPortfolio, (Account, NameData)>(
                     true,
                     portfolio => portfolio.TryEditName(DataType, _preEditSelectedName, name)));
-            ReportLogger?.Log(ReportType.Information, nameof(UpdateNameData), result.ToString());
+            ReportLogger?.Info(nameof(DataNamesViewModel), result.ToString());
         }
     }
 }

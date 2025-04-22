@@ -3,6 +3,7 @@ using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
@@ -10,7 +11,7 @@ using Effanville.FPD.Logic.ViewModels.Stats;
 
 using Microsoft.Extensions.Logging;
 
-using Moq;
+using NSubstitute;
 
 using NUnit.Framework;
 
@@ -33,12 +34,12 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
 
             FileSystem.AddFile(testPath, new MockFileData(file));
 
-            Mock<ILogger<OptionsToolbarViewModel>> loggerMock = new Mock<ILogger<OptionsToolbarViewModel>>();
-            Mock<ILogger<ReportingWindowViewModel>> loggerReportMock = new Mock<ILogger<ReportingWindowViewModel>>();
+            ILogger<OptionsToolbarViewModel> loggerMock = Substitute.For<ILogger<OptionsToolbarViewModel>>();
+            ILogger<ReportingWindowViewModel> loggerReportMock = Substitute.For<ILogger<ReportingWindowViewModel>>();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(
                 FileSystem,
-                TestSetupHelper.CreateFileMock(testPath, saveFilePath).Object,
-                TestSetupHelper.CreateDialogMock().Object);
+                TestSetupHelper.CreateFileMock(testPath, saveFilePath),
+                TestSetupHelper.CreateDialogMock());
 
             UserConfiguration config = UserConfiguration.LoadFromUserConfigFile(
                 testConfigPath,
@@ -53,8 +54,8 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 portfolio,
                 new ViewModelFactory(styles, globals, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
-                new ReportingWindowViewModel(loggerReportMock.Object, globals, styles),
-                new OptionsToolbarViewModel(loggerMock.Object, globals, styles, portfolio, downloader, updater),
+                new ReportingWindowViewModel(loggerReportMock, globals, styles),
+                new OptionsToolbarViewModel(globals, styles, portfolio, downloader, updater, new PortfolioPersistence(globals.ReportLogger)),
                 new BasicDataViewModel(globals, styles, portfolio, updater),
                 new StatisticsChartsViewModel(globals, portfolio, styles, updater));
         }
