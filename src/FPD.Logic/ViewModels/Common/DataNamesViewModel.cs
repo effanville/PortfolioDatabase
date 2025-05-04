@@ -167,7 +167,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 ModelData,
                 new UpdateRequestArgs<IPortfolio>(
                     true,
-                    portfolio => _portfolioDataDownloader.Download(portfolio, ReportLogger).ConfigureAwait(false)));
+                    async portfolio => await _portfolioDataDownloader.Download(portfolio).ConfigureAwait(false)));
         }
 
         /// <summary>

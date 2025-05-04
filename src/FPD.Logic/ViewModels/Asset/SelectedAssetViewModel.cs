@@ -143,6 +143,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryDeleteData(value.Day)));
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void DeleteDebtValue(DailyValuation value)
@@ -153,6 +154,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryDeleteDebt(value.Day)));
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void DeletePaymentValue(DailyValuation value)
@@ -162,6 +164,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryDeletePayment(value.Day)));
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <summary>
@@ -178,7 +181,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
 
             NameData names = SelectedName;
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
+                async asset => await _portfolioDataDownloader.Download(ModelData).ConfigureAwait(false)));
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <summary>
@@ -212,6 +216,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     asset => asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
@@ -223,6 +228,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     asset => asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value)));
 
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
@@ -234,6 +240,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     asset => asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value)));
 
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <inheritdoc/>

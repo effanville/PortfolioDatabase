@@ -8,7 +8,6 @@ using Effanville.Common.ReportWriting.Documents;
 using Effanville.Common.Structure.Extensions;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.Structure.Reporting.LogAspect;
-using Effanville.Common.Structure.WebAccess;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Download;
@@ -28,6 +27,7 @@ namespace Effanville.FPD.Console
         private readonly IConfiguration _config;
         private readonly IMailSender _mailSender;
         private readonly IPersistence<IPortfolio> _persistence;
+        private readonly IPortfolioDataDownloader _dataDownloader;
         private readonly CommandOption<string> _filepathOption;
         private readonly CommandOption<bool> _updateStatsOption;
         private readonly CommandOption<string> _mailRecipientOption;
@@ -50,7 +50,8 @@ namespace Effanville.FPD.Console
             IReportLogger reportLogger,
             IConfiguration config,
             IMailSender mailSender,
-            IPersistence<IPortfolio> persistence)
+            IPersistence<IPortfolio> persistence,
+            IPortfolioDataDownloader dataDownloader)
         {
             _fileSystem = fileSystem;
             _logger = logger;
@@ -58,6 +59,7 @@ namespace Effanville.FPD.Console
             _config = config;
             _mailSender = mailSender;
             _persistence = persistence;
+            _dataDownloader = dataDownloader;
             _filepathOption = new CommandOption<string>("filepath", "The path to the portfolio.", required: true, FileValidator);
             Options.Add(_filepathOption);
             _updateStatsOption = new CommandOption<bool>("updateStats", "Update stats for portfolio.");
@@ -77,9 +79,7 @@ namespace Effanville.FPD.Console
             IPortfolio portfolio = _persistence.Load(persistenceOptions);
             _logger.Info($"Successfully loaded portfolio from {_filepathOption.Value}");
 
-            WebDownloader webDownloader = new WebDownloader(_reportLogger);
-            PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory(_reportLogger, webDownloader);
-            new PortfolioDataDownloader(priceDownloaderFactory).Download(portfolio, _reportLogger).Wait();
+            _dataDownloader.Download(portfolio).Wait();
 
             if (_updateStatsOption.Value)
             {

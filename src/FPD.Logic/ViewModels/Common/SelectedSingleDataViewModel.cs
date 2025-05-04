@@ -118,6 +118,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     true,
                     valueList => valueList.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
             ReportLogger.Info(nameof(SelectedSingleDataViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <summary>
@@ -137,6 +138,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         true,
                         valueList => valueList.TryDeleteData(value.Day)));
                 ReportLogger.Info(nameof(SelectedSingleDataViewModel), result.ToString());
+                OnModelUpdated(EventArgs.Empty);
             }
             else
             {
@@ -183,6 +185,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     ReportLogger.Error(nameof(SelectedSingleDataViewModel), "Have the wrong type of thing");
                 }
             }
+
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <summary>

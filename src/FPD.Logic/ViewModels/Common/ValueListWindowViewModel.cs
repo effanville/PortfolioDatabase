@@ -157,6 +157,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         }
 
                         newViewModel.RequestClose += RemoveTab;
+                        newViewModel.ModelUpdated += OnSubViewModelDataUpdated;
                         Tabs.Add(newViewModel);
                         break;
                     }
@@ -172,6 +173,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                             asset.Names,
                             DataType);
                         newViewModel.RequestClose += RemoveTab;
+                        newViewModel.ModelUpdated += OnSubViewModelDataUpdated;
                         Tabs.Add(newViewModel);
                         break;
                     }
@@ -187,6 +189,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                             valueList.Names,
                             DataType);
                         newViewModel.RequestClose += RemoveTab;
+                        newViewModel.ModelUpdated += OnSubViewModelDataUpdated;
                         Tabs.Add(newViewModel);
                         break;
                     }
@@ -205,9 +208,44 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
         }
 
+        private void OnSubViewModelDataUpdated(object obj, EventArgs args)
+            => OnModelUpdated(new PortfolioEventArgs(DataType));
+
         /// <summary>
         /// Removes a tab from the collection of tabs controlled by this view model.
         /// </summary>
-        private void RemoveTab(object obj, EventArgs args) => Tabs.Remove(obj);
+        private void RemoveTab(object obj, EventArgs args)
+        {
+            Tabs.Remove(obj);
+            switch (obj)
+            {
+                case StyledClosableViewModelBase<IPortfolio> viewModel1:
+                {
+                    viewModel1.RequestClose -= RemoveTab;
+                    viewModel1.ModelUpdated -= OnSubViewModelDataUpdated;
+                    break;
+                }
+                case StyledClosableViewModelBase<ISecurity> viewModel2:
+                {
+                    viewModel2.RequestClose -= RemoveTab;
+                    viewModel2.ModelUpdated -= OnSubViewModelDataUpdated;
+                    break;
+                }
+                case StyledClosableViewModelBase<IAmortisableAsset> viewModel3:
+                {
+                    viewModel3.RequestClose -= RemoveTab;
+                    viewModel3.ModelUpdated -= OnSubViewModelDataUpdated;
+                    break;
+                }
+                case StyledClosableViewModelBase<IValueList> viewModel4:
+                {
+                    viewModel4.RequestClose -= RemoveTab;
+                    viewModel4.ModelUpdated -= OnSubViewModelDataUpdated;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
     }
 }

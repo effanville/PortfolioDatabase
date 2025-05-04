@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 using Effanville.Common.Console.DependencyInjection;
 using Effanville.Common.Structure.Reporting.LogAspect;
+using Effanville.Common.Structure.WebAccess;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
 
@@ -23,7 +25,10 @@ namespace Effanville.FPD.Console
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
             builder.Services.AddScoped<LogInterceptor>()
                 .AddScoped<IMailSender, MailSender>()
-                .AddScoped<IPersistence<IPortfolio>, PortfolioPersistence>();
+                .AddScoped<IPersistence<IPortfolio>, PortfolioPersistence>()
+                .AddScoped<WebDownloader>()
+                .AddScoped<IPriceDownloaderFactory, PriceDownloaderFactory>()
+                .AddScoped<IPortfolioDataDownloader, PortfolioDataDownloader>();
 
             string executingAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string appSettingsFilePath = Path.Combine(executingAssemblyLocation, "command_settings.json");
