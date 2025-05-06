@@ -1,4 +1,5 @@
-﻿﻿﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 
@@ -29,7 +30,7 @@ namespace Effanville.FPD.Logic.Tests
                 mockGlobals,
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader(),
+                TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
                 new PortfolioPersistence(mockGlobals.ReportLogger));
             viewModel.NewDatabaseCommand.Execute(1);
@@ -60,7 +61,7 @@ namespace Effanville.FPD.Logic.Tests
                 mockGlobals,
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader(),
+                TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
                 new PortfolioPersistence(mockGlobals.ReportLogger));
             viewModel.LoadDatabaseCommand.Execute(1);
@@ -92,7 +93,7 @@ namespace Effanville.FPD.Logic.Tests
                 mockGlobals,
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader(),
+                TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
                 new PortfolioPersistence(mockGlobals.ReportLogger));
             viewModel.LoadDatabaseCommand.Execute(1);
@@ -126,7 +127,7 @@ namespace Effanville.FPD.Logic.Tests
                 mockGlobals,
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader(),
+                TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
                 new PortfolioPersistence(mockGlobals.ReportLogger));
             viewModel.SaveDatabaseCommand.Execute(1);
@@ -140,11 +141,11 @@ namespace Effanville.FPD.Logic.Tests
         }
 
         [Test]
-        [Ignore("IncompeteArchitecture - Downloader does not currently allow for use in test environment.")]
         public void CanUpdateDatabase()
         {
             FileSystem fileSystem = new FileSystem();
             string testFilePath = TestConstants.ExampleDatabaseLocation + "\\BasicTestDatabase.xml";
+            string name = fileSystem.Path.GetFileNameWithoutExtension(testFilePath);
             IFileInteractionService fileMock = TestSetupHelper.CreateFileMock(testFilePath);
             IBaseDialogCreationService dialogMock = TestSetupHelper.CreateDialogMock();
             IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
@@ -154,16 +155,23 @@ namespace Effanville.FPD.Logic.Tests
                 mockGlobals,
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader(),
+                TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
                 new PortfolioPersistence(mockGlobals.ReportLogger));
-            viewModel.UpdateDataCommand.Execute(1);
-            //Input prespecified example database
+            viewModel.LoadDatabaseCommand.Execute(1);
 
-            Assert.That(portfolio.Name, Is.EqualTo(testFilePath));
+            Assert.That(portfolio.Name, Is.EqualTo(name));
             Assert.That(portfolio.Funds.Count, Is.EqualTo(1));
             Assert.That(portfolio.BankAccounts.Count, Is.EqualTo(1));
             Assert.That(portfolio.BenchMarks.Count, Is.EqualTo(1));
+
+            viewModel.UpdateDataCommand.Execute(1);
+
+            var fund = portfolio.Funds[0];
+            Assert.That(fund.UnitPrice.Value(DateTime.Today)?.Value, Is.EqualTo(1.2m));
+
+            var bankAcc = portfolio.BankAccounts[0];
+            Assert.That(bankAcc.Value(DateTime.Today)?.Value, Is.EqualTo(1.2m));
         }
 
         [Test]
@@ -179,7 +187,7 @@ namespace Effanville.FPD.Logic.Tests
                 mockGlobals,
                 null,
                 portfolio,
-                TestSetupHelper.SetupDownloader(),
+                TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
                 new PortfolioPersistence(mockGlobals.ReportLogger));
             viewModel.RefreshCommand.Execute(1);

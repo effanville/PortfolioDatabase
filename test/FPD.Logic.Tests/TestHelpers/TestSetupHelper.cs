@@ -11,6 +11,7 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.DataEdit;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.Download;
+using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.TemplatesAndStyles;
@@ -110,13 +111,45 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 .Do(y =>
                 {
                     var arg = y.ArgAt<Action>(0);
-                    arg();
+                    try
+                    {
+                        arg();
+                    }
+                    catch { }
                 });
 
             return dispatcherMock;
         }
-        public static IPortfolioDataDownloader SetupDownloader()
-            => Substitute.For<IPortfolioDataDownloader>();
+
+        public static IPortfolioDataDownloader SetupDownloader(DateTime testDate)
+        {
+            var mock = Substitute.For<IPortfolioDataDownloader>();
+            mock.When(x => x.Download(Arg.Any<IValueList>()))
+                .Do(y =>
+                {
+                    var valueList = y.ArgAt<IValueList>(0);
+                    valueList.SetData(testDate, 1.2m);
+                });
+
+            mock.When(x => x.Download(Arg.Any<IPortfolio>()))
+                .Do(y =>
+                {
+                    var valueList = y.ArgAt<IPortfolio>(0);
+                    foreach (var fund in valueList.Funds)
+                    {
+                        fund.SetData(testDate, 1.2m);
+                    }
+                    foreach (var pension in valueList.Pensions)
+                    {
+                        pension.SetData(testDate, 1.2m);
+                    }
+                    foreach (var bankAcc in valueList.BankAccounts)
+                    {
+                        bankAcc.SetData(testDate, 1.2m);
+                    }
+                });
+            return mock;
+        }
 
         public static IReportLogger SetupReportLogger()
         {

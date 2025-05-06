@@ -786,7 +786,7 @@ namespace Effanville.FPD.Logic.Tests
                 globals.CurrentFileSystem,
                 globals.ReportLogger);
 
-            var downloader = TestSetupHelper.SetupDownloader();
+            var downloader = TestSetupHelper.SetupDownloader(DateTime.Today);
             config.ProgramVersion = new Version(1, 2, 3, 4);
             MainWindowViewModel vm = new MainWindowViewModel(globals,
                 null,

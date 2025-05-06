@@ -1,3 +1,4 @@
+using System;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 
@@ -39,7 +40,7 @@ public static class TestDependencies
                 b.Resolve<IReportLogger>()));
         builder.RegisterInstance(TestSetupHelper.SetupUpdater());
         builder.RegisterInstance(TestSetupHelper.SetupProvider());
-        builder.RegisterInstance(TestSetupHelper.SetupDownloader());
+        builder.RegisterInstance(TestSetupHelper.SetupDownloader(DateTime.Today));
         builder.RegisterInstance<IConfiguration>(new UserConfiguration());
         builder.Register(
             b => TestSetupHelper.SetupViewModelFactory(

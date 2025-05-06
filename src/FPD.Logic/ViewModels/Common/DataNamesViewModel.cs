@@ -15,6 +15,7 @@ using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.FinancialStructures.FinanceStructures;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
 {
@@ -163,11 +164,18 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             }
 
             NameData names = SelectedName.ModelData;
-            await _updater.PerformUpdate(
-                ModelData,
-                new UpdateRequestArgs<IPortfolio>(
+            if (ModelData.TryGetAccount(DataType, names, out IValueList valueList))
+            {
+                await _updater.PerformUpdate(
+                valueList,
+                new UpdateRequestArgs<IValueList>(
                     true,
-                    async portfolio => await _portfolioDataDownloader.Download(portfolio).ConfigureAwait(false)));
+                    async valueList => await _portfolioDataDownloader.Download(valueList).ConfigureAwait(false)));
+            }
+            else
+            {
+                ReportLogger.Error(nameof(DataNamesViewModel), $"Could not find. DataType={DataType},Name={names}");
+            }
         }
 
         /// <summary>

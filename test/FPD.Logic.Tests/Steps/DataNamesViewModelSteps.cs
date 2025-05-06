@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
@@ -149,7 +151,16 @@ public class DataNamesViewModelSteps
     [Then(@"I can see that the data has been downloaded")]
     public void ThenICanSeeThatTheDataHasBeenDownloaded()
     {
-        Assert.Inconclusive("Need to implement check to ensure that the data is downloaded.");
+        var selectedName = _testContext.ViewModel.SelectedName;
+        var dataType = _testContext.ViewModel.DataType;
+        if (_testContext.ModelData.TryGetAccount(dataType, selectedName.ModelData, out IValueList list))
+        {
+            var value = dataType == Account.Security || dataType == Account.Pension
+                ? (list as ISecurity).UnitPrice.Value(DateTime.Today)
+                : list.Value(DateTime.Today);
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(1.2m));
+        }
     }
 
     void AreNameDataEqual(NameData expected, NameData actual)

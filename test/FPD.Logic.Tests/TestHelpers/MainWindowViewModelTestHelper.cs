@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
@@ -48,7 +49,7 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
             IUiStyles styles = TestSetupHelper.SetupDefaultStyles();
-            var downloader = TestSetupHelper.SetupDownloader();
+            var downloader = TestSetupHelper.SetupDownloader(DateTime.Today);
             ViewModel = new MainWindowViewModel(globals,
                 styles,
                 portfolio,
