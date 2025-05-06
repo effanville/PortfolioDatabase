@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Structure", "Financi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5F985C0F-B939-463C-BCCF-060883E478B5}"
 	ProjectSection(SolutionItems) = preProject
-		Common\Directory.Build.props = Common\Directory.Build.props
+		FinancialStructures\Common\Directory.Build.props = FinancialStructures\Common\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UI", "FinancialStructures\Common\src\Common.UI\Common.UI.csproj", "{037B9B7D-83E3-4395-9C8C-A1D528C39FA2}"
