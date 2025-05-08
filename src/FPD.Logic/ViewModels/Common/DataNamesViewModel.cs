@@ -34,6 +34,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public bool DisplayCompany => DataType != Account.Benchmark;
 
         /// <summary>
+        /// Whether a broker column should be displayed
+        /// </summary>
+        public bool DisplayBroker => DataType != Account.Benchmark && DataType != Account.Currency;
+
+        /// <summary>
         /// Backing field for <see cref="DataNames"/>.
         /// </summary>
         private ObservableCollection<NameDataViewModel> _dataNames = new ObservableCollection<NameDataViewModel>();

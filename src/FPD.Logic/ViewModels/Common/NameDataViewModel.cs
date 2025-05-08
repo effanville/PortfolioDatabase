@@ -13,6 +13,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         private NameData _preEditSelectedName;
 
         private bool _isUpdated;
+        private string _broker;
         private string _company;
         private string _name;
         private string _url;
@@ -34,6 +35,15 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         {
             get => _isUpdated;
             set => SetAndNotify(ref _isUpdated, value);
+        }
+
+        /// <summary>
+        /// The broker for this instrument
+        /// </summary>
+        public string Broker
+        {
+            get => _broker;
+            set => SetAndNotify(ref _broker, value);
         }
 
         /// <summary>
@@ -112,6 +122,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 return;
             }
 
+            Broker = modelData.Broker;
             Company = modelData.Company;
             Name = modelData.Name;
             Url = modelData.Url;
@@ -149,6 +160,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 Url,
                 notes: Notes)
             {
+                Broker = Broker,
                 SectorsFlat = Sectors
             };
             _updateCallback(_preEditSelectedName, name);

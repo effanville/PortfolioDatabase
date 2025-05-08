@@ -123,12 +123,16 @@ public class DataNamesViewModelSteps
     }
 
     private static NameData FromRow(TableRow row)
-        => new NameData(
-            row["Company"],
-            row["Name"],
-            row["Currency"],
-            row["Url"],
-            row["Sectors"].Split(',').ToHashSet());
+    {
+        row.TryGetValue("Broker", out string broker);
+        return new NameData(
+                row["Company"],
+                row["Name"],
+                row["Currency"],
+                row["Url"],
+                row["Sectors"].Split(',').ToHashSet())
+        { Broker = broker };
+    }
 
     [When(@"I remove the (.*) data name")]
     public void WhenIRemoveTheDataName(int p0)

@@ -80,6 +80,7 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
                                    Grid.Column="0"
@@ -89,64 +90,75 @@
                                    Margin="2" />
                         <TextBlock Grid.Row="1"
                                    Grid.Column="0"
-                                   Text="Company:"
+                                   Text="Broker:"
                                    Margin="2" />
                         <TextBox Grid.Row="1"
                                  Grid.Column="1"
-                                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Text="{Binding Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
                                  Margin="2"
                                  Foreground="{Binding Styles.ForegroundBrush}" />
                         <TextBlock Grid.Row="2"
                                    Grid.Column="0"
-                                   Text="Name:"
+                                   Text="Company:"
                                    Margin="2" />
                         <TextBox Grid.Row="2"
                                  Grid.Column="1"
-                                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
                                  Margin="2"
                                  Foreground="{Binding Styles.ForegroundBrush}" />
                         <TextBlock Grid.Row="3"
                                    Grid.Column="0"
-                                   Text="Url:"
+                                   Text="Name:"
                                    Margin="2" />
                         <TextBox Grid.Row="3"
                                  Grid.Column="1"
-                                 Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
                                  Margin="2"
                                  Foreground="{Binding Styles.ForegroundBrush}" />
                         <TextBlock Grid.Row="4"
                                    Grid.Column="0"
-                                   Text="Currency:"
+                                   Text="Url:"
                                    Margin="2" />
                         <TextBox Grid.Row="4"
                                  Grid.Column="1"
-                                 Text="{Binding Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
                                  Margin="2"
                                  Foreground="{Binding Styles.ForegroundBrush}" />
                         <TextBlock Grid.Row="5"
                                    Grid.Column="0"
-                                   Text="Sectors:"
+                                   Text="Currency:"
                                    Margin="2" />
                         <TextBox Grid.Row="5"
                                  Grid.Column="1"
-                                 Text="{Binding Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Text="{Binding Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
                                  Margin="2"
                                  Foreground="{Binding Styles.ForegroundBrush}" />
                         <TextBlock Grid.Row="6"
                                    Grid.Column="0"
-                                   Text="Notes:"
+                                   Text="Sectors:"
                                    Margin="2" />
                         <TextBox Grid.Row="6"
+                                 Grid.Column="1"
+                                 Text="{Binding Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="{Binding Styles.BackgroundBrush}"
+                                 BorderThickness="0"
+                                 Margin="2"
+                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                        <TextBlock Grid.Row="7"
+                                   Grid.Column="0"
+                                   Text="Notes:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="7"
                                  Grid.Column="1"
                                  Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Background="{Binding Styles.BackgroundBrush}"
@@ -213,15 +225,20 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Broker"
+                                    MinWidth="70"
+                                    Width="Auto"
+                                    Visibility="{Binding Data.DisplayBroker, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
+                                    Binding="{Binding Path=Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Company"
                                     MinWidth="70"
                                     Width="Auto"
                                     Visibility="{Binding Data.DisplayCompany, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
-                                    Binding="{Binding Path=Company,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Binding="{Binding Path=Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Name"
                                     MinWidth="70"
                                     Width="Auto"
-                                    Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Binding="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
         <GridSplitter Grid.Row="1"
