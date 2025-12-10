@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
-using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
@@ -93,7 +90,6 @@ public sealed class MainWindowViewModel : PropertyChangedBase
 
         ReportsViewModel = reportsViewModel;
 
-        SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
         OptionsToolbarCommands = optionsViewModel;
         if (OptionsToolbarCommands != null)
         {
@@ -243,18 +239,6 @@ public sealed class MainWindowViewModel : PropertyChangedBase
 
         vmb.RequestClose -= RemoveTab;
         vmb.ModelUpdated -= OnModelUpdated;
-    }
-
-    public ICommand SelectionChanged { get; }
-
-    private void ExecuteSelectionChanged(IList source)
-    {
-        if (source is not object[] list || list.Length != 1)
-        {
-            return;
-        }
-
-        _ = UpdateTab(list[0], ProgramPortfolio, Account.All, force: false);
     }
 
     private bool UpdateTab(object item, IPortfolio modelData, Account changedAccount, bool force)

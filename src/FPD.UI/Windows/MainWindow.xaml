@@ -161,7 +161,6 @@
                             TabStripPlacement="Top"
                             Margin="0"
                             ItemsSource="{Binding Tabs}"
-                            SelectionChanged="MainTabControl_OnSelectionChanged"
                             SelectedIndex="0" />
                 <UserControl Grid.Row="1"
                              Content="{Binding ReportsViewModel}" />

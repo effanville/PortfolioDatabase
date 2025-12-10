@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
-using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
@@ -24,18 +21,6 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         private readonly IViewModelFactory _viewModelFactory;
 
         public ObservableCollection<object> Tabs { get; set; } = new ObservableCollection<object>();
-
-        public ICommand SelectionChanged { get; }
-
-        private void ExecuteSelectionChanged(IList source)
-        {
-            if (source is not object[] list || list.Length != 1)
-            {
-                return;
-            }
-
-            UpdateTab(list[0], ModelData);
-        }
 
         /// <summary>
         /// Default constructor.
@@ -54,7 +39,6 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             var dataNames = viewModelFactory.GenerateViewModel(portfolio, LoadTabFunc, accountType);
             Tabs.Add(dataNames);
             dataNames.RequestClose += RemoveTab;
-            SelectionChanged = new RelayCommand<IList>(ExecuteSelectionChanged);
         }
 
         /// <inheritdoc/>

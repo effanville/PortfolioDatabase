@@ -27,8 +27,6 @@
         <TabControl x:Name="TabMain"
                     Grid.Row="0"
                     Grid.Column="0"
-                    SelectedIndex="0"
-                    SelectionChanged="TabMain_OnSelectionChanged"
                     ItemsSource="{Binding Tabs}">
             <TabControl.Resources>
                 <Style TargetType="TabItem"
