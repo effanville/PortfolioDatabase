@@ -1,5 +1,3 @@
-using System;
-
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -19,9 +17,4 @@ public interface IViewModelFactory
         TwoName names,
         Account account)
         where TModel : class;
-
-    DataNamesViewModel GenerateViewModel(
-        IPortfolio portfolio,
-        Action<object> loadSelectedData,
-        Account dataType);
 }

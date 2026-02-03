@@ -55,7 +55,7 @@ public static class TestDependencies
         builder.RegisterType<ViewModelTestContext<IPortfolio, HtmlViewerViewModel>>();
         builder.RegisterType<ViewModelTestContext<IPortfolio, BasicDataViewModel>>();
         builder.RegisterType<ViewModelTestContext<IValueList, SelectedSingleDataViewModel>>();
-        builder.RegisterType<ViewModelTestContext<IPortfolio, ValueListWindowViewModel>>();
+        builder.RegisterType<ViewModelTestContext<IPortfolio, MainWindowViewModel>>();
         builder.RegisterType<ViewModelTestContext<IAmortisableAsset, SelectedAssetViewModel>>();
         builder.RegisterType<ViewModelTestContext<ISecurity, SelectedSecurityViewModel>>();
     }

@@ -1,6 +1,5 @@
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
-using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
 using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
@@ -14,7 +13,7 @@ public class ViewModelTestContext<TModelData, TViewModel> where TModelData : cla
     public IUpdater Updater { get; }
     public IPortfolioDataDownloader PortfolioDataDownloader { get; }
     public TModelData ModelData { get; set; }
-    public TViewModel ViewModel { get; set; }
+    public virtual TViewModel ViewModel { get; set; }
 
     public IViewModelFactory ViewModelFactory { get; }
 

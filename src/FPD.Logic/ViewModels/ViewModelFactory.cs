@@ -1,5 +1,3 @@
-using System;
-
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
@@ -49,9 +47,9 @@ public class ViewModelFactory : IViewModelFactory
         {
             nameof(StatsViewModel) => new StatsViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsViewModel)], portfolio, account),
             nameof(BasicDataViewModel) => new BasicDataViewModel(_globals, _styles, portfolio, _updater),
-            nameof(ValueListWindowViewModel) => new ValueListWindowViewModel(_globals, _styles, portfolio, title, account, _updater, this),
             nameof(StatsCreatorWindowViewModel) => new StatsCreatorWindowViewModel(_globals, _styles, _configuration.ChildConfigurations[nameof(StatsCreatorWindowViewModel)], portfolio, this),
             nameof(SecurityInvestmentViewModel) => new SecurityInvestmentViewModel(portfolio, _styles),
+            nameof(DataNamesViewModel) => new DataNamesViewModel(portfolio, _globals, _styles, _updater, _portfolioDataDownloader, this, account),
             _ => null
         };
 
@@ -98,17 +96,4 @@ public class ViewModelFactory : IViewModelFactory
                 _updater) as StyledClosableViewModelBase<T>,
             _ => null
         };
-
-    public DataNamesViewModel GenerateViewModel(
-        IPortfolio portfolio,
-        Action<object> loadSelectedData,
-        Account dataType)
-        => new DataNamesViewModel(
-            portfolio,
-            _globals,
-            _styles,
-            _updater,
-            _portfolioDataDownloader,
-            loadSelectedData,
-            dataType);
 }

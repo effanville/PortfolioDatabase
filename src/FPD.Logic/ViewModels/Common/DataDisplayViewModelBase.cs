@@ -26,9 +26,9 @@ public abstract class DataDisplayViewModelBase : StyledClosableViewModelBase<IPo
     public Account DataType { get; }
 
     /// <summary>
-    /// To be raised when the underlying model data is changed.
+    /// To be raised when this vm wants to create a new one
     /// </summary>
-    public new EventHandler<PortfolioEventArgs> ModelUpdated;
+    public event EventHandler RequestAddTab;
 
     /// <summary>
     /// Default constructor.
@@ -61,6 +61,6 @@ public abstract class DataDisplayViewModelBase : StyledClosableViewModelBase<IPo
         _updater = updater;
     }
 
-    protected void OnModelUpdated(PortfolioEventArgs e)
-        => ModelUpdated?.Invoke(this, e);
+    protected void OnRequestTabAdded(object obj, EventArgs e)
+        => RequestAddTab?.Invoke(obj, e);
 }

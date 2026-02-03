@@ -14,7 +14,15 @@
           Width="Auto"
           VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch">
+
         <Grid.Resources>
+            <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Height"
+                    Value="25" />
+                <Setter Property="Margin"
+                    Value="2" />
+            </Style>
             <converters:StringToUKDateConverter x:Key="StringToUKDate" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </Grid.Resources>

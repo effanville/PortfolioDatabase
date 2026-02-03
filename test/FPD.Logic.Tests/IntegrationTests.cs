@@ -35,25 +35,20 @@ namespace Effanville.FPD.Logic.Tests
             Assert.That(dataView.SecurityTotalText, Is.EqualTo("Total Securities: 1"));
             Assert.That(dataView.BankAccountTotalText, Is.EqualTo("Total Bank Accounts: 1"));
 
-            ValueListWindowViewModel securityView = ViewModel.SecurityWindow();
+            DataNamesViewModel securityView = ViewModel.OpenAccountTab(Account.Security);
             securityView.UpdateData(ViewModel.ProgramPortfolio, false);
-            DataNamesViewModel securityNamesView = securityView.GetDataNamesViewModel();
-            securityNamesView.UpdateData(ViewModel.ProgramPortfolio, false);
-            Assert.That(securityNamesView.DataNames.Count, Is.EqualTo(1));
+            Assert.That(securityView.DataNames.Count, Is.EqualTo(1));
 
-            ValueListWindowViewModel bankAccView = ViewModel.Window(Account.BankAccount);
+            DataNamesViewModel bankAccView = ViewModel.OpenAccountTab(Account.BankAccount);
             bankAccView.UpdateData(ViewModel.ProgramPortfolio, false);
-            DataNamesViewModel bankAccNamesView = bankAccView.GetDataNamesViewModel();
-            bankAccView.UpdateData(ViewModel.ProgramPortfolio, false);
-            Assert.That(bankAccNamesView.DataNames.Count, Is.EqualTo(1));
+            Assert.That(bankAccView.DataNames.Count, Is.EqualTo(1));
         }
 
 
         [Test]
         public void AddingSecurityUpdatesSuccessfully()
         {
-            ValueListWindowViewModel securityViewModel = ViewModel.SecurityWindow();
-            DataNamesViewModel securityNames = securityViewModel.Tabs[0] as DataNamesViewModel;
+            DataNamesViewModel securityNames = ViewModel.OpenAccountTab(Account.Security);
             Assert.That(securityNames != null, nameof(securityNames) + " != null");
 
             NameDataViewModel selectedInitialName = new NameDataViewModel("", new NameData(), false, securityNames.UpdateNameData, null, null);

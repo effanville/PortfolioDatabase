@@ -11,22 +11,21 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.FinancialStructures.Database;
-using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Extensions.Values;
+using Effanville.FinancialStructures.Download;
+using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.TemplatesAndStyles;
-using Effanville.FinancialStructures.FinanceStructures;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// Data store behind view for a list of names and associated update name methods.
     /// </summary>
-    public sealed class DataNamesViewModel : StyledClosableViewModelBase<IPortfolio>
+    public sealed class DataNamesViewModel : DataDisplayViewModelBase
     {
-        private readonly IUpdater _updater;
         private readonly IPortfolioDataDownloader _portfolioDataDownloader;
-        internal readonly Account DataType;
+        private readonly IViewModelFactory _viewModelFactory;
 
         /// <summary>
         /// Whether a company column should be displayed.
@@ -106,24 +105,82 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             IUiStyles styles,
             IUpdater updater,
             IPortfolioDataDownloader portfolioDataDownloader,
-            Action<object> loadSelectedData,
+            IViewModelFactory viewModelFactory,
             Account dataType)
-            : base("Accounts", portfolio, uiGlobals, styles, closable: false)
+            : base(uiGlobals, styles, portfolio, updater, dataType.ToString(), dataType, closable: false)
         {
-            DataType = dataType;
             _updater = updater;
             _portfolioDataDownloader = portfolioDataDownloader;
+            _viewModelFactory = viewModelFactory;
             SelectionChangedCommand = new RelayCommandAsync<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommandAsync<object>(CreateEdit);
             DeleteCommand = new RelayCommandAsync(ExecuteDelete);
             DownloadCommand = new RelayCommandAsync(ExecuteDownloadCommand);
-            OpenTabCommand = new RelayCommand(() => loadSelectedData(SelectedName?.ModelData));
+            OpenTabCommand = new RelayCommand(OpenTab);
         }
 
         /// <summary>
         /// Command that opens a tab associated to the selected entry.
         /// </summary>
         public ICommand OpenTabCommand { get; }
+
+        internal void OpenTab()
+        {
+            NameData selected = SelectedName?.ModelData;
+            if (!ModelData.TryGetAccount(DataType, selected, out IValueList valueList))
+            {
+                return;
+            }
+            object tabViewModel = null;
+
+            switch (valueList)
+            {
+                case ISecurity security:
+                {
+                    StyledClosableViewModelBase<ISecurity> newViewModel = _viewModelFactory.GenerateViewModel(
+                        security,
+                        security.Names,
+                        DataType);
+                    if (newViewModel == null)
+                    {
+                        break;
+                    }
+
+                    tabViewModel = newViewModel;
+                    break;
+                }
+                case IAmortisableAsset asset:
+                {
+                    StyledClosableViewModelBase<IAmortisableAsset> newViewModel = _viewModelFactory.GenerateViewModel(
+                        asset,
+                        asset.Names,
+                        DataType);
+                    if (newViewModel == null)
+                    {
+                        break;
+                    }
+
+                    tabViewModel = newViewModel;
+                    break;
+                }
+                default:
+                {
+                    StyledClosableViewModelBase<IValueList> newViewModel = _viewModelFactory.GenerateViewModel(
+                        valueList,
+                        valueList.Names,
+                        DataType);
+                    if (newViewModel == null)
+                    {
+                        break;
+                    }
+
+                    tabViewModel = newViewModel;
+                    break;
+                }
+            }
+
+            OnRequestTabAdded(tabViewModel, EventArgs.Empty);
+        }
 
         private bool IsUpdated(IPortfolio dataToDisplay, NameData name)
             => dataToDisplay.LatestDate(DataType, name) == DateTime.Today
@@ -176,6 +233,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 new UpdateRequestArgs<IValueList>(
                     true,
                     async valueList => await _portfolioDataDownloader.Download(valueList).ConfigureAwait(false)));
+                OnModelUpdated(new PortfolioEventArgs(DataType));
             }
             else
             {
@@ -196,7 +254,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             if (DataNames != null && args is NameDataViewModel selectableName && selectableName.ModelData != null)
             {
                 SelectedName = selectableName;
-                var history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.ModelData, ReportLogger).ToList());
+                List<DailyValuation> history = await Task.Run(() => ModelData.NumberData(DataType, SelectedName.ModelData, ReportLogger).ToList());
                 SelectedValueHistory = history;
             }
             else
@@ -230,6 +288,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     true,
                     portfolio => portfolio.TryAdd(DataType, name)));
             ReportLogger.Info(nameof(DataNamesViewModel), result.ToString());
+            OnModelUpdated(new PortfolioEventArgs(DataType));
         }
 
         /// <summary>
@@ -248,6 +307,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                         true,
                         portfolio => portfolio.TryRemove(DataType, SelectedName.ModelData)));
                 ReportLogger?.Info(nameof(DataNamesViewModel), result.ToString());
+                OnModelUpdated(new PortfolioEventArgs(DataType));
             }
             else
             {
@@ -263,6 +323,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                     true,
                     portfolio => portfolio.TryEditName(DataType, _preEditSelectedName, name)));
             ReportLogger?.Info(nameof(DataNamesViewModel), result.ToString());
+            OnModelUpdated(new PortfolioEventArgs(DataType));
         }
     }
 }

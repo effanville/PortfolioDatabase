@@ -5,7 +5,7 @@ A view model of DataNames should behave in a certain way.
         Given I have a DataNamesViewModel with type <account> and no data
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 0
 
         Examples:
@@ -23,7 +23,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Barclays | Current |          |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
 
         Examples:
@@ -39,14 +39,14 @@ A view model of DataNames should behave in a certain way.
         Given I have a DataNamesViewModel with type <account> and no data
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 0
         When new names are added to the database
           | Account   | Company  | Name    | Currency | Url | Sectors |
           | <account> | Barclays | Current |          |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         And the dataNames portfolio has only 1 of type <account>
 
@@ -65,13 +65,13 @@ A view model of DataNames should behave in a certain way.
           | <account> | Barclays | Current |          |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         When I select the names row with data
           | Account   | Company  | Name    | Currency | Url | Sectors |
           | <account> | Barclays | Current |          |     |         |
         And I click on the open data button
-        Then the action to open the tab is called.
+        Then the action to open the tab is called
 
         Examples:
           | account     |
@@ -88,7 +88,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Barclays | Current | HKD      | http://www.google.com | UK,US   |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         When I add a name with data
           | Account   | Company  | Name    | Currency | Url | Sectors |
@@ -116,7 +116,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Me     | Barclays | Current | HKD      | http://www.google.com | UK,US   |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         When I add a name with data
           | Account   | Broker | Company  | Name    | Currency | Url | Sectors |
@@ -144,7 +144,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Barclays | Current |          |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         When I add a name with data
           | Account   | Company  | Name    | Currency | Url | Sectors |
@@ -168,7 +168,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Barclays | Current | GBP      |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         When I edit the 1 name data to
           | Account   | Company  | Name    | Currency | Url            | Sectors |
@@ -194,7 +194,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Me     | Barclays | Current | GBP      |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 1
         When I edit the 1 name data to
           | Account   | Broker | Company  | Name    | Currency | Url            | Sectors |
@@ -221,7 +221,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Fidelity | Current |          |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 2
         When I remove the 2 data name
         Then the user can see the number of names is 1
@@ -246,7 +246,7 @@ A view model of DataNames should behave in a certain way.
           | <account> | Fidelity | Current |          |     |         |
         And the DataNamesViewModel is brought into focus
         Then I can see the DataNamesViewModel type is <account>
-        And I can see the DNVW has header Accounts
+        And I can see the DNVW has header <account>
         And the user can see the number of names is 2
         When I select the names row with data
           | Account   | Company  | Name    | Currency | Url | Sectors |

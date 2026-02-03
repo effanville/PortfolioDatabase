@@ -21,13 +21,13 @@ public static class PortfolioGeneratorHelper
             {
                 string accountAsString = row["Account"];
                 Account eff = Enum.Parse<Account>(accountAsString);
-                NameData nameData = NameDataFromRow(row);
+                NameData nameData = TableParsers.NameFromRow(row);
                 portfolio.TryAdd(eff, nameData);
             }
         }
 
         return portfolio;
-    }    
+    }
     public static void UpdateModelData(IPortfolio portfolio, Table table)
     {
         if (table != null)
@@ -36,12 +36,12 @@ public static class PortfolioGeneratorHelper
             {
                 string accountAsString = row["Account"];
                 Account eff = Enum.Parse<Account>(accountAsString);
-                NameData nameData = NameDataFromRow(row);
+                NameData nameData = TableParsers.NameFromRow(row);
                 portfolio.TryAdd(eff, nameData);
             }
         }
     }
-    
+
     public static void RemoveModelData(IPortfolio portfolio, Table table)
     {
         if (table != null)
@@ -50,26 +50,9 @@ public static class PortfolioGeneratorHelper
             {
                 string accountAsString = row["Account"];
                 Account eff = Enum.Parse<Account>(accountAsString);
-                NameData nameData = NameDataFromRow(row);
+                NameData nameData = TableParsers.NameFromRow(row);
                 portfolio.TryRemove(eff, nameData);
             }
         }
     }
-
-    public static NameData NameDataFromRow(TableRow row)
-    { 
-        row.TryGetValue("Currency", out string currency);
-        row.TryGetValue("Url", out string url);
-        row.TryGetValue("Sectors", out string sectors);
-        HashSet<string> sectorsSet = !string.IsNullOrEmpty(sectors)
-            ? sectors?.Split(',').ToHashSet()
-            : null;
-        return new NameData(
-            row["Company"],
-            row["Name"],
-            currency,
-            url,
-            sectorsSet);
-    }
-     
 }

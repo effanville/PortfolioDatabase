@@ -9,9 +9,6 @@
     <DataTemplate DataType="{x:Type vm:BasicDataViewModel}">
         <windows:BasicDataView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type cvm:ValueListWindowViewModel}">
-        <common:SingleValueEditWindow />
-    </DataTemplate>
     <DataTemplate DataType="{x:Type vmStats:StatsCreatorWindowViewModel}">
         <stats:StatsCreatorWindow />
     </DataTemplate>

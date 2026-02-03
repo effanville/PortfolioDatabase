@@ -53,8 +53,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _exportReport, value);
         }
 
-        public event EventHandler RequestAddTab;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -72,14 +70,14 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 UserConfiguration.HasLoaded = true;
             }
 
-            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
+            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
             if (!UserConfiguration.ChildConfigurations.TryGetValue(Configuration.UserConfiguration.ReportOptions, out _))
             {
                 UserConfiguration.ChildConfigurations.Add(Configuration.UserConfiguration.ReportOptions, new ExportReportConfiguration());
             }
 
-            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
-            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => RequestAddTab?.Invoke(obj, EventArgs.Empty));
+            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
+            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
             CreateInvestmentListCommand = new RelayCommandAsync(ExecuteInvestmentListCommand);
             _viewModelFactory = viewModelFactory;
         }
@@ -107,7 +105,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 }
                 PortfolioInvestments portfolioInvestments = new PortfolioInvestments(ModelData, new PortfolioInvestmentSettings());
                 portfolioInvestments.ExportToFile(result.FilePath, DisplayGlobals.CurrentFileSystem, ReportLogger);
-                RequestAddTab?.Invoke(_viewModelFactory.GenerateViewModel(ModelData, "", Account.All, nameof(SecurityInvestmentViewModel)), EventArgs.Empty);
+                OnRequestTabAdded(_viewModelFactory.GenerateViewModel(ModelData, "", Account.All, nameof(SecurityInvestmentViewModel)), EventArgs.Empty);
 
             }
             else

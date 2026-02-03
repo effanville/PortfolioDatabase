@@ -90,6 +90,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             DeleteValuationCommand = new RelayCommandAsync(DeleteValue);
             AddCsvDataCommand = new RelayCommandAsync(AddCsvData);
             ExportCsvDataCommand = new RelayCommandAsync(ExportCsvData);
+            UpdateData(valueList, true);
         }
 
         /// <inheritdoc/>

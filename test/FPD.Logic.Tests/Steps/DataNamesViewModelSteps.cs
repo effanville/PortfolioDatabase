@@ -6,6 +6,7 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
+using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.Tests.UserInteractions;
 using Effanville.FPD.Logic.ViewModels.Common;
 
@@ -34,9 +35,6 @@ public class DataNamesViewModelSteps
     public void GivenIHaveADataNamesViewModelWithNoData(Account account)
         => Create(account, null);
 
-    private void LoadSelectedData(object obj)
-        => _testContext.LoadDataCalled = true;
-
     [Given(@"I have a DataNamesViewModel with type (.*) and data")]
     public void GivenIHaveADataNamesViewModelWithTypeSecurityAndData(Account account, Table table)
         => Create(account, table);
@@ -52,7 +50,7 @@ public class DataNamesViewModelSteps
             _testContext.Styles,
             _testContext.Updater,
             _testContext.PortfolioDataDownloader,
-            LoadSelectedData,
+            _testContext.ViewModelFactory,
             account);
     }
 
@@ -76,7 +74,7 @@ public class DataNamesViewModelSteps
     public void WhenNewNamesAreAddedToTheDatabase(Table table)
         => PortfolioGeneratorHelper.UpdateModelData(_testContext.ModelData, table);
 
-    [Then(@"the action to open the tab is called\.")]
+    [Then(@"the action to open the tab is called")]
     public void ThenTheActionToOpenTheTabIsCalled()
         => Assert.That(_testContext.LoadDataCalled, Is.EqualTo(true));
 
@@ -87,14 +85,14 @@ public class DataNamesViewModelSteps
     [When(@"I select the names row with data")]
     public void WhenISelectTheNamesRowWithData(Table table)
     {
-        NameData nameData = FromRow(table.Rows[0]);
+        NameData nameData = TableParsers.NameFromRow(table.Rows[0]);
         _testContext.ViewModel.SelectName(nameData);
     }
 
     [When(@"I add a name with data")]
     public void WhenIAddANameWithData(Table table)
     {
-        NameData nameData = FromRow(table.Rows[0]);
+        NameData nameData = TableParsers.NameFromRow(table.Rows[0]);
         _testContext.ViewModel.AddName(nameData);
     }
 
@@ -109,7 +107,7 @@ public class DataNamesViewModelSteps
         TableRows rows = table.Rows;
         for (int index = 0; index < rows.Count; index++)
         {
-            NameData name = FromRow(rows[index]);
+            NameData name = TableParsers.NameFromRow(rows[index]);
             AreNameDataEqual(name, dataNames[index].ModelData);
         }
     }
@@ -117,21 +115,9 @@ public class DataNamesViewModelSteps
     [When(@"I edit the (.*) name data to")]
     public void WhenIEditTheNameDataTo(int index, Table table)
     {
-        NameData newName = FromRow(table.Rows[0]);
+        NameData newName = TableParsers.NameFromRow(table.Rows[0]);
         NameDataViewModel selectedRow = _testContext.ViewModel.DataNames[index - 1];
         _testContext.ViewModel.EditName(selectedRow, newName);
-    }
-
-    private static NameData FromRow(TableRow row)
-    {
-        row.TryGetValue("Broker", out string broker);
-        return new NameData(
-                row["Company"],
-                row["Name"],
-                row["Currency"],
-                row["Url"],
-                row["Sectors"].Split(',').ToHashSet())
-        { Broker = broker };
     }
 
     [When(@"I remove the (.*) data name")]

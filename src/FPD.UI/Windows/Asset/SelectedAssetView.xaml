@@ -18,6 +18,15 @@
                       Styles="{Binding Styles}" />
     </UserControl.Resources>
     <Grid Width="Auto">
+        <Grid.Resources>
+            <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Height"
+                    Value="25" />
+                <Setter Property="Margin"
+                    Value="2" />
+            </Style>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />

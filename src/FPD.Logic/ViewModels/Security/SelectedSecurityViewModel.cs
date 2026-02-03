@@ -144,6 +144,7 @@ public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity>
             DeleteValue,
             AddEditUnitPriceData);
         SecurityStats = new AccountStatsViewModel(null, Styles);
+        UpdateData(security, true);
     }
 
     /// <summary>

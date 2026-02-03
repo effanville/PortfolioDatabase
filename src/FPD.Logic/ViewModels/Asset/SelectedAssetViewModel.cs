@@ -133,6 +133,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                 DeletePaymentValue,
                 ExecuteAddEditPayment);
             Statistics = new AccountStatsViewModel(null, Styles);
+            UpdateData(asset, true);
         }
 
         private async void DeleteValue(DailyValuation value)
