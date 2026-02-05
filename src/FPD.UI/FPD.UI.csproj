@@ -19,9 +19,9 @@
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3719.77" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="System.IO.Abstractions" Version="22.0.14" />
+    <PackageReference Include="System.IO.Abstractions" Version="22.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FinancialStructures\Common\src\Common.UI\Common.UI.csproj" />
