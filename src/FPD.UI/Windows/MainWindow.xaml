@@ -66,17 +66,19 @@
                        shell:WindowChrome.IsHitTestVisibleInChrome="True" />
                 <windows:OptionsToolbar Grid.Column="1"
                                         DataContext="{Binding OptionsToolbarCommands}"/>
-                <StackPanel Grid.Column="2" />
+                <TextBlock Text="fish" Foreground="Transparent" Grid.Column="2" MinWidth="100" />
                 <StackPanel Orientation="Horizontal"
                             Grid.Column="3"
                             MouseDown="UserControl_MouseDown"
-                            HorizontalAlignment="Right">
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top">
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
+                            BorderBrush="Transparent"
                             MinWidth="40"
                             Click="MinimizeButton_Click">
-                        <Grid Width="30"
-                              Height="25"
+                        <Grid Width="20"
+                              Height="20"
                               UseLayoutRounding="True"
                               RenderTransform="1,0,0,1,.5,.5">
                             <Path Data="M0,6 L8,6 M0,5.5 L8,5.5"
@@ -88,10 +90,11 @@
                     </Button>
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
+                            BorderBrush="Transparent"
                             MinWidth="40"
                             Click="MaximizeButton_Click">
-                        <Grid Width="30"
-                              Height="30"
+                        <Grid Width="20"
+                              Height="20"
                               UseLayoutRounding="True"
                               RenderTransform="1,0,0,1,.5,.5">
                             <Path Data="M2,0 L8,0 L8,6 M0,3 L6,3 M0,2 L6,2 L6,8 L0,8 Z"
@@ -103,10 +106,11 @@
                     </Button>
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
+                            BorderBrush="Transparent"
                             MinWidth="40"
                             Click="CloseButton_Click">
-                        <Grid Width="30"
-                              Height="30"
+                        <Grid Width="20"
+                              Height="20"
                               UseLayoutRounding="True"
                               RenderTransform="1,0,0,1,.5,.5">
                             <Path Data="M0,0 L8,8 M8,0 L0,8"
