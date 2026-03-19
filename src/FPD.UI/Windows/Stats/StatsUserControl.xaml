@@ -11,8 +11,6 @@
     mc:Ignorable="d"
     VerticalAlignment="Stretch">
     <controls:AutoGenColumnControl.Resources>
-        <ui:Bridge x:Key="Bridge"
-                   Styles="{Binding Styles}" />
         <ui:StatisticToStringConverter x:Key="statConverter" />
     </controls:AutoGenColumnControl.Resources>
     <Grid>
@@ -29,22 +27,26 @@
                   Grid.ColumnSpan="2"
                   IsChecked="{Binding DisplayValueFunds}"
                   Content="Only Display Funds with current value" />
-        <ItemsControl Grid.Row="1"
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  FlowDirection="LeftToRight"
+                      Grid.Row="1"
+                      Grid.Column="0"
+                      Margin="3">
+            <ItemsControl Grid.Row="1"
                       Grid.Column="0"
                       Margin="3"
                       DataContext="{Binding}"
                       ItemsSource="{Binding StatisticNames}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <CheckBox Content="{Binding Instance, Converter={StaticResource statConverter}}"
-                              Style="{StaticResource CheckBoxDefaultStyle}"
-                              Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundBrush}"
-                              Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                              BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundSecondaryBrush}"
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Instance, Converter={StaticResource statConverter}}"
                               IsChecked="{Binding Selected}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
         <DataGrid Margin="5"
                   Grid.Row="1"
                   Grid.Column="1"
@@ -60,24 +62,6 @@
                   x:Name="StatsBox"
                   x:FieldModifier="private"
                   Sorting="dg_Sorting">
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DgrStyle}">
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DgcStyle}">
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                </Style>
-            </DataGrid.CellStyle>
         </DataGrid>
     </Grid>
 </controls:AutoGenColumnControl>

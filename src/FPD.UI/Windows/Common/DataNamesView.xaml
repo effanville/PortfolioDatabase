@@ -14,15 +14,7 @@
           Width="Auto"
           VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch">
-
         <Grid.Resources>
-            <Style TargetType="Button"
-               BasedOn="{StaticResource DefaultButtonStyle}">
-                <Setter Property="Height"
-                    Value="25" />
-                <Setter Property="Margin"
-                    Value="2" />
-            </Style>
             <converters:StringToUKDateConverter x:Key="StringToUKDate" />
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </Grid.Resources>
@@ -48,7 +40,6 @@
         </StackPanel>
         <DataGrid Grid.Row="1"
                   Grid.Column="0"
-                  FontSize="{Binding Styles.SmallFontSize}"
                   Margin="5"
                   Width="Auto"
                   HorizontalAlignment="Left"
@@ -74,7 +65,7 @@
             </DataGrid.Resources>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.BackgroundBrush}">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"
                                               MaxWidth="100" />
@@ -93,7 +84,6 @@
                         <TextBlock Grid.Row="0"
                                    Grid.Column="0"
                                    Grid.ColumnSpan="2"
-                                   FontSize="{Binding Styles.MediumFontSize}"
                                    Text="Account Details:"
                                    Margin="2" />
                         <TextBlock Grid.Row="1"
@@ -103,10 +93,8 @@
                         <TextBox Grid.Row="1"
                                  Grid.Column="1"
                                  Text="{Binding Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2"/>
                         <TextBlock Grid.Row="2"
                                    Grid.Column="0"
                                    Text="Company:"
@@ -114,10 +102,8 @@
                         <TextBox Grid.Row="2"
                                  Grid.Column="1"
                                  Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="3"
                                    Grid.Column="0"
                                    Text="Name:"
@@ -125,10 +111,8 @@
                         <TextBox Grid.Row="3"
                                  Grid.Column="1"
                                  Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="4"
                                    Grid.Column="0"
                                    Text="Url:"
@@ -136,10 +120,8 @@
                         <TextBox Grid.Row="4"
                                  Grid.Column="1"
                                  Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="5"
                                    Grid.Column="0"
                                    Text="Currency:"
@@ -147,10 +129,8 @@
                         <TextBox Grid.Row="5"
                                  Grid.Column="1"
                                  Text="{Binding Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2"/>
                         <TextBlock Grid.Row="6"
                                    Grid.Column="0"
                                    Text="Sectors:"
@@ -158,10 +138,8 @@
                         <TextBox Grid.Row="6"
                                  Grid.Column="1"
                                  Text="{Binding Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="7"
                                    Grid.Column="0"
                                    Text="Notes:"
@@ -169,40 +147,29 @@
                         <TextBox Grid.Row="7"
                                  Grid.Column="1"
                                  Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2"/>
                     </Grid>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
             <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DgrStyle}">
+                <Style TargetType="{x:Type DataGridRow}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsUpdated}"
                                      Value="False">
                             <Setter Property="Background"
-                                    Value="#FF5555"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding}"
-                                     Value="{x:Static CollectionView.NewItemPlaceholder}">
-                            <Setter Property="Background"
-                                    Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.BackgroundBrush}" />
-                            <Setter Property="Foreground"
-                                    Value="{Binding Styles.ForegroundBrush}" />
+                                    Value="#FF5555" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DgcStyle}">
+                <Style TargetType="{x:Type DataGridCell}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsUpdated}"
                                      Value="False">
                             <Setter Property="Background"
-                                    Value="#FF5555"></Setter>
+                                    Value="#FF5555" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -222,12 +189,11 @@
                         <DataTemplate>
                             <StackPanel DataContext="{Binding}">
                                 <Button Content="View Data"
+                                        Style="{StaticResource DefaultButtonStyle}"
                                         DataContext="{Binding}"
                                         BorderThickness="0"
                                         Margin="0.5"
                                         Padding="3"
-                                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.ForegroundBrush}"
-                                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.DefaultButtonBrush}"
                                         Command="{Binding Path=DataContext.OpenTabCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
                             </StackPanel>
                         </DataTemplate>
@@ -254,7 +220,6 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Stretch"
                       ShowsPreview="True"
-                      Background="{Binding Styles.BackgroundSecondaryBrush}"
                       Width="5" />
         <Grid Grid.Row="1"
               Grid.Column="2"
@@ -276,13 +241,12 @@
                        VerticalAlignment="Stretch"
                        Grid.Row="0"
                        Grid.RowSpan="2"
-                       FontSize="{Binding Styles.SmallFontSize}"
                        Grid.Column="0">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=SelectedValueHistory}"
-                                    DataPointStyle="{StaticResource InvisibleDataPointBlue}"
+                                    DataPointStyle="{StaticResource InvisibleDataPointPrimary}"
                                     IndependentValueBinding="{Binding Path=Day}"
-                                    DependentValueBinding="{Binding Path=Value}"></cht:LineSeries>
+                                    DependentValueBinding="{Binding Path=Value}" />
                 </cht:Chart.Series>
             </cht:Chart>
         </Grid>

@@ -7,8 +7,7 @@
              xmlns:controls="clr-namespace:Effanville.Common.UI.Wpf.Controls;assembly=Effanville.Common.UI.Wpf"
              xmlns:common="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
              d:DataContext="{d:DesignInstance Type=common:HtmlViewerViewModel}"
-             mc:Ignorable="d"
-             Background="White">
+             mc:Ignorable="d">
     <Grid Width="Auto"
           Height="Auto"
           VerticalAlignment="Stretch"
@@ -33,11 +32,15 @@
                  VerticalAlignment="Stretch"
                  VerticalContentAlignment="Center"
                  Text="{Binding UrlTextPath}" />
-        <wpf:WebView2 Grid.Row="1"
-                      Grid.Column="0"
-                      Width="Auto"
-                      Height="Auto"
-                      Grid.ColumnSpan="2"
-                      controls:WebBrowserBehaviours.BindableSource="{Binding HtmlPath}"/>
+        <Grid Background="White"
+              Grid.Row="1"
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Width="Auto"
+              Height="Auto">
+            <wpf:WebView2 Width="Auto"
+                          Height="Auto"
+                          controls:WebBrowserBehaviours.BindableSource="{Binding HtmlPath}"/>
+        </Grid>
     </Grid>
 </UserControl>

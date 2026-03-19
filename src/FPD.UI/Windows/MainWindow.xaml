@@ -13,15 +13,11 @@
         MinWidth="600"
         Height="500"
         Width="1000"
-        WindowChrome.IsHitTestVisibleInChrome="True"
         Icon="../Assets/fpd-icon.ico"
-        FontFamily="{Binding Styles.FontFamily}"
-        Foreground="{Binding Styles.ForegroundBrush}"
-        Background="{Binding Styles.BackgroundBrush}"
-        AllowsTransparency="True"
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        FontSize="12">
     <Grid Height="Auto"
           Width="Auto">
         <Grid.Resources>
@@ -39,28 +35,6 @@
                              Handler="Resize_End" />
                 <EventSetter Event="MouseMove"
                              Handler="Resizeing_Form" />
-            </Style>    
-            <Style TargetType="{x:Type windows:MainWindow}">
-                <Setter Property="shell:WindowChrome.WindowChrome">
-                    <Setter.Value>
-                        <shell:WindowChrome CaptionHeight="0"
-                                            CornerRadius="20"
-                                            GlassFrameThickness="0"
-                                            NonClientFrameEdges="None"
-                                            ResizeBorderThickness="5" />
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type windows:MainWindow}">
-                            <Grid>
-                                <Border Background="White">
-                                    <ContentPresenter Content="{TemplateBinding Content}" />
-                                </Border>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
             </Style>
         </Grid.Resources>
         <Grid Height="Auto"
@@ -70,11 +44,10 @@
             </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"
-                               MaxHeight="32" />
+                               MaxHeight="35" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"
-                  Background="{Binding Styles.BackgroundSecondaryBrush}"
                   MouseDown="UserControl_MouseDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -100,7 +73,6 @@
                             HorizontalAlignment="Right">
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
-                            Foreground="{Binding Styles.ForegroundBrush}"
                             MinWidth="40"
                             Click="MinimizeButton_Click">
                         <Grid Width="30"
@@ -116,7 +88,6 @@
                     </Button>
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
-                            Foreground="{Binding Styles.ForegroundBrush}"
                             MinWidth="40"
                             Click="MaximizeButton_Click">
                         <Grid Width="30"
@@ -132,7 +103,6 @@
                     </Button>
                     <Button KeyboardNavigation.IsTabStop="False"
                             Background="Transparent"
-                            Foreground="{Binding Styles.ForegroundBrush}"
                             MinWidth="40"
                             Click="CloseButton_Click">
                         <Grid Width="30"
@@ -154,8 +124,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0"
-                      Background="{Binding Styles.BackgroundSecondaryBrush}" />
+                <Grid Grid.Row="0" />
                 <TabControl Grid.Row="0"
                             x:Name="MainTabControl"
                             TabStripPlacement="Top"

@@ -9,24 +9,12 @@
              xmlns:security="clr-namespace:Effanville.FPD.Logic.ViewModels.Security;assembly=Effanville.FPD.Logic"
              xmlns:ui="clr-namespace:Effanville.FPD.UI"
              d:DataContext="{d:DesignInstance Type=security:SelectedSecurityViewModel}"
-             mc:Ignorable="d"
-             DataContextChanged="UC_DataContextChanged">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
         <ui:DisplayConstants x:Key="Consts" />
-        <ui:Bridge x:Key="Bridge"
-                      Styles="{Binding Styles}" />
     </UserControl.Resources>
     <Grid Width="Auto">
-        <Grid.Resources>
-            <Style TargetType="Button"
-               BasedOn="{StaticResource DefaultButtonStyle}">
-                <Setter Property="Height"
-                    Value="25" />
-                <Setter Property="Margin"
-                    Value="2" />
-            </Style>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
@@ -66,8 +54,7 @@
                             Grid.Row="0"
                             Grid.RowSpan="2"
                             Grid.Column="0" />
-            <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                    BorderThickness="1"
+            <Border BorderThickness="1"
                     Grid.Row="0"
                     Grid.Column="1">
                 <DataGrid ItemsSource="{Binding Path=Trades, Mode=TwoWay}"
@@ -78,24 +65,6 @@
                           KeyDown="DataGrid_KeyDown"
                           PreviewKeyDown="DataGrid_KeyDown"
                           AddingNewItem="DataGrid_AddingNewItem">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="{x:Type DataGridRow}"
-                               BasedOn="{StaticResource DgrStyle}">
-                            <Setter Property="Background"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                            <Setter Property="Foreground"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.CellStyle>
-                        <Style TargetType="{x:Type DataGridCell}"
-                               BasedOn="{StaticResource DgcStyle}">
-                            <Setter Property="Foreground"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                            <Setter Property="Background"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                        </Style>
-                    </DataGrid.CellStyle>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="BeginningEdit">
                             <i:InvokeCommandAction Command="{Binding PreEditCommand}" />
@@ -166,7 +135,6 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Stretch"
                       ShowsPreview="True"
-                      Background="{Binding Styles.BackgroundSecondaryBrush}"
                       Width="5" />
         <Grid Grid.Row="1"
               Grid.Column="2"
@@ -192,10 +160,9 @@
                        Grid.RowSpan="2">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=Values}"
-                                    Background="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}"
-                                    DataPointStyle="{StaticResource InvisibleDataPointBlue}"
+                                    DataPointStyle="{StaticResource InvisibleDataPointPrimary}"
                                     IndependentValueBinding="{Binding Path=Day}"
-                                    DependentValueBinding="{Binding Path=Value}"></cht:LineSeries>
+                                    DependentValueBinding="{Binding Path=Value}" />
                 </cht:Chart.Series>
             </cht:Chart>
         </Grid>

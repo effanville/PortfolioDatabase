@@ -3,56 +3,42 @@ using System.Windows.Input;
 
 using Effanville.FPD.Logic.ViewModels.Security;
 
-namespace Effanville.FPD.UI.Windows.Security
+namespace Effanville.FPD.UI.Windows.Security;
+
+/// <summary>
+/// Interaction logic for SelectedSecurityView.xaml
+/// </summary>
+public partial class SelectedSecurityView : UserControl
 {
     /// <summary>
-    /// Interaction logic for SelectedSecurityView.xaml
+    /// Construct an instance.
     /// </summary>
-    public partial class SelectedSecurityView : UserControl
+    public SelectedSecurityView() => InitializeComponent();
+
+
+    private void DataGrid_KeyDown(object sender, KeyEventArgs e)
     {
-        /// <summary>
-        /// Construct an instance.
-        /// </summary>
-        public SelectedSecurityView()
+        if (e.Key != Key.Delete && e.Key != Key.Back)
         {
-            InitializeComponent();
+            return;
         }
 
-
-        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        if (e.OriginalSource is not DataGridCell)
         {
-            if (e.Key != Key.Delete && e.Key != Key.Back)
-            {
-                return;
-            }
-
-            if (e.OriginalSource is not DataGridCell)
-            {
-                return;
-            }
-
-            if (DataContext is SelectedSecurityViewModel vm)
-            {
-                vm.DeleteTrade();
-            }
+            return;
         }
 
-        private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        if (DataContext is SelectedSecurityViewModel vm)
         {
-            if (DataContext is SelectedSecurityViewModel vm)
-            {
-                e.NewItem = vm.DefaultTradeValue();
-            }
+            vm.DeleteTrade();
         }
+    }
 
-        private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+    private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
+    {
+        if (DataContext is SelectedSecurityViewModel vm)
         {
-            if (Resources.Contains(DisplayConstants.StyleBridgeName)
-                && DataContext is SelectedSecurityViewModel dc
-                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
-            {
-                bridge.Styles = dc.Styles;
-            }
+            e.NewItem = vm.DefaultTradeValue();
         }
     }
 }

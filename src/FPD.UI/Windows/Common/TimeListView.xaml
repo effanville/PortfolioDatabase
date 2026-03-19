@@ -8,15 +8,11 @@
                 xmlns:common="clr-namespace:Effanville.FPD.Logic.ViewModels.Common;assembly=Effanville.FPD.Logic"
                 xmlns:ui="clr-namespace:Effanville.FPD.UI"
                 d:DataContext="{d:DesignInstance Type=common:TimeListViewModel}"
-                mc:Ignorable="d"
-                DataContextChanged="UC_DataContextChanged">
+                mc:Ignorable="d">
     <ContentControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
-        <ui:Bridge x:Key="Bridge"
-                      Styles="{Binding Styles}" />
     </ContentControl.Resources>
-    <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-            BorderThickness="1">
+    <Border BorderThickness="1">
         <DataGrid ItemsSource="{Binding Path=Valuations, Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   BorderThickness="1"
@@ -28,24 +24,6 @@
                   KeyDown="DataGrid_KeyDown"
                   PreviewKeyDown="DataGrid_KeyDown"
                   AddingNewItem="DataGrid_AddingNewItem">
-            <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DgcStyle}">
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DgrStyle}">
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                </Style>
-            </DataGrid.RowStyle>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="BeginningEdit">
                     <i:InvokeCommandAction Command="{Binding PreEditCommand}" />

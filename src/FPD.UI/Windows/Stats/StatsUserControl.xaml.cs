@@ -29,7 +29,7 @@ namespace Effanville.FPD.UI.Windows.Stats
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue is bool isVisible and false)
+            if (e.NewValue is bool isVisible and false)
             {
                 _isVisible = false;
                 return;
@@ -45,17 +45,10 @@ namespace Effanville.FPD.UI.Windows.Stats
             {
                 vm.StatisticsChanged += UpdateDataGrid;
             }
-            
-            if (Resources.Contains(DisplayConstants.StyleBridgeName)
-                && DataContext is StatsViewModel dc
-                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
-            {
-                bridge.Styles = dc.Styles;
-            }
-            
+
             DataContextChanged -= OnDataContextChanged;
         }
-        
+
         /// <summary>
         /// Updates the data displayed in the grid.
         /// </summary>
@@ -91,7 +84,7 @@ namespace Effanville.FPD.UI.Windows.Stats
                 {
                     _ = dataTable.Rows.Add(val.StatValuesAsObjects.ToArray());
                 }
-                    
+
                 return dataTable;
             }
         }

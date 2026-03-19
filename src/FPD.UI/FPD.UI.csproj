@@ -33,9 +33,6 @@
     <Resource Include="Assets/fpd-icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="TemplatesAndStyles\close.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="TemplatesAndStyles\helpicon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

@@ -9,26 +9,20 @@
           mc:Ignorable="d"
           MaxHeight="150"
           IsExpanded="{Binding IsExpanded}"
-          Foreground="{Binding Styles.ForegroundBrush}"
           HorizontalAlignment="Stretch"
-          DataContextChanged="UC_DataContextChanged"
+          Foreground="{DynamicResource TextControlForeground}"
           VerticalAlignment="Stretch">
     <Expander.Header>
         <TextBlock FontWeight="Bold"
                    Text="SysReports" />
     </Expander.Header>
-    <Expander.Resources>
-        <ui:Bridge x:Key="Bridge"
-                      Styles="{Binding Styles}" />
-    </Expander.Resources>
     <Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="90" />
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0"
-              Background="{Binding Styles.BackgroundSecondaryBrush}">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -58,24 +52,6 @@
                   Grid.Column="1"
                   Margin="5 -15 5 5"
                   ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DgrStyle}">
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DgcStyle}">
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                </Style>
-            </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type"
                                     MinWidth="50"
