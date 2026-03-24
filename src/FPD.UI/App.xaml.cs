@@ -11,9 +11,7 @@ using Effanville.Common.UI.Wpf.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FPD.Logic.Configuration;
 using Effanville.FPD.Logic.DependencyInjection;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
-using Effanville.FPD.UI.TemplatesAndStyles;
 using Effanville.FPD.UI.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +43,6 @@ namespace Effanville.FPD.UI
                 .AddSingleton<IBaseDialogCreationService>(x => x.GetService<DialogCreationService>())
                 .AddSingleton<IDialogCreationService>(x => x.GetService<DialogCreationService>())
                 .AddSingleton<UiGlobals>()
-                .AddSingleton<IUiStyles>(_ => new UiStyles(ThemeHelpers.IsLightTheme()))
                 .AddSingleton(_ => PortfolioFactory.GenerateEmpty())
                 .AddSingleton(x => x.LoadConfig())
                 .AddViewModelDependencies();

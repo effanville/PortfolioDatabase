@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database.Statistics;
-using Effanville.FPD.Logic.TemplatesAndStyles;
-using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
 {
-    public sealed class AccountStatsViewModel : StyledViewModelBase<AccountStatistics>
+    public sealed class AccountStatsViewModel : ViewModelBase<AccountStatistics>
     {
         private List<IStatistic> _statistics;
         public List<IStatistic> Statistics
@@ -16,8 +15,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _statistics, value);
         }
 
-        public AccountStatsViewModel(AccountStatistics accStats, IUiStyles styles)
-        : base("Account Stats", accStats, null, styles)
+        public AccountStatsViewModel(AccountStatistics accStats)
+        : base("Account Stats", accStats, null)
         {
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Effanville.Common.Structure.DataEdit;
@@ -10,7 +9,6 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Extensions;
 using Effanville.FinancialStructures.Persistence;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using System.Threading.Tasks;
 
@@ -47,26 +45,16 @@ public sealed class OptionsToolbarViewModel : DataDisplayViewModelBase
         set => SetAndNotify(ref _currencies, value);
     }
 
-    private bool _isLightTheme;
-    public bool IsLightTheme
-    {
-        get => _isLightTheme;
-        set => SetAndNotify(ref _isLightTheme, value);
-    }
-
-    private void UpdateColours(object sender, PropertyChangedEventArgs e) => Styles.UpdateTheme(IsLightTheme);
-
     /// <summary>
     /// Default constructor.
     /// </summary>
     public OptionsToolbarViewModel(
         UiGlobals globals,
-        IUiStyles styles,
         IPortfolio portfolio,
         IPortfolioDataDownloader portfolioDataDownloader,
         IUpdater updater,
         IPersistence<IPortfolio> persistence)
-        : base(globals, styles, portfolio, updater, "Options")
+        : base(globals, portfolio, updater, "Options")
     {
         _portfolioDataDownloader = portfolioDataDownloader;
         _portfolioPersistence = persistence;
@@ -79,7 +67,6 @@ public sealed class OptionsToolbarViewModel : DataDisplayViewModelBase
         RepriceResetCommand = new RelayCommandAsync(ExecuteRepriceReset);
         RefreshCommand = new RelayCommand(ExecuteRefresh);
         CurrencyDropDownClosed = new RelayCommandAsync(DropDownClosed);
-        PropertyChanged += UpdateColours;
     }
 
     /// <inheritdoc/>

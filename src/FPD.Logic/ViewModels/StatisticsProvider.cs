@@ -10,7 +10,7 @@ namespace Effanville.FPD.Logic.ViewModels;
 public sealed class StatisticsProvider : IAccountStatisticsProvider
 {
     private readonly IPortfolio _portfolio;
-        
+
     public StatisticsProvider(IPortfolio portfolio)
     {
         _portfolio = portfolio;

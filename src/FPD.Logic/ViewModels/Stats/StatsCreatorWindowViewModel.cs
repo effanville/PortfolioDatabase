@@ -9,7 +9,6 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Investments;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -56,8 +55,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsCreatorWindowViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, IViewModelFactory viewModelFactory)
-            : base(globals, styles, userConfiguration, portfolio, null, "Stats Creator", Account.All)
+        public StatsCreatorWindowViewModel(UiGlobals globals, IConfiguration userConfiguration, IPortfolio portfolio, IViewModelFactory viewModelFactory)
+            : base(globals, userConfiguration, portfolio, null, "Stats Creator", Account.All)
         {
             UserConfiguration = userConfiguration;
             if (UserConfiguration.HasLoaded)
@@ -70,14 +69,14 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 UserConfiguration.HasLoaded = true;
             }
 
-            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
+            StatsPageExportOptions = new ExportStatsViewModel(DisplayGlobals, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.StatsOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
             if (!UserConfiguration.ChildConfigurations.TryGetValue(Configuration.UserConfiguration.ReportOptions, out _))
             {
                 UserConfiguration.ChildConfigurations.Add(Configuration.UserConfiguration.ReportOptions, new ExportReportConfiguration());
             }
 
-            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
-            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, Styles, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
+            ExportReportOptions = new ExportReportViewModel(DisplayGlobals, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.ReportOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
+            ExportHistoryOptions = new ExportHistoryViewModel(DisplayGlobals, UserConfiguration.ChildConfigurations[Configuration.UserConfiguration.HistoryOptions], ModelData, obj => OnRequestTabAdded(obj, EventArgs.Empty));
             CreateInvestmentListCommand = new RelayCommandAsync(ExecuteInvestmentListCommand);
             _viewModelFactory = viewModelFactory;
         }

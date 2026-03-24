@@ -38,7 +38,6 @@ namespace Effanville.FPD.Logic.Tests
             IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
-                null,
                 globals,
                 updater,
                 null,
@@ -74,7 +73,6 @@ namespace Effanville.FPD.Logic.Tests
             IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
-                null,
                 globals,
                 updater,
                 null,

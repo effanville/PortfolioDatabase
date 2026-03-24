@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TemplatesAndStyles\" />
+  </ItemGroup>
+
 </Project>

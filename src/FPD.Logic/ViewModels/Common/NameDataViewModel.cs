@@ -2,12 +2,12 @@
 using System.ComponentModel;
 
 using Effanville.Common.UI;
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
 {
-    public sealed class NameDataViewModel : StyledViewModelBase<NameData>, IEditableObject
+    public sealed class NameDataViewModel : ViewModelBase<NameData>, IEditableObject
     {
         private readonly Action<NameData, NameData> _updateCallback;
         private NameData _preEditSelectedName;
@@ -105,15 +105,15 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// Empty constructor. Required for WPF to load rows with this as a view model.
         /// </summary>
         public NameDataViewModel()
-            : base(null, null, null, null)
+            : base(null, null, null)
         { }
 
         public NameDataViewModel(string header,
             NameData modelData,
             bool isUpdated,
             Action<NameData, NameData> updateCallback,
-            UiGlobals displayGlobals, IUiStyles styles)
-            : base(header, modelData, displayGlobals, styles)
+            UiGlobals displayGlobals)
+            : base(header, modelData, displayGlobals)
         {
             _updateCallback = updateCallback;
             IsUpdated = isUpdated;

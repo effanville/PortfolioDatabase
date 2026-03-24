@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.History;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -38,8 +37,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public PortfolioHistoryViewModel(IPortfolio portfolio, IUiStyles styles)
-            : base(null, styles, portfolio, null, "History", closable: true)
+        public PortfolioHistoryViewModel(IPortfolio portfolio)
+            : base(null, portfolio, null, "History", closable: true)
         {
             UpdateData(portfolio, false);
         }

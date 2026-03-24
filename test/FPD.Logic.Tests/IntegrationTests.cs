@@ -51,7 +51,7 @@ namespace Effanville.FPD.Logic.Tests
             DataNamesViewModel securityNames = ViewModel.OpenAccountTab(Account.Security);
             Assert.That(securityNames != null, nameof(securityNames) + " != null");
 
-            NameDataViewModel selectedInitialName = new NameDataViewModel("", new NameData(), false, securityNames.UpdateNameData, null, null);
+            NameDataViewModel selectedInitialName = new NameDataViewModel("", new NameData(), false, securityNames.UpdateNameData, null);
             securityNames.DataNames.Add(selectedInitialName);
             securityNames.SelectionChangedCommand.Execute(selectedInitialName);
             Selectable<NameData> selectedEditedName = new Selectable<NameData>(new NameData("Forgotten", "New"), false);

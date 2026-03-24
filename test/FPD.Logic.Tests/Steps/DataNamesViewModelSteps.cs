@@ -47,7 +47,6 @@ public class DataNamesViewModelSteps
         _testContext.ViewModel = new DataNamesViewModel(
             portfolio,
             _testContext.Globals,
-            _testContext.Styles,
             _testContext.Updater,
             _testContext.PortfolioDataDownloader,
             _testContext.ViewModelFactory,

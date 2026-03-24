@@ -17,17 +17,17 @@ using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
 using System.Threading.Tasks;
+using Effanville.Common.UI.ViewModelBases;
 
 namespace Effanville.FPD.Logic.ViewModels.Security;
 
 /// <summary>
 /// View model for the display of a security data.
 /// </summary>
-public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity>
+public class SelectedSecurityViewModel : ClosableViewModelBase<ISecurity>
 {
     private readonly IUpdater _updater;
     private readonly IAccountStatisticsProvider _statisticsProvider;
@@ -116,13 +116,12 @@ public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity>
     public SelectedSecurityViewModel(
         IAccountStatisticsProvider statisticsProvider,
         ISecurity security,
-        IUiStyles styles,
         UiGlobals globals,
         TwoName selectedName,
         Account account,
         IUpdater updater,
         IPortfolioDataDownloader portfolioDataDownloader)
-        : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, styles, true)
+        : base(selectedName != null ? selectedName.ToString() : "No-Name", security, globals, true)
     {
         _statisticsProvider = statisticsProvider;
         _updater = updater;
@@ -140,10 +139,10 @@ public class SelectedSecurityViewModel : StyledClosableViewModelBase<ISecurity>
             CurrencyCultureHelpers.CurrencySymbol(security.Names.Currency);
         TradePriceHeader = $"Price({currencySymbol})";
         TradeTotalCostHeader = $"Total Cost({currencySymbol})";
-        TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})", Styles,
+        TLVM = new TimeListViewModel(security.UnitPrice, $"UnitPrice({currencySymbol})",
             DeleteValue,
             AddEditUnitPriceData);
-        SecurityStats = new AccountStatsViewModel(null, Styles);
+        SecurityStats = new AccountStatsViewModel(null);
         UpdateData(security, true);
     }
 

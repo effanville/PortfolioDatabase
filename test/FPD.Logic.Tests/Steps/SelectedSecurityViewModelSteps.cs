@@ -39,7 +39,6 @@ public class SelectedSecurityViewModelSteps
         _testContext.ViewModel = new SelectedSecurityViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
@@ -79,7 +78,6 @@ public class SelectedSecurityViewModelSteps
         _testContext.ViewModel = new SelectedSecurityViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,

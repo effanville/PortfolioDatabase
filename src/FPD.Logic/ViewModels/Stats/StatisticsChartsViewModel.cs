@@ -10,7 +10,6 @@ using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.History;
 using Effanville.FinancialStructures.Database.Extensions.Values;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -100,8 +99,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUiStyles styles, IUpdater updater)
-            : base(uiGlobals, styles, portfolio, updater, "Charts", Account.All)
+        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUpdater updater)
+            : base(uiGlobals, portfolio, updater, "Charts", Account.All)
         {
             PropertyChanged += OnPropertyChanged;
         }

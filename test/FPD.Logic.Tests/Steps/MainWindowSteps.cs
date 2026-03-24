@@ -47,14 +47,13 @@ public class MainWindowSteps
 
         _testContext.ViewModel = new MainWindowViewModel(
             _testContext.Globals,
-            _testContext.Styles,
             portfolio,
             _testContext.ViewModelFactory,
             null, //config,
-            new ReportingWindowViewModel(loggerReportMock, _testContext.Globals, _testContext.Styles),
-            new OptionsToolbarViewModel(_testContext.Globals, _testContext.Styles, portfolio, _testContext.PortfolioDataDownloader, _testContext.Updater, new PortfolioPersistence(_testContext.Globals.ReportLogger)),
-            new BasicDataViewModel(_testContext.Globals, _testContext.Styles, portfolio, _testContext.Updater),
-            new StatisticsChartsViewModel(_testContext.Globals, portfolio, _testContext.Styles, _testContext.Updater));
+            new ReportingWindowViewModel(loggerReportMock, _testContext.Globals),
+            new OptionsToolbarViewModel(_testContext.Globals, portfolio, _testContext.PortfolioDataDownloader, _testContext.Updater, new PortfolioPersistence(_testContext.Globals.ReportLogger)),
+            new BasicDataViewModel(_testContext.Globals, portfolio, _testContext.Updater),
+            new StatisticsChartsViewModel(_testContext.Globals, portfolio, _testContext.Updater));
 
         PortfolioGeneratorHelper.UpdateModelData(_testContext.ModelData, table);
         _testContext.ViewModel.OnModelUpdated(null, new PortfolioEventArgs(Account.All));

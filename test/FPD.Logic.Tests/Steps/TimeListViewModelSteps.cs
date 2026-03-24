@@ -1,7 +1,6 @@
 using System;
 
 using Effanville.Common.Structure.DataStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.UserInteractions;
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -17,7 +16,7 @@ public class TimeListViewModelSteps
 {
     private readonly TimeListTestContext _testContext;
 
-    public TimeListViewModelSteps(TimeListTestContext testContext, IUiStyles styles)
+    public TimeListViewModelSteps(TimeListTestContext testContext)
     {
         _testContext = testContext;
     }
@@ -47,7 +46,7 @@ public class TimeListViewModelSteps
         }
 
         _testContext.ModelData = timeList;
-        _testContext.ViewModel = new TimeListViewModel(timeList, name, _testContext.Styles, DeleteEvent, UpdateEvent);
+        _testContext.ViewModel = new TimeListViewModel(timeList, name, DeleteEvent, UpdateEvent);
     }
 
     [StepDefinition("It is brought into focus")]

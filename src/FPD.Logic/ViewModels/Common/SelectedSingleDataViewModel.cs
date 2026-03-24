@@ -10,12 +10,12 @@ using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
@@ -23,7 +23,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
     /// <summary>
     /// View model to display a list with one value.
     /// </summary>
-    public class SelectedSingleDataViewModel : StyledClosableViewModelBase<IValueList>
+    public class SelectedSingleDataViewModel : ClosableViewModelBase<IValueList>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly Account _dataType;
@@ -67,12 +67,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public SelectedSingleDataViewModel(
             IAccountStatisticsProvider statisticsProvider,
             IValueList valueList,
-            IUiStyles styles,
             UiGlobals globals,
             TwoName selectedName,
             Account accountDataType,
             IUpdater updater)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals, styles,
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", valueList, globals,
                 closable: true)
         {
             _statisticsProvider = statisticsProvider;
@@ -83,10 +82,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             TLVM = new TimeListViewModel(
                 valueList.Values,
                 $"Value({currencySymbol})",
-                Styles,
                 DeleteValue,
                 ExecuteAddEditData);
-            Stats = new AccountStatsViewModel(null, Styles);
+            Stats = new AccountStatsViewModel(null);
             DeleteValuationCommand = new RelayCommandAsync(DeleteValue);
             AddCsvDataCommand = new RelayCommandAsync(AddCsvData);
             ExportCsvDataCommand = new RelayCommandAsync(ExportCsvData);

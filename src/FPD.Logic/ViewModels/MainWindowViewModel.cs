@@ -9,7 +9,6 @@ using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
@@ -25,17 +24,6 @@ public sealed class MainWindowViewModel : PropertyChangedBase
     internal readonly IConfiguration UserConfiguration;
 
     public UiGlobals Globals { get; }
-
-    private IUiStyles _styles;
-
-    /// <summary>
-    /// The styles for the Ui.
-    /// </summary>
-    public IUiStyles Styles
-    {
-        get => _styles;
-        set => SetAndNotify(ref _styles, value);
-    }
 
     /// <summary>
     /// The portfolio for the view model instance.
@@ -74,7 +62,6 @@ public sealed class MainWindowViewModel : PropertyChangedBase
     /// </summary>
     public MainWindowViewModel(
         UiGlobals globals,
-        IUiStyles styles,
         IPortfolio portfolio,
         IViewModelFactory viewModelFactory,
         IConfiguration configuration,
@@ -84,7 +71,6 @@ public sealed class MainWindowViewModel : PropertyChangedBase
         StatisticsChartsViewModel statisticsChartsViewModel)
     {
         ProgramPortfolio = portfolio;
-        _styles = styles;
         Globals = globals;
         UserConfiguration = configuration;
 
@@ -94,7 +80,6 @@ public sealed class MainWindowViewModel : PropertyChangedBase
         if (OptionsToolbarCommands != null)
         {
             OptionsToolbarCommands.ModelUpdated += OnModelUpdated;
-            OptionsToolbarCommands.IsLightTheme = styles.IsLightTheme;
         }
 
         if (basicDataViewModel != null)
@@ -231,22 +216,22 @@ public sealed class MainWindowViewModel : PropertyChangedBase
                 vmb5.ModelUpdated -= OnModelUpdated;
                 break;
             }
-            case StyledClosableViewModelBase<IPortfolio> viewModel1:
+            case ClosableViewModelBase<IPortfolio> viewModel1:
             {
                 viewModel1.ModelUpdated += (x, y) => OnSubViewModelDataUpdated(x, y, Account.All);
                 break;
             }
-            case StyledClosableViewModelBase<ISecurity> viewModel2:
+            case ClosableViewModelBase<ISecurity> viewModel2:
             {
                 viewModel2.ModelUpdated += (x, y) => OnSubViewModelDataUpdated(x, y, Account.Security);
                 break;
             }
-            case StyledClosableViewModelBase<IAmortisableAsset> viewModel3:
+            case ClosableViewModelBase<IAmortisableAsset> viewModel3:
             {
                 viewModel3.ModelUpdated += (x, y) => OnSubViewModelDataUpdated(x, y, Account.Asset);
                 break;
             }
-            case StyledClosableViewModelBase<IValueList> viewModel4:
+            case ClosableViewModelBase<IValueList> viewModel4:
             {
                 viewModel4.ModelUpdated += (x, y) => OnSubViewModelDataUpdated(x, y, Account.BankAccount);
                 break;
@@ -283,22 +268,22 @@ public sealed class MainWindowViewModel : PropertyChangedBase
                 vmb5.ModelUpdated -= OnModelUpdated;
                 break;
             }
-            case StyledClosableViewModelBase<IPortfolio> viewModel1:
+            case ClosableViewModelBase<IPortfolio> viewModel1:
             {
                 viewModel1.ModelUpdated -= (x, y) => OnSubViewModelDataUpdated(x, y, Account.All);
                 break;
             }
-            case StyledClosableViewModelBase<ISecurity> viewModel2:
+            case ClosableViewModelBase<ISecurity> viewModel2:
             {
                 viewModel2.ModelUpdated -= (x, y) => OnSubViewModelDataUpdated(x, y, Account.Security);
                 break;
             }
-            case StyledClosableViewModelBase<IAmortisableAsset> viewModel3:
+            case ClosableViewModelBase<IAmortisableAsset> viewModel3:
             {
                 viewModel3.ModelUpdated -= (x, y) => OnSubViewModelDataUpdated(x, y, Account.Asset);
                 break;
             }
-            case StyledClosableViewModelBase<IValueList> viewModel4:
+            case ClosableViewModelBase<IValueList> viewModel4:
             {
                 viewModel4.ModelUpdated -= (x, y) => OnSubViewModelDataUpdated(x, y, Account.BankAccount);
                 break;
@@ -325,12 +310,12 @@ public sealed class MainWindowViewModel : PropertyChangedBase
                 vmb5.UpdateData(modelData, force);
                 return true;
             }
-            case StyledClosableViewModelBase<IPortfolio> viewModel1:
+            case ClosableViewModelBase<IPortfolio> viewModel1:
             {
                 viewModel1.UpdateData(modelData, false);
                 return true;
             }
-            case StyledClosableViewModelBase<ISecurity> viewModel2:
+            case ClosableViewModelBase<ISecurity> viewModel2:
             {
                 if (!modelData.TryGetAccount(Account.Security, viewModel2.ModelData.Names, out ISecurity security))
                 {
@@ -341,7 +326,7 @@ public sealed class MainWindowViewModel : PropertyChangedBase
                 return true;
 
             }
-            case StyledClosableViewModelBase<IAmortisableAsset> viewModel3:
+            case ClosableViewModelBase<IAmortisableAsset> viewModel3:
             {
                 if (!modelData.TryGetAccount(Account.Asset, viewModel3.ModelData.Names, out IAmortisableAsset asset))
                 {
@@ -352,7 +337,7 @@ public sealed class MainWindowViewModel : PropertyChangedBase
                 return true;
 
             }
-            case StyledClosableViewModelBase<IValueList> viewModel4:
+            case ClosableViewModelBase<IValueList> viewModel4:
             {
                 if (!modelData.TryGetAccount(Account.BankAccount, viewModel4.ModelData.Names, out IValueList vl))
                 {

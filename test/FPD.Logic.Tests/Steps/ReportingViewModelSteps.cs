@@ -43,8 +43,7 @@ public class ReportingViewModelSteps
         ILogger<ReportingWindowViewModel> loggerMock = Substitute.For<ILogger<ReportingWindowViewModel>>();
         _testContext.ViewModel = new ReportingWindowViewModel(
             loggerMock,
-            _testContext.Globals,
-            _testContext.Styles)
+            _testContext.Globals)
         { ReportType = reportSeverity };
         WhenAReportIsAddedToTheRvmWithData(table);
         _testContext.ModelData = _testContext.ViewModel.ModelData;

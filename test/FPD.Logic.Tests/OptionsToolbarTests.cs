@@ -28,7 +28,6 @@ namespace Effanville.FPD.Logic.Tests
             var mockGlobals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 mockGlobals,
-                null,
                 portfolio,
                 TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
@@ -59,7 +58,6 @@ namespace Effanville.FPD.Logic.Tests
             var mockGlobals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock, dialogMock);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 mockGlobals,
-                null,
                 portfolio,
                 TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
@@ -91,7 +89,6 @@ namespace Effanville.FPD.Logic.Tests
             var mockGlobals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock, dialogMock);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 mockGlobals,
-                null,
                 portfolio,
                 TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
@@ -125,7 +122,6 @@ namespace Effanville.FPD.Logic.Tests
             var mockGlobals = TestSetupHelper.SetupGlobalsMock(tempFileSystem, fileMock, dialogMock);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 mockGlobals,
-                null,
                 portfolio,
                 TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
@@ -153,7 +149,6 @@ namespace Effanville.FPD.Logic.Tests
             var mockGlobals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 mockGlobals,
-                null,
                 portfolio,
                 TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,
@@ -185,7 +180,6 @@ namespace Effanville.FPD.Logic.Tests
             var mockGlobals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             OptionsToolbarViewModel viewModel = new OptionsToolbarViewModel(
                 mockGlobals,
-                null,
                 portfolio,
                 TestSetupHelper.SetupDownloader(DateTime.Today),
                 updater,

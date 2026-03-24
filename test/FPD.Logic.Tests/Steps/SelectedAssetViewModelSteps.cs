@@ -38,7 +38,6 @@ public class SelectedAssetViewModelSteps
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
@@ -84,7 +83,6 @@ public class SelectedAssetViewModelSteps
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,
@@ -105,7 +103,6 @@ public class SelectedAssetViewModelSteps
         _testContext.ViewModel = new SelectedAssetViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             Account.Asset,

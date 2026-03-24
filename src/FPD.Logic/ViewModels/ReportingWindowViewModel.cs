@@ -10,7 +10,6 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
 using Effanville.Common.UI.ViewModelBases;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 
 using Microsoft.Extensions.Logging;
 
@@ -23,17 +22,6 @@ namespace Effanville.FPD.Logic.ViewModels
     {
         private readonly ILogger<ReportingWindowViewModel> _logger;
         private List<ErrorReport> _reportsToView = new List<ErrorReport>();
-
-        private IUiStyles _styles;
-
-        /// <summary>
-        /// The style object containing the style for the ui.
-        /// </summary>
-        public IUiStyles Styles
-        {
-            get => _styles;
-            set => SetAndNotify(ref _styles, value);
-        }
 
         /// <summary>
         /// The reports to display in the control. This is a sublist of <see cref="ReportingWindowViewModel.ModelData"/> filtered by <see cref="ReportType"/>.
@@ -65,8 +53,8 @@ namespace Effanville.FPD.Logic.ViewModels
             get => _reportType;
             set
             {
-                SetAndNotify(ref _reportType, value);
-                SyncReports();
+                if (SetAndNotify(ref _reportType, value))
+                    SyncReports();
             }
         }
 
@@ -79,11 +67,10 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ReportingWindowViewModel(ILogger<ReportingWindowViewModel> logger, UiGlobals uiGlobals, IUiStyles styles)
+        public ReportingWindowViewModel(ILogger<ReportingWindowViewModel> logger, UiGlobals uiGlobals)
             : base("Reports", new ErrorReports(), uiGlobals)
         {
             _logger = logger;
-            Styles = styles;
             IsExpanded = false;
             ReportType = ReportType.Information;
             ClearReportsCommand = new RelayCommand(ExecuteClearReports);

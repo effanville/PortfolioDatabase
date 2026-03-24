@@ -2,7 +2,6 @@ using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Common;
 
@@ -37,12 +36,11 @@ public sealed class DataNamesViewModelTestContext : ViewModelTestContext<IPortfo
     }
 
     public DataNamesViewModelTestContext(
-        IUiStyles uiStyles,
         UiGlobals globals,
         IUpdater updater,
         IViewModelFactory viewModelFactory,
         IPortfolioDataDownloader downloader)
-        : base(uiStyles, globals, updater, viewModelFactory, downloader)
+        : base(globals, updater, viewModelFactory, downloader)
     {
     }
 }

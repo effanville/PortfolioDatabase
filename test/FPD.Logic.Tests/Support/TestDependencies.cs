@@ -11,7 +11,6 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.Tests.Context;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels;
@@ -29,7 +28,6 @@ public static class TestDependencies
     public static void CreateDependencies(ContainerBuilder builder)
     {
         builder.RegisterAssemblyTypes(typeof(TestDependencies).Assembly).SingleInstance();
-        builder.RegisterInstance(TestSetupHelper.SetupDefaultStyles());
         builder.RegisterInstance<IFileSystem>(new MockFileSystem());
         builder.RegisterInstance(TestSetupHelper.SetupReportLogger());
         builder.Register(
@@ -44,7 +42,6 @@ public static class TestDependencies
         builder.RegisterInstance<IConfiguration>(new UserConfiguration());
         builder.Register(
             b => TestSetupHelper.SetupViewModelFactory(
-                b.Resolve<IUiStyles>(),
                 b.Resolve<UiGlobals>(),
                 b.Resolve<IUpdater>(),
                 b.Resolve<IPortfolioDataDownloader>(),

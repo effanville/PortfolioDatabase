@@ -10,12 +10,12 @@ using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
 {
@@ -91,7 +91,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// </summary>
         /// <returns></returns>
         public NameDataViewModel DefaultRow() =>
-            new NameDataViewModel("", new NameData(), true, UpdateNameData, DisplayGlobals, Styles)
+            new NameDataViewModel("", new NameData(), true, UpdateNameData, DisplayGlobals)
             {
                 IsNew = true
             };
@@ -102,12 +102,11 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public DataNamesViewModel(
             IPortfolio portfolio,
             UiGlobals uiGlobals,
-            IUiStyles styles,
             IUpdater updater,
             IPortfolioDataDownloader portfolioDataDownloader,
             IViewModelFactory viewModelFactory,
             Account dataType)
-            : base(uiGlobals, styles, portfolio, updater, dataType.ToString(), dataType, closable: false)
+            : base(uiGlobals, portfolio, updater, dataType.ToString(), dataType, closable: false)
         {
             _updater = updater;
             _portfolioDataDownloader = portfolioDataDownloader;
@@ -137,7 +136,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
             {
                 case ISecurity security:
                 {
-                    StyledClosableViewModelBase<ISecurity> newViewModel = _viewModelFactory.GenerateViewModel(
+                    ClosableViewModelBase<ISecurity> newViewModel = _viewModelFactory.GenerateViewModel(
                         security,
                         security.Names,
                         DataType);
@@ -151,7 +150,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 case IAmortisableAsset asset:
                 {
-                    StyledClosableViewModelBase<IAmortisableAsset> newViewModel = _viewModelFactory.GenerateViewModel(
+                    ClosableViewModelBase<IAmortisableAsset> newViewModel = _viewModelFactory.GenerateViewModel(
                         asset,
                         asset.Names,
                         DataType);
@@ -165,7 +164,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
                 }
                 default:
                 {
-                    StyledClosableViewModelBase<IValueList> newViewModel = _viewModelFactory.GenerateViewModel(
+                    ClosableViewModelBase<IValueList> newViewModel = _viewModelFactory.GenerateViewModel(
                         valueList,
                         valueList.Names,
                         DataType);
@@ -195,7 +194,7 @@ namespace Effanville.FPD.Logic.ViewModels.Common
 
             List<NameDataViewModel> values = modelData
                 .NameDataForAccount(DataType)
-                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), UpdateNameData, DisplayGlobals, Styles)).ToList();
+                .Select(name => new NameDataViewModel("", name.Copy(), IsUpdated(modelData, name), UpdateNameData, DisplayGlobals)).ToList();
             values.Sort((a, b) => a.ModelData.CompareTo(b.ModelData));
             DisplayGlobals.CurrentDispatcher.BeginInvoke(() =>
             {

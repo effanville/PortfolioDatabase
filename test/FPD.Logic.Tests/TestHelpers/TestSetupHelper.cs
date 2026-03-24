@@ -14,7 +14,6 @@ using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 
 using NSubstitute;
@@ -37,22 +36,13 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
             return mockfileinteraction;
         }
 
-        public static IUiStyles SetupDefaultStyles()
-        {
-            IUiStyles styles = Substitute.For<IUiStyles>();
-            styles.IsLightTheme.Returns(true);
-            return styles;
-        }
-
         internal static IViewModelFactory SetupViewModelFactory(
-            IUiStyles styles,
             UiGlobals globals,
             IUpdater updater,
             IPortfolioDataDownloader downloader,
             IConfiguration config,
             IAccountStatisticsProvider statisticsProvider)
             => new ViewModelFactory(
-                styles,
                 globals,
                 updater,
                 downloader,

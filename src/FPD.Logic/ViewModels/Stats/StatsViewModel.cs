@@ -10,7 +10,6 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Statistics;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -67,8 +66,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
-            : base(globals, styles, userConfiguration, portfolio, null, "Statistics", account)
+        public StatsViewModel(UiGlobals globals, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
+            : base(globals, userConfiguration, portfolio, null, "Statistics", account)
         {
             StatisticNames = AccountStatisticsHelpers.AllStatistics()
                 .Select(stat =>
