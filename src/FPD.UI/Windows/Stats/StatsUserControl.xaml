@@ -60,8 +60,7 @@
                   GridLinesVisibility="None"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   x:Name="StatsBox"
-                  x:FieldModifier="private"
-                  Sorting="dg_Sorting">
+                  x:FieldModifier="private">
         </DataGrid>
     </Grid>
 </controls:AutoGenColumnControl>
