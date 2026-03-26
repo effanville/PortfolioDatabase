@@ -1,0 +1,36 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="build.config" />
+    <File Path="Directory.Build.props" />
+    <Project Path="BuildProcess/src/_build.csproj">
+      <Build Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Common/">
+    <File Path="FinancialStructures/Common/Directory.Build.props" />
+    <Project Path="FinancialStructures/Common/src/Common.Console/Common.Console.csproj" />
+    <Project Path="FinancialStructures/Common/src/Common.ReportWriting/Common.ReportWriting.csproj" />
+    <Project Path="FinancialStructures/Common/src/Common.Structure/Common.Structure.csproj" />
+    <Project Path="FinancialStructures/Common/src/Common.UI.Wpf/Common.UI.Wpf.csproj" />
+    <Project Path="FinancialStructures/Common/src/Common.UI/Common.UI.csproj" />
+    <Project Path="FinancialStructures/Common/test/Common.Console.Tests/Common.Console.Tests.csproj" />
+    <Project Path="FinancialStructures/Common/test/Common.ReportWriting.Unit.Tests/Common.ReportWriting.Unit.Tests.csproj" />
+    <Project Path="FinancialStructures/Common/test/Common.Structure.Tests/Common.Structure.Tests.csproj" />
+    <Project Path="FinancialStructures/Common/test/Common.UI.Tests/Common.UI.Tests.csproj" />
+    <Project Path="FinancialStructures/Common/test/Common.UI.Wpf.Tests/Common.UI.Wpf.Tests.csproj" />
+  </Folder>
+  <Folder Name="/FinanceStructures/">
+    <File Path="FinancialStructures/Directory.Build.props" />
+    <Project Path="FinancialStructures/src/FinancialStructures/FinancialStructures.csproj" />
+    <Project Path="FinancialStructures/test/FinancialStructures.Tests/FinancialStructures.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="src/FPD.Console/FPD.Console.csproj" />
+  <Project Path="src/FPD.Logic/FPD.Logic.csproj" />
+  <Project Path="src/FPD.UI/FPD.UI.csproj" Startup="true" />
+  <Project Path="test/FPD.Console.Tests/FPD.Console.Tests.csproj" />
+  <Project Path="test/FPD.Logic.Tests/FPD.Logic.Tests.csproj" />
+</Solution>
