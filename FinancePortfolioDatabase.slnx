@@ -2,12 +2,14 @@
   <Folder Name="/Build/">
     <File Path="build.config" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <Project Path="BuildProcess/src/_build.csproj">
       <Build Project="false" />
     </Project>
   </Folder>
   <Folder Name="/Common/">
     <File Path="FinancialStructures/Common/Directory.Build.props" />
+    <File Path="FinancialStructures/Common/Directory.Packages.props" />
     <Project Path="FinancialStructures/Common/src/Common.Console/Common.Console.csproj" />
     <Project Path="FinancialStructures/Common/src/Common.ReportWriting/Common.ReportWriting.csproj" />
     <Project Path="FinancialStructures/Common/src/Common.Structure/Common.Structure.csproj" />
@@ -21,6 +23,7 @@
   </Folder>
   <Folder Name="/FinanceStructures/">
     <File Path="FinancialStructures/Directory.Build.props" />
+    <File Path="FinancialStructures/Directory.Packages.props" />
     <Project Path="FinancialStructures/src/FinancialStructures/FinancialStructures.csproj" />
     <Project Path="FinancialStructures/test/FinancialStructures.Tests/FinancialStructures.Tests.csproj" />
   </Folder>
@@ -30,7 +33,7 @@
   </Folder>
   <Project Path="src/FPD.Console/FPD.Console.csproj" />
   <Project Path="src/FPD.Logic/FPD.Logic.csproj" />
-  <Project Path="src/FPD.UI/FPD.UI.csproj" Startup="true" />
+  <Project Path="src/FPD.UI/FPD.UI.csproj" />
   <Project Path="test/FPD.Console.Tests/FPD.Console.Tests.csproj" />
   <Project Path="test/FPD.Logic.Tests/FPD.Logic.Tests.csproj" />
 </Solution>
