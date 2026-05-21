@@ -44,11 +44,12 @@ public sealed class DownloadCommandTests
         var mailSender = Substitute.For<IMailSender>();
         var persistence = Substitute.For<IPersistence<IPortfolio>>();
         ILogger<DownloadCommand> logger = Substitute.For<ILogger<DownloadCommand>>();
+        ILogger<WebDownloader> webDownloaderLogger = Substitute.For<ILogger<WebDownloader>>();
         IConfiguration config = new ConfigurationBuilder()
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        WebDownloader webDownloader = new WebDownloader(reportLogger);
+        WebDownloader webDownloader = new WebDownloader(webDownloaderLogger);
         PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory(reportLogger, webDownloader);
         var downloader = new PortfolioDataDownloader(priceDownloaderFactory, reportLogger);
 
