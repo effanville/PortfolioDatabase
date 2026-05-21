@@ -94,66 +94,59 @@
                                    Grid.Column="0"
                                    Text="Broker:"
                                    Margin="2" />
-                        <TextBox Grid.Row="1"
+                        <TextBlock Grid.Row="1"
                                  Visibility="{Binding Data.DisplayBroker, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
                                  Grid.Column="1"
                                  Text="{Binding ModelData.Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2"/>
                         <TextBlock Grid.Row="2"
                                    Grid.Column="0"
                                    Text="Company:"
                                    Margin="2" />
-                        <TextBox Grid.Row="2"
+                        <TextBlock Grid.Row="2"
                                  Grid.Column="1"
                                  Visibility="{Binding Data.DisplayCompany, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
                                  Text="{Binding ModelData.Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2" />
                         <TextBlock Grid.Row="3"
                                    Grid.Column="0"
                                    Text="Name:"
                                    Margin="2" />
-                        <TextBox Grid.Row="3"
+                        <TextBlock Grid.Row="3"
                                  Grid.Column="1"
                                  Text="{Binding ModelData.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2" />
                         <TextBlock Grid.Row="4"
                                    Grid.Column="0"
                                    Text="Url:"
                                    Margin="2" />
-                        <TextBox Grid.Row="4"
+                        <TextBlock Grid.Row="4"
                                  Grid.Column="1"
                                  Text="{Binding ModelData.Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2" />
                         <TextBlock Grid.Row="5"
                                    Grid.Column="0"
                                    Text="Currency:"
                                    Margin="2" />
-                        <TextBox Grid.Row="5"
+                        <TextBlock Grid.Row="5"
                                  Grid.Column="1"
                                  Text="{Binding ModelData.Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2"/>
                         <TextBlock Grid.Row="6"
                                    Grid.Column="0"
                                    Text="Sectors:"
                                    Margin="2" />
-                        <TextBox Grid.Row="6"
+                        <TextBlock Grid.Row="6"
                                  Grid.Column="1"
                                  Text="{Binding ModelData.Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2" />
                         <TextBlock Grid.Row="7"
                                    Grid.Column="0"
                                    Text="Notes:"
                                    Margin="2" />
-                        <TextBox Grid.Row="7"
+                        <TextBlock Grid.Row="7"
                                  Grid.Column="1"
                                  Text="{Binding ModelData.Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
                                  Margin="2"/>
                     </Grid>
                 </DataTemplate>
