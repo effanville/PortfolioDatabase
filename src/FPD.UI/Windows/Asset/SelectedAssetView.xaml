@@ -8,14 +8,10 @@
              xmlns:asset="clr-namespace:Effanville.FPD.Logic.ViewModels.Asset;assembly=Effanville.FPD.Logic"
              xmlns:ui="clr-namespace:Effanville.FPD.UI"
              d:DataContext="{d:DesignInstance Type=asset:SelectedAssetViewModel}"
-             mc:Ignorable="d"
-             DataContextChanged="UC_DataContextChanged">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <converters:StringToUKDateConverter x:Key="StringToUKDate" />
         <ui:DisplayConstants x:Key="Consts" />
-        <ui:Bridge x:Key="bridge"
-                      x:Name="bridge"
-                      Styles="{Binding Styles}" />
     </UserControl.Resources>
     <Grid Width="Auto">
         <Grid.RowDefinitions>
@@ -79,9 +75,9 @@
                        Grid.RowSpan="2">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=Values}"
-                                    DataPointStyle="{StaticResource InvisibleDataPointBlue}"
+                                    DataPointStyle="{StaticResource InvisibleDataPointPrimary}"
                                     IndependentValueBinding="{Binding Path=Day}"
-                                    DependentValueBinding="{Binding Path=Value}"></cht:LineSeries>
+                                    DependentValueBinding="{Binding Path=Value}" />
                 </cht:Chart.Series>
             </cht:Chart>
         </Grid>

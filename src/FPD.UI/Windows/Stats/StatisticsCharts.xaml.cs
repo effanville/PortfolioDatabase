@@ -29,12 +29,12 @@ namespace Effanville.FPD.UI.Windows.Stats
             {
                 vm.PropertyChanged += VmOnPropertyChanged;
             }
-            VmOnPropertyChanged(null, new PropertyChangedEventArgs("IRRLines"));
+            VmOnPropertyChanged(null, new PropertyChangedEventArgs(nameof(StatisticsChartsViewModel.IRRLines)));
         }
 
         private void VmOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "IRRLines" && DataContext is StatisticsChartsViewModel vm)
+            if (e.PropertyName == nameof(StatisticsChartsViewModel.IRRLines) && DataContext is StatisticsChartsViewModel vm)
             {
                 var rnd = new Random(12345);
                 if (vm.IRRLines == null)

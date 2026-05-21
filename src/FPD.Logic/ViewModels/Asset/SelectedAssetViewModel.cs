@@ -15,17 +15,17 @@ using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Stats;
 using System.Threading.Tasks;
+using Effanville.Common.UI.ViewModelBases;
 
 namespace Effanville.FPD.Logic.ViewModels.Asset
 {
     /// <summary>
     /// View model for the display of a security data.
     /// </summary>
-    public sealed class SelectedAssetViewModel : StyledClosableViewModelBase<IAmortisableAsset>
+    public sealed class SelectedAssetViewModel : ClosableViewModelBase<IAmortisableAsset>
     {
         private readonly IAccountStatisticsProvider _statisticsProvider;
         private readonly IUpdater _updater;
@@ -98,13 +98,12 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
         public SelectedAssetViewModel(
             IAccountStatisticsProvider statisticsProvider,
             IAmortisableAsset asset,
-            IUiStyles styles,
             UiGlobals globals,
             NameData selectedName,
             Account dataType,
             IUpdater dataUpdater,
             IPortfolioDataDownloader portfolioDataDownloader)
-            : base(selectedName != null ? selectedName.ToString() : "No-Name", asset, globals, styles, true)
+            : base(selectedName != null ? selectedName.ToString() : "No-Name", asset, globals, true)
         {
             _statisticsProvider = statisticsProvider;
             SelectedName = selectedName;
@@ -117,22 +116,20 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
             ValuesTLVM = new TimeListViewModel(
                 asset.Values,
                 $"Values({currencySymbol})",
-                Styles,
                 DeleteValue,
                 ExecuteAddEditValues);
             DebtTLVM = new TimeListViewModel(
                 asset.Debt,
                 $"Debt({currencySymbol})",
-                Styles,
                 DeleteDebtValue,
                 ExecuteAddEditDebt);
             PaymentsTLVM = new TimeListViewModel(
                 asset.Payments,
                 $"Payments({currencySymbol})",
-                Styles,
                 DeletePaymentValue,
                 ExecuteAddEditPayment);
-            Statistics = new AccountStatsViewModel(null, Styles);
+            Statistics = new AccountStatsViewModel(null);
+            UpdateData(asset, true);
         }
 
         private async void DeleteValue(DailyValuation value)
@@ -143,6 +140,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryDeleteData(value.Day)));
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void DeleteDebtValue(DailyValuation value)
@@ -153,6 +151,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryDeleteDebt(value.Day)));
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void DeletePaymentValue(DailyValuation value)
@@ -162,6 +161,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     true,
                     asset => asset.TryDeletePayment(value.Day)));
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <summary>
@@ -178,7 +178,8 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
 
             NameData names = SelectedName;
             await _updater.PerformUpdate(ModelData, new UpdateRequestArgs<IAmortisableAsset>(true,
-                asset => _portfolioDataDownloader.Download(ModelData, ReportLogger).ConfigureAwait(false)));
+                async asset => await _portfolioDataDownloader.Download(ModelData).ConfigureAwait(false)));
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <summary>
@@ -212,6 +213,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     asset => asset.TryEditData(oldValue.Day, newValue.Day, newValue.Value)));
 
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void ExecuteAddEditDebt(DailyValuation oldValue, DailyValuation newValue)
@@ -223,6 +225,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     asset => asset.TryEditDebt(oldValue.Day, newValue.Day, newValue.Value)));
 
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         private async void ExecuteAddEditPayment(DailyValuation oldValue, DailyValuation newValue)
@@ -234,6 +237,7 @@ namespace Effanville.FPD.Logic.ViewModels.Asset
                     asset => asset.TryEditPayment(oldValue.Day, newValue.Day, newValue.Value)));
 
             ReportLogger?.Info(nameof(SelectedAssetViewModel), result.ToString());
+            OnModelUpdated(EventArgs.Empty);
         }
 
         /// <inheritdoc/>

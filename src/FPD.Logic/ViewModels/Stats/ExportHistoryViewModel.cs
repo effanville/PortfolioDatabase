@@ -9,7 +9,6 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.History;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -68,8 +67,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public ExportHistoryViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
-            : base(globals, styles, userConfiguration, portfolio, null, "", Account.All, closable: true)
+        public ExportHistoryViewModel(UiGlobals globals, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
+            : base(globals, userConfiguration, portfolio, null, "", Account.All, closable: true)
         {
             _closeWindowAction = closeWindow;
             if (UserConfiguration.HasLoaded)
@@ -110,7 +109,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
 
                 PortfolioHistory history = new PortfolioHistory(ModelData, new PortfolioHistory.Settings(default, default, HistoryGapDays, generateSecurityValues: GenerateSecurityValues, generateBankAccountValues: GenerateBankAccountValues, generateSectorValues: GenerateSectorValues, generateSecurityRates: false, generateSectorRates: false));
                 history.ExportToFile(result.FilePath, DisplayGlobals.CurrentFileSystem);
-                _closeWindowAction(new PortfolioHistoryViewModel(ModelData, Styles));
+                _closeWindowAction(new PortfolioHistoryViewModel(ModelData));
             }
             else
             {

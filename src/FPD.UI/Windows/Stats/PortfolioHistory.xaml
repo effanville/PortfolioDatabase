@@ -6,12 +6,7 @@
              xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
              xmlns:ui="clr-namespace:Effanville.FPD.UI"
              d:DataContext="{d:DesignInstance Type=stats:PortfolioHistoryViewModel}"
-             mc:Ignorable="d"
-             DataContextChanged="UC_DataContextChanged">
-    <UserControl.Resources>
-        <ui:Bridge x:Key="bridge"
-                      Styles="{Binding Styles}" />
-    </UserControl.Resources>
+             mc:Ignorable="d">
     <Grid VerticalAlignment="Stretch"
           HorizontalAlignment="Left">
         <DataGrid Name="HistoryStatsBox"
@@ -23,24 +18,6 @@
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding HistoryStats}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible">
-            <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DgcStyle}">
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DgrStyle}">
-                    <Setter Property="Background"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.BackgroundBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Source={StaticResource bridge}, Path=Styles.ForegroundBrush}" />
-                </Style>
-            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date"
                                     Binding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" />

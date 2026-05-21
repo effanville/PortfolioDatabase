@@ -1,58 +1,43 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 
 using Effanville.FPD.Logic.ViewModels.Common;
 
-namespace Effanville.FPD.UI.Windows.Common
+namespace Effanville.FPD.UI.Windows.Common;
+
+/// <summary>
+/// Interaction logic for TimeListView.xaml
+/// </summary>
+public partial class TimeListView : ContentControl
 {
     /// <summary>
-    /// Interaction logic for TimeListView.xaml
+    /// Construct an instance.
     /// </summary>
-    public partial class TimeListView : ContentControl
+    public TimeListView() => InitializeComponent();
+
+    private void DataGrid_KeyDown(object sender, KeyEventArgs e)
     {
-        /// <summary>
-        /// Construct an instance.
-        /// </summary>
-        public TimeListView()
+        if (e.Key != Key.Delete && e.Key != Key.Back)
         {
-            InitializeComponent();
+            return;
         }
 
-        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        if (e.OriginalSource is not DataGridCell)
         {
-            if (e.Key != Key.Delete && e.Key != Key.Back)
-            {
-                return;
-            }
-
-            if (e.OriginalSource is not DataGridCell)
-            {
-                return;
-            }
-
-            if (DataContext is TimeListViewModel vm)
-            {
-                vm.DeleteValuation();
-            }
+            return;
         }
 
-        private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        if (DataContext is TimeListViewModel vm)
         {
-            if (DataContext is TimeListViewModel vm)
-            {
-                e.NewItem = vm.DefaultNewItem();
-            }
+            vm.DeleteValuation();
         }
+    }
 
-        private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
+    {
+        if (DataContext is TimeListViewModel vm)
         {
-            if (Resources.Contains(DisplayConstants.StyleBridgeName)
-                && DataContext is TimeListViewModel dc
-                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
-            {
-                bridge.Styles = dc.Styles;
-            }
+            e.NewItem = vm.DefaultNewItem();
         }
     }
 }

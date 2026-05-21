@@ -1,5 +1,4 @@
-using System;
-
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -14,14 +13,9 @@ public interface IViewModelFactory
         Account account,
         string vmType);
 
-    StyledClosableViewModelBase<TModel> GenerateViewModel<TModel>(
+    ClosableViewModelBase<TModel> GenerateViewModel<TModel>(
         TModel modelData,
         TwoName names,
         Account account)
         where TModel : class;
-
-    DataNamesViewModel GenerateViewModel(
-        IPortfolio portfolio,
-        Action<object> loadSelectedData,
-        Account dataType);
 }

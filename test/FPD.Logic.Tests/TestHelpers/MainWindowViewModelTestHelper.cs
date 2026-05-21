@@ -1,11 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 
 using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels;
 using Effanville.FPD.Logic.ViewModels.Stats;
 
@@ -47,17 +47,15 @@ namespace Effanville.FPD.Logic.Tests.TestHelpers
                 globals.ReportLogger);
             IPortfolio portfolio = PortfolioFactory.GenerateEmpty();
             Common.Structure.DataEdit.SynchronousUpdater updater = new Common.Structure.DataEdit.SynchronousUpdater();
-            IUiStyles styles = TestSetupHelper.SetupDefaultStyles();
-            var downloader = TestSetupHelper.SetupDownloader();
+            var downloader = TestSetupHelper.SetupDownloader(DateTime.Today);
             ViewModel = new MainWindowViewModel(globals,
-                styles,
                 portfolio,
-                new ViewModelFactory(styles, globals, updater, downloader, config, new StatisticsProvider(portfolio)),
+                new ViewModelFactory(globals, updater, downloader, config, new StatisticsProvider(portfolio)),
                 config,
-                new ReportingWindowViewModel(loggerReportMock, globals, styles),
-                new OptionsToolbarViewModel(globals, styles, portfolio, downloader, updater, new PortfolioPersistence(globals.ReportLogger)),
-                new BasicDataViewModel(globals, styles, portfolio, updater),
-                new StatisticsChartsViewModel(globals, portfolio, styles, updater));
+                new ReportingWindowViewModel(loggerReportMock, globals),
+                new OptionsToolbarViewModel(globals, portfolio, downloader, updater, new PortfolioPersistence(globals.ReportLogger)),
+                new BasicDataViewModel(globals, portfolio, updater),
+                new StatisticsChartsViewModel(globals, portfolio, updater));
         }
 
         [TearDown]

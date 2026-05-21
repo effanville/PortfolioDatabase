@@ -3,14 +3,13 @@ using System.Linq;
 
 using Effanville.Common.Structure.DisplayClasses;
 using Effanville.Common.UI;
+using Effanville.Common.UI.ViewModelBases;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Database.Statistics;
-using Effanville.FPD.Logic.TemplatesAndStyles;
-using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
 {
-    public sealed class ExportDataViewModel : StyledViewModelBase<TableOptions<Statistic>>
+    public sealed class ExportDataViewModel : ViewModelBase<TableOptions<Statistic>>
     {
         private Statistic _SortingField;
         private SortDirection _sortingDirection;
@@ -53,8 +52,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _columnNames, value);
         }
 
-        public ExportDataViewModel(string name, TableOptions<Statistic> modelData, UiGlobals displayGlobals, IUiStyles styles, IReadOnlyList<Statistic> defaultColumns)
-            : base($"{name} Sorting Properties", modelData, displayGlobals, styles)
+        public ExportDataViewModel(string name, TableOptions<Statistic> modelData, UiGlobals displayGlobals, IReadOnlyList<Statistic> defaultColumns)
+            : base($"{name} Sorting Properties", modelData, displayGlobals)
         {
             Name = $"Show {name}";
             foreach (Statistic stat in defaultColumns)

@@ -6,14 +6,14 @@ using System.Windows.Input;
 
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.UI.Commands;
-using Effanville.FPD.Logic.TemplatesAndStyles;
+using Effanville.Common.UI.ViewModelBases;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
 {
     /// <summary>
     /// View model for displaying a <see cref="TimeList"/>
     /// </summary>
-    public sealed class TimeListViewModel : StyledViewModelBase<TimeList>
+    public sealed class TimeListViewModel : ViewModelBase<TimeList>
     {
         private readonly Action<DailyValuation> _deleteValueAction;
         private readonly Action<DailyValuation, DailyValuation> _addEditValueAction;
@@ -38,10 +38,9 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         public TimeListViewModel(
             TimeList timeList,
             string valueName,
-            IUiStyles styles,
             Action<DailyValuation> deleteValueAction,
             Action<DailyValuation, DailyValuation> addEditValueAction)
-            : base(valueName, timeList, null, styles)
+            : base(valueName, timeList, null)
         {
             _deleteValueAction = deleteValueAction;
             _addEditValueAction = addEditValueAction;

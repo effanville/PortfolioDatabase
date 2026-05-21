@@ -52,7 +52,6 @@ public class SelectedSingleDataViewModelSteps
         _testContext.ViewModel = new SelectedSingleDataViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,
@@ -71,7 +70,6 @@ public class SelectedSingleDataViewModelSteps
         _testContext.ViewModel = new SelectedSingleDataViewModel(
             new StatisticsProvider(portfolio),
             _testContext.ModelData,
-            _testContext.Styles,
             _testContext.Globals,
             _testContext.ModelData.Names,
             account,

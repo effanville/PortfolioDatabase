@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls.DataVisualization.Charting;
 
 using Effanville.Common.Structure.DataEdit;
@@ -10,7 +11,6 @@ using Effanville.Common.UI;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.History;
 using Effanville.FinancialStructures.Database.Extensions.Values;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -20,6 +20,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     /// </summary>
     public sealed class StatisticsChartsViewModel : DataDisplayViewModelBase
     {
+        private bool _updateDataInProgress;
         private int _historyGapDays;
         private DateTime _earliestViewDate = new DateTime(DateTime.Today.AddYears(-10).Year, 1, 1);
         private List<PortfolioDaySnapshot> _historyStats;
@@ -100,8 +101,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUiStyles styles, IUpdater updater)
-            : base(uiGlobals, styles, portfolio, updater, "Charts", Account.All)
+        public StatisticsChartsViewModel(UiGlobals uiGlobals, IPortfolio portfolio, IUpdater updater)
+            : base(uiGlobals, portfolio, updater, "Charts", Account.All)
         {
             PropertyChanged += OnPropertyChanged;
         }
@@ -111,25 +112,30 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             if (e.PropertyName == nameof(EarliestViewDate)
                 || e.PropertyName == nameof(HistoryGapDays))
             {
-                UpdateData(force: true);
+                UpdateData(null, force: true);
             }
         }
 
         /// <summary>
         /// Updates the data for display in the charts.
         /// </summary>
-        public override void UpdateData(IPortfolio modelData, bool force)
+        public override async void UpdateData(IPortfolio modelData, bool force)
+        {
+            if (!_updateDataInProgress)
+            {
+                _updateDataInProgress = true;
+                await Task.Run(() => UpdateDataInternal(modelData, force));
+                _updateDataInProgress = false;
+            }
+        }
+
+        private void UpdateDataInternal(IPortfolio modelData, bool force)
         {
             if (modelData != null)
             {
                 base.UpdateData(modelData, force);
             }
 
-            UpdateData(force);
-        }
-
-        private void UpdateData(bool force = false)
-        {
             if (!force && (HistoryStats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)))
             {
                 return;

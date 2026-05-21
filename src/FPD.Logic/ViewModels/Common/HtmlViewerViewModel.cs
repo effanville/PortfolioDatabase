@@ -6,7 +6,6 @@ using Effanville.Common.UI;
 using Effanville.Common.UI.Commands;
 using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 
 namespace Effanville.FPD.Logic.ViewModels.Common
 {
@@ -54,8 +53,8 @@ namespace Effanville.FPD.Logic.ViewModels.Common
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public HtmlViewerViewModel(IUiStyles styles, UiGlobals globals, string header, string filePath)
-            : base(globals, styles, null, null, header, Account.All, closable: true)
+        public HtmlViewerViewModel(UiGlobals globals, string header, string filePath)
+            : base(globals, null, null, header, Account.All, closable: true)
         {
             if (!string.IsNullOrEmpty(filePath))
             {

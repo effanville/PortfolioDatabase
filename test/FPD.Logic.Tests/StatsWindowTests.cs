@@ -38,7 +38,6 @@ namespace Effanville.FPD.Logic.Tests
             IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
-                null,
                 globals,
                 updater,
                 null,
@@ -52,7 +51,7 @@ namespace Effanville.FPD.Logic.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(viewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(viewModel.StatsDisplay, Has.Count.EqualTo(ExpectedNumberTabs));
                 Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(true));
             });
         }
@@ -74,7 +73,6 @@ namespace Effanville.FPD.Logic.Tests
             IUpdater updater = TestSetupHelper.SetupUpdater();
             UiGlobals globals = TestSetupHelper.SetupGlobalsMock(fileSystem, fileMock, dialogMock);
             IViewModelFactory viewModelFactory = TestSetupHelper.SetupViewModelFactory(
-                null,
                 globals,
                 updater,
                 null,
@@ -87,7 +85,7 @@ namespace Effanville.FPD.Logic.Tests
             await Task.Delay(3000);
             Assert.Multiple(() =>
             {
-                Assert.That(viewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(viewModel.StatsDisplay, Has.Count.EqualTo(ExpectedNumberTabs));
                 Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(true));
             });
             viewModel.DisplayValueFunds = valueFunds;
@@ -100,7 +98,7 @@ namespace Effanville.FPD.Logic.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(viewModel.DisplayValueFunds, Is.EqualTo(valueFunds));
-                Assert.That(viewModel.Stats, Has.Count.EqualTo(ExpectedNumberTabs));
+                Assert.That(viewModel.StatsDisplay, Has.Count.EqualTo(ExpectedNumberTabs));
             });
         }
     }

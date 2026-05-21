@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.Context;
+using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.Tests.UserInteractions;
 using Effanville.FPD.Logic.ViewModels.Common;
 
@@ -32,9 +35,6 @@ public class DataNamesViewModelSteps
     public void GivenIHaveADataNamesViewModelWithNoData(Account account)
         => Create(account, null);
 
-    private void LoadSelectedData(object obj)
-        => _testContext.LoadDataCalled = true;
-
     [Given(@"I have a DataNamesViewModel with type (.*) and data")]
     public void GivenIHaveADataNamesViewModelWithTypeSecurityAndData(Account account, Table table)
         => Create(account, table);
@@ -47,10 +47,9 @@ public class DataNamesViewModelSteps
         _testContext.ViewModel = new DataNamesViewModel(
             portfolio,
             _testContext.Globals,
-            _testContext.Styles,
             _testContext.Updater,
             _testContext.PortfolioDataDownloader,
-            LoadSelectedData,
+            _testContext.ViewModelFactory,
             account);
     }
 
@@ -74,7 +73,7 @@ public class DataNamesViewModelSteps
     public void WhenNewNamesAreAddedToTheDatabase(Table table)
         => PortfolioGeneratorHelper.UpdateModelData(_testContext.ModelData, table);
 
-    [Then(@"the action to open the tab is called\.")]
+    [Then(@"the action to open the tab is called")]
     public void ThenTheActionToOpenTheTabIsCalled()
         => Assert.That(_testContext.LoadDataCalled, Is.EqualTo(true));
 
@@ -85,15 +84,16 @@ public class DataNamesViewModelSteps
     [When(@"I select the names row with data")]
     public void WhenISelectTheNamesRowWithData(Table table)
     {
-        NameData nameData = FromRow(table.Rows[0]);
+        NameData nameData = TableParsers.NameFromRow(table.Rows[0]);
         _testContext.ViewModel.SelectName(nameData);
     }
 
     [When(@"I add a name with data")]
     public void WhenIAddANameWithData(Table table)
     {
-        NameData nameData = FromRow(table.Rows[0]);
-        _testContext.ViewModel.AddName(nameData);
+        NameData nameData = TableParsers.NameFromRow(table.Rows[0]);
+        var dialogService = _testContext.Globals.DialogCreationService as TestDialogService;
+        _testContext.ViewModel.AddName(dialogService, nameData);
     }
 
     [Then(@"the dataName update event is called")]
@@ -107,7 +107,7 @@ public class DataNamesViewModelSteps
         TableRows rows = table.Rows;
         for (int index = 0; index < rows.Count; index++)
         {
-            NameData name = FromRow(rows[index]);
+            NameData name = TableParsers.NameFromRow(rows[index]);
             AreNameDataEqual(name, dataNames[index].ModelData);
         }
     }
@@ -115,18 +115,11 @@ public class DataNamesViewModelSteps
     [When(@"I edit the (.*) name data to")]
     public void WhenIEditTheNameDataTo(int index, Table table)
     {
-        NameData newName = FromRow(table.Rows[0]);
+        NameData newName = TableParsers.NameFromRow(table.Rows[0]);
         NameDataViewModel selectedRow = _testContext.ViewModel.DataNames[index - 1];
-        _testContext.ViewModel.EditName(selectedRow, newName);
+        var dialogService = _testContext.Globals.DialogCreationService as TestDialogService;
+        _testContext.ViewModel.EditName(dialogService, selectedRow, newName);
     }
-
-    private static NameData FromRow(TableRow row)
-        => new NameData(
-            row["Company"],
-            row["Name"],
-            row["Currency"],
-            row["Url"],
-            row["Sectors"].Split(',').ToHashSet());
 
     [When(@"I remove the (.*) data name")]
     public void WhenIRemoveTheDataName(int p0)
@@ -149,7 +142,16 @@ public class DataNamesViewModelSteps
     [Then(@"I can see that the data has been downloaded")]
     public void ThenICanSeeThatTheDataHasBeenDownloaded()
     {
-        Assert.Inconclusive("Need to implement check to ensure that the data is downloaded.");
+        var selectedName = _testContext.ViewModel.SelectedName;
+        var dataType = _testContext.ViewModel.DataType;
+        if (_testContext.ModelData.TryGetAccount(dataType, selectedName.ModelData, out IValueList list))
+        {
+            var value = dataType == Account.Security || dataType == Account.Pension
+                ? (list as ISecurity).UnitPrice.Value(DateTime.Today)
+                : list.Value(DateTime.Today);
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(1.2m));
+        }
     }
 
     void AreNameDataEqual(NameData expected, NameData actual)

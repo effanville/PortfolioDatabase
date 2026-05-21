@@ -14,12 +14,7 @@
              d:DataContext="{d:DesignInstance Type=viewModels:BasicDataViewModel}"
              mc:Ignorable="d"
              HorizontalAlignment="Stretch"
-             ScrollViewer.VerticalScrollBarVisibility="Visible"
-             DataContextChanged="UC_DataContextChanged">
-    <UserControl.Resources>
-        <ui:Bridge x:Key="Bridge"
-                      Styles="{Binding Styles}" />
-    </UserControl.Resources>
+             ScrollViewer.VerticalScrollBarVisibility="Visible">
     <Grid>
         <Grid.Resources>
             <converters:StringToUKDateConverter x:Key="StringToUKDate" />
@@ -65,6 +60,7 @@
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Margin="5"
+                       FontWeight="Bold"
                        Text="Portfolio Overview:" />
             <TextBlock Grid.Row="0"
                        Grid.Column="1"
@@ -126,20 +122,17 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Border Grid.Row="1"
-                BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                BorderThickness="2"
-                Visibility="{Binding HasValues, Converter={StaticResource BoolToVis}}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0"
+        <Grid Grid.Row="1"
+                  Visibility="{Binding HasValues, Converter={StaticResource BoolToVis}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
                            Margin="5"
-                           FontWeight="DemiBold"
+                           FontWeight="Bold"
                            Text="Portfolio Notes:" />
-                <DataGrid Grid.Row="1"
+            <DataGrid Grid.Row="1"
                           Margin="5"
                           MinWidth="600"
                           HorizontalAlignment="Left"
@@ -157,41 +150,21 @@
                           ScrollViewer.VerticalScrollBarVisibility="Visible"
                           SelectionChanged="DataGrid_OnSelectionChanged"
                           ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="RowEditEnding">
-                            <i:InvokeCommandAction Command="{Binding CreateCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <DataGrid.RowStyle>
-                        <Style TargetType="{x:Type DataGridRow}"
-                               BasedOn="{StaticResource DgrStyle}">
-                            <Setter Property="Background"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                            <Setter Property="Foreground"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.CellStyle>
-                        <Style TargetType="{x:Type DataGridCell}"
-                               BasedOn="{StaticResource DgcStyle}">
-                            <Setter Property="Foreground"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}" />
-                            <Setter Property="Background"
-                                    Value="{Binding Source={StaticResource Bridge}, Path=Styles.BackgroundBrush}" />
-                        </Style>
-                    </DataGrid.CellStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="TimeStamp"
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="RowEditEnding">
+                        <i:InvokeCommandAction Command="{Binding CreateCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="TimeStamp"
                                             MinWidth="100"
-                                            Foreground="{Binding Source={StaticResource Bridge}, Path=Styles.ForegroundBrush}"
                                             Binding="{Binding Path=TimeStamp, Converter={StaticResource StringToUKDate}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <DataGridTextColumn Header="Note"
+                    <DataGridTextColumn Header="Note"
                                             MinWidth="600"
                                             Binding="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-        </Border>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
         <Border Grid.Row="1"
                 Visibility="{Binding NoValues, Converter={StaticResource BoolToVis}}">
             <TextBlock Text="To get started, &#10; 1. Save your database in a convenient location by clicking at the top on the Save Database button.&#10; 2. Navigate to each page on the left hand side&#10; 3. Start adding Bank Accounts or Securities to the database.&#10; 4. Remember to save so you don't lose your data."

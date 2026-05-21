@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Statistics;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -21,7 +21,6 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
     public sealed class StatsViewModel : DataDisplayViewModelBase
     {
         private bool _updateDataInProgress;
-        private List<AccountStatistics> _stats;
 
         private bool _displayValueFunds = true;
         private List<Selectable<Statistic>> _statisticNames;
@@ -40,16 +39,15 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _displayValueFunds, value);
         }
 
-        /// <summary>
-        /// The values of the statistics being displayed.
-        /// </summary>
-        public List<AccountStatistics> Stats
+        private ObservableCollection<List<string>> _statsDisplay;
+
+        public ObservableCollection<List<string>> StatsDisplay
         {
-            get => _stats;
+            get => _statsDisplay;
             set
             {
-                SetAndNotify(ref _stats, value);
-                StatisticsChanged?.Invoke(null, new PropertyChangedEventArgs(nameof(Stats)));
+                if (SetAndNotify(ref _statsDisplay, value))
+                    StatisticsChanged?.Invoke(null, new PropertyChangedEventArgs(nameof(StatsDisplay)));
             }
         }
 
@@ -62,13 +60,13 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             set => SetAndNotify(ref _statisticNames, value);
         }
 
-        private Statistic[] _statsToView;
+        public List<Statistic> StatsToView { get; set; }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
-            : base(globals, styles, userConfiguration, portfolio, null, "Statistics", account)
+        public StatsViewModel(UiGlobals globals, IConfiguration userConfiguration, IPortfolio portfolio, Account account = Account.All)
+            : base(globals, userConfiguration, portfolio, null, "Statistics", account)
         {
             StatisticNames = AccountStatisticsHelpers.AllStatistics()
                 .Select(stat =>
@@ -91,10 +89,10 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 UserConfiguration.HasLoaded = true;
             }
 
-            _statsToView = StatisticNames
+            StatsToView = StatisticNames
                 .Where(stat => stat.Selected)
                 .Select(stat => stat.Instance)
-                .ToArray();
+                .ToList();
 
             StatisticNames.ForEach(stat => stat.SelectedChanged += OnSelectedChanged);
             PropertyChanged += OnPropertyChanged;
@@ -106,10 +104,10 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         private async void OnSelectedChanged(object sender, EventArgs e)
         {
             UserConfiguration.StoreConfiguration(this);
-            _statsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToArray();
+            StatsToView = StatisticNames.Where(stat => stat.Selected).Select(stat => stat.Instance).ToList();
             if (!_updateDataInProgress)
             {
-                await Task.Run(() => UpdateData(null, false));
+                await Task.Run(() => UpdateData(null, true));
             }
         }
 
@@ -132,36 +130,33 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
             }
         }
 
-        private void UpdateDataInternal(IPortfolio modelData, bool force)
-        {
-            if (modelData != null)
-            {
-                base.UpdateData(modelData, false);
-            }
-
-            if ((Stats?.Count > 4 && (!ModelData?.IsAlteredSinceSave ?? true)) && !force)
-            {
-                return;
-            }
-
-            var stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: _statsToView);
-            DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStats(stats));
-            return;
-
-            void AssignStats(List<AccountStatistics> statistics)
-            {
-                Stats = statistics;
-            }
-        }
-
         /// <inheritdoc/>
         public override async void UpdateData(IPortfolio modelData, bool force)
         {
             if (!_updateDataInProgress)
             {
                 _updateDataInProgress = true;
-                await Task.Run(() => UpdateDataInternal(null, force));
+                if (modelData != null)
+                {
+                    base.UpdateData(modelData, false);
+                }
+
+                if (!force
+                    && (StatsDisplay?.Count > 4
+                        && (!ModelData?.IsAlteredSinceSave ?? true)))
+                {
+                    return;
+                }
+
+                List<AccountStatistics> stats = ModelData.GetStats(DateTime.Today, DataType, DisplayValueFunds, statisticsToDisplay: StatsToView);
+                List<List<string>> statsDisplay = stats.Select(x => x.Statistics.Select(y => y?.ToString()).ToList()).ToList();
+                DisplayGlobals.CurrentDispatcher?.BeginInvoke(() => AssignStatsDisplay(statsDisplay));
+
                 _updateDataInProgress = false;
+                return;
+
+                void AssignStatsDisplay(List<List<string>> statistics)
+                    => StatsDisplay = new ObservableCollection<List<string>>(statistics);
             }
         }
     }

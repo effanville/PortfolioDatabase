@@ -5,7 +5,6 @@
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:stats="clr-namespace:Effanville.FPD.Logic.ViewModels.Stats;assembly=Effanville.FPD.Logic"
               xmlns:ui="clr-namespace:Effanville.FPD.UI"
-              xmlns:stats1="clr-namespace:Effanville.FPD.UI.Windows.Stats"
               d:DataContext="{d:DesignInstance Type=stats:ExportStatsViewModel}"
               mc:Ignorable="d">
     <Grid ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -37,10 +36,6 @@
                     <StackPanel Orientation="Horizontal"
                                 Margin="3">
                         <CheckBox IsChecked="{Binding Selected}"
-                                  Style="{StaticResource CheckBoxDefaultStyle}"
-                                  Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundBrush}"
-                                  Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.ForegroundBrush}"
-                                  BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.Styles.BackgroundSecondaryBrush}"
                                   Content="{Binding Instance}" />
                     </StackPanel>
                 </DataTemplate>

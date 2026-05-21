@@ -15,7 +15,6 @@ using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.DataStructures;
 using Effanville.FinancialStructures.FinanceStructures;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels
@@ -142,8 +141,8 @@ namespace Effanville.FPD.Logic.ViewModels
         /// <summary>
         /// Construct an instance.
         /// </summary>
-        public BasicDataViewModel(UiGlobals globals, IUiStyles styles, IPortfolio portfolio, IUpdater updater)
-            : base(globals, styles, portfolio, updater, "Overview", Account.All)
+        public BasicDataViewModel(UiGlobals globals, IPortfolio portfolio, IUpdater updater)
+            : base(globals, portfolio, updater, "Overview", Account.All)
         {
             SelectionChangedCommand = new RelayCommand<object>(ExecuteSelectionChanged);
             CreateCommand = new RelayCommandAsync(ExecuteCreateEdit);

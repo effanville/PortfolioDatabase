@@ -14,7 +14,6 @@ using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Statistics;
 using Effanville.FinancialStructures.Database.Statistics;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -85,26 +84,26 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ExportStatsViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
-            : base(globals, styles, userConfiguration, portfolio, null, "", Account.All)
+        public ExportStatsViewModel(UiGlobals globals, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> closeWindow)
+            : base(globals, userConfiguration, portfolio, null, "", Account.All)
         {
             _closeWindowAction = closeWindow;
             ExportCommand = new RelayCommandAsync(ExecuteExportCommand);
 
             TableOptions<Statistic> securityData = new TableOptions<Statistic>(true, Statistic.Company, SortDirection.Ascending, null);
-            SecuritySortingData = new ExportDataViewModel("Securities", securityData, DisplayGlobals, Styles, AccountStatisticsHelpers.DefaultSecurityStats());
+            SecuritySortingData = new ExportDataViewModel("Securities", securityData, DisplayGlobals, AccountStatisticsHelpers.DefaultSecurityStats());
 
             TableOptions<Statistic> bankAccountData = new TableOptions<Statistic>(true, Statistic.Company, SortDirection.Ascending, null);
-            BankAccountSortingData = new ExportDataViewModel("BankAccounts", bankAccountData, DisplayGlobals, Styles, AccountStatisticsHelpers.DefaultBankAccountStats());
+            BankAccountSortingData = new ExportDataViewModel("BankAccounts", bankAccountData, DisplayGlobals, AccountStatisticsHelpers.DefaultBankAccountStats());
 
             TableOptions<Statistic> sectorData = new TableOptions<Statistic>(true, Statistic.Name, SortDirection.Ascending, null);
-            SectorSortingData = new ExportDataViewModel("Sectors", sectorData, DisplayGlobals, Styles, AccountStatisticsHelpers.DefaultSectorStats());
+            SectorSortingData = new ExportDataViewModel("Sectors", sectorData, DisplayGlobals, AccountStatisticsHelpers.DefaultSectorStats());
 
             TableOptions<Statistic> assetData = new TableOptions<Statistic>(false, Statistic.Company, SortDirection.Ascending, null);
-            AssetSortingData = new ExportDataViewModel("Assets", assetData, DisplayGlobals, Styles, AccountStatisticsHelpers.DefaultAssetStats());
+            AssetSortingData = new ExportDataViewModel("Assets", assetData, DisplayGlobals, AccountStatisticsHelpers.DefaultAssetStats());
 
             TableOptions<Statistic> currencyData = new TableOptions<Statistic>(false, Statistic.Name, SortDirection.Ascending, null);
-            CurrencySortingData = new ExportDataViewModel("Currencies", currencyData, DisplayGlobals, Styles, AccountStatisticsHelpers.DefaultCurrencyStats());
+            CurrencySortingData = new ExportDataViewModel("Currencies", currencyData, DisplayGlobals, AccountStatisticsHelpers.DefaultCurrencyStats());
 
 
             DisplayConditions.Add(new Selectable<string>(ValueFunds, true));
@@ -172,7 +171,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 ReportLogger.Error(nameof(ExportStatsViewModel), "Was not able to create page in place specified.");
             }
 
-            _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Stats", path));
+            _closeWindowAction(new HtmlViewerViewModel(DisplayGlobals, "Exported Stats", path));
         }
     }
 }

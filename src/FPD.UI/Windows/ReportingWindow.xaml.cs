@@ -5,66 +5,52 @@ using System.Windows.Input;
 using Effanville.Common.Structure.Reporting;
 using Effanville.FPD.Logic.ViewModels;
 
-namespace Effanville.FPD.UI.Windows
+namespace Effanville.FPD.UI.Windows;
+
+/// <summary>
+/// Interaction logic for ReportingWindow.xaml
+/// </summary>
+public partial class ReportingWindow : Expander
 {
     /// <summary>
-    /// Interaction logic for ReportingWindow.xaml
+    /// Construct an instance.
     /// </summary>
-    public partial class ReportingWindow : Expander
+    public ReportingWindow() => InitializeComponent();
+
+    private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        /// <summary>
-        /// Construct an instance.
-        /// </summary>
-        public ReportingWindow()
+        if (e.Key != Key.Delete && e.Key != Key.Back)
         {
-            InitializeComponent();
+            return;
         }
 
-        private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        if (sender is not DataGrid dg)
         {
-            if (e.Key != Key.Delete && e.Key != Key.Back)
-            {
-                return;
-            }
+            return;
+        }
 
-            if (sender is not DataGrid dg)
-            {
-                return;
-            }
+        if (DataContext == null
+            || DataContext is not ReportingWindowViewModel vm)
+        {
+            return;
+        }
 
-            if (DataContext == null
-                || DataContext is not ReportingWindowViewModel vm)
+        if (dg.SelectedItems.Count > 1)
+        {
+            var reports = new List<ErrorReport>();
+            foreach (object item in dg.SelectedItems)
             {
-                return;
-            }
-
-            if (dg.SelectedItems.Count > 1)
-            {
-                var reports = new List<ErrorReport>();
-                foreach (object item in dg.SelectedItems)
+                if (item is ErrorReport report)
                 {
-                    if (item is ErrorReport report)
-                    {
-                        reports.Add(report);
-                    }
+                    reports.Add(report);
                 }
+            }
 
-                vm.DeleteReports(reports);
-            }
-            else if (dg.CurrentItem is ErrorReport selectedItem)
-            {
-                vm.DeleteReport(selectedItem);
-            }
+            vm.DeleteReports(reports);
         }
-
-        private void UC_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        else if (dg.CurrentItem is ErrorReport selectedItem)
         {
-            if (Resources.Contains(DisplayConstants.StyleBridgeName)
-                && DataContext is ReportingWindowViewModel dc
-                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
-            {
-                bridge.Styles = dc.Styles;
-            }
+            vm.DeleteReport(selectedItem);
         }
     }
 }

@@ -786,12 +786,11 @@ namespace Effanville.FPD.Logic.Tests
                 globals.CurrentFileSystem,
                 globals.ReportLogger);
 
-            var downloader = TestSetupHelper.SetupDownloader();
+            var downloader = TestSetupHelper.SetupDownloader(DateTime.Today);
             config.ProgramVersion = new Version(1, 2, 3, 4);
             MainWindowViewModel vm = new MainWindowViewModel(globals,
-                null,
                 PortfolioFactory.GenerateEmpty(),
-                new ViewModelFactory(null, globals, updater, downloader, config, null),
+                new ViewModelFactory(globals, updater, downloader, config, null),
                 config,
                 null,
                 null,

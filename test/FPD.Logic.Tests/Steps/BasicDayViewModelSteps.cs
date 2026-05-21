@@ -28,7 +28,6 @@ public class BasicDayViewModelSteps
         _testContext.ModelData = portfolio;
         _testContext.ViewModel = new BasicDataViewModel(
             _testContext.Globals,
-            _testContext.Styles,
             _testContext.ModelData,
             _testContext.Updater);
     }
@@ -56,7 +55,6 @@ public class BasicDayViewModelSteps
         _testContext.ModelData = portfolio;
         _testContext.ViewModel = new BasicDataViewModel(
             _testContext.Globals,
-            _testContext.Styles,
             _testContext.ModelData,
             _testContext.Updater);
     }

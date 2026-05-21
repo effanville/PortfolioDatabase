@@ -31,25 +31,30 @@
                     Height="35"
                     Grid.Row="0"
                     Grid.Column="0">
+            <Button Content="Add"
+                    Command="{Binding AddCommand}"
+                    ToolTip="Add new item" />
+            <Button Content="Edit"
+                    Command="{Binding EditCommand}"
+                    ToolTip="Edit selected item" />
             <Button Content="Download"
                     Command="{Binding DownloadCommand}"
-                    ToolTip="Press here to download data for selected." />
+                    ToolTip="Press here to download data for selected" />
             <Button Content="Delete"
                     Command="{Binding DeleteCommand}"
-                    ToolTip="Delete the highlighted." />
+                    ToolTip="Delete the highlighted" />
         </StackPanel>
         <DataGrid Grid.Row="1"
                   Grid.Column="0"
-                  FontSize="{Binding Styles.SmallFontSize}"
                   Margin="5"
                   Width="Auto"
                   HorizontalAlignment="Left"
                   ToolTip="Lists all items currently in the database. Select one to edit data."
                   SelectionUnit="FullRow"
                   SelectionMode="Single"
-                  CanUserAddRows="True"
                   IsReadOnly="False"
                   CanUserDeleteRows="True"
+                  CanUserAddRows="False"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding Path=DataNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DataContext="{Binding}"
@@ -57,16 +62,14 @@
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   KeyDown="DataGrid_KeyDown"
-                  PreviewKeyDown="DataGrid_KeyDown"
-                  AddingNewItem="DataGrid_AddingNewItem"
-                  RowDetailsVisibilityChanged="DataGrid_RowDetailsVisibilityChanged">
+                  PreviewKeyDown="DataGrid_KeyDown">
             <DataGrid.Resources>
                 <controls:BindingProxy x:Key="proxy"
                                        Data="{Binding}" />
             </DataGrid.Resources>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.BackgroundBrush}">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"
                                               MaxWidth="100" />
@@ -80,109 +83,99 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
                                    Grid.Column="0"
                                    Grid.ColumnSpan="2"
-                                   FontSize="{Binding Styles.MediumFontSize}"
                                    Text="Account Details:"
                                    Margin="2" />
                         <TextBlock Grid.Row="1"
                                    Grid.Column="0"
-                                   Text="Company:"
+                                   Text="Broker:"
                                    Margin="2" />
                         <TextBox Grid.Row="1"
+                                 Visibility="{Binding Data.DisplayBroker, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
                                  Grid.Column="1"
-                                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
+                                 Text="{Binding ModelData.Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2"/>
                         <TextBlock Grid.Row="2"
                                    Grid.Column="0"
-                                   Text="Name:"
+                                   Text="Company:"
                                    Margin="2" />
                         <TextBox Grid.Row="2"
                                  Grid.Column="1"
-                                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
+                                 Visibility="{Binding Data.DisplayCompany, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
+                                 Text="{Binding ModelData.Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="3"
                                    Grid.Column="0"
-                                   Text="Url:"
+                                   Text="Name:"
                                    Margin="2" />
                         <TextBox Grid.Row="3"
                                  Grid.Column="1"
-                                 Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
+                                 Text="{Binding ModelData.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="4"
                                    Grid.Column="0"
-                                   Text="Currency:"
+                                   Text="Url:"
                                    Margin="2" />
                         <TextBox Grid.Row="4"
                                  Grid.Column="1"
-                                 Text="{Binding Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
+                                 Text="{Binding ModelData.Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
                         <TextBlock Grid.Row="5"
                                    Grid.Column="0"
-                                   Text="Sectors:"
+                                   Text="Currency:"
                                    Margin="2" />
                         <TextBox Grid.Row="5"
                                  Grid.Column="1"
-                                 Text="{Binding Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
+                                 Text="{Binding ModelData.Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2"/>
                         <TextBlock Grid.Row="6"
                                    Grid.Column="0"
-                                   Text="Notes:"
+                                   Text="Sectors:"
                                    Margin="2" />
                         <TextBox Grid.Row="6"
                                  Grid.Column="1"
-                                 Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="{Binding Styles.BackgroundBrush}"
+                                 Text="{Binding ModelData.Sectors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  BorderThickness="0"
-                                 Margin="2"
-                                 Foreground="{Binding Styles.ForegroundBrush}" />
+                                 Margin="2" />
+                        <TextBlock Grid.Row="7"
+                                   Grid.Column="0"
+                                   Text="Notes:"
+                                   Margin="2" />
+                        <TextBox Grid.Row="7"
+                                 Grid.Column="1"
+                                 Text="{Binding ModelData.Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 BorderThickness="0"
+                                 Margin="2"/>
                     </Grid>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
             <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}"
-                       BasedOn="{StaticResource DgrStyle}">
+                <Style TargetType="{x:Type DataGridRow}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsUpdated}"
                                      Value="False">
                             <Setter Property="Background"
-                                    Value="#FF5555"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding}"
-                                     Value="{x:Static CollectionView.NewItemPlaceholder}">
-                            <Setter Property="Background"
-                                    Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.BackgroundBrush}" />
-                            <Setter Property="Foreground"
-                                    Value="{Binding Styles.ForegroundBrush}" />
+                                    Value="#FF5555" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}"
-                       BasedOn="{StaticResource DgcStyle}">
+                <Style TargetType="{x:Type DataGridCell}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsUpdated}"
                                      Value="False">
                             <Setter Property="Background"
-                                    Value="#FF5555"></Setter>
+                                    Value="#FF5555" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -202,26 +195,30 @@
                         <DataTemplate>
                             <StackPanel DataContext="{Binding}">
                                 <Button Content="View Data"
+                                        Style="{StaticResource DefaultButtonStyle}"
                                         DataContext="{Binding}"
                                         BorderThickness="0"
                                         Margin="0.5"
                                         Padding="3"
-                                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.ForegroundBrush}"
-                                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Styles.DefaultButtonBrush}"
                                         Command="{Binding Path=DataContext.OpenTabCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Broker"
+                                    MinWidth="70"
+                                    Width="Auto"
+                                    Visibility="{Binding Data.DisplayBroker, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
+                                    Binding="{Binding Path=ModelData.Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Company"
                                     MinWidth="70"
                                     Width="Auto"
                                     Visibility="{Binding Data.DisplayCompany, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
-                                    Binding="{Binding Path=Company,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Binding="{Binding Path=ModelData.Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Name"
                                     MinWidth="70"
                                     Width="Auto"
-                                    Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Binding="{Binding Path=ModelData.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
         <GridSplitter Grid.Row="1"
@@ -229,7 +226,6 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Stretch"
                       ShowsPreview="True"
-                      Background="{Binding Styles.BackgroundSecondaryBrush}"
                       Width="5" />
         <Grid Grid.Row="1"
               Grid.Column="2"
@@ -251,13 +247,12 @@
                        VerticalAlignment="Stretch"
                        Grid.Row="0"
                        Grid.RowSpan="2"
-                       FontSize="{Binding Styles.SmallFontSize}"
                        Grid.Column="0">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=SelectedValueHistory}"
-                                    DataPointStyle="{StaticResource InvisibleDataPointBlue}"
+                                    DataPointStyle="{StaticResource InvisibleDataPointPrimary}"
                                     IndependentValueBinding="{Binding Path=Day}"
-                                    DependentValueBinding="{Binding Path=Value}"></cht:LineSeries>
+                                    DependentValueBinding="{Binding Path=Value}" />
                 </cht:Chart.Series>
             </cht:Chart>
         </Grid>

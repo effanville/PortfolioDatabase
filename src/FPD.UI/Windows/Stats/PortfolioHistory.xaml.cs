@@ -1,7 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-
-using Effanville.FPD.Logic.ViewModels.Stats;
+﻿using System.Windows.Controls;
 
 namespace Effanville.FPD.UI.Windows.Stats
 {
@@ -16,15 +13,6 @@ namespace Effanville.FPD.UI.Windows.Stats
         public PortfolioHistory()
         {
             InitializeComponent();
-        }
-        private void UC_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (Resources.Contains(DisplayConstants.StyleBridgeName)
-                && DataContext is PortfolioHistoryViewModel dc
-                && Resources[DisplayConstants.StyleBridgeName] is Bridge bridge)
-            {
-                bridge.Styles = dc.Styles;
-            }
         }
     }
 }

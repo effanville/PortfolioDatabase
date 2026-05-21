@@ -116,10 +116,10 @@ namespace Effanville.FPD.Console
         public bool Validate()
         {
             _smtpAuthUser = _config.GetValue<string>("SmtpAuthUser");
-            _logger.Info($"Mail user has length {_smtpAuthUser.Length}");
+            _logger.Info($"Mail user has length {_smtpAuthUser?.Length}");
 
             _smtpAuthPassword = _config.GetValue<string>("SmtpAuthPassword");
-            _logger.Info($"Mail auth pwd has length {_smtpAuthPassword.Length}");
+            _logger.Info($"Mail auth pwd has length {_smtpAuthPassword?.Length}");
 
             _commandOptions = _config.GetSection(CommandOptions.Command).Get<CommandOptions>();
             _logger.Info($"Retrieved options");

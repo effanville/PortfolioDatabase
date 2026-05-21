@@ -27,7 +27,7 @@ public class HtmlViewerViewModelSteps
 
     [Given(@"I have a HtmlViewerViewModel with name (.*) and webpage (.*)")]
     public void GivenIHaveAHtmlViewerViewModelWithNoWebpage(string name, string webpage)
-        => _testContext.ViewModel = new HtmlViewerViewModel(null, null, name, webpage);
+        => _testContext.ViewModel = new HtmlViewerViewModel(null, name, webpage);
 
     [Given(@"the HtmlViewerViewModel is brought into focus")]
     public void GivenTheHtmlViewerViewModelIsBroughtIntoFocus()

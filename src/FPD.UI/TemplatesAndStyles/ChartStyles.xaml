@@ -4,23 +4,20 @@
                     xmlns:chartingPrimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=DotNetProjects.DataVisualization.Toolkit">
     <Style x:Key="ChartStyle1"
            TargetType="cht:Chart">
-        <Setter Property="BorderBrush"
-                Value="{Binding Styles.BackgroundSecondaryBrush}" />
-        <Setter Property="Foreground"
-                Value="{Binding Styles.ForegroundBrush}" />
-        <Setter Property="Background"
-                Value="{Binding Styles.BackgroundBrush}" />
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Padding"
                 Value="10" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="TitleStyle">
             <Setter.Value>
                 <Style TargetType="cht:Title">
-                    <Setter Property="FontSize"
-                            Value="{Binding Styles.LargeFontSize}" />
                     <Setter Property="FontWeight"
                             Value="Bold" />
                     <Setter Property="HorizontalAlignment"
@@ -37,16 +34,12 @@
                             Value="15,0,15,0" />
                     <Setter Property="HorizontalAlignment"
                             Value="Center" />
-                    <Setter Property="BorderBrush"
-                            Value="{Binding Styles.BackgroundSecondaryBrush}" />
                     <Setter Property="Width"
                             Value="Auto" />
-                    <Setter Property="Background"
-                            Value="{Binding Styles.BackgroundBrush}" />
                     <Setter Property="ItemsPanel">
                         <Setter.Value>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"></StackPanel>
+                                <StackPanel Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </Setter.Value>
                     </Setter>
@@ -68,76 +61,62 @@
                 <Style TargetType="Grid">
                     <Setter Property="Width"
                             Value="Auto" />
-                    <Setter Property="Background"
-                            Value="{Binding Styles.BackgroundBrush}" />
                 </Style>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="cht:Chart">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Background="{TemplateBinding Background}"
-                            Padding="{TemplateBinding Padding}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <cht:Title Content="{TemplateBinding Title}"
+                    <Grid Margin="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <cht:Title Content="{TemplateBinding Title}"
                                        Grid.Row="0"
                                        Style="{TemplateBinding TitleStyle}" />
-                            <chartingPrimitives:EdgePanel x:Name="ChartArea"
+                        <chartingPrimitives:EdgePanel x:Name="ChartArea"
                                                           Grid.Row="1"
                                                           Grid.RowSpan="2"
                                                           Style="{TemplateBinding ChartAreaStyle}">
-                                <Grid Style="{TemplateBinding PlotAreaStyle}"
+                            <Grid Style="{TemplateBinding PlotAreaStyle}"
                                       Canvas.ZIndex="-1" />
-                                <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                                        BorderThickness="1"
+                            <Border BorderThickness="1"
                                         Canvas.ZIndex="10" />
-                            </chartingPrimitives:EdgePanel>
-                            <cht:Legend Grid.Row="1"
+                        </chartingPrimitives:EdgePanel>
+                        <cht:Legend Grid.Row="1"
                                         FontSize="14"
                                         FontWeight="Normal"
                                         x:Name="Legend"
                                         Header="{TemplateBinding LegendTitle}"
                                         Style="{TemplateBinding LegendStyle}" />
-                        </Grid>
-                    </Border>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     <Style x:Key="NoLegendChart"
            TargetType="cht:Chart">
-        <Setter Property="BorderBrush"
-                Value="{Binding Styles.BackgroundSecondaryBrush}" />
+
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="IsTabStop"
                 Value="False" />
-        <Setter Property="Foreground"
-                Value="{Binding Styles.ForegroundBrush}" />
-        <Setter Property="Background"
-                Value="{Binding Styles.BackgroundBrush}" />
         <Setter Property="Padding"
                 Value="10" />
         <Setter Property="TitleStyle">
             <Setter.Value>
                 <Style TargetType="cht:Title">
-                    <Setter Property="FontSize"
-                            Value="{Binding Styles.LargeFontSize}" />
                     <Setter Property="FontWeight"
                             Value="Bold" />
                     <Setter Property="HorizontalAlignment"
                             Value="Center" />
-                    <Setter Property="Foreground"
-                            Value="{Binding Styles.ForegroundBrush}" />
-                    <Setter Property="Background"
-                            Value="{Binding Styles.BackgroundBrush}" />
                     <Setter Property="Margin"
                             Value="0,10,0,10" />
                 </Style>
@@ -146,8 +125,6 @@
         <Setter Property="ChartAreaStyle">
             <Setter.Value>
                 <Style TargetType="Panel">
-                    <Setter Property="Background"
-                            Value="{Binding Styles.BackgroundBrush}" />
                     <Setter Property="HorizontalAlignment"
                             Value="Stretch" />
                     <Setter Property="VerticalAlignment"
@@ -160,44 +137,43 @@
                 <Style TargetType="Grid">
                     <Setter Property="Width"
                             Value="Auto" />
-                    <Setter Property="Background"
-                            Value="{Binding Styles.BackgroundBrush}" />
                 </Style>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="cht:Chart">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Background="{TemplateBinding Background}"
-                            Padding="{TemplateBinding Padding}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <cht:Title Content="{TemplateBinding Title}"
+                    <Grid Margin="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <cht:Title Content="{TemplateBinding Title}"
                                        Grid.Row="0"
                                        Style="{TemplateBinding TitleStyle}" />
 
-                            <chartingPrimitives:EdgePanel x:Name="ChartArea"
+                        <chartingPrimitives:EdgePanel x:Name="ChartArea"
                                                           Grid.Row="1"
                                                           Grid.RowSpan="2"
                                                           Style="{TemplateBinding ChartAreaStyle}">
 
-                                <Grid Style="{TemplateBinding PlotAreaStyle}"
+                            <Grid Style="{TemplateBinding PlotAreaStyle}"
                                       Canvas.ZIndex="-1" />
-                                <Border BorderBrush="{Binding Styles.BackgroundSecondaryBrush}"
-                                        BorderThickness="1"
+                            <Border BorderThickness="1"
                                         Canvas.ZIndex="10" />
-                            </chartingPrimitives:EdgePanel>
-                        </Grid>
-                    </Border>
+                        </chartingPrimitives:EdgePanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style> 
+    <Style x:Key="InvisibleDataPointPrimary"
+           TargetType="{x:Type cht:DataPoint}">
+        <Setter Property="Background"
+                Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
+        <Setter Property="Template"
+                Value="{x:Null}" />
     </Style>
     <Style x:Key="InvisibleDataPointBlue"
            TargetType="{x:Type cht:DataPoint}">

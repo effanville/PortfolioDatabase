@@ -6,7 +6,6 @@ using Effanville.Common.Structure.NamingStructures;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Extensions.Values;
 using Effanville.FinancialStructures.NamingStructures;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -30,8 +29,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Construct an instance
         /// </summary>
-        public SecurityInvestmentViewModel(IPortfolio portfolio, IUiStyles styles)
-            : base(null, styles, portfolio, null, "Investments", closable: true)
+        public SecurityInvestmentViewModel(IPortfolio portfolio)
+            : base(null, portfolio, null, "Investments", closable: true)
         {
             UpdateData(portfolio, false);
         }

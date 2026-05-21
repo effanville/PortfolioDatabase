@@ -5,7 +5,9 @@ using System.IO.Abstractions.TestingHelpers;
 using Effanville.Common.Console;
 using Effanville.Common.Structure.DataStructures;
 using Effanville.Common.Structure.Reporting;
+using Effanville.Common.Structure.WebAccess;
 using Effanville.FinancialStructures.Database;
+using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.Persistence;
 using Effanville.FPD.Console.Utilities.Mail;
 
@@ -42,11 +44,16 @@ public sealed class DownloadCommandTests
         var mailSender = Substitute.For<IMailSender>();
         var persistence = Substitute.For<IPersistence<IPortfolio>>();
         ILogger<DownloadCommand> logger = Substitute.For<ILogger<DownloadCommand>>();
+        ILogger<WebDownloader> webDownloaderLogger = Substitute.For<ILogger<WebDownloader>>();
         IConfiguration config = new ConfigurationBuilder()
             .AddCommandLine(new ConsoleCommandArgs(args).GetEffectiveArgs())
             .AddEnvironmentVariables()
             .Build();
-        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger, config, mailSender, persistence);
+        WebDownloader webDownloader = new WebDownloader(webDownloaderLogger);
+        PriceDownloaderFactory priceDownloaderFactory = new PriceDownloaderFactory(reportLogger, webDownloader);
+        var downloader = new PortfolioDataDownloader(priceDownloaderFactory, reportLogger);
+
+        var downloadCommand = new DownloadCommand(mockFileSystem, logger, reportLogger, config, mailSender, persistence, downloader);
         bool isValidated = downloadCommand.Validate();
         Assert.That(isValidated, Is.EqualTo(expectedValidation));
     }

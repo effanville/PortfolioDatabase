@@ -4,9 +4,10 @@
     <RootNamespace>Effanville.FPD.Logic</RootNamespace>
     <AssemblyName>Effanville.FPD.Logic</AssemblyName>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
-    <PackageReference Include="System.IO.Abstractions" Version="22.0.12" />
+    <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" />
+    <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

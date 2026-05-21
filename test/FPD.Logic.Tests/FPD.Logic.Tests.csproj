@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-windows</TargetFrameworks>
+		<TargetFrameworks>net10.0-windows</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<RootNamespace>Effanville.FPD.Logic.Tests</RootNamespace>
 		<AssemblyName>Effanville.FPD.Logic.Tests</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SpecFlow" Version="3.9.74" />
-		<PackageReference Include="SpecFlow.Autofac" Version="3.9.74" />
-		<PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
-		<PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="22.0.12" />
+		<PackageReference Include="SpecFlow" />
+		<PackageReference Include="SpecFlow.Autofac" />
+		<PackageReference Include="SpecFlow.NUnit" />
+		<PackageReference Include="System.IO.Abstractions.TestingHelpers" />
 	</ItemGroup>
 
 	<ItemGroup>

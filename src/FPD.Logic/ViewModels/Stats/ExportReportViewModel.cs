@@ -10,7 +10,6 @@ using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Database.Export.Report;
 using Effanville.FPD.Logic.Configuration;
-using Effanville.FPD.Logic.TemplatesAndStyles;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.ViewModels.Stats
@@ -35,8 +34,8 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public ExportReportViewModel(UiGlobals globals, IUiStyles styles, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> CloseWindow)
-            : base(globals, styles, userConfiguration, portfolio, null, "", Account.All)
+        public ExportReportViewModel(UiGlobals globals, IConfiguration userConfiguration, IPortfolio portfolio, Action<object> CloseWindow)
+            : base(globals, userConfiguration, portfolio, null, "", Account.All)
         {
             _closeWindowAction = CloseWindow;
             if (UserConfiguration.HasLoaded)
@@ -76,7 +75,7 @@ namespace Effanville.FPD.Logic.ViewModels.Stats
                 }
                 PortfolioReport portfolioInvestments = new PortfolioReport(ModelData, PortfolioReport.Settings.Default());
                 portfolioInvestments.ExportToFile(DisplayGlobals.CurrentFileSystem, result.FilePath, PortfolioReport.ExportSettings.Default(), ReportLogger);
-                _closeWindowAction(new HtmlViewerViewModel(Styles, DisplayGlobals, "Exported Report", result.FilePath));
+                _closeWindowAction(new HtmlViewerViewModel(DisplayGlobals, "Exported Report", result.FilePath));
             }
             else
             {
