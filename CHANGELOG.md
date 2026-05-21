@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [26.05.01] - 2026-05-21
+
+### Bug Fixes
+
+- Remove unnecessary selectionChanged events
+- Use single file for VM to View mappings
+- Use nameof for strong typing
+- Remove sorting from stats view as it doesnt work correctly
+- Remove unnecessary date formatting in security view
+- Make stats charts load async to speed  up db loading
+- Fix tests
+
+### Build Changes
+
+- Update third party dependencies to latest
+- Update to target .NET10
+- Update build and remove custom version in FPD.UI
+- Update build script csproj location
+- Update build to target .NET10
+- Remove FinancialStructures as a nuget package
+- Update FinancialStructures to only target .NEt10
+- Update test package references to latest
+- Update Microsoft.Extensions packages to 10.0.2
+- Update System.IO.Abstractions to latest
+- Remove superfluous build config
+- Update to use slnx files
+- Update dependencies in build process to latest
+- Update test dependencies to latest
+- Update microsoft.Extensions.* packages to latest
+- UPdate web packages to latest
+- Update remaining packages to latest
+
+### Features
+
+- Replace portfolio changed event with update event within ui
+- Enable downloading UI tests
+- Add broker to name data and expose in UI
+- Remove nested tabs in individual account type windows
+- Use WPF fluent theme instead of custom one
+- Restyle and enable dragging from the top bar
+- Use CentralPackage Management
+- Add buttons for add/remove DataName Entries
+- Update FinancialStructures to latest
+
+### Refactor
+
+- Remove UIStyles object from ViewModels
+
+### Testing
+
+- Correct test for previous DI changes
+
 ## [25.04.01] - 2025-04-22
 
 ### Bug Fixes
