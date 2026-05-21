@@ -92,7 +92,8 @@ public class DataNamesViewModelSteps
     public void WhenIAddANameWithData(Table table)
     {
         NameData nameData = TableParsers.NameFromRow(table.Rows[0]);
-        _testContext.ViewModel.AddName(nameData);
+        var dialogService = _testContext.Globals.DialogCreationService as TestDialogService;
+        _testContext.ViewModel.AddName(dialogService, nameData);
     }
 
     [Then(@"the dataName update event is called")]
@@ -116,7 +117,8 @@ public class DataNamesViewModelSteps
     {
         NameData newName = TableParsers.NameFromRow(table.Rows[0]);
         NameDataViewModel selectedRow = _testContext.ViewModel.DataNames[index - 1];
-        _testContext.ViewModel.EditName(selectedRow, newName);
+        var dialogService = _testContext.Globals.DialogCreationService as TestDialogService;
+        _testContext.ViewModel.EditName(dialogService, selectedRow, newName);
     }
 
     [When(@"I remove the (.*) data name")]

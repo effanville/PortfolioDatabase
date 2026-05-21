@@ -50,6 +50,10 @@
     <DataTemplate DataType="{x:Type cvm:DataNamesViewModel}">
         <common:DataNamesView/>
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type cvm:AddEditNameViewModel}">
+        <common:AddEditNameView/>
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type vma:SelectedAssetViewModel}">
         <asset:SelectedAssetView/>

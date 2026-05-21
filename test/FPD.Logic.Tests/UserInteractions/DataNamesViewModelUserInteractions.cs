@@ -1,38 +1,39 @@
 using System.Linq;
 
+using Effanville.Common.Structure.NamingStructures;
 using Effanville.FinancialStructures.NamingStructures;
+using Effanville.FPD.Logic.Tests.TestHelpers;
 using Effanville.FPD.Logic.ViewModels.Common;
 
 namespace Effanville.FPD.Logic.Tests.UserInteractions;
 
 public static class DataNamesViewModelUserInteractions
 {
-    public static void AddName(this DataNamesViewModel viewModel, NameData name)
+    public static void AddName(this DataNamesViewModel viewModel, TestDialogService service, NameData name)
     {
-        viewModel.SelectName(null);
-        NameDataViewModel newItem = viewModel.DefaultRow();
-        viewModel.DataNames.Add(newItem);
-        viewModel.SelectRow(newItem);
-
-        newItem.BeginEdit();
-        newItem.Company = name.Company;
-        newItem.Name = name.Name;
-        newItem.Url = name.Url;
-        newItem.Currency = name.Currency;
-        newItem.Sectors = name.SectorsFlat;
-        viewModel.CompleteEdit(newItem);
+        service.SetupCustomDialogAction(obj =>
+        {
+            if (obj is AddEditNameViewModel vm)
+            {
+                vm.UpdateData(name, true);
+                vm.CompleteCommand.Execute(null);
+            }
+        });
+        viewModel.AddCommand.Execute(null);
     }
 
-    public static void EditName(this DataNamesViewModel viewModel, NameDataViewModel row, NameData newName)
+    public static void EditName(this DataNamesViewModel viewModel, TestDialogService service, NameDataViewModel row, NameData newName)
     {
         viewModel.SelectRow(row);
-        row.BeginEdit();
-        row.Company = newName.Company;
-        row.Name = newName.Name;
-        row.Url = newName.Url;
-        row.Currency = newName.Currency;
-        row.Sectors = newName.SectorsFlat;
-        viewModel.CompleteEdit(row);
+        service.SetupCustomDialogAction(obj =>
+        {
+            if (obj is AddEditNameViewModel vm)
+            {
+                vm.UpdateData(newName, true);
+                vm.CompleteCommand.Execute(null);
+            }
+        });
+        viewModel.EditCommand.Execute(null);
     }
 
     public static void SelectName(this DataNamesViewModel viewModel, NameData name)
@@ -51,12 +52,6 @@ public static class DataNamesViewModelUserInteractions
 
     public static void ViewData(this DataNamesViewModel viewModel)
         => viewModel.OpenTabCommand.Execute(null);
-
-    public static void CompleteEdit(this DataNamesViewModel viewModel, NameDataViewModel row)
-    {
-        viewModel.CreateCommand?.Execute(row);
-        row.EndEdit();
-    }
 
     public static void DeleteName(this DataNamesViewModel viewModel, NameData name)
     {

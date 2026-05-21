@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 using Effanville.FPD.Logic.ViewModels.Common;
@@ -16,16 +15,7 @@ public partial class DataNamesView : UserControl
     /// </summary>
     public DataNamesView() => InitializeComponent();
 
-    private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
-    {
-        if (DataContext is DataNamesViewModel vm
-            && vm.DataNames != null)
-        {
-            e.NewItem = vm.DefaultRow();
-        }
-    }
-
-    private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+    private async void DataGrid_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key != Key.Delete && e.Key != Key.Back)
         {
@@ -39,7 +29,7 @@ public partial class DataNamesView : UserControl
 
         if (DataContext is DataNamesViewModel vm)
         {
-            vm.ExecuteDelete();
+            await vm.ExecuteDelete();
         }
     }
 
@@ -50,26 +40,6 @@ public partial class DataNamesView : UserControl
             return;
         }
 
-        object currentItem = dataGrid.CurrentItem;
-        dc.SelectionChangedCommand.Execute(currentItem == CollectionView.NewItemPlaceholder
-            ? null
-            : dataGrid.CurrentItem);
-    }
-
-    private void DataGrid_RowDetailsVisibilityChanged(object sender, DataGridRowDetailsEventArgs e)
-    {
-        if (e.Row.DataContext is not NameDataViewModel rd)
-        {
-            return;
-        }
-
-        if (!rd.IsEditing)
-        {
-            rd.BeginEdit();
-        }
-        else
-        {
-            rd.EndEdit();
-        }
+        dc.SelectionChangedCommand.Execute(dataGrid.CurrentItem);
     }
 }

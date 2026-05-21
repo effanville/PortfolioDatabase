@@ -51,11 +51,11 @@ namespace Effanville.FPD.Logic.Tests
             DataNamesViewModel securityNames = ViewModel.OpenAccountTab(Account.Security);
             Assert.That(securityNames != null, nameof(securityNames) + " != null");
 
-            NameDataViewModel selectedInitialName = new NameDataViewModel("", new NameData(), false, securityNames.UpdateNameData, null);
+            NameDataViewModel selectedInitialName = new NameDataViewModel("", new NameData(), false, null);
             securityNames.DataNames.Add(selectedInitialName);
             securityNames.SelectionChangedCommand.Execute(selectedInitialName);
             Selectable<NameData> selectedEditedName = new Selectable<NameData>(new NameData("Forgotten", "New"), false);
-            securityNames.CreateCommand.Execute(selectedEditedName);
+            securityNames.AddCommand.Execute(selectedEditedName);
             Assert.That(securityNames.DataNames.Count, Is.EqualTo(1));
         }
     }

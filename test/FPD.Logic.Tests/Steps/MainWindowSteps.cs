@@ -90,7 +90,8 @@ public class MainWindowSteps
         NameData nameData = TableParsers.NameFromRow(table.Rows[0]);
         DataNamesViewModel accVM = _testContext.ViewModel.OpenAccountTab(account);
         _testContext.FocusedTab = accVM;
-        accVM.AddName(nameData);
+        var dialogService = _testContext.Globals.DialogCreationService as TestDialogService;
+        accVM.AddName(dialogService, nameData);
         PortfolioGeneratorHelper.UpdateModelData(_testContext.ModelData, table);
     }
 

@@ -7,6 +7,7 @@ using Autofac;
 using Effanville.Common.Structure.DataEdit;
 using Effanville.Common.Structure.Reporting;
 using Effanville.Common.UI;
+using Effanville.Common.UI.Services;
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.Download;
 using Effanville.FinancialStructures.FinanceStructures;
@@ -30,11 +31,12 @@ public static class TestDependencies
         builder.RegisterAssemblyTypes(typeof(TestDependencies).Assembly).SingleInstance();
         builder.RegisterInstance<IFileSystem>(new MockFileSystem());
         builder.RegisterInstance(TestSetupHelper.SetupReportLogger());
+        builder.RegisterInstance<IBaseDialogCreationService>(new TestDialogService());
         builder.Register(
             b => TestSetupHelper.SetupGlobalsMock(
                 b.Resolve<IFileSystem>(),
                 null,
-                null,
+                b.Resolve<IBaseDialogCreationService>(),
                 b.Resolve<IReportLogger>()));
         builder.RegisterInstance(TestSetupHelper.SetupUpdater());
         builder.RegisterInstance(TestSetupHelper.SetupProvider());

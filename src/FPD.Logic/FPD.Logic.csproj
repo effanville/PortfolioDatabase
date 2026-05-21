@@ -4,6 +4,7 @@
     <RootNamespace>Effanville.FPD.Logic</RootNamespace>
     <AssemblyName>Effanville.FPD.Logic</AssemblyName>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" />
     <PackageReference Include="System.IO.Abstractions" />
@@ -12,10 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\FinancialStructures\Common\src\Common.UI\Common.UI.csproj" />
     <ProjectReference Include="..\..\FinancialStructures\src\FinancialStructures\FinancialStructures.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TemplatesAndStyles\" />
   </ItemGroup>
 
 </Project>
