@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [26.05.02] - 2026-05-21
+## [26.05.04] - 2026-05-26
+
+### Bug Fixes
+
+- Make Dataname grid columns read only
+
+## [26.05.02] - 2026-05-26
 
 ### Bug Fixes
 
