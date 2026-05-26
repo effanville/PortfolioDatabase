@@ -201,16 +201,19 @@
                 <DataGridTextColumn Header="Broker"
                                     MinWidth="70"
                                     Width="Auto"
+                                    IsReadOnly="True"
                                     Visibility="{Binding Data.DisplayBroker, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
                                     Binding="{Binding Path=ModelData.Broker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Company"
                                     MinWidth="70"
                                     Width="Auto"
+                                    IsReadOnly="True"
                                     Visibility="{Binding Data.DisplayCompany, Converter={StaticResource BoolToVis}, Source={StaticResource proxy}}"
                                     Binding="{Binding Path=ModelData.Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Name"
                                     MinWidth="70"
                                     Width="Auto"
+                                    IsReadOnly="True"
                                     Binding="{Binding Path=ModelData.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </DataGrid.Columns>
         </DataGrid>
