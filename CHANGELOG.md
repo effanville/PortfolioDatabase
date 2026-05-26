@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [26.05.02] - 2026-05-21
+
+### Bug Fixes
+
+- Use text blocks to avoid editing in datanames view row details
+
 ## [26.05.01] - 2026-05-21
 
 ### Bug Fixes
