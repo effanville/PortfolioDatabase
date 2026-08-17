@@ -19,7 +19,7 @@ using Effanville.FPD.Logic.ViewModels.Asset;
 using Effanville.FPD.Logic.ViewModels.Common;
 using Effanville.FPD.Logic.ViewModels.Security;
 
-using SpecFlow.Autofac;
+using Reqnroll.Autofac;
 
 namespace Effanville.FPD.Logic.Tests.Support;
 

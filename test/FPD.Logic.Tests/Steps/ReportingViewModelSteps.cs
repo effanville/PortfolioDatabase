@@ -12,7 +12,7 @@ using NSubstitute;
 
 using NUnit.Framework;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 
@@ -69,7 +69,7 @@ public class ReportingViewModelSteps
             return;
         }
 
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             ErrorReport report = FromRow(row);
             _testContext.ViewModel.UpdateReport(report.ErrorSeverity, report.ErrorType, report.ErrorLocation,
@@ -84,7 +84,7 @@ public class ReportingViewModelSteps
         Assert.That(actualViewReports.Count(), Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             ErrorReport expectedReport = FromRow(row);
             ErrorReport actualReport = actualViewReports[index];
             Assert.That(actualReport.ErrorSeverity, Is.EqualTo(expectedReport.ErrorSeverity));
@@ -101,7 +101,7 @@ public class ReportingViewModelSteps
         Assert.That(actualReports.Count(), Is.EqualTo(table.RowCount));
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             ErrorReport expectedReport = FromRow(row);
             ErrorReport actualReport = actualReports[index];
             Assert.That(actualReport.ErrorSeverity, Is.EqualTo(expectedReport.ErrorSeverity));
@@ -111,7 +111,7 @@ public class ReportingViewModelSteps
         }
     }
 
-    private static ErrorReport FromRow(TableRow row)
+    private static ErrorReport FromRow(DataTableRow row)
     {
         ReportSeverity severity = Enum.Parse<ReportSeverity>(row["Severity"]);
         ReportType reportType = Enum.Parse<ReportType>(row["Type"]);

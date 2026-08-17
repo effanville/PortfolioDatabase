@@ -4,7 +4,7 @@ using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 

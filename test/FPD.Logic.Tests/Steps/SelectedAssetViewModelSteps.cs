@@ -12,7 +12,7 @@ using Effanville.FPD.Logic.ViewModels.Asset;
 
 using NUnit.Framework;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 
@@ -56,7 +56,7 @@ public class SelectedAssetViewModelSteps
         NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(Account.Asset, nameData);
         portfolio.TryGetAccount(Account.Asset, nameData, out IAmortisableAsset asset);
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             string date = row["Date"];
             string value = row["Value"];
@@ -132,7 +132,7 @@ public class SelectedAssetViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 
@@ -158,7 +158,7 @@ public class SelectedAssetViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 
@@ -183,7 +183,7 @@ public class SelectedAssetViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 
@@ -211,7 +211,7 @@ public class SelectedAssetViewModelSteps
         for (int index = 0; index < table.RowCount; index++)
         {
             DailyValuation valuation = valuations[index];
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 
@@ -233,7 +233,7 @@ public class SelectedAssetViewModelSteps
         for (int index = 0; index < table.RowCount; index++)
         {
             DailyValuation valuation = valuations[index];
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 
@@ -255,7 +255,7 @@ public class SelectedAssetViewModelSteps
         for (int index = 0; index < table.RowCount; index++)
         {
             DailyValuation valuation = valuations[index];
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 

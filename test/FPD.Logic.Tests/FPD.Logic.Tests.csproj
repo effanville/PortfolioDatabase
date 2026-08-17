@@ -8,9 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SpecFlow" />
-		<PackageReference Include="SpecFlow.Autofac" />
-		<PackageReference Include="SpecFlow.NUnit" />
+		<PackageReference Include="Reqnroll" />
+		<PackageReference Include="Reqnroll.Autofac" />
+		<PackageReference Include="Reqnroll.NUnit" />
 		<PackageReference Include="System.IO.Abstractions.TestingHelpers" />
 	</ItemGroup>
 

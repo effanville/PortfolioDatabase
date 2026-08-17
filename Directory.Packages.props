@@ -23,8 +23,8 @@
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="22.2.0" />
-    <PackageVersion Include="SpecFlow" Version="3.9.74" />
-    <PackageVersion Include="SpecFlow.Autofac" Version="3.9.74" />
-    <PackageVersion Include="SpecFlow.NUnit" Version="3.9.74" />
+    <PackageVersion Include="Reqnroll" Version="3.3.4" />
+    <PackageVersion Include="Reqnroll.Autofac" Version="3.3.4" />
+    <PackageVersion Include="Reqnroll.NUnit" Version="3.3.4" />
   </ItemGroup>
 </Project>

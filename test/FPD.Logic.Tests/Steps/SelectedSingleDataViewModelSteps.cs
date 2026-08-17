@@ -12,7 +12,7 @@ using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 
@@ -38,7 +38,7 @@ public class SelectedSingleDataViewModelSteps
         portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out IValueList valueList);
 
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             string date = row["Date"];
             string value = row["Value"];
@@ -92,7 +92,7 @@ public class SelectedSingleDataViewModelSteps
         for (int index = 0; index < table.RowCount; index++)
         {
             DailyValuation valuation = valuations[index];
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 
@@ -111,7 +111,7 @@ public class SelectedSingleDataViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["Value"];
 

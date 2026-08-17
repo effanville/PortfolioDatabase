@@ -3,13 +3,13 @@ using System.Linq;
 
 using Effanville.FinancialStructures.NamingStructures;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.TestHelpers;
 
 public static class TableParsers
 {
-    public static NameData NameFromRow(TableRow row)
+    public static NameData NameFromRow(DataTableRow row)
     {
         row.TryGetValue("Currency", out string currency);
         row.TryGetValue("Url", out string url);
