@@ -4,21 +4,21 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4129.50" />
-    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="Nager.Date" Version="[1.33.1]" />
     <PackageVersion Include="System.IO.Abstractions" Version="22.2.0" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.11" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.12" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageVersion Include="NUnit" Version="4.6.1" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.3.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
