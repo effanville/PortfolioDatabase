@@ -75,6 +75,7 @@
                        Grid.RowSpan="2">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=Values}"
+                                    DataContext="{Binding}"
                                     DataPointStyle="{StaticResource InvisibleDataPointPrimary}"
                                     IndependentValueBinding="{Binding Path=Day}"
                                     DependentValueBinding="{Binding Path=Value}" />

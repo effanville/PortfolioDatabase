@@ -246,7 +246,8 @@
                        Grid.Column="0">
                 <cht:Chart.Series>
                     <cht:LineSeries ItemsSource="{Binding Path=SelectedValueHistory}"
-                                    DataPointStyle="{StaticResource InvisibleDataPointPrimary}"
+                                    DataContext="{Binding}"
+                                    DataPointStyle="{StaticResource InvisibleDataPointPrimary}"                                    
                                     IndependentValueBinding="{Binding Path=Day}"
                                     DependentValueBinding="{Binding Path=Value}" />
                 </cht:Chart.Series>
