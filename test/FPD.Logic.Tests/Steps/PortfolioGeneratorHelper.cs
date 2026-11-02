@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using Effanville.FinancialStructures.Database;
 using Effanville.FinancialStructures.NamingStructures;
 using Effanville.FPD.Logic.Tests.TestHelpers;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 
@@ -17,7 +15,7 @@ public static class PortfolioGeneratorHelper
         IPortfolio portfolio = TestSetupHelper.CreateEmptyDataBase();
         if (table != null)
         {
-            foreach (TableRow row in table.Rows)
+            foreach (DataTableRow row in table.Rows)
             {
                 string accountAsString = row["Account"];
                 Account eff = Enum.Parse<Account>(accountAsString);
@@ -32,7 +30,7 @@ public static class PortfolioGeneratorHelper
     {
         if (table != null)
         {
-            foreach (TableRow row in table.Rows)
+            foreach (DataTableRow row in table.Rows)
             {
                 string accountAsString = row["Account"];
                 Account eff = Enum.Parse<Account>(accountAsString);
@@ -46,7 +44,7 @@ public static class PortfolioGeneratorHelper
     {
         if (table != null)
         {
-            foreach (TableRow row in table.Rows)
+            foreach (DataTableRow row in table.Rows)
             {
                 string accountAsString = row["Account"];
                 Account eff = Enum.Parse<Account>(accountAsString);

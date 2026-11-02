@@ -13,7 +13,7 @@ using Effanville.FPD.Logic.ViewModels.Security;
 
 using NUnit.Framework;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 
@@ -54,7 +54,7 @@ public class SelectedSecurityViewModelSteps
         NameData nameData = new NameData(names[0], names[1]);
         portfolio.TryAdd(account, nameData);
         portfolio.TryGetAccount(account, nameData, out ISecurity security);
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             string date = row["Date"];
             DateTime.TryParse(date, out DateTime actualDate);
@@ -85,7 +85,7 @@ public class SelectedSecurityViewModelSteps
             _testContext.PortfolioDataDownloader);
     }
 
-    private SecurityTrade FromRow(NameData name, TableRow row)
+    private SecurityTrade FromRow(NameData name, DataTableRow row)
     {
         string date = row["Date"];
         DateTime.TryParse(date, out DateTime actualDate);
@@ -128,7 +128,7 @@ public class SelectedSecurityViewModelSteps
     {
         for (int index = 0; index < table.RowCount; index++)
         {
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["UnitPrice"];
 
@@ -160,7 +160,7 @@ public class SelectedSecurityViewModelSteps
         for (int index = 0; index < table.RowCount; index++)
         {
             DailyValuation valuation = valuations[index];
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             string date = row["Date"];
             string value = row["UnitPrice"];
 
@@ -179,7 +179,7 @@ public class SelectedSecurityViewModelSteps
     {
         string[] names = name.Split('-');
         NameData nameData = new NameData(names[0], names[1]);
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             SecurityTrade trade = FromRow(nameData, row);
             _testContext.ViewModel.AddNewTrade(trade);
@@ -195,7 +195,7 @@ public class SelectedSecurityViewModelSteps
         for (int index = 0; index < table.RowCount; index++)
         {
             SecurityTrade actualTrade = valuations[index];
-            TableRow row = table.Rows[index];
+            DataTableRow row = table.Rows[index];
             SecurityTrade expectedTrade = FromRow(name, row);
             Assert.Multiple(() =>
             {

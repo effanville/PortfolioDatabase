@@ -12,7 +12,7 @@ using Effanville.FPD.Logic.ViewModels.Common;
 
 using NUnit.Framework;
 
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Effanville.FPD.Logic.Tests.Steps;
 
@@ -104,7 +104,7 @@ public class DataNamesViewModelSteps
     public void ThenTheUserCanSeeTheDataNamesAre(Table table)
     {
         List<NameDataViewModel> dataNames = _testContext.ViewModel.DataNames.ToList();
-        TableRows rows = table.Rows;
+        DataTableRows rows = table.Rows;
         for (int index = 0; index < rows.Count; index++)
         {
             NameData name = TableParsers.NameFromRow(rows[index]);
