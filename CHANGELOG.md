@@ -2,7 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## [26.05.04] - 2026-05-26
+## [26.11.02] - 2026-11-02
+
+### Bug Fixes
+
+- Correct command name to avoid binding error
+- Avoid exceptions in Charts due to missing DataContext
+
+### Build Changes
+
+- Update packages to latest versions
+- Update packages to latest versions
+- Update packages to latest
+- Update packages to latest
+
+### Testing
+
+- Convert specflow tests to Reqnroll
+
+## [26.05.03] - 2026-05-26
 
 ### Bug Fixes
 
