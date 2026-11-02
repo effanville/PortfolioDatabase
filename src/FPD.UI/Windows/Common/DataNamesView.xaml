@@ -175,7 +175,7 @@
             </DataGrid.CellStyle>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="RowEditEnding">
-                    <i:InvokeCommandAction Command="{Binding CreateCommand}"
+                    <i:InvokeCommandAction Command="{Binding AddCommand}"
                                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Mode=Default, Path=CurrentItem}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="Delete">
