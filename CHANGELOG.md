@@ -2,7 +2,216 @@
 
 All notable changes to this project will be documented in this file.
 
-## [25.03.02] - 2025-03-02
+## [26.11.02] - 2026-11-02
+
+### Bug Fixes
+
+- Correct command name to avoid binding error
+- Avoid exceptions in Charts due to missing DataContext
+
+### Build Changes
+
+- Update packages to latest versions
+- Update packages to latest versions
+- Update packages to latest
+- Update packages to latest
+
+### Testing
+
+- Convert specflow tests to Reqnroll
+
+## [26.05.03] - 2026-05-26
+
+### Bug Fixes
+
+- Make Dataname grid columns read only
+
+## [26.05.02] - 2026-05-26
+
+### Bug Fixes
+
+- Use text blocks to avoid editing in datanames view row details
+
+## [26.05.01] - 2026-05-21
+
+### Bug Fixes
+
+- Remove unnecessary selectionChanged events
+- Use single file for VM to View mappings
+- Use nameof for strong typing
+- Remove sorting from stats view as it doesnt work correctly
+- Remove unnecessary date formatting in security view
+- Make stats charts load async to speed  up db loading
+- Fix tests
+
+### Build Changes
+
+- Update third party dependencies to latest
+- Update to target .NET10
+- Update build and remove custom version in FPD.UI
+- Update build script csproj location
+- Update build to target .NET10
+- Remove FinancialStructures as a nuget package
+- Update FinancialStructures to only target .NEt10
+- Update test package references to latest
+- Update Microsoft.Extensions packages to 10.0.2
+- Update System.IO.Abstractions to latest
+- Remove superfluous build config
+- Update to use slnx files
+- Update dependencies in build process to latest
+- Update test dependencies to latest
+- Update microsoft.Extensions.* packages to latest
+- UPdate web packages to latest
+- Update remaining packages to latest
+
+### Features
+
+- Replace portfolio changed event with update event within ui
+- Enable downloading UI tests
+- Add broker to name data and expose in UI
+- Remove nested tabs in individual account type windows
+- Use WPF fluent theme instead of custom one
+- Restyle and enable dragging from the top bar
+- Use CentralPackage Management
+- Add buttons for add/remove DataName Entries
+- Update FinancialStructures to latest
+
+### Refactor
+
+- Remove UIStyles object from ViewModels
+
+### Testing
+
+- Correct test for previous DI changes
+
+## [25.04.01] - 2025-04-22
+
+### Bug Fixes
+
+- Ensure stats display can display new statistics
+- Ensure timelist and selectedSecurity values are created in UTC
+
+### Build Changes
+
+- Remove net8.0 targetting
+- Update test dependencies
+- Update packages to latest
+- Update microsoft depencies to latest
+- Consume Common repo as a sub repo of FinancialStructures
+
+### Features
+
+- Add WeeklyChange statistic type
+- Use debug level logging in downloading
+- Use logging extension methods
+- Inject logger into WebDownloader and persistence classes
+- Enable stats sorting options to be specified via configuration for console commands
+- Add appsettings config to raise log level for hosting info
+- Add new xml saving version for Portfolio
+- Update for fixes to Xml writing
+- Use new async Relay commands where possible
+- Improve loading and saving to file
+
+### Testing
+
+- Remove moq from testing code
+
+## [25.03.05] - 2025-03-20
+
+### Bug Fixes
+
+- Small fixes to fpd console for json serialization
+- Ensure notes and stat lists can be displayed
+- Ensure new names can be created via NameDataViewModel
+- Fixes to json serialization and xml versioning
+
+### Features
+
+- Tidy console logging
+
+### Testing
+
+- Update unit tests for recent saving changes
+
+## [25.03.02] - 2025-03-03
+
+### Bug Fixes
+
+- Use simple inferral for button styles
+- Small tidies in combobox display to enable small boxes to be shown
+- Ensure button style doesnt force sizing on buttons
+- Ensure html viewer background is white to view the html
+- Use viewModelFactory for creating view models
+- Remove unnecessary updateRequest event on view models and associated updater
+- Use ViewModelFactory where possible
+- Use ReportType sorting in reporting window
+- Fix yahoo downloading
+
+### Features
+
+- Use new icon for project
+- Provide default style for CheckBoxes to ensure consistent colouring
+- Use Update classes to respond with result from finance structure updates
+- Use update result values and log output
+- Remove ability to target net8.0
+
+### Refactor
+
+- Simplify Stats options display classes
+- Rename BorderStyle style file
+- Remove unnecessary borderstyles file
+
+### Testing
+
+- Fix broken unit tests
+
+## [25.01.01] - 2025-01-10
+
+### Bug Fixes
+
+- Update System.Io.Abstractions and WebView to latest
+- Update nager.date to latest
+- Tidy build props file
+- Update misc packages to latest.
+- Decouple portfolio from value list display
+- Separate ViewModel DI additions into separate location.
+- Ensure removing entry in TimeListView is correctly displayed
+- Remove unnecessary duplicated class definition
+- Move configuration factory to Logic dll.
+- Tidy code
+- Explicitly set namespace for ui project
+- Ensure when editing names that collection key is updated
+- Update nuke config to enable build
+- Update build process to correct for versioning
+- Ensure portfolio downloader is correctly passed into DataNames tests
+
+### Features
+
+- Use new report writing classes
+- Make file interactions async
+- Ensure only one tab per valueList can be created in view
+- Reduce dependency upon IPortfolio in valuelist view models
+- Replace RowData with view model for NameData that enables datagrid details view
+
+### Miscellaneous Tasks
+
+- Update test dependencies to latest
+- Update microsoft dependencies to v8
+- Update to target net8.0
+- Update microsoft extensions dependencies to v9
+- Update to target net9.0
+- Update build to latest version
+- Update nuke build schema
+
+### Refactor
+
+- Use consumable PortfolioDownloader
+
+### Testing
+
+- Remove dependency on Moq
+
+## [24.11.00] - 2024-11-18
 
 ### Bug Fixes
 
@@ -27,30 +236,6 @@ All notable changes to this project will be documented in this file.
 - Update submodule
 - Correct wrong scrolling behaviour in stats creator window
 - Update for new yahoo cookie
-- Update System.Io.Abstractions and WebView to latest
-- Update nager.date to latest
-- Tidy build props file
-- Update misc packages to latest.
-- Decouple portfolio from value list display
-- Separate ViewModel DI additions into separate location.
-- Ensure removing entry in TimeListView is correctly displayed
-- Remove unnecessary duplicated class definition
-- Move configuration factory to Logic dll.
-- Tidy code
-- Explicitly set namespace for ui project
-- Ensure when editing names that collection key is updated
-- Update nuke config to enable build
-- Update build process to correct for versioning
-- Ensure portfolio downloader is correctly passed into DataNames tests
-- Use simple inferral for button styles
-- Small tidies in combobox display to enable small boxes to be shown
-- Ensure button style doesnt force sizing on buttons
-- Ensure html viewer background is white to view the html
-- Use viewModelFactory for creating view models
-- Remove unnecessary updateRequest event on view models and associated updater
-- Use ViewModelFactory where possible
-- Use ReportType sorting in reporting window
-- Fix yahoo downloading
 
 ### Features
 
@@ -60,40 +245,15 @@ All notable changes to this project will be documented in this file.
 - Improve Stats generation apis.
 - Expose calculating currency statistics.
 - Add aspect logging into console commands.
-- Use new report writing classes
-- Make file interactions async
-- Ensure only one tab per valueList can be created in view
-- Reduce dependency upon IPortfolio in valuelist view models
-- Replace RowData with view model for NameData that enables datagrid details view
-- Use new icon for project
-- Provide default style for CheckBoxes to ensure consistent colouring
-- Use Update classes to respond with result from finance structure updates
-- Use update result values and log output
-- Remove ability to target net8.0
-
-### Miscellaneous Tasks
-
-- Update test dependencies to latest
-- Update microsoft dependencies to v8
-- Update to target net8.0
-- Update microsoft extensions dependencies to v9
-- Update to target net9.0
-- Update build to latest version
-- Update nuke build schema
 
 ### Refactor
 
 - Update to use collection lists.
-- Use consumable PortfolioDownloader
-- Simplify Stats options display classes
-- Rename BorderStyle style file
-- Remove unnecessary borderstyles file
 
 ### Testing
 
 - Fix broken config tests.
 - Fix broken unit tests
-- Remove dependency on Moq
 
 ## [24.06.00] - 2024-06-10
 

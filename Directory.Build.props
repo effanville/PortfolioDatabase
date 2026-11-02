@@ -7,7 +7,7 @@
     <Authors>Effanville</Authors>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>26.04.01-20260401T1226</Version>
+    <Version>26.11.02</Version>
   </PropertyGroup>
   <ItemGroup Condition="$(MSBuildProjectFile.Contains('.Tests'))">
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
